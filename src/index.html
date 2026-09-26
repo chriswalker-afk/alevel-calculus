@@ -692,6 +692,16 @@
                   <span class="classwiz-support-button__label">ClassWiz</span>
                 </button>
                 <button
+                  class="topic-goals-button"
+                  type="button"
+                  aria-controls="topic-goals-dialog"
+                  aria-expanded="false"
+                  data-topic-goals-trigger
+                >
+                  <span class="topic-goals-button__icon" aria-hidden="true">◎</span>
+                  <span class="topic-goals-button__label">Topic goals</span>
+                </button>
+                <button
                   class="word-bank-button"
                   type="button"
                   aria-controls="word-bank-drawer"
@@ -717,6 +727,14 @@
               </div>
             </div>
             <div class="activity-stage__content" data-standard-activity-content>
+              <section class="topic-objectives-card topic-objectives-card--inline" data-topic-objectives-inline hidden>
+                <div class="topic-objectives-card__heading">
+                  <p class="eyebrow" data-topic-objectives-inline-eyebrow>Topic goals</p>
+                  <h2 data-topic-objectives-inline-heading>In this topic you will learn to…</h2>
+                </div>
+                <ul class="topic-objectives-list" data-topic-objectives-inline-list></ul>
+                <p class="topic-objectives-card__footer" data-topic-objectives-inline-footer></p>
+              </section>
               <div class="activity-copy">
                 <p class="activity-overline" data-activity-overline>Explore the idea</p>
                 <h2 data-activity-title>See the derivative as a gradient function</h2>
@@ -1461,6 +1479,21 @@
       </aside>
     </div>
   </div>
+
+  <dialog class="topic-goals-dialog" id="topic-goals-dialog" aria-labelledby="topic-goals-title" data-topic-goals-dialog>
+    <div class="topic-goals-dialog__panel">
+      <header class="topic-goals-dialog__header">
+        <div>
+          <p class="eyebrow">Topic goals</p>
+          <h2 id="topic-goals-title" data-topic-goals-heading>In this topic you will learn to…</h2>
+        </div>
+        <button class="topic-goals-dialog__close" type="button" aria-label="Close topic goals" data-topic-goals-close>×</button>
+      </header>
+      <p class="topic-goals-dialog__topic" data-topic-goals-topic></p>
+      <ul class="topic-objectives-list topic-objectives-list--dialog" data-topic-goals-list></ul>
+      <p class="topic-objectives-card__footer" data-topic-goals-footer></p>
+    </div>
+  </dialog>
 
   <dialog class="data-management-dialog" id="data-management-dialog" aria-labelledby="data-management-title" data-data-management-dialog>
     <form method="dialog" class="data-management-dialog__panel">
