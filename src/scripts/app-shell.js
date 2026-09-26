@@ -84,6 +84,7 @@ import { calculusModellingLearningModes } from "./calculus-modelling-activities.
 import { fullCalculusMasteryLearningModes } from "./full-calculus-mastery-activities.js";
 import { fullCalculusMasteryModel } from "./full-calculus-mastery-model.js";
 import { getFullDifferentiationReviewMicroSkillLabel } from "./full-differentiation-review-model.js";
+import { getTopicObjectiveConfig } from "./topic-objectives-data.js";
 
 const root = document.documentElement;
 const shell = document.querySelector("[data-app-shell]");
@@ -130,6 +131,18 @@ const helpDrawerScrim = document.querySelector("[data-help-drawer-scrim]");
 const helpContext = document.querySelector("[data-help-context]");
 const helpTargetLinks = Array.from(document.querySelectorAll("[data-help-target]"));
 const wordBankDrawer = document.querySelector("[data-word-bank-drawer]");
+const topicGoalsTrigger = document.querySelector("[data-topic-goals-trigger]");
+const topicGoalsDialog = document.querySelector("[data-topic-goals-dialog]");
+const topicGoalsClose = document.querySelector("[data-topic-goals-close]");
+const topicGoalsHeading = document.querySelector("[data-topic-goals-heading]");
+const topicGoalsTopic = document.querySelector("[data-topic-goals-topic]");
+const topicGoalsList = document.querySelector("[data-topic-goals-list]");
+const topicGoalsFooter = document.querySelector("[data-topic-goals-footer]");
+const topicObjectivesInline = document.querySelector("[data-topic-objectives-inline]");
+const topicObjectivesInlineEyebrow = document.querySelector("[data-topic-objectives-inline-eyebrow]");
+const topicObjectivesInlineHeading = document.querySelector("[data-topic-objectives-inline-heading]");
+const topicObjectivesInlineList = document.querySelector("[data-topic-objectives-inline-list]");
+const topicObjectivesInlineFooter = document.querySelector("[data-topic-objectives-inline-footer]");
 const wordBankTrigger = document.querySelector("[data-word-bank-trigger]");
 const wordBankClose = document.querySelector("[data-word-bank-close]");
 const wordBankScrim = document.querySelector("[data-word-bank-scrim]");
@@ -192,6 +205,18 @@ const required = [
   helpDrawerClose,
   helpDrawerScrim,
   helpContext,
+  topicGoalsTrigger,
+  topicGoalsDialog,
+  topicGoalsClose,
+  topicGoalsHeading,
+  topicGoalsTopic,
+  topicGoalsList,
+  topicGoalsFooter,
+  topicObjectivesInline,
+  topicObjectivesInlineEyebrow,
+  topicObjectivesInlineHeading,
+  topicObjectivesInlineList,
+  topicObjectivesInlineFooter,
   wordBankDrawer,
   wordBankTrigger,
   wordBankClose,
@@ -1253,6 +1278,67 @@ function currentActivities() {
   return currentLearningModes()[activeMode]?.activities ?? [];
 }
 
+function renderTopicObjectiveList(listElement, objectives) {
+  const items = objectives.map((objective) => {
+    const item = document.createElement("li");
+    item.className = "topic-objectives-list__item";
+    const marker = document.createElement("span");
+    marker.className = "topic-objectives-list__marker";
+    marker.setAttribute("aria-hidden", "true");
+    marker.textContent = "✓";
+    const copy = document.createElement("span");
+    copy.textContent = objective;
+    item.append(marker, copy);
+    return item;
+  });
+  listElement.replaceChildren(...items);
+}
+
+function syncTopicGoalsDialog() {
+  const config = getTopicObjectiveConfig(currentTopicId);
+  if (!config) return;
+  topicGoalsHeading.textContent = config.heading;
+  topicGoalsTopic.textContent = currentTopicRuntime().label;
+  topicGoalsFooter.textContent = config.footer;
+  renderTopicObjectiveList(topicGoalsList, config.objectives);
+}
+
+function syncInlineTopicObjectives() {
+  const config = getTopicObjectiveConfig(currentTopicId);
+  const activities = currentActivities();
+  const isFirstUnderstand = activeMode === "understand" && activityIndex === 0;
+  const isLastUnderstand = activeMode === "understand" && activities.length > 1 && activityIndex === activities.length - 1;
+  const show = Boolean(config && (isFirstUnderstand || isLastUnderstand));
+  topicObjectivesInline.hidden = !show;
+  if (!show) return;
+
+  const recap = isLastUnderstand && !isFirstUnderstand;
+  topicObjectivesInline.dataset.objectivePhase = recap ? "recap" : "intro";
+  topicObjectivesInlineEyebrow.textContent = recap ? "Topic recap" : "Topic goals";
+  topicObjectivesInlineHeading.textContent = recap ? config.recapHeading : config.heading;
+  topicObjectivesInlineFooter.textContent = recap
+    ? "Use these goals to decide what needs one more look before you move into recall and practice."
+    : config.footer;
+  renderTopicObjectiveList(topicObjectivesInlineList, config.objectives);
+}
+
+function openTopicGoals() {
+  syncTopicGoalsDialog();
+  topicGoalsTrigger.setAttribute("aria-expanded", "true");
+  if (typeof topicGoalsDialog.showModal === "function") topicGoalsDialog.showModal();
+  else topicGoalsDialog.setAttribute("open", "");
+  topicGoalsClose.focus();
+}
+
+function closeTopicGoals() {
+  if (typeof topicGoalsDialog.close === "function" && topicGoalsDialog.open) topicGoalsDialog.close();
+  else {
+    topicGoalsDialog.removeAttribute("open");
+    topicGoalsTrigger.setAttribute("aria-expanded", "false");
+    topicGoalsTrigger.focus();
+  }
+}
+
 export function wrappedIndex(index, length = currentActivities().length) {
   if (!(length > 0)) return 0;
   return ((index % length) + length) % length;
@@ -1285,6 +1371,7 @@ export function renderActivity(index) {
   fields.formula.textContent = activity.formula;
   fields.caption.textContent = activity.caption;
   footerPosition.textContent = position;
+  syncInlineTopicObjectives();
 
   const memoryLabView = activeMode === "memorise" ? activity.memoryLabView : null;
   const generatedQuestionSet = generatedQuestionSetForActivity(activity.activityId);
@@ -1547,6 +1634,13 @@ for (const tab of modeTabs) {
 classWizTrigger.addEventListener("click", openClassWizSupport);
 classWizClose.addEventListener("click", () => closeClassWizSupport());
 classWizScrim.addEventListener("click", () => closeClassWizSupport());
+
+topicGoalsTrigger.addEventListener("click", openTopicGoals);
+topicGoalsClose.addEventListener("click", closeTopicGoals);
+topicGoalsDialog.addEventListener("close", () => {
+  topicGoalsTrigger.setAttribute("aria-expanded", "false");
+  topicGoalsTrigger.focus();
+});
 
 helpDrawerTrigger.addEventListener("click", openHelpDrawer);
 helpDrawerClose.addEventListener("click", () => closeHelpDrawer());
