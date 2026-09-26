@@ -1,4 +1,5 @@
 import { getCourseScope } from "./scope-metadata.js";
+import { getTopicObjectiveConfig } from "./topic-objectives-data.js";
 
 const allowedModes = Object.freeze(["understand", "memorise", "ao1", "ao2", "ao3", "mastery"]);
 const allowedActivityTypes = Object.freeze(["lesson", "interactive", "memory", "question-set", "mastery"]);
@@ -148,6 +149,15 @@ export function defineTopicMetadata(config) {
   const journeyIds = new Set(journey.map((item) => item.id));
   if (journeyIds.size !== journey.length) throw new Error("TopicMetadata journey IDs must be unique.");
 
+  const objectiveConfig = getTopicObjectiveConfig(topicId);
+  if (!objectiveConfig) throw new Error(`TopicMetadata ${topicId} must have a Topic objectives definition.`);
+  if (!Array.isArray(objectiveConfig.objectives) || objectiveConfig.objectives.length < 3 || objectiveConfig.objectives.length > 6) {
+    throw new Error(`TopicMetadata ${topicId} must have 3–6 student-facing objectives.`);
+  }
+  if (new Set(objectiveConfig.objectives).size !== objectiveConfig.objectives.length) {
+    throw new Error(`TopicMetadata ${topicId} objectives must not contain duplicates.`);
+  }
+
   return Object.freeze({
     topicId,
     scopeId,
@@ -155,6 +165,11 @@ export function defineTopicMetadata(config) {
     strand,
     slug,
     title: requireString(config.title, "title"),
+    objectives: objectiveConfig.objectives,
+    objectiveKind: objectiveConfig.kind,
+    objectiveHeading: objectiveConfig.heading,
+    objectiveRecapHeading: objectiveConfig.recapHeading,
+    objectiveFooter: objectiveConfig.footer,
     sequence: Number.isFinite(config.sequence) ? config.sequence : 0,
     modes,
     prerequisiteTopicIds: freezeUniqueStrings(config.prerequisiteTopicIds ?? [], "prerequisiteTopicIds"),
