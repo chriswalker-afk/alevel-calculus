@@ -51,7 +51,8 @@ function makeBlankState() {
 export function createQuestionShell(root, {
   onAttempt = () => {},
   resolveDiagnostic = () => null,
-  onDiagnosticNavigate = () => {}
+  onDiagnosticNavigate = () => {},
+  onRequestFreshSet = () => null
 } = {}) {
   assertElement(root, "root");
 
@@ -308,12 +309,13 @@ export function createQuestionShell(root, {
     if (!question || !activeSet) return;
     const state = stateFor(question);
     const position = `${questionIndex + 1} of ${activeSet.questions.length}`;
+    const batchPrefix = Number.isInteger(activeSet.practiceBatch) ? `Set ${activeSet.practiceBatch} · ` : "";
 
     root.dataset.questionResponseType = question.responseType;
     root.dataset.questionId = question.id;
     fields.format.textContent = responseTypeLabel(question.responseType);
-    fields.counter.textContent = `Question ${position}`;
-    fields.progress.textContent = `Question ${position}`;
+    fields.counter.textContent = `${batchPrefix}Question ${position}`;
+    fields.progress.textContent = `${batchPrefix}Question ${position}`;
     fields.prompt.textContent = question.prompt;
     fields.math.textContent = question.math || "";
     fields.math.hidden = !question.math;
@@ -342,12 +344,14 @@ export function createQuestionShell(root, {
     if (focus) focusResponse(question);
   }
 
-  function loadSet(set, { focus = false } = {}) {
+  function loadSet(set, { focus = false, resetIndex = false } = {}) {
     validateSet(set);
     saveCurrentResponse();
     if (activeSet) setIndex.set(activeSet.id, questionIndex);
     activeSet = set;
-    questionIndex = Math.min(setIndex.get(set.id) ?? 0, set.questions.length - 1);
+    questionIndex = resetIndex
+      ? 0
+      : Math.min(setIndex.get(set.id) ?? 0, set.questions.length - 1);
     render({ focus });
   }
 
@@ -469,8 +473,24 @@ export function createQuestionShell(root, {
     const question = currentQuestion();
     if (!question) return;
     const state = stateFor(question);
-    if (!state.checked) return;
+    const selfReviewQuestion = isAo3SelfReviewQuestion(question);
+    const canContinue = selfReviewQuestion ? state.selfReviewOutcome === "secure" : state.checked;
+    if (!canContinue) return;
+
     saveCurrentResponse();
+    const atEndOfSet = questionIndex >= activeSet.questions.length - 1;
+    if (atEndOfSet) {
+      const freshSet = onRequestFreshSet(Object.freeze({
+        setId: activeSet.id,
+        questionId: question.id,
+        practiceBatch: activeSet.practiceBatch ?? null
+      }));
+      if (freshSet) {
+        loadSet(freshSet, { focus: true, resetIndex: true });
+        return;
+      }
+    }
+
     questionIndex = (questionIndex + 1) % activeSet.questions.length;
     setIndex.set(activeSet.id, questionIndex);
     render({ focus: true });

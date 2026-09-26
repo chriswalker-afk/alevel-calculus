@@ -472,4 +472,32 @@ const questionSetsByActivityId = Object.freeze({
 export function getQuestionDefinition(templateId) { return questionDefinitionsByTemplateId.get(templateId) ?? null; }
 export function listQuestionDefinitions() { return [...questionDefinitionsByTemplateId.values()]; }
 export function getQuestionSetDefinitionForActivity(activityId) { return questionSetsByActivityId[activityId] ?? null; }
+
+export function getQuestionPracticeDefinitionForActivity(activityId) {
+  const setDefinition = getQuestionSetDefinitionForActivity(activityId);
+  if (!setDefinition) return null;
+
+  const topics = new Set(setDefinition.definitions.map((definition) => definition.topicId));
+  const assessmentObjectives = new Set(setDefinition.definitions.map((definition) => definition.assessmentObjective));
+  let practiceDefinitions = setDefinition.definitions;
+
+  if (topics.size === 1 && assessmentObjectives.size === 1) {
+    const [topicId] = topics;
+    const [assessmentObjective] = assessmentObjectives;
+    const related = allDefinitions.filter((definition) =>
+      definition.topicId === topicId && definition.assessmentObjective === assessmentObjective
+    );
+    const byTemplate = new Map();
+    for (const definition of [...setDefinition.definitions, ...related]) {
+      if (!byTemplate.has(definition.templateId)) byTemplate.set(definition.templateId, definition);
+    }
+    practiceDefinitions = Object.freeze([...byTemplate.values()]);
+  }
+
+  return Object.freeze({
+    ...setDefinition,
+    practiceDefinitions
+  });
+}
+
 export function listQuestionSetDefinitions() { return Object.values(questionSetsByActivityId); }
