@@ -10,8 +10,9 @@ import { activityRouteFromId, createHistoryRouteController } from "./navigation-
 import { renderVocabularyRichText } from "./vocabulary-term.js";
 import { buildWordBankEntries, filterWordBankEntries } from "./word-bank-model.js";
 import { createQuestionShell } from "./question-shell.js";
-import { getQuestionSetDefinitionForActivity } from "./question-catalogue.js";
+import { getQuestionPracticeDefinitionForActivity } from "./question-catalogue.js";
 import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner.js";
+import { createQuestionPracticeSession } from "./question-practice-session.js";
 import { createMemoryLab } from "./memory-lab.js";
 import { installMathRendering } from "./math-renderer.js";
 import { getMemoryItemsForTopic } from "./memory-content.js";
@@ -517,7 +518,7 @@ let fullCalculusMasterySnapshot = fullCalculusMasteryModel.summarise(fullCalculu
 let masteryFeedbackSnapshot = masteryFeedbackModel.summarise(questionOutcomeHistory);
 let year12ReviewMasterySnapshot = masteryFeedbackModel.summarise(year12ReviewOutcomeHistory);
 let fullDifferentiationReviewMasterySnapshot = masteryFeedbackModel.summarise(fullDifferentiationReviewOutcomeHistory);
-const generatedQuestionSetsByActivityId = new Map();
+const questionPracticeSessionsByActivityId = new Map();
 
 function isYear12DiagnosticMasteryActivity() {
   return currentTopicId === "topic:y12:review:calculus-mastery" && currentActivities()[activityIndex]?.activityId === "activity:y12:review:calculus-mastery:ao3:diagnostic-mastery";
@@ -600,16 +601,28 @@ function syncFullDifferentiationMasterySummary() {
   if (hasEvidence && snapshot.weaknesses.length===0 && fullDifferentiationMasteryWeaknesses) { const item=document.createElement("li"); item.textContent="No specific weakness has been identified from the evidence so far."; fullDifferentiationMasteryWeaknesses.appendChild(item); }
 }
 
-function generatedQuestionSetForActivity(activityId) {
-  const setDefinition = getQuestionSetDefinitionForActivity(activityId);
+function questionPracticeSessionForActivity(activityId) {
+  const setDefinition = getQuestionPracticeDefinitionForActivity(activityId);
   if (!setDefinition) return null;
-  if (!generatedQuestionSetsByActivityId.has(activityId)) {
-    generatedQuestionSetsByActivityId.set(activityId, questionGeneratorRunner.generateSet(setDefinition));
+  if (!questionPracticeSessionsByActivityId.has(activityId)) {
+    questionPracticeSessionsByActivityId.set(activityId, createQuestionPracticeSession({
+      setDefinition,
+      runner: questionGeneratorRunner
+    }));
   }
-  return generatedQuestionSetsByActivityId.get(activityId);
+  return questionPracticeSessionsByActivityId.get(activityId);
+}
+
+function generatedQuestionSetForActivity(activityId) {
+  return questionPracticeSessionForActivity(activityId)?.currentBatch() ?? null;
 }
 
 const questionShell = createQuestionShell(questionShellElement, {
+  onRequestFreshSet() {
+    const activity = currentActivities()[activityIndex];
+    if (!activity?.activityId) return null;
+    return questionPracticeSessionForActivity(activity.activityId)?.nextBatch() ?? null;
+  },
   resolveDiagnostic(attempt) {
     return diagnosticRouter.routeOutcome(attempt);
   },
