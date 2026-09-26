@@ -139,10 +139,33 @@ export const chooseDifferenceQuotientDefinition = defineQuestionDefinition({
     'wrong-denominator': { kind: 'recognition', supportNeed: 'understand', supportMicroSkillId: 'skill:y12:foundations:pre-calculus:delta-y-over-delta-x', studentMessage: 'The denominator is the horizontal change from x to x+h, which is h.' },
     'formula-recall': { kind: 'recognition', supportNeed: 'memorise', supportMicroSkillId: skill('formal-definition'), studentMessage: 'Retrieve the difference quotient and connect f(x+h)−f(x) with the vertical change.' }
   }, defaultDiagnostic: { kind: 'recognition', supportNeed: 'memorise', supportMicroSkillId: skill('formal-definition') },
-  responseType: 'choice', parameterGenerator({ random }) { return { order: random.shuffle(['correct', 'reverse', 'sum', 'wrong-denominator']) }; }, promptRenderer() { return 'A curve has P=(x,f(x)) and Q=(x+h,f(x+h)). Which expression is the gradient of chord PQ?'; }, mathRenderer() { return 'P=(x,f(x)),  Q=(x+h,f(x+h))'; },
-  responseOptionsRenderer({ order }) { const labels = { correct: '[f(x+h)−f(x)]/h', reverse: '[f(x)−f(x+h)]/h', sum: '[f(x+h)+f(x)]/h', 'wrong-denominator': '[f(x+h)−f(x)]/(x+h)' }; return order.map((id) => ({ id, label: labels[id] })); },
+  responseType: 'choice',
+  parameterGenerator({ random }) {
+    const base = random.int(-4, 4);
+    return { base, order: random.shuffle(['correct', 'reverse', 'sum', 'wrong-denominator']) };
+  },
+  promptRenderer({ base }) {
+    return `A curve has P=(${base},f(${base})) and Q=(${base}+h,f(${base}+h)). Which expression is the gradient of chord PQ?`;
+  },
+  mathRenderer({ base }) { return `P=(${base},f(${base})),  Q=(${base}+h,f(${base}+h))`; },
+  responseOptionsRenderer({ base, order }) {
+    const labels = {
+      correct: `[f(${base}+h)−f(${base})]/h`,
+      reverse: `[f(${base})−f(${base}+h)]/h`,
+      sum: `[f(${base}+h)+f(${base})]/h`,
+      'wrong-denominator': `[f(${base}+h)−f(${base})]/(${base}+h)`
+    };
+    return order.map((id) => ({ id, label: labels[id] }));
+  },
   answerChecker(response) { if (response === 'correct') return { tone: 'correct', title: 'Correct', message: 'Vertical change divided by horizontal change gives the chord gradient.' }; const map = { reverse: 'reversed-change', 'wrong-denominator': 'wrong-denominator', sum: 'formula-recall' }; return { tone: 'incorrect', errorCategory: map[response] ?? 'formula-recall', title: 'Check the two changes', message: 'Use change in y over change in x from P to Q.' }; },
-  workedSolutionGenerator() { return steps([{ label: 'Horizontal change', expression: '(x+h)−x = h', explanation: 'This is the denominator.' }, { label: 'Vertical change', expression: 'f(x+h)−f(x)', explanation: 'This is the numerator.' }, { kind: 'result', label: 'Chord gradient', expression: '[f(x+h)−f(x)]/h', explanation: 'This is the difference quotient.' }]); },
+  workedSolutionGenerator({ base }) {
+    const wrappedBase = base < 0 ? `(${base})` : String(base);
+    return steps([
+      { label: 'Horizontal change', expression: `(${base}+h)−${wrappedBase} = h`, explanation: 'This is the denominator.' },
+      { label: 'Vertical change', expression: `f(${base}+h)−f(${base})`, explanation: 'This is the numerator.' },
+      { kind: 'result', label: 'Chord gradient', expression: `[f(${base}+h)−f(${base})]/h`, explanation: 'This is the difference quotient.' }
+    ]);
+  },
   hintSequenceGenerator() { return [{ id: 'gradient', text: 'Start with change in y divided by change in x.' }]; }
 });
 
