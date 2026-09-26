@@ -143,6 +143,7 @@ export function createGeneratorRunner({ debugSeed = null, runtimeSeed = null } =
       responseType: definition.responseType,
       responseLabel: definition.responseLabel,
       placeholder: definition.placeholder,
+      selfReviewCriteria: definition.selfReviewCriteria,
       prompt: definition.promptRenderer(parameters),
       math: definition.mathRenderer ? definition.mathRenderer(parameters) : "",
       options: options ? Object.freeze(options.map((option) => Object.freeze({ ...option }))) : undefined,
