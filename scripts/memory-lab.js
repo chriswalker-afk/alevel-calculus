@@ -198,6 +198,12 @@ export function createMemoryLab(element, {
     onSecurity: (evidence) => reportReviewSecurity("missing-piece", evidence),
     onComplete: (evidence) => reportReviewComplete("missing-piece", evidence)
   });
+  const reviewSort = createSortEngine(reviewTaskPanelById.get("sort"), {
+    definition: gamePack.sort,
+    onAttempt: (evidence) => reportReviewAttempt("sort", evidence),
+    onSecurity: (evidence) => reportReviewSecurity("sort", evidence),
+    onComplete: (evidence) => reportReviewComplete("sort", evidence)
+  });
   const reviewImpostor = createImpostorEngine(reviewTaskPanelById.get("impostor"), {
     definition: gamePack.impostor,
     onAttempt: (evidence) => reportReviewAttempt("impostor", evidence),
@@ -210,6 +216,7 @@ export function createMemoryLab(element, {
     ["diagram", diagramRecall],
     ["build", reviewBuild],
     ["missing-piece", reviewMissingPiece],
+    ["sort", reviewSort],
     ["impostor", reviewImpostor]
   ]);
   const reviewLabels = new Map([
@@ -217,6 +224,7 @@ export function createMemoryLab(element, {
     ["diagram", reviewPack.diagram.label],
     ["build", gamePack.build.label],
     ["missing-piece", gamePack.missingPiece.label],
+    ["sort", gamePack.sort.label],
     ["impostor", gamePack.impostor.label]
   ]);
 
