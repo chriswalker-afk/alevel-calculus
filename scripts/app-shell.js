@@ -13,6 +13,7 @@ import { createQuestionShell } from "./question-shell.js";
 import { getQuestionSetDefinitionForActivity } from "./question-catalogue.js";
 import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner.js";
 import { createMemoryLab } from "./memory-lab.js?v=hotfix3";
+import { installMathRendering } from "./math-renderer.js?v=mathpass1";
 import { getMemoryItemsForTopic } from "./memory-content.js";
 import { getMemoryGamePackForTopic } from "./memory-game-content.js";
 import { getMemoryReviewPackForTopic } from "./memory-review-content.js";
@@ -231,6 +232,8 @@ const required = [
 if (required.some((element) => !element) || modeTabs.length !== learningModeOrder.length || helpTargetLinks.length !== 3 || wordBankFilterButtons.length !== 4) {
   throw new Error("AppShell is missing one or more required regions, ModeTabs, HelpDrawer targets, Word Bank controls, QuestionShell host, or progress-data controls.");
 }
+
+installMathRendering(document);
 
 const compactNavigationMedia = window.matchMedia("(max-width: 900px)");
 
