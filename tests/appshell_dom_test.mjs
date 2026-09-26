@@ -668,10 +668,14 @@ assert(standardActivityContent.hidden === true, 'QuestionShell activity should h
 const questionInput = questionShellElement.children.get('[data-question-shell-input]');
 const questionFeedback = questionShellElement.children.get('[data-question-shell-feedback]');
 const { createGeneratorRunner } = await import('../src/scripts/generator-runner.js');
-const { getQuestionSetDefinitionForActivity } = await import('../src/scripts/question-catalogue.js');
+const { getQuestionPracticeDefinitionForActivity } = await import('../src/scripts/question-catalogue.js');
+const { createQuestionPracticeSession } = await import('../src/scripts/question-practice-session.js');
 const domRunner = createGeneratorRunner({ debugSeed: 'dom-test' });
-const domSet = domRunner.generateSet(getQuestionSetDefinitionForActivity('activity:y12:differentiation:basics:ao1:power-rule'));
-const generatedAlgebraic = domSet.questions[0];
+const domPracticeSession = createQuestionPracticeSession({
+  setDefinition: getQuestionPracticeDefinitionForActivity('activity:y12:differentiation:basics:ao1:power-rule'),
+  runner: domRunner
+});
+const generatedAlgebraic = domPracticeSession.currentBatch().questions[0];
 const gp = generatedAlgebraic.parameters;
 const term = (coefficient, power) => `${coefficient}${power === 0 ? '' : `x${power === 1 ? '' : `^${power}`}`}`;
 questionInput.value = `${term(gp.a * gp.highPower, gp.highPower - 1)}${gp.b * gp.lowPower < 0 ? '' : '+'}${term(gp.b * gp.lowPower, gp.lowPower - 1)}`;
