@@ -349,8 +349,8 @@ assert 'createQuestionShell' in question_shell and 'questionResponseTypes' in qu
 assert all(response_type in question_shell for response_type in ['"numeric"', '"algebraic"', '"choice"', '"short-reasoning"'])
 assert 'data-question-shell-feedback' in html and 'aria-live="polite"' in html
 assert html.count('data-question-shell-option') == 4
-assert 'Worked solution' in html and 'Show hint' in html and 'Check answer' in html and 'Next question' in html
-assert 'getQuestionSetDefinitionForActivity' in js and 'createGeneratorRunner' in js and 'createQuestionShell' in js
+assert 'Worked solution' in html and 'Show hint' in html and 'Check answer' in html and 'Another question' in html
+assert 'getQuestionPracticeDefinitionForActivity' in js and 'createQuestionPracticeSession' in js and 'createGeneratorRunner' in js and 'createQuestionShell' in js
 assert 'readQuestionDebugSeed(window.location?.search ?? "")' in js, "Runtime should support an optional deterministic questionSeed debug parameter"
 assert 'progressStore.recordAttempt' in js, "QuestionShell attempts should report through the existing shared progress layer"
 assert 'questionShell.loadSet' in js and 'questionShell.hide' in js
