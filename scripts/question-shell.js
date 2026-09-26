@@ -1,4 +1,4 @@
-import { createQuestionVisualRenderer } from "./question-visual-renderer.js?v=interactions1";
+import { createQuestionVisualRenderer } from "./question-visual-renderer.js?v=interactions2";
 import {
   getHintActionLabel,
   getHintProgressLabel,
