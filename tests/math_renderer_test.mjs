@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { tokeniseMathExpression } from "../src/scripts/math-renderer.js";
 
 const derivative = tokeniseMathExpression("dy/dx = 3x²");
@@ -28,3 +29,12 @@ const prose = tokeniseMathExpression("Differentiate with respect to x.");
 assert.deepEqual(prose, [{ type: "text", value: "Differentiate with respect to x." }]);
 
 console.log("Math renderer tokenisation regression passed.");
+
+
+const appShell = readFileSync(new URL("../src/scripts/app-shell.js", import.meta.url), "utf8");
+const sourceHtml = readFileSync(new URL("../src/index.html", import.meta.url), "utf8");
+const mathCss = readFileSync(new URL("../src/styles/math-renderer.css", import.meta.url), "utf8");
+assert.match(appShell, /installMathRendering\(document\)/);
+assert.match(sourceHtml, /styles\/math-renderer\.css/);
+assert.match(mathCss, /white-space:\s*nowrap/);
+assert.match(mathCss, /overflow-x:\s*auto/);
