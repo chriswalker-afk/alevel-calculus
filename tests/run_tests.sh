@@ -13,7 +13,8 @@ node tests/topic_metadata_test.mjs
 node tests/generator_runner_test.mjs
 node tests/feedback_system_test.mjs
 node tests/question_shell_test.mjs
-node tests/question_generator_diversity_test.mjs\nnode tests/graph_question_interactions_batch1_test.mjs
+node tests/question_generator_diversity_test.mjs
+node tests/graph_question_interactions_batch1_test.mjs
 node tests/question_practice_session_test.mjs
 node tests/question_response_enhancements_test.mjs
 node tests/math_renderer_test.mjs
