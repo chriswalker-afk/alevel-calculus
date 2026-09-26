@@ -6,6 +6,7 @@ import {
   nextHintRevealCount
 } from "./hint-sequence.js";
 import { createWorkedSolutionRenderer } from "./worked-solution-renderer.js";
+import { createMathEntryEnhancement, createSelfReviewPanel, deriveSelfReviewCriteria, isAo3SelfReviewQuestion } from "./question-response-enhancements.js?v=answerpass1";
 
 export const questionResponseTypes = Object.freeze([
   "numeric",
@@ -38,7 +39,12 @@ function makeBlankState() {
     feedback: null,
     diagnostic: null,
     hintsRevealed: 0,
-    solutionOpen: false
+    solutionOpen: false,
+    selfReviewOpen: false,
+    selfReviewCriteria: new Set(),
+    selfReviewFocus: new Set(),
+    selfReviewOutcome: null,
+    selfReviewAttemptCount: 0
   };
 }
 
@@ -92,6 +98,8 @@ export function createQuestionShell(root, {
   let questionIndex = 0;
   const setIndex = new Map();
   const stateByQuestionId = new Map();
+  const mathEntry = createMathEntryEnhancement({ inputGroup: fields.inputGroup, input: fields.input });
+  let selfReview = null;
 
   function stateFor(question) {
     if (!stateByQuestionId.has(question.id)) stateByQuestionId.set(question.id, makeBlankState());
@@ -101,6 +109,28 @@ export function createQuestionShell(root, {
   function currentQuestion() {
     return activeSet?.questions?.[questionIndex] ?? null;
   }
+
+  selfReview = createSelfReviewPanel({
+    beforeElement: fields.solutionPanel,
+    onCriterionChange(index, checked) {
+      const question = currentQuestion();
+      if (!question) return;
+      const state = stateFor(question);
+      if (checked) state.selfReviewCriteria.add(index);
+      else state.selfReviewCriteria.delete(index);
+      renderSelfReview(question, state);
+    },
+    onFocusChange(focusId, checked) {
+      const question = currentQuestion();
+      if (!question) return;
+      const state = stateFor(question);
+      if (checked) state.selfReviewFocus.add(focusId);
+      else state.selfReviewFocus.delete(focusId);
+    },
+    onOutcome(outcome) {
+      recordSelfReviewOutcome(outcome);
+    }
+  });
 
   function validateQuestion(question) {
     if (!question?.id || !questionResponseTypes.includes(question.responseType) || typeof question.check !== "function") {
@@ -149,6 +179,7 @@ export function createQuestionShell(root, {
     } else {
       fields.input.value = state.response;
     }
+    mathEntry.sync(fields.input.value);
   }
 
   function saveCurrentResponse() {
@@ -213,16 +244,30 @@ export function createQuestionShell(root, {
     fields.hintList.textContent = visibleHints.map((hint, index) => `${index + 1}. ${hint.text}`).join("\n\n");
   }
 
+  function renderSelfReview(question, state) {
+    const visible = isAo3SelfReviewQuestion(question) && state.selfReviewOpen;
+    selfReview?.render({
+      visible,
+      criteria: visible ? deriveSelfReviewCriteria(question) : [],
+      checkedCriteria: [...state.selfReviewCriteria],
+      focus: [...state.selfReviewFocus],
+      outcome: state.selfReviewOutcome
+    });
+  }
+
   function renderPanels(question, state) {
     renderHintPanel(question, state);
 
-    fields.solutionButton.disabled = !state.checked;
+    const selfReviewQuestion = isAo3SelfReviewQuestion(question);
+    const solutionAvailable = state.checked || (selfReviewQuestion && state.selfReviewOpen);
+    fields.solutionButton.disabled = !solutionAvailable;
     fields.solutionButton.setAttribute("aria-expanded", state.solutionOpen ? "true" : "false");
-    fields.solutionButton.textContent = state.solutionOpen ? "Hide worked solution" : "Worked solution";
+    fields.solutionButton.textContent = state.solutionOpen ? "Hide model solution" : (selfReviewQuestion ? "Model solution" : "Worked solution");
     fields.solutionPanel.hidden = !state.solutionOpen;
     solutionRenderer.render(question.solutionSteps);
 
-    fields.nextButton.disabled = !state.checked;
+    renderSelfReview(question, state);
+    fields.nextButton.disabled = selfReviewQuestion ? !state.selfReviewOutcome : !state.checked;
   }
 
   function renderOptions(question) {
@@ -284,7 +329,9 @@ export function createQuestionShell(root, {
     fields.input.inputMode = question.responseType === "numeric" ? "decimal" : "text";
     fields.reasoningLabel.textContent = question.responseLabel || "Your explanation";
     fields.reasoning.placeholder = question.placeholder || "Write a short explanation.";
+    fields.checkButton.textContent = isAo3SelfReviewQuestion(question) ? "Review my reasoning" : "Check answer";
 
+    mathEntry.setMode(question.responseType);
     renderOptions(question);
     writeResponse(question, state);
     renderFeedback(state);
@@ -333,6 +380,23 @@ export function createQuestionShell(root, {
       return state.feedback;
     }
 
+    if (isAo3SelfReviewQuestion(question)) {
+      state.selfReviewOpen = true;
+      state.solutionOpen = true;
+      state.feedback = {
+        tone: "info",
+        title: "Compare your reasoning",
+        message: "Use the checklist and model solution to judge your own response. The site will not guess whether your wording matches a hidden phrase.",
+        errorCategory: null
+      };
+      state.diagnostic = null;
+      renderFeedback(state);
+      renderDiagnostic(state);
+      renderPanels(question, state);
+      selfReview?.element?.scrollIntoView?.({ block: "nearest" });
+      return state.feedback;
+    }
+
     const result = question.check(state.response) ?? {};
     const tone = feedbackPresentation[result.tone] ? result.tone : "info";
     state.checked = true;
@@ -363,6 +427,44 @@ export function createQuestionShell(root, {
     return state.feedback;
   }
 
+  function recordSelfReviewOutcome(outcome) {
+    const question = currentQuestion();
+    if (!question || !isAo3SelfReviewQuestion(question)) return null;
+    const state = stateFor(question);
+    if (!state.selfReviewOpen) return null;
+
+    const secure = outcome === "secure";
+    state.selfReviewOutcome = secure ? "secure" : "needs-review";
+    state.checked = true;
+    state.selfReviewAttemptCount += 1;
+    state.feedback = secure
+      ? { tone: "correct", title: "Self-review complete", message: "You have checked your reasoning against the model and the success criteria.", errorCategory: null }
+      : { tone: "warning", title: "Revise before moving on", message: "Use the points you selected to improve your response, then review it again.", errorCategory: null };
+
+    const attemptBase = {
+      setId: activeSet.id,
+      questionId: question.id,
+      responseType: question.responseType,
+      response: state.response,
+      templateId: question.templateId ?? null,
+      generationSeed: question.generationSeed ?? null,
+      metadata: question.metadata ?? null,
+      tone: state.feedback.tone,
+      success: secure,
+      errorCategory: null,
+      selfReviewed: true,
+      selfReviewOutcome: state.selfReviewOutcome,
+      selfReviewCriteria: [...state.selfReviewCriteria],
+      selfReviewFocus: [...state.selfReviewFocus]
+    };
+    state.diagnostic = secure ? null : (resolveDiagnostic(attemptBase) ?? null);
+    renderFeedback(state);
+    renderDiagnostic(state);
+    renderPanels(question, state);
+    onAttempt(Object.freeze({ ...attemptBase, diagnostic: state.diagnostic }));
+    return state.feedback;
+  }
+
   function moveNext() {
     const question = currentQuestion();
     if (!question) return;
@@ -374,7 +476,10 @@ export function createQuestionShell(root, {
     render({ focus: true });
   }
 
-  fields.input.addEventListener("input", saveCurrentResponse);
+  fields.input.addEventListener("input", () => {
+    saveCurrentResponse();
+    mathEntry.sync(fields.input.value);
+  });
   fields.reasoning.addEventListener("input", saveCurrentResponse);
   fields.choiceGroup.addEventListener("change", saveCurrentResponse);
   fields.input.addEventListener("keydown", (event) => {
@@ -434,7 +539,11 @@ export function createQuestionShell(root, {
         diagnostic: state.diagnostic ? { ...state.diagnostic } : null,
         hintOpen: state.hintsRevealed > 0,
         hintsRevealed: state.hintsRevealed,
-        solutionOpen: state.solutionOpen
+        solutionOpen: state.solutionOpen,
+        selfReviewOpen: state.selfReviewOpen,
+        selfReviewCriteria: [...state.selfReviewCriteria],
+        selfReviewFocus: [...state.selfReviewFocus],
+        selfReviewOutcome: state.selfReviewOutcome
       });
     }
   });
