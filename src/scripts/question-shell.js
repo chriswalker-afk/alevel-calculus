@@ -1,5 +1,6 @@
 import { createQuestionVisualRenderer } from "./question-visual-renderer.js";
 import { createSpecialQuestionVisualRenderer, isSpecialInteractiveQuestionVisual } from "./question-special-visual-renderer.js";
+import { createConceptQuestionVisualRenderer, isConceptInteractiveQuestionVisual } from "./question-concept-visual-renderer.js";
 import {
   getHintActionLabel,
   getHintProgressLabel,
@@ -111,12 +112,23 @@ export function createQuestionShell(root, {
   const specialVisualRenderer = createSpecialQuestionVisualRenderer(fields.visual, {
     onResponseChange: handleVisualResponseChange
   });
+  const conceptVisualRenderer = createConceptQuestionVisualRenderer(fields.visual, {
+    onResponseChange: handleVisualResponseChange
+  });
 
   function handlesInteractiveVisual(question) {
-    return visualRenderer.handlesResponse(question) || isSpecialInteractiveQuestionVisual(question);
+    return visualRenderer.handlesResponse(question)
+      || isSpecialInteractiveQuestionVisual(question)
+      || isConceptInteractiveQuestionVisual(question);
   }
 
   function renderInteractiveVisual(question, response) {
+    if (isConceptInteractiveQuestionVisual(question)) {
+      visualRenderer.clear();
+      specialVisualRenderer.clear();
+      return conceptVisualRenderer.render(question, { response });
+    }
+    conceptVisualRenderer.clear();
     if (isSpecialInteractiveQuestionVisual(question)) {
       visualRenderer.clear();
       return specialVisualRenderer.render(question, { response });
@@ -330,7 +342,8 @@ export function createQuestionShell(root, {
 
   function focusResponse(question) {
     if (handlesInteractiveVisual(question)) {
-      if (isSpecialInteractiveQuestionVisual(question)) specialVisualRenderer.focusResponse();
+      if (isConceptInteractiveQuestionVisual(question)) conceptVisualRenderer.focusResponse();
+      else if (isSpecialInteractiveQuestionVisual(question)) specialVisualRenderer.focusResponse();
       else visualRenderer.focusResponse();
       return;
     }
@@ -399,6 +412,7 @@ export function createQuestionShell(root, {
     if (activeSet) setIndex.set(activeSet.id, questionIndex);
     visualRenderer.clear();
     specialVisualRenderer.clear();
+    conceptVisualRenderer.clear();
     root.hidden = true;
   }
 
