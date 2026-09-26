@@ -1,0 +1,49 @@
+{
+  "step": 51,
+  "reference": "Step 36 frozen Basics/QuestionShell/MemoryLab files",
+  "passed": true,
+  "files": [
+    {
+      "file": "src/scripts/basics-understand.js",
+      "expected": "cf4aa7477f10f334da8c29030090e9a42714f26cb44227392c20cd5df3d2601f",
+      "actual": "cf4aa7477f10f334da8c29030090e9a42714f26cb44227392c20cd5df3d2601f",
+      "unchanged": true
+    },
+    {
+      "file": "src/scripts/sample-activities.js",
+      "expected": "bfc57d979b001637ff559b9d3596c7275938ed46d216a750d6d00ef0c618f04e",
+      "actual": "bfc57d979b001637ff559b9d3596c7275938ed46d216a750d6d00ef0c618f04e",
+      "unchanged": true
+    },
+    {
+      "file": "src/scripts/question-shell.js",
+      "expected": "f9c448abd9d3599d54263903b024c3299088331d9436d34a48c79dd7b1ff9dfe",
+      "actual": "f9c448abd9d3599d54263903b024c3299088331d9436d34a48c79dd7b1ff9dfe",
+      "unchanged": true
+    },
+    {
+      "file": "src/scripts/memory-lab.js",
+      "expected": "bc56f05bedb571111ce50b397f9840233c0ceb9c63e45dee2850b4bf9de653fe",
+      "actual": "bc56f05bedb571111ce50b397f9840233c0ceb9c63e45dee2850b4bf9de653fe",
+      "unchanged": true
+    },
+    {
+      "file": "src/styles/basics-understand.css",
+      "expected": "f1535235f860ff49c4660ff53c32d853f0e923b738010fd35b3cc9a5c994e769",
+      "actual": "f1535235f860ff49c4660ff53c32d853f0e923b738010fd35b3cc9a5c994e769",
+      "unchanged": true
+    },
+    {
+      "file": "src/styles/question-shell.css",
+      "expected": "ea0b79c61a31be3cebb5633df56ea58b9b62675b9af4eb2568c1baa6aba13706",
+      "actual": "ea0b79c61a31be3cebb5633df56ea58b9b62675b9af4eb2568c1baa6aba13706",
+      "unchanged": true
+    },
+    {
+      "file": "src/styles/memory-lab.css",
+      "expected": "69974e2cad0b2f404da0cc8c6055ffb8f55be0512f48472d5ad208738ee4afb2",
+      "actual": "69974e2cad0b2f404da0cc8c6055ffb8f55be0512f48472d5ad208738ee4afb2",
+      "unchanged": true
+    }
+  ]
+}

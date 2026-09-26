@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Step 29 — Rate-Flow Diagram</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/diagram-primitives.css">
+  <link rel="stylesheet" href="styles/rate-flow-diagram.css">
+  <style>
+    body{margin:0;background:var(--surface-subtle);font-family:var(--font-ui);color:var(--text-primary)}
+    main{width:min(1180px,calc(100% - 32px));margin:32px auto 56px}
+    .demo-head{margin-bottom:20px}.demo-head h1{margin:0 0 8px}.demo-head p{max-width:78ch;margin:0;color:var(--text-secondary)}
+    .demo-card{padding:20px;border:1px solid var(--border-default);border-radius:var(--radius-xl);background:var(--surface-base)}
+  </style>
+</head>
+<body>
+<main>
+  <header class="demo-head">
+    <h1>Rate-Flow Diagram</h1>
+    <p>Arrange the variables before orienting each derivative. Arrow direction shows dependency; the derivative must put the quantity being changed in the numerator. Known, unknown and relationship-derived rates use both words and distinct shapes.</p>
+  </header>
+  <section class="demo-card"><div id="rate-flow-demo"></div></section>
+</main>
+<script type="module" src="scripts/rate-flow-diagram-demo.js"></script>
+</body>
+</html>

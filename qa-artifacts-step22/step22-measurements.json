@@ -1,0 +1,280 @@
+{
+  "reference": {
+    "docW": 1440,
+    "docH": 900,
+    "innerW": 1440,
+    "innerH": 900,
+    "shell": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "nav": {
+      "x": 16,
+      "y": 80,
+      "w": 248,
+      "h": 804
+    },
+    "workspace": {
+      "x": 280,
+      "y": 80,
+      "w": 1144,
+      "h": 804
+    },
+    "stage": {
+      "x": 297,
+      "y": 184,
+      "w": 1110,
+      "h": 611
+    },
+    "controls": {
+      "x": 281,
+      "y": 811,
+      "w": 1142,
+      "h": 72
+    },
+    "panel": null
+  },
+  "viewports": {
+    "desktop": {
+      "docW": 1440,
+      "docH": 900,
+      "innerW": 1440,
+      "innerH": 900,
+      "shell": {
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 900
+      },
+      "nav": {
+        "x": 16,
+        "y": 80,
+        "w": 248,
+        "h": 804
+      },
+      "workspace": {
+        "x": 280,
+        "y": 80,
+        "w": 1144,
+        "h": 804
+      },
+      "stage": {
+        "x": 297,
+        "y": 184,
+        "w": 1110,
+        "h": 611
+      },
+      "controls": {
+        "x": 281,
+        "y": 811,
+        "w": 1142,
+        "h": 72
+      },
+      "panel": {
+        "x": 940,
+        "y": 64,
+        "w": 500,
+        "h": 836
+      },
+      "open": "true",
+      "switch": {
+        "model": "fx-991EX",
+        "radiansHidden": true,
+        "help": "Checking the numerical value of a definite integral after the exact method has been set up.",
+        "docW": 1440,
+        "innerW": 1440
+      }
+    },
+    "tablet": {
+      "docW": 768,
+      "docH": 1024,
+      "innerW": 768,
+      "innerH": 1024,
+      "shell": {
+        "x": 0,
+        "y": 0,
+        "w": 768,
+        "h": 1024
+      },
+      "nav": {
+        "x": -336,
+        "y": 0,
+        "w": 320,
+        "h": 1024
+      },
+      "workspace": {
+        "x": 12,
+        "y": 81,
+        "w": 744,
+        "h": 931
+      },
+      "stage": {
+        "x": 29,
+        "y": 185,
+        "w": 710,
+        "h": 738
+      },
+      "controls": {
+        "x": 13,
+        "y": 939,
+        "w": 742,
+        "h": 72
+      },
+      "panel": {
+        "x": 268,
+        "y": 69,
+        "w": 500,
+        "h": 955
+      },
+      "open": "true",
+      "switch": {
+        "model": "fx-991EX",
+        "radiansHidden": true,
+        "help": "Checking the numerical value of a definite integral after the exact method has been set up.",
+        "docW": 768,
+        "innerW": 768
+      }
+    },
+    "phone": {
+      "docW": 390,
+      "docH": 844,
+      "innerW": 390,
+      "innerH": 844,
+      "shell": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 844
+      },
+      "nav": {
+        "x": -320,
+        "y": 0,
+        "w": 304,
+        "h": 844
+      },
+      "workspace": {
+        "x": 8,
+        "y": 105,
+        "w": 374,
+        "h": 731
+      },
+      "stage": {
+        "x": 17,
+        "y": 241.59375,
+        "w": 356,
+        "h": 523.40625
+      },
+      "controls": {
+        "x": 9,
+        "y": 773,
+        "w": 372,
+        "h": 62
+      },
+      "panel": {
+        "x": 0,
+        "y": 97,
+        "w": 390,
+        "h": 747
+      },
+      "open": "true",
+      "switch": {
+        "model": "fx-991EX",
+        "radiansHidden": true,
+        "help": "Checking the numerical value of a definite integral after the exact method has been set up.",
+        "docW": 390,
+        "innerW": 390
+      }
+    }
+  },
+  "interaction": {
+    "questionState": {
+      "before": {
+        "value": "preserve-me",
+        "open": "true"
+      },
+      "after": {
+        "value": "preserve-me",
+        "open": "false"
+      },
+      "focusBack": true
+    }
+  },
+  "current": {
+    "docW": 1440,
+    "docH": 900,
+    "innerW": 1440,
+    "innerH": 900,
+    "shell": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900
+    },
+    "nav": {
+      "x": 16,
+      "y": 80,
+      "w": 248,
+      "h": 804
+    },
+    "workspace": {
+      "x": 280,
+      "y": 80,
+      "w": 1144,
+      "h": 804
+    },
+    "stage": {
+      "x": 297,
+      "y": 184,
+      "w": 1110,
+      "h": 611
+    },
+    "controls": {
+      "x": 281,
+      "y": 811,
+      "w": 1142,
+      "h": 72
+    },
+    "panel": {
+      "x": 1456,
+      "y": 64,
+      "w": 500,
+      "h": 836
+    },
+    "open": "false"
+  },
+  "geometryDelta": {
+    "shell": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "nav": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "workspace": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "stage": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "controls": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    }
+  },
+  "exceptionEvents": []
+}

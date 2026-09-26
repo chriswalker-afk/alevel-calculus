@@ -1,0 +1,22 @@
+{
+  "src/index.html": {
+    "step25_sha256": "7b974c1dad369387d27169b9b579f2a1be0465b11e2466b7f3955ca90c26b3bd",
+    "step26_sha256": "7b974c1dad369387d27169b9b579f2a1be0465b11e2466b7f3955ca90c26b3bd",
+    "identical": true
+  },
+  "src/styles/app-shell.css": {
+    "step25_sha256": "b245a4391a76b06b38a4acd98792de7ecbf8b7012728a2be117eda3ee57dcc9e",
+    "step26_sha256": "b245a4391a76b06b38a4acd98792de7ecbf8b7012728a2be117eda3ee57dcc9e",
+    "identical": true
+  },
+  "src/styles/tokens.css": {
+    "step25_sha256": "dd7d6f206971315373b062e813d45bddd2383bf2ec35eff16f807a48cea576d5",
+    "step26_sha256": "dd7d6f206971315373b062e813d45bddd2383bf2ec35eff16f807a48cea576d5",
+    "identical": true
+  },
+  "src/scripts/app-shell.js": {
+    "step25_sha256": "043f30795c23f388533855c05a874a09d5b4a0f7c68182de6eb0e68f313eaa8c",
+    "step26_sha256": "043f30795c23f388533855c05a874a09d5b4a0f7c68182de6eb0e68f313eaa8c",
+    "identical": true
+  }
+}

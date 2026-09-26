@@ -1,0 +1,13 @@
+PASS static AppShell, shared QuestionShell, staged hints, structured worked solutions and persistence checks
+file:///mnt/data/calc49/Calculus_Website_New_Chat_Handoff_After_Step_48_2026-09-25/runtime/calculus-site/src/scripts/topic-metadata.js:142
+        throw new Error(`Support target ${activityId} must include ${microSkill.microSkillId}.`);
+              ^
+
+Error: Support target activity:y13:differentiation:trig-first-principles:memorise:proof-sequence must include skill:y13:differentiation:trig-first-principles:cosine-derivation.
+    at defineTopicMetadata (file:///mnt/data/calc49/Calculus_Website_New_Chat_Handoff_After_Step_48_2026-09-25/runtime/calculus-site/src/scripts/topic-metadata.js:142:15)
+    at file:///mnt/data/calc49/Calculus_Website_New_Chat_Handoff_After_Step_48_2026-09-25/runtime/calculus-site/src/scripts/topic-content/trig-first-principles.js:5:39
+    at ModuleJob.run (node:internal/modules/esm/module_job:274:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+    at async file:///mnt/data/calc49/Calculus_Website_New_Chat_Handoff_After_Step_48_2026-09-25/runtime/calculus-site/tests/appshell_dom_test.mjs:465:1
+
+Node.js v22.16.0

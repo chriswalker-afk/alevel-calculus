@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/mnt/data/calc49/Calculus_Website_New_Chat_Handoff_After_Step_48_2026-09-25/runtime/calculus-site/tests/test_appshell.py", line 239, in <module>
+    assert html.count("data-topic-progress-item") == 20, "Expected compact progress on all sample topic entries"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Expected compact progress on all sample topic entries

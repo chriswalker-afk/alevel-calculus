@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rectangle-Sum Explorer - Step 30</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/diagram-primitives.css">
+  <link rel="stylesheet" href="styles/rectangle-sum-explorer.css">
+  <style>
+    body { margin: 0; background: #f4f6fa; color: #172033; font-family: system-ui, sans-serif; }
+    main { width: min(1180px, calc(100% - 2rem)); margin: 0 auto; padding: 1.5rem 0 2rem; }
+    .demo-heading { margin-bottom: 1rem; }
+    .demo-heading h1 { margin: 0 0 .35rem; font-size: clamp(1.5rem, 3vw, 2.2rem); }
+    .demo-heading p { margin: .25rem 0; max-width: 80ch; color: #526075; }
+    .demo-checks { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+    .demo-checks span { background: white; border: 1px solid #d7dce5; border-radius: 999px; padding: .35rem .65rem; font-size: .9rem; }
+  </style>
+</head>
+<body data-learning-mode="understand">
+  <main>
+    <section class="demo-heading">
+      <h1>Step 30 - Rectangle-Sum Explorer</h1>
+      <p>Move from one rectangle to several and then many. Change the sample location to see how each rectangle height is chosen, while the fixed axes make convergence toward the exact definite integral visible rather than hidden by rescaling.</p>
+      <div class="demo-checks" aria-label="Validation cases">
+        <span>1 → several → many rectangles</span>
+        <span>Left / midpoint / right samples</span>
+        <span>Δx=(b−a)/n</span>
+        <span>Finite sum vs exact integral</span>
+        <span>Sum components → integral notation</span>
+      </div>
+    </section>
+    <div id="rectangle-sum-explorer-demo"></div>
+  </main>
+  <script type="module" src="scripts/rectangle-sum-explorer-demo.js"></script>
+</body>
+</html>

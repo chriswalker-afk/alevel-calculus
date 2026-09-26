@@ -1,0 +1,26 @@
+Calculus Website quality harness - project root: /mnt/data/step31_harness_root
+========================================================================
+PASS  calculus-design-tokens.json - valid JSON
+PASS  calculus-design-tokens.css - readable CSS
+PASS  design-token modes - ao1, ao2, ao3, mastery, memorise, understand
+PASS  design-token scopes - fullAlevel, y12, y13Additional
+PASS  locked colour contrast - mode and feedback foreground/background pairs >= 4.5:1
+PASS  CSS/JSON token parity - mode and scope aliases match JSON
+PASS  reduced-motion override - present
+PASS  calculus-route-topic-metadata.schema.json - valid JSON
+PASS  calculus-route-examples.json - valid JSON
+PASS  route metadata validator - Schema: PASS | Topics: 2 unique | Micro-skills: 2 unique | Activities/routes: 2 unique | PASS /y12/differentiation/first-principles/understand/chord-gradient | -> activity:y12:differentiation:first-principles:understand:chord-gradient | PASS /y13/integration/substitution/ao1/change-limits | -> activity:y13:integration:substitution:ao1:change-limits | Shared route shape: PASS (5 segments each)
+PASS  smoke-routes.json - valid JSON
+PASS  smoke route shape - 2 routes use canonical five-segment form
+PASS  smoke route metadata binding - every smoke route maps to its declared activityId
+PASS  reuse registry canonical entries - AppShell, AreaExplorer, BuildRuleEngine, ChordToTangentExplorer, ClassWizSupportPanel, CourseScopeMetadata, DesignTokens, DiagnosticRouter, DiagramPrimitives, DiagramRecallEngine, EquationStepRenderer, FamilyOfCurvesExplorer, FlashcardEngine, GeneratorRunner, HelpDrawer, HintSequence, ImpostorEngine, LearnView, LinkedFunctionGradientExplorer, LocalStateStore, MasteryFeedbackModel, MatchEngine, MemoryItem, MemoryLab, MemoryMixEngine, MissingPieceEngine, ParametricCurveTracer, ProgressIndicator, ProgressStore, QualityHarness, QuestionDefinition, QuestionShell, RapidRecallEngine, RateFlowDiagram, RectangleSumExplorer, RouteMetadata, ScopeBadge, SolutionStep, SortEngine, TopicMetadata, TopicNavigation, TrapeziumRuleBuilder, VocabularyStore, VocabularyTerm, WordBankDrawer, WorkedSolutionRenderer
+PASS  implementation-log continuity - Steps 1-31 present once and Complete
+PASS  qa/MANUAL_QA_CHECKLIST.md - present
+PASS  qa/README.md - present
+PASS  qa/run-quality-checks.sh - present
+PASS  runtime-checks.json - valid JSON
+PASS  runtime build - command exited 0
+PASS  runtime automated tests - command exited 0
+========================================================================
+SUMMARY: 21 passed, 0 failed, 0 skipped
+QUALITY HARNESS: PASS

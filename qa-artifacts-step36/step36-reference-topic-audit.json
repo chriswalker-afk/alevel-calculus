@@ -1,0 +1,16 @@
+{
+  "duplicateIds": {},
+  "unlabelledFormControls": [],
+  "modeTabs": [
+    "understand",
+    "memorise",
+    "ao1",
+    "ao2",
+    "ao3"
+  ],
+  "hasHelpDrawer": true,
+  "hasWordBankDrawer": true,
+  "hasQuestionShell": true,
+  "hasMemoryLab": true,
+  "browserVisualQA": "blocked: net::ERR_BLOCKED_BY_ADMINISTRATOR"
+}

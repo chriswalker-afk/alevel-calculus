@@ -1,0 +1,36 @@
+.parametric-tracer { display:grid; gap:var(--space-4,1rem); color:var(--color-text,#172033); }
+.parametric-tracer__controls { display:grid; grid-template-columns:minmax(220px,.8fr) minmax(360px,1.4fr); gap:.9rem; align-items:end; }
+.parametric-tracer__select-label { display:grid; gap:.4rem; font-weight:700; }
+.parametric-tracer__select { min-height:44px; width:100%; border:1px solid var(--color-border,#cbd5e1); border-radius:.65rem; padding:.55rem .7rem; background:var(--color-surface,#fff); color:inherit; }
+.parametric-tracer__stages { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.45rem; }
+.parametric-tracer__stage-button { min-height:44px; border:1px solid var(--color-border-strong,#94a3b8); border-radius:.65rem; padding:.5rem .55rem; background:var(--color-surface,#fff); color:inherit; font:inherit; font-weight:750; cursor:pointer; }
+.parametric-tracer__stage-button.is-active { border-color:var(--mode-accent,#3157a4); background:var(--mode-accent,#3157a4); color:var(--mode-accent-text,#fff); }
+.parametric-tracer__interval-panel { display:grid; gap:.65rem; border:1px solid var(--color-border,#d7dce5); border-radius:.9rem; padding:.8rem .9rem; background:var(--color-surface,#fff); }
+.parametric-tracer__interval-controls { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.8rem; }
+.parametric-tracer__card { border:1px solid var(--color-border,#d7dce5); border-radius:1rem; background:var(--color-surface,#fff); overflow:hidden; }
+.parametric-tracer__card-heading { display:flex; justify-content:space-between; gap:1rem; align-items:baseline; padding:.85rem 1rem .15rem; }
+.parametric-tracer__title { margin:0; font-size:1rem; }
+.parametric-tracer__expression { margin:0; font-weight:700; color:var(--color-text-muted,#526075); white-space:pre-wrap; }
+.parametric-tracer__diagram { min-width:0; }
+.parametric-tracer .diagram-primitives__tone--parametric-muted { color:#98A2B3; }
+.parametric-tracer .diagram-primitives__tone--direction { color:#175CD3; }
+.parametric-tracer .diagram-primitives__tone--interval { color:#6941C6; }
+.parametric-tracer .diagram-primitives__tone--parametric-area-positive { color:#0F766E; }
+.parametric-tracer .diagram-primitives__tone--parametric-area-negative { color:#B54708; }
+.parametric-tracer__full-curve { opacity:.28; stroke-dasharray:6 8; }
+.parametric-tracer__active-curve { stroke-width:4px; }
+.parametric-tracer__point-label,.parametric-tracer__interval-label { font-weight:800; paint-order:stroke; stroke:var(--color-surface,#fff); stroke-width:5px; stroke-linejoin:round; }
+.parametric-tracer__legend { display:flex; flex-wrap:wrap; gap:.55rem; padding:.15rem 1rem .85rem; color:var(--color-text-muted,#526075); font-size:.9rem; }
+.parametric-tracer__legend span { display:inline-flex; align-items:center; gap:.35rem; border:1px solid var(--color-border,#d7dce5); border-radius:999px; padding:.3rem .6rem; }
+.parametric-tracer__legend b { color:#175CD3; font-size:1.2rem; }
+.parametric-tracer__legend i { width:1.4rem; border-top:3px solid currentColor; display:inline-block; }
+.parametric-tracer__readout { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:.6rem; }
+.parametric-tracer__metric { display:grid; gap:.2rem; border:1px solid var(--color-border,#d7dce5); border-radius:.8rem; padding:.65rem .75rem; background:var(--color-surface,#fff); min-width:0; }
+.parametric-tracer__metric span { color:var(--color-text-muted,#526075); font-size:.78rem; font-weight:700; }
+.parametric-tracer__metric strong { font-size:1rem; overflow-wrap:anywhere; }
+.parametric-tracer__note { margin:0; color:var(--color-text-muted,#526075); }
+@media (max-width:980px) { .parametric-tracer__controls { grid-template-columns:1fr; } .parametric-tracer__readout { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media (max-width:720px) { .parametric-tracer__stages,.parametric-tracer__interval-controls { grid-template-columns:1fr 1fr; } .parametric-tracer__readout { grid-template-columns:repeat(2,minmax(0,1fr)); } .parametric-tracer__card-heading { display:grid; } }
+@media (max-width:480px) { .parametric-tracer__stages,.parametric-tracer__interval-controls,.parametric-tracer__readout { grid-template-columns:1fr; } }
+
+.parametric-tracer__teaching-strip{stroke-width:2px}.parametric-tracer__dx-label{font-weight:800;paint-order:stroke;stroke:var(--color-surface,#fff);stroke-width:5px}

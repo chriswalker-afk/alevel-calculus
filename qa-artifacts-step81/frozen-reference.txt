@@ -1,0 +1,1 @@
+PASS Step 36 reference-topic regression/design-freeze contract across all five modes

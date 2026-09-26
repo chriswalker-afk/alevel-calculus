@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import { concavityInflectionTopic } from '../src/scripts/topic-content/concavity-inflection.js';
+import { concavityInflectionLearningModes } from '../src/scripts/concavity-inflection-activities.js';
+import { concavityFromSecondDerivative, hasInflectionBySignChange } from '../src/scripts/concavity-inflection-understand.js';
+import { createPolynomialFunctionDefinition } from '../src/scripts/linked-function-gradient-explorer.js';
+import { getQuestionSetDefinitionForActivity } from '../src/scripts/question-catalogue.js';
+import { createGeneratorRunner } from '../src/scripts/generator-runner.js';
+import { getMemoryItemsForTopic } from '../src/scripts/memory-content.js';
+import { getMemoryGamePackForTopic } from '../src/scripts/memory-game-content.js';
+import { getMemoryReviewPackForTopic } from '../src/scripts/memory-review-content.js';
+import { getSupportTargetForMicroSkill } from '../src/scripts/help-content.js';
+assert.equal(concavityInflectionTopic.sequence,240); assert.deepEqual(concavityInflectionTopic.modes,['understand','memorise','ao1','ao2','ao3']);
+assert.equal(concavityFromSecondDerivative(-2),'concave'); assert.equal(concavityFromSecondDerivative(2),'convex'); assert.match(concavityFromSecondDerivative(0),/candidate/);
+const cubic=createPolynomialFunctionDefinition({id:'c',label:'c',coefficients:[0,0,0,1]}); const quartic=createPolynomialFunctionDefinition({id:'q',label:'q',coefficients:[0,0,0,0,1]});
+assert.equal(hasInflectionBySignChange(cubic,0),true); assert.equal(hasInflectionBySignChange(quartic,0),false);
+for(const mode of ['understand','memorise','ao1','ao2','ao3']) assert.ok(concavityInflectionLearningModes[mode].activities.length>0);
+const questionActivities=concavityInflectionTopic.activities.filter(a=>a.activityType==='question-set'); const runner=createGeneratorRunner({debugSeed:'step57'});
+for(const a of questionActivities){const set=getQuestionSetDefinitionForActivity(a.activityId); assert.ok(set,`missing set ${a.activityId}`); const generated=runner.generateSet(set); assert.ok(generated.questions.length>0); assert.ok(generated.questions.every(q=>q.metadata.topicId===concavityInflectionTopic.topicId));}
+assert.ok(getMemoryItemsForTopic(concavityInflectionTopic.topicId).length>=6); assert.ok(getMemoryGamePackForTopic(concavityInflectionTopic.topicId)); assert.ok(getMemoryReviewPackForTopic(concavityInflectionTopic.topicId));
+const help=getSupportTargetForMicroSkill('skill:y13:differentiation:concavity-inflection:inflection-sign-change','understand'); assert.equal(help.activityId,'activity:y13:differentiation:concavity-inflection:understand:inflection-test');
+const src=await import('node:fs/promises').then(fs=>fs.readFile(new URL('../src/scripts/concavity-inflection-understand.js',import.meta.url),'utf8')); assert.match(src,/createLinkedFunctionGradientExplorer/); assert.match(src,/revealSecondDerivative:true/); assert.match(src,/zero second derivative is only a candidate/); assert.match(src,/sign change/);
+console.log('Step 57 concavity/inflection contract: PASS');

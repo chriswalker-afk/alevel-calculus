@@ -1,0 +1,45 @@
+PASS static AppShell, shared QuestionShell, staged hints, structured worked solutions and persistence checks
+PASS AppShell responsive navigation, ModeTabs, HelpDrawer, WordBank, QuestionShell, MemoryLab and progress-data controls
+PASS LocalStateStore versioned persistence, refresh, export/import and reset checks
+PASS ProgressStore visit/attempt/completion/security separation checks
+PASS shared topic progress selectors now read persisted ProgressStore completion state
+PASS HelpDrawer exact support target metadata
+PASS VocabularyStore persistent encounter, first-context and review checks
+PASS Word Bank metadata join, search and scope/review filter checks
+PASS TopicMetadata and Basics of Differentiation Step 32 content model
+PASS QuestionDefinition contract, deterministic GeneratorRunner, 240-question quality batch and mixed-consumer reuse
+PASS staged HintSequence, structured SolutionStep rendering and error-category feedback hooks
+PASS shared QuestionShell consumes generated AO1/AO2 QuestionDefinition objects and preserves state
+PASS DiagnosticRouter distinguishes recognition/execution and resolves exact existing support routes
+PASS MasteryFeedbackModel aggregates tagged strengths/weaknesses and separates recognition from execution
+PASS ClassWiz support pack model-specific derivative/integral guidance and conditional RADIAN reminder
+PASS MemoryItem contract and shared Basics memory bank
+PASS FlashcardEngine deck reuses MemoryItem content in both directions
+PASS MatchEngine rounds consume the shared MemoryItem bank
+PASS declarative Build, Missing Piece, Sort and Impostor game contracts
+PASS Build, Missing Piece, Sort and Impostor engines report attempt/security/completion evidence
+PASS RapidRecallEngine derives one-at-a-time retrieval from MemoryItem content with optional timer
+PASS DiagramRecallEngine renders declarative callouts and reports accessible label-recall evidence
+PASS MemoryMixEngine orchestrates varied existing engines and aggregates review security/completion
+DiagramPrimitives contract checks passed.
+LinkedFunctionGradientExplorer tests passed.
+ChordToTangentExplorer tests passed.
+FamilyOfCurvesExplorer tests passed.
+AreaExplorer tests passed.
+ParametricCurveTracer tests passed.
+RateFlowDiagram tests passed.
+RectangleSumExplorer tests passed.
+TrapeziumRuleBuilder tests passed.
+PASS Basics Understand eight-state reference journey and linked polynomial contract
+PASS Basics Step 34 Memorise facts, reusable retrieval coverage and VocabularyTerm wiring
+PASS Basics Step 35 AO1/AO2/AO3 generated batches, mathematics, metadata and mode separation
+PASS Step 36 reference-topic regression/design-freeze contract across all five modes
+PASS Step 37 Pre-calculus understanding-only gradient journey
+PASS Step 38 Differentiation from First Principles Understand journey
+PASS Step 39 First Principles Memorise/AO1-AO3 shared-memory, assessment and diagnostic contracts
+PASS Step 40 Tangents and Normals all-mode, shared-visual, memory, assessment and special-case contracts
+Step 41 stationary-points Understand contract passed.
+PASS Step 42 Stationary/Turning Points Memorise/AO1-AO3, shared-memory, generated-assessment and classification contracts
+PASS Step 43 Increasing/Decreasing appearance-first, interval-selection, memory, assessment and algebra-agreement contracts
+PASS Step 44 Introduction to Integration reverse-differentiation, +C motivation, Memory Lab and AO contracts
+PASS Step 45 Definite/Indefinite Integration family-vs-number, evaluate, C-cancellation and limit-property contracts

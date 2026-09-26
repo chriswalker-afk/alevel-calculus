@@ -1,0 +1,37 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { productQuotientChainTopic } from '../src/scripts/topic-content/product-quotient-chain.js';
+import { productQuotientChainLearningModes } from '../src/scripts/product-quotient-chain-activities.js';
+import { getMemoryItemsForTopic } from '../src/scripts/memory-content.js';
+import { getMemoryGamePackForTopic } from '../src/scripts/memory-game-content.js';
+import { getMemoryReviewPackForTopic } from '../src/scripts/memory-review-content.js';
+import { getQuestionSetDefinitionForActivity } from '../src/scripts/question-catalogue.js';
+import { createGeneratorRunner } from '../src/scripts/generator-runner.js';
+import { getSupportTargetForMicroSkill } from '../src/scripts/help-content.js';
+
+assert.deepEqual(productQuotientChainTopic.modes,['understand','memorise','ao1','ao2','ao3']);
+for (const mode of productQuotientChainTopic.modes) assert.ok(productQuotientChainLearningModes[mode].activities.length>0,mode);
+assert.equal(productQuotientChainTopic.activities.filter(a=>a.mode==='memorise').length,6);
+assert.equal(productQuotientChainTopic.activities.filter(a=>a.mode==='ao1').length,5);
+assert.equal(productQuotientChainTopic.activities.filter(a=>a.mode==='ao2').length,3);
+assert.equal(productQuotientChainTopic.activities.filter(a=>a.mode==='ao3').length,1);
+const memory=getMemoryItemsForTopic(productQuotientChainTopic.topicId);
+assert.ok(memory.length>=13);
+assert.ok(memory.some(x=>x.learn.notation.includes('vu′−uv′')));
+assert.ok(memory.some(x=>x.learn.statement.toLowerCase().includes('derivative of the inside')));
+const games=getMemoryGamePackForTopic(productQuotientChainTopic.topicId); assert.ok(games);
+assert.equal(games.missingPiece.answerId,'3'); assert.equal(games.impostor.answerId,'c');
+assert.ok(getMemoryReviewPackForTopic(productQuotientChainTopic.topicId));
+for(const s of ['product-rule','quotient-rule','chain-rule','rule-selection','multi-rule-execution']) assert.ok(getSupportTargetForMicroSkill(`skill:y13:differentiation:product-quotient-chain:${s}`,'ao1') || getSupportTargetForMicroSkill(`skill:y13:differentiation:product-quotient-chain:${s}`,'memorise') || getSupportTargetForMicroSkill(`skill:y13:differentiation:product-quotient-chain:${s}`,'understand'),s);
+const runner=createGeneratorRunner({debugSeed:'step53'});
+const assessed=productQuotientChainTopic.activities.filter(a=>['ao1','ao2','ao3'].includes(a.mode));
+for(const activity of assessed){const set=getQuestionSetDefinitionForActivity(activity.activityId);assert.ok(set,activity.activityId);const generated=runner.generateSet(set);assert.ok(generated.questions.length>0);for(const q of generated.questions){assert.equal(q.metadata.assessmentObjective,activity.mode);assert.ok(q.solutionSteps.length>0);}}
+const quotientSet=getQuestionSetDefinitionForActivity('activity:y13:differentiation:product-quotient-chain:ao2:diagnose-quotient-order');
+assert.ok(quotientSet.definitions[0].errorCategories.includes('quotient-order'));
+const chainSet=getQuestionSetDefinitionForActivity('activity:y13:differentiation:product-quotient-chain:ao2:diagnose-chain-factor');
+assert.ok(chainSet.definitions[0].errorCategories.includes('missing-chain-factor'));
+const mixedOne=getQuestionSetDefinitionForActivity('activity:y13:differentiation:product-quotient-chain:ao1:mixed-one-rule');
+assert.deepEqual(new Set(mixedOne.definitions.map(d=>d.microSkillId)),new Set(['skill:y13:differentiation:product-quotient-chain:product-rule','skill:y13:differentiation:product-quotient-chain:quotient-rule','skill:y13:differentiation:product-quotient-chain:chain-rule']));
+const app=fs.readFileSync(new URL('../src/scripts/app-shell.js',import.meta.url),'utf8');
+assert.match(app,/productQuotientChainMemoryLabHost/);assert.match(app,/productQuotientChainLearningModes, availableModes: Object\.freeze\(\[\.\.\.learningModeOrder\]\)/);
+console.log('PASS Step 53 product/quotient/chain Memory Lab, individual/mixed generators, explicit quotient/chain error categories and AO1-AO3 applications');

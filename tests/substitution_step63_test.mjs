@@ -1,0 +1,72 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import { substitutionTopic } from '../src/scripts/topic-content/substitution.js';
+import { substitutionLearningModes } from '../src/scripts/substitution-activities.js';
+import { SUBSTITUTION_CHECKLIST, SUBSTITUTION_CHOICE_GUIDANCE, SUBSTITUTION_EXAMPLES, REVERSE_CHAIN_SUBSTITUTION_SOURCE, REVERSE_CHAIN_TAG_SOURCE, SUBSTITUTION_METHOD_TAG } from '../src/scripts/substitution-data.js';
+import { REVERSE_CHAIN_RECOGNITION_EXAMPLES, INTEGRATION_RECOGNITION_TAGS } from '../src/scripts/reverse-chain-recognition-data.js';
+import { INTEGRATION_METHOD_TAGS } from '../src/scripts/trig-integration-data.js';
+import { createVariableTransformationWorkspace, validateTransformedIntegral } from '../src/scripts/variable-transformation-workspace.js';
+import { getSupportTargetForMicroSkill } from '../src/scripts/help-content.js';
+import { getVocabularyTerm } from '../src/scripts/vocabulary-data.js';
+
+const topicId='topic:y13:integration:substitution';
+assert.equal(substitutionTopic.topicId,topicId);
+assert.equal(substitutionTopic.sequence,300);
+assert.equal(substitutionTopic.modes[0],'understand','Step 63 Understand mode must remain the first substitution mode');
+assert.ok(substitutionTopic.prerequisiteTopicIds.includes('topic:y13:integration:reverse-chain-rule'));
+const step63Activities=substitutionTopic.activities.filter(a=>a.implementationStep===63);
+assert.equal(step63Activities.length,4);
+assert.ok(step63Activities.every(a=>a.mode==='understand'));
+assert.equal(substitutionLearningModes.understand.activities.length,4);
+assert.ok(substitutionLearningModes.understand,'Step 63 Understand learning mode must remain available');
+
+assert.equal(REVERSE_CHAIN_SUBSTITUTION_SOURCE,REVERSE_CHAIN_RECOGNITION_EXAMPLES,'Step 63 must reuse Step 61 recognition data by reference');
+assert.equal(REVERSE_CHAIN_TAG_SOURCE,INTEGRATION_RECOGNITION_TAGS.reverseChain);
+assert.equal(SUBSTITUTION_METHOD_TAG,INTEGRATION_METHOD_TAGS.substitution,'Step 63 must consume the Step 62 method tag');
+assert.equal(SUBSTITUTION_CHECKLIST.length,5);
+assert.ok(SUBSTITUTION_CHOICE_GUIDANCE.some(x=>x.cue==='inside'));
+assert.ok(SUBSTITUTION_CHOICE_GUIDANCE.some(x=>x.cue==='denominator'));
+assert.ok(SUBSTITUTION_CHOICE_GUIDANCE.some(x=>x.cue==='derivative'));
+for(const tag of ['vocab:substitution','vocab:differential']) assert.ok(getVocabularyTerm(tag),`missing ${tag}`);
+
+const compare=SUBSTITUTION_EXAMPLES.find(x=>x.id==='recognition-comparison');
+assert.equal(compare.recognitionSourceId,'power-exact');
+assert.equal(compare.resultX,'(3x²+4)^6/6 + C');
+const definite=SUBSTITUTION_EXAMPLES.find(x=>x.id==='definite-power');
+assert.deepEqual(definite.xLimits,{lower:'0',upper:'1'});
+assert.deepEqual(definite.uLimits,{lower:'1',upper:'2'});
+assert.equal(definite.resultX,null,'Definite substitution must stay in u after changing limits');
+assert.ok(SUBSTITUTION_EXAMPLES.some(x=>x.suggestedU==='3x+1'));
+assert.ok(SUBSTITUTION_EXAMPLES.some(x=>x.suggestedU==='x²+3'));
+assert.ok(SUBSTITUTION_EXAMPLES.some(x=>x.suggestedU==='2x²+3x+7'));
+assert.ok(SUBSTITUTION_EXAMPLES.filter(x=>!x.helpful).length>=2,'Need deliberately unhelpful proposals');
+
+const workspace=createVariableTransformationWorkspace('definite-power');
+assert.equal(workspace.stages[0].limits.lower,'0');
+assert.equal(workspace.stages[2].limits.lower,'1');
+assert.equal(workspace.stages.at(-1).variable,'u');
+assert.ok(workspace.stages.every((_,i)=>workspace.inspectStage(i).valid),'Canonical workspace stages must never mix variables');
+const mixed=validateTransformedIntegral({integrand:'∫ u cos(x²+1) du',differential:'du'});
+assert.equal(mixed.mixed,true);
+assert.equal(mixed.valid,false,'Workspace must refuse mixed x/u states');
+const wrongDx=validateTransformedIntegral({integrand:'∫ u^3',differential:'dx'});
+assert.equal(wrongDx.wrongDifferential,true);
+assert.equal(wrongDx.valid,false);
+
+assert.equal(getSupportTargetForMicroSkill('skill:y13:integration:substitution:recognition-comparison','understand').activityId,'activity:y13:integration:substitution:understand:why-substitution');
+assert.equal(getSupportTargetForMicroSkill('skill:y13:integration:substitution:mixed-variable-check','understand').activityId,'activity:y13:integration:substitution:understand:change-everything');
+assert.equal(getSupportTargetForMicroSkill('skill:y13:integration:substitution:definite-limits','understand').activityId,'activity:y13:integration:substitution:understand:definite-indefinite');
+assert.equal(getSupportTargetForMicroSkill('skill:y13:integration:substitution:choose-u','understand').activityId,'activity:y13:integration:substitution:understand:choosing-u');
+
+const understand=await fs.readFile(new URL('../src/scripts/substitution-understand.js',import.meta.url),'utf8');
+assert.match(understand,/createVariableTransformationWorkspace/);
+assert.match(understand,/renderEquationSteps/);
+assert.match(understand,/x=0, x=1/,'x-limits must be displayed explicitly before u-limit conversion');
+assert.match(understand,/Do not back-substitute x/);
+const app=await fs.readFile(new URL('../src/scripts/app-shell.js',import.meta.url),'utf8');
+assert.match(app,/createSubstitutionUnderstandExperience/);
+assert.match(app,/learningModes: substitutionLearningModes/);
+const html=await fs.readFile(new URL('../src/index.html',import.meta.url),'utf8');
+assert.match(html,/Integration by substitution/);
+assert.match(html,/substitution-understand\.css/);
+console.log('Step 63 substitution Understand contract checks passed.');

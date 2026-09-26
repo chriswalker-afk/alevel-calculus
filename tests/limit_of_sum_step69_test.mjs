@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict'; import fs from 'node:fs';
+const read=p=>fs.readFileSync(new URL(`../${p}`,import.meta.url),'utf8');
+const tags=await import('../src/scripts/trig-integration-data.js'); const data=await import('../src/scripts/limit-of-sum-data.js'); const rect=await import('../src/scripts/rectangle-sum-explorer.js');
+assert.equal(tags.INTEGRATION_METHOD_TAGS.limitOfSum,'limit-of-sum');
+assert.equal(data.LIMIT_OF_SUM_METHOD_TAG,tags.INTEGRATION_METHOD_TAGS.limitOfSum);
+assert.equal(data.STANDARD_INTEGRAL_LIMIT_SUM_SOURCE,(await import('../src/scripts/standard-integrals-data.js')).STANDARD_INTEGRAL_DEFINITIONS);
+const n=data.buildKNotation({a:2,b:5}); assert.equal(n.width,'Δx=(5−2)/n'); assert.equal(n.sample,'xₖ=2+kΔx');
+assert.ok(typeof rect.RectangleSumExplorer==='function'); assert.ok(typeof rect.buildSumToIntegralMap==='function');
+const understand=read('src/scripts/limit-of-sum-understand.js'); assert.match(understand,/RectangleSumExplorer/); assert.match(understand,/buildSumToIntegralMap/); assert.doesNotMatch(understand,/createElementNS|<svg|canvas/i); assert.match(understand,/Recognition comes before evaluation/);
+const assess=await import('../src/scripts/question-definitions/limit-of-sum-assessment.js'); assert.equal(assess.limitOfSumAssessmentQuestionDefinitions.length,6); assert.ok(assess.recogniseIntegralDefinition.methodTags.includes('limit-of-sum')); assert.ok(assess.recogniseEvaluateDefinition.methodTags.includes('standard-integral')); assert.ok(assess.mixedTechniqueDefinition.methodTags.includes('reverse-chain'));
+const topic=(await import('../src/scripts/topic-content/limit-of-sum.js')).limitOfSumTopic; assert.equal(topic.modes.length,5); assert.equal(topic.activities.filter(a=>a.mode==='understand').length,6);
+const index=read('src/index.html'); assert.match(index,/topic:y13:integration:limit-of-sum/);
+console.log('Step 69 limit-of-sum tests passed.');

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Family-of-Curves Explorer - Step 26</title>
+  <link rel="stylesheet" href="./styles/tokens.css">
+  <link rel="stylesheet" href="./styles/diagram-primitives.css">
+  <link rel="stylesheet" href="./styles/family-of-curves-explorer.css">
+  <style>
+    body { margin: 0; background: var(--color-surface-muted, #f2f5f9); color: var(--color-text, #172033); font-family: Inter, system-ui, sans-serif; }
+    main { width: min(1500px, calc(100% - 2rem)); margin: 0 auto; padding: 1.25rem 0 2rem; }
+    h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.25rem); }
+    .intro { max-width: 78ch; color: var(--color-text-muted, #526174); }
+    .note { margin-top: 1rem; padding: 0.75rem 0.9rem; border-radius: 12px; background: var(--color-surface-raised, #fff); border: 1px solid var(--color-border-subtle, #d7dde8); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Family-of-Curves Explorer</h1>
+    <p class="intro">Move <strong>C</strong> to translate <strong>F(x)+C</strong> vertically. The dashed comparison curves make the unchanged shape visible, while the derivative graph stays fixed because the derivative of the constant is zero.</p>
+    <div id="family-curves-demo"></div>
+    <p class="note"><strong>Keyboard:</strong> tab to the C slider and use the arrow keys. The axes stay fixed while C changes, so the vertical translation is never autoscaled away.</p>
+  </main>
+  <script type="module" src="./scripts/family-of-curves-explorer-demo.js"></script>
+</body>
+</html>

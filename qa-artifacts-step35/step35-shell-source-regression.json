@@ -1,0 +1,48 @@
+{
+  "comparison": "Step 34 authoritative runtime vs Step 35 work",
+  "files": [
+    {
+      "file": "src/scripts/app-shell.js",
+      "step34_sha256": "d4e7724e5935869ec2daae7a6e5c214cc55037f9ceff64a2e1f5da4cf69b3169",
+      "step35_sha256": "d4e7724e5935869ec2daae7a6e5c214cc55037f9ceff64a2e1f5da4cf69b3169",
+      "identical": true
+    },
+    {
+      "file": "src/styles/tokens.css",
+      "step34_sha256": "dd7d6f206971315373b062e813d45bddd2383bf2ec35eff16f807a48cea576d5",
+      "step35_sha256": "dd7d6f206971315373b062e813d45bddd2383bf2ec35eff16f807a48cea576d5",
+      "identical": true
+    },
+    {
+      "file": "src/styles/app-shell.css",
+      "step34_sha256": "b245a4391a76b06b38a4acd98792de7ecbf8b7012728a2be117eda3ee57dcc9e",
+      "step35_sha256": "b245a4391a76b06b38a4acd98792de7ecbf8b7012728a2be117eda3ee57dcc9e",
+      "identical": true
+    },
+    {
+      "file": "src/styles/basics-understand.css",
+      "step34_sha256": "17bc91031cec5e56e319364079a5e33a66292c9e28ea633e20ef3840818c533f",
+      "step35_sha256": "17bc91031cec5e56e319364079a5e33a66292c9e28ea633e20ef3840818c533f",
+      "identical": true
+    },
+    {
+      "file": "src/scripts/basics-understand.js",
+      "step34_sha256": "37129bafd87f86e26282fd346283884636c3300ee08100d18e5c5f9cada4a01d",
+      "step35_sha256": "37129bafd87f86e26282fd346283884636c3300ee08100d18e5c5f9cada4a01d",
+      "identical": true
+    },
+    {
+      "file": "src/styles/memory-lab.css",
+      "step34_sha256": "346df4018f392add26ba04e64ff3d891ee6754194492d26279724fcd355f53b1",
+      "step35_sha256": "346df4018f392add26ba04e64ff3d891ee6754194492d26279724fcd355f53b1",
+      "identical": true
+    },
+    {
+      "file": "src/scripts/memory-lab.js",
+      "step34_sha256": "bc56f05bedb571111ce50b397f9840233c0ceb9c63e45dee2850b4bf9de653fe",
+      "step35_sha256": "bc56f05bedb571111ce50b397f9840233c0ceb9c63e45dee2850b4bf9de653fe",
+      "identical": true
+    }
+  ],
+  "all_identical": true
+}

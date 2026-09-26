@@ -1,0 +1,11 @@
+PASS static AppShell, shared QuestionShell, staged hints, structured worked solutions and persistence checks
+file:///mnt/data/calc57_work/calculus-site/src/scripts/concavity-inflection-understand.js:2
+import { createEquationStepRenderer } from './equation-step-renderer.js';
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: The requested module './equation-step-renderer.js' does not provide an export named 'createEquationStepRenderer'
+    at ModuleJob._instantiate (node:internal/modules/esm/module_job:182:21)
+    at async ModuleJob.run (node:internal/modules/esm/module_job:266:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+    at async file:///mnt/data/calc57_work/calculus-site/tests/appshell_dom_test.mjs:465:1
+
+Node.js v22.16.0

@@ -1,0 +1,32 @@
+{
+  "changedSourceFiles": [
+    {
+      "path": "scripts/basics-understand.js",
+      "step35Sha256": "37129bafd87f86e26282fd346283884636c3300ee08100d18e5c5f9cada4a01d",
+      "step36Sha256": "cf4aa7477f10f334da8c29030090e9a42714f26cb44227392c20cd5df3d2601f"
+    },
+    {
+      "path": "styles/app-shell.css",
+      "step35Sha256": "b245a4391a76b06b38a4acd98792de7ecbf8b7012728a2be117eda3ee57dcc9e",
+      "step36Sha256": "0efb0443d4ba2554a4dcb8a191f97f0b1632010c9ba7878b1d540b19c94c2711"
+    },
+    {
+      "path": "styles/basics-understand.css",
+      "step35Sha256": "17bc91031cec5e56e319364079a5e33a66292c9e28ea633e20ef3840818c533f",
+      "step36Sha256": "f1535235f860ff49c4660ff53c32d853f0e923b738010fd35b3cc9a5c994e769"
+    },
+    {
+      "path": "styles/memory-lab.css",
+      "step35Sha256": "346df4018f392add26ba04e64ff3d891ee6754194492d26279724fcd355f53b1",
+      "step36Sha256": "69974e2cad0b2f404da0cc8c6055ffb8f55be0512f48472d5ad208738ee4afb2"
+    },
+    {
+      "path": "styles/question-shell.css",
+      "step35Sha256": "857bb072bbd9f95032e3f910fdb37950337a8e3e8b0cf609c42e239be28100a1",
+      "step36Sha256": "ea0b79c61a31be3cebb5633df56ea58b9b62675b9af4eb2568c1baa6aba13706"
+    }
+  ],
+  "unchangedLockedTokens": true,
+  "unchangedIndexHtml": true,
+  "unchangedAppShellJs": true
+}

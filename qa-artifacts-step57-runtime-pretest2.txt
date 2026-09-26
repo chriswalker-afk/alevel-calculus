@@ -1,0 +1,18 @@
+PASS static AppShell, shared QuestionShell, staged hints, structured worked solutions and persistence checks
+file:///mnt/data/calc57_work/calculus-site/src/scripts/question-definition.js:43
+    throw new Error(`QuestionDefinition ${label}.kind must be one of: ${allowedDiagnosticKinds.join(", ")}.`);
+          ^
+
+Error: QuestionDefinition diagnosticRules.zero-only.kind must be one of: recognition, execution.
+    at normaliseDiagnosticRule (file:///mnt/data/calc57_work/calculus-site/src/scripts/question-definition.js:43:11)
+    at file:///mnt/data/calc57_work/calculus-site/src/scripts/question-definition.js:71:28
+    at Array.map (<anonymous>)
+    at normaliseDiagnosticRules (file:///mnt/data/calc57_work/calculus-site/src/scripts/question-definition.js:67:41)
+    at defineQuestionDefinition (file:///mnt/data/calc57_work/calculus-site/src/scripts/question-definition.js:120:27)
+    at base (file:///mnt/data/calc57_work/calculus-site/src/scripts/question-definitions/concavity-inflection-assessment.js:5:25)
+    at file:///mnt/data/calc57_work/calculus-site/src/scripts/question-definitions/concavity-inflection-assessment.js:8:35
+    at ModuleJob.run (node:internal/modules/esm/module_job:274:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+    at async file:///mnt/data/calc57_work/calculus-site/tests/appshell_dom_test.mjs:465:1
+
+Node.js v22.16.0

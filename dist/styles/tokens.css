@@ -1,0 +1,193 @@
+/* Calculus Website - Step 4 locked design tokens, v1.0.0 */
+:root {
+  /* Typography */
+  --font-ui: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-math: "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Spacing */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* Shape */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-pill: 999px;
+
+  /* Surfaces */
+  --surface-canvas: #F7F9FC;
+  --surface-base: #FFFFFF;
+  --surface-subtle: #F0F3F8;
+  --surface-raised: #FFFFFF;
+  --border-default: #D8DEE9;
+  --divider-default: #E5E9F0;
+  --overlay-scrim: rgba(23, 32, 51, 0.42);
+  --shadow-raised: 0 6px 20px rgba(23, 32, 51, 0.08);
+  --shadow-drawer: 0 18px 50px rgba(23, 32, 51, 0.18);
+
+  /* Text */
+  --text-primary: #172033;
+  --text-secondary: #465168;
+  --text-muted: #5B667A;
+  --text-disabled: #98A2B3;
+  --text-inverse: #FFFFFF;
+
+  /* Focus */
+  --focus-ring: #0B5FFF;
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 2px;
+
+  /* Interaction */
+  --touch-target-min: 44px;
+  --control-height: 44px;
+  --control-height-compact: 36px;
+  --disabled-opacity: 0.55;
+
+  /* Motion */
+  --motion-fast: 120ms;
+  --motion-normal: 180ms;
+  --motion-slow: 260ms;
+  --motion-easing: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Universal feedback - never inherit current learning-mode colour */
+  --feedback-correct-accent: #16794F;
+  --feedback-correct-soft: #EAF7F0;
+  --feedback-correct-ink: #16794F;
+  --feedback-incorrect-accent: #B42318;
+  --feedback-incorrect-soft: #FDECEC;
+  --feedback-incorrect-ink: #B42318;
+  --feedback-warning-accent: #9A5B00;
+  --feedback-warning-soft: #FFF3D6;
+  --feedback-warning-ink: #744300;
+  --feedback-info-accent: #0B5FFF;
+  --feedback-info-soft: #EAF1FF;
+  --feedback-info-ink: #1746A2;
+
+  /* Neutral progress/security */
+  --progress-not-started: #98A2B3;
+  --progress-in-progress: #667085;
+  --progress-complete: #243B5A;
+  --security-needs-review: #9A5B00;
+  --security-developing: #475467;
+  --security-secure: #16794F;
+
+  /* Default aliases. A data-learning-mode selector overrides these. */
+  --mode-accent: #243B5A;
+  --mode-accent-text: #FFFFFF;
+  --mode-soft: #E9EEF5;
+  --mode-soft-text: #243B5A;
+
+  /* Default scope aliases. A data-course-scope selector overrides these. */
+  --scope-background: #F1F5F9;
+  --scope-text: #334155;
+  --scope-border: #CBD5E1;
+}
+
+[data-learning-mode="understand"] {
+  --mode-accent: #0F766E;
+  --mode-accent-text: #FFFFFF;
+  --mode-soft: #E7F6F4;
+  --mode-soft-text: #0F5F59;
+}
+
+[data-learning-mode="memorise"] {
+  --mode-accent: #6D28D9;
+  --mode-accent-text: #FFFFFF;
+  --mode-soft: #F1EAFF;
+  --mode-soft-text: #5420AA;
+}
+
+[data-learning-mode="ao1"] {
+  --mode-accent: #1D4ED8;
+  --mode-accent-text: #FFFFFF;
+  --mode-soft: #EAF0FF;
+  --mode-soft-text: #173EA8;
+}
+
+[data-learning-mode="ao2"] {
+  --mode-accent: #9A5B00;
+  --mode-accent-text: #FFFFFF;
+  --mode-soft: #FFF3D6;
+  --mode-soft-text: #744300;
+}
+
+[data-learning-mode="ao3"] {
+  --mode-accent: #C2415D;
+  --mode-accent-text: #FFFFFF;
+  --mode-soft: #FDECEF;
+  --mode-soft-text: #9E324B;
+}
+
+[data-learning-mode="mastery"] {
+  --mode-accent: #243B5A;
+  --mode-accent-text: #FFFFFF;
+  --mode-soft: #E9EEF5;
+  --mode-soft-text: #243B5A;
+}
+
+[data-course-scope="y12"] {
+  --scope-background: #F1F5F9;
+  --scope-text: #334155;
+  --scope-border: #CBD5E1;
+}
+
+[data-course-scope="y13-additional"] {
+  --scope-background: #F5F3F0;
+  --scope-text: #3F3F46;
+  --scope-border: #D6D3D1;
+}
+
+[data-course-scope="full-alevel"] {
+  --scope-background: #E8ECEF;
+  --scope-text: #111827;
+  --scope-border: #9CA3AF;
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-normal: 0ms;
+    --motion-slow: 0ms;
+  }
+
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}

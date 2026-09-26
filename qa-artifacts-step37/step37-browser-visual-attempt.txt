@@ -1,0 +1,10 @@
+Step 37 browser visual QA attempt
+Date: 2026-09-25
+Target: http://127.0.0.1:8899/index.html
+Browser path: /usr/bin/chromium, driven through Python Playwright
+Requested viewport: 1440x900
+Result: BLOCKED/FAILED
+Exact navigation error: Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at http://127.0.0.1:8899/index.html
+Call log:
+  - navigating to "http://127.0.0.1:8899/index.html", waiting until "domcontentloaded"
+

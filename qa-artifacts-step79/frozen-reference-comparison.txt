@@ -1,0 +1,25 @@
+Step 78 -> Step 79 frozen-reference comparison
+UNCHANGED  src/scripts/basics-understand.js
+  step78=cf4aa7477f10f334da8c29030090e9a42714f26cb44227392c20cd5df3d2601f
+  step79=cf4aa7477f10f334da8c29030090e9a42714f26cb44227392c20cd5df3d2601f
+UNCHANGED  src/styles/basics-understand.css
+  step78=f1535235f860ff49c4660ff53c32d853f0e923b738010fd35b3cc9a5c994e769
+  step79=f1535235f860ff49c4660ff53c32d853f0e923b738010fd35b3cc9a5c994e769
+UNCHANGED  src/scripts/question-shell.js
+  step78=f9c448abd9d3599d54263903b024c3299088331d9436d34a48c79dd7b1ff9dfe
+  step79=f9c448abd9d3599d54263903b024c3299088331d9436d34a48c79dd7b1ff9dfe
+UNCHANGED  src/styles/question-shell.css
+  step78=ea0b79c61a31be3cebb5633df56ea58b9b62675b9af4eb2568c1baa6aba13706
+  step79=ea0b79c61a31be3cebb5633df56ea58b9b62675b9af4eb2568c1baa6aba13706
+UNCHANGED  src/scripts/memory-lab.js
+  step78=bc56f05bedb571111ce50b397f9840233c0ceb9c63e45dee2850b4bf9de653fe
+  step79=bc56f05bedb571111ce50b397f9840233c0ceb9c63e45dee2850b4bf9de653fe
+UNCHANGED  src/styles/memory-lab.css
+  step78=69974e2cad0b2f404da0cc8c6055ffb8f55be0512f48472d5ad208738ee4afb2
+  step79=69974e2cad0b2f404da0cc8c6055ffb8f55be0512f48472d5ad208738ee4afb2
+CHANGED  src/styles/app-shell.css
+  step78=b097ec908a2967459201cdf1536461de4c47df6733017c1b93c3fb994c882522
+  step79=329b758e94ba12c5a888cdb24f552d712f6d83cf28fcb36e1c17230e966e2d0c
+summary: unchanged=6 changed=1
+Expected controlled change: src/styles/app-shell.css (Step 79 accessibility touch-target maintenance).
+Reference-topic behavioral regression: PASS via full runtime suite.

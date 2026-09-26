@@ -1,0 +1,27 @@
+import assert from 'node:assert/strict';
+import { fullCalculusMasteryTopic } from '../src/scripts/topic-content/full-calculus-mastery.js';
+import { fullCalculusMasteryLearningModes } from '../src/scripts/full-calculus-mastery-activities.js';
+import { fullCalculusMasteryModel, classifyFullCalculusMasteryDimension, FULL_CALCULUS_MASTERY_DIMENSIONS } from '../src/scripts/full-calculus-mastery-model.js';
+import { getQuestionSetDefinitionForActivity, getQuestionDefinition, listQuestionDefinitions } from '../src/scripts/question-catalogue.js';
+assert.equal(fullCalculusMasteryTopic.topicId,'topic:full:review:full-calculus-mastery');
+assert.deepEqual(fullCalculusMasteryTopic.modes,['ao1','ao2','ao3']);
+assert.equal(fullCalculusMasteryTopic.activities.length,6);
+assert.deepEqual(FULL_CALCULUS_MASTERY_DIMENSIONS,['recognition','order','execution','interpretation']);
+assert.equal(listQuestionDefinitions().length,232,'Step 75 must not add a parallel final QuestionDefinition bank');
+for(const a of fullCalculusMasteryTopic.activities){const set=getQuestionSetDefinitionForActivity(a.activityId);assert.ok(set?.definitions.length>0,`missing reused set ${a.activityId}`);for(const d of set.definitions)assert.equal(getQuestionDefinition(d.templateId),d,'mastery sets must reuse source definitions by reference');}
+const methodSet=getQuestionSetDefinitionForActivity('activity:full:review:full-calculus-mastery:ao1:method-only');
+assert.ok(methodSet.definitions.some(d=>d.templateId.includes('full:review:calculus-mastery:method-')));assert.ok(methodSet.definitions.some(d=>d.topicId.includes('integration')));assert.ok(methodSet.definitions.some(d=>d.topicId.includes('modelling')));
+const orderSet=getQuestionSetDefinitionForActivity('activity:full:review:full-calculus-mastery:ao1:which-method-first');
+assert.ok(orderSet.definitions.some(d=>d.templateId.includes('rewrite-only')),'rewrite-first decision must be present');
+assert.ok(orderSet.definitions.some(d=>d.templateId.includes('multi-rule')),'multi-method/which-first decision must be present');
+const mixed=getQuestionSetDefinitionForActivity('activity:full:review:full-calculus-mastery:ao3:mixed-mastery');
+assert.ok(new Set(mixed.definitions.map(d=>d.assessmentObjective)).has('ao1'));assert.ok(new Set(mixed.definitions.map(d=>d.assessmentObjective)).has('ao2'));assert.ok(new Set(mixed.definitions.map(d=>d.assessmentObjective)).has('ao3'));
+assert.equal(classifyFullCalculusMasteryDimension('activity:full:review:full-calculus-mastery:ao1:method-only',{}),'recognition');
+assert.equal(classifyFullCalculusMasteryDimension('activity:full:review:full-calculus-mastery:ao1:which-method-first',{}),'order');
+assert.equal(classifyFullCalculusMasteryDimension('activity:full:review:full-calculus-mastery:ao1:select-complete-check',{diagnostic:{kind:'execution'}}),'execution');
+assert.equal(classifyFullCalculusMasteryDimension('activity:full:review:full-calculus-mastery:ao2:select-and-explain',{errorCategory:'model-limitation'}),'interpretation');
+const target=Object.freeze({topicId:'topic:y13:integration:substitution',activityId:'activity:y13:integration:substitution:understand:change-everything'});
+const summary=fullCalculusMasteryModel.summarise([{activityId:'activity:full:review:full-calculus-mastery:ao1:which-method-first',attempt:{success:false,errorCategory:'order',metadata:{assessmentObjective:'ao1'},diagnostic:{kind:'execution',target}}}]);
+assert.equal(summary.dimensions.order.failures,1);assert.equal(summary.dimensions.order.nextSteps[0],target,'precise source support target must survive mastery classification');
+assert.ok(fullCalculusMasteryLearningModes.ao1.activities.some(a=>a.formula.includes('first method')));
+console.log('Step 75 full calculus mastery contract: PASS');

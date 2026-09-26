@@ -1,0 +1,72 @@
+PASS static AppShell, shared QuestionShell, staged hints, structured worked solutions and persistence checks
+PASS AppShell responsive navigation, ModeTabs, HelpDrawer, WordBank, QuestionShell, MemoryLab and progress-data controls
+PASS LocalStateStore versioned persistence, refresh, export/import and reset checks
+PASS ProgressStore visit/attempt/completion/security separation checks
+PASS shared topic progress selectors now read persisted ProgressStore completion state
+PASS HelpDrawer exact support target metadata
+PASS VocabularyStore persistent encounter, first-context and review checks
+PASS Word Bank metadata join, search and scope/review filter checks
+PASS TopicMetadata and Basics of Differentiation Step 32 content model
+PASS QuestionDefinition contract, deterministic GeneratorRunner, 240-question quality batch and mixed-consumer reuse
+PASS staged HintSequence, structured SolutionStep rendering and error-category feedback hooks
+PASS shared QuestionShell consumes generated AO1/AO2 QuestionDefinition objects and preserves state
+PASS DiagnosticRouter distinguishes recognition/execution and resolves exact existing support routes
+PASS MasteryFeedbackModel aggregates tagged strengths/weaknesses and separates recognition from execution
+PASS ClassWiz support pack model-specific derivative/integral guidance and conditional RADIAN reminder
+PASS MemoryItem contract and shared Basics memory bank
+PASS FlashcardEngine deck reuses MemoryItem content in both directions
+PASS MatchEngine rounds consume the shared MemoryItem bank
+PASS declarative Build, Missing Piece, Sort and Impostor game contracts
+PASS Build, Missing Piece, Sort and Impostor engines report attempt/security/completion evidence
+PASS RapidRecallEngine derives one-at-a-time retrieval from MemoryItem content with optional timer
+PASS DiagramRecallEngine renders declarative callouts and reports accessible label-recall evidence
+PASS MemoryMixEngine orchestrates varied existing engines and aggregates review security/completion
+DiagramPrimitives contract checks passed.
+LinkedFunctionGradientExplorer tests passed.
+ChordToTangentExplorer tests passed.
+FamilyOfCurvesExplorer tests passed.
+AreaExplorer tests passed.
+ParametricCurveTracer tests passed.
+RateFlowDiagram tests passed.
+RectangleSumExplorer tests passed.
+TrapeziumRuleBuilder tests passed.
+PASS Basics Understand eight-state reference journey and linked polynomial contract
+PASS Basics Step 34 Memorise facts, reusable retrieval coverage and VocabularyTerm wiring
+PASS Basics Step 35 AO1/AO2/AO3 generated batches, mathematics, metadata and mode separation
+PASS Step 36 reference-topic regression/design-freeze contract across all five modes
+PASS Step 37 Pre-calculus understanding-only gradient journey
+PASS Step 38 Differentiation from First Principles Understand journey
+PASS Step 39 First Principles Memorise/AO1-AO3 shared-memory, assessment and diagnostic contracts
+PASS Step 40 Tangents and Normals all-mode, shared-visual, memory, assessment and special-case contracts
+Step 41 stationary-points Understand contract passed.
+PASS Step 42 Stationary/Turning Points Memorise/AO1-AO3, shared-memory, generated-assessment and classification contracts
+PASS Step 43 Increasing/Decreasing appearance-first, interval-selection, memory, assessment and algebra-agreement contracts
+PASS Step 44 Introduction to Integration reverse-differentiation, +C motivation, Memory Lab and AO contracts
+PASS Step 45 Definite/Indefinite Integration family-vs-number, evaluate, C-cancellation and limit-property contracts
+PASS Step 46 Integration as Area lower-zero, removed-region, endpoint-difference and visual-property contracts
+PASS Step 47 signed-area, cancellation, root-splitting, total-area and all-mode contracts
+PASS Step 48 Year 12 consolidated recall, topic-blind mixed practice and exact diagnostic mastery contracts
+PASS Step 49 Year 12 plan traceability, scope, vocabulary, progress, route, generator, boundary and responsive regression gate
+Step 50 standard functions tests passed.
+PASS Step 51 trig first-principles small-angle evidence, proof reconstruction, Memory Lab, ClassWiz evidence and AO1-AO3 contracts
+PASS Step 52 product/quotient/chain structure classification, composition machines and persistent labelled rule highlighting
+PASS Step 53 product/quotient/chain Memory Lab, individual/mixed generators, explicit quotient/chain error categories and AO1-AO3 applications
+PASS Step 54 parametric tracing, restricted ranges, elimination, chain-rule gradient, vertical tangents, Memory Lab, diagnostics and AO1-AO3 contracts
+PASS Step 55 explicit/implicit classification, gated term-by-term workflow, y-chain cue, diagnostics, Memory Lab and AO1-AO3 contracts
+PASS Step 56 inverse-vs-reciprocal notation, restricted-domain inverse visuals, further trig/inverse derivations, Memory Lab, diagnostics and AO1-AO3 contracts
+Step 57 concavity/inflection contract: PASS
+PASS Step 58 dependency-first RateFlowDiagram, derivative orientation, signs/units, multi-stage chains, Memory Lab and AO1-AO3 contracts
+PASS Step 59 full differentiation recall, method-selection-only, topic-blind AO1-AO3 and recognition-vs-execution mastery contracts
+PASS Step 60 central standard-integral data, FTC, function recovery, Memory Lab and AO1-AO3 contracts
+Step 61 reverse-chain recognition contract checks passed.
+Step 62 trig-identity integration contract checks passed.
+Step 63 substitution Understand contract checks passed.
+Step 64 substitution AO1-AO3, Memory Lab and diagnostic contracts passed.
+Step 65 integration-by-parts contracts passed.
+Step 66 partial-fractions integration contracts passed.
+Step 67 Year 13 area-technique contracts passed.
+Step 68 parametric-area contracts passed.
+Step 69 limit-of-sum tests passed.
+Step 70 numerical integration tests passed.
+Step 71 integration method-tag audit passed.
+Differential equations Step 72 tests passed.

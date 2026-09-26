@@ -1,0 +1,12 @@
+PASS static AppShell, shared QuestionShell, staged hints, structured worked solutions and persistence checks
+file:///mnt/data/calc55_work/calculus-site/src/scripts/help-content.js:295
+  "topic:y13:differentiation:implicit-differentiation": Object.freeze({ understand: implicitTermUnderstandTarget, memorise: implicitMethodMemoriseTarget, ao1: implicitFullAo1Target })
+                                                                                    ^
+
+ReferenceError: implicitTermUnderstandTarget is not defined
+    at file:///mnt/data/calc55_work/calculus-site/src/scripts/help-content.js:295:85
+    at ModuleJob.run (node:internal/modules/esm/module_job:274:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+    at async file:///mnt/data/calc55_work/calculus-site/tests/appshell_dom_test.mjs:465:1
+
+Node.js v22.16.0

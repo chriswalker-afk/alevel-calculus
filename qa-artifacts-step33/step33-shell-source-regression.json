@@ -1,0 +1,26 @@
+{
+  "src/styles/tokens.css": {
+    "step32_sha256": "dd7d6f206971315373b062e813d45bddd2383bf2ec35eff16f807a48cea576d5",
+    "step33_sha256": "dd7d6f206971315373b062e813d45bddd2383bf2ec35eff16f807a48cea576d5",
+    "identical": true,
+    "intentional_step33_change": false
+  },
+  "src/styles/app-shell.css": {
+    "step32_sha256": "b245a4391a76b06b38a4acd98792de7ecbf8b7012728a2be117eda3ee57dcc9e",
+    "step33_sha256": "b245a4391a76b06b38a4acd98792de7ecbf8b7012728a2be117eda3ee57dcc9e",
+    "identical": true,
+    "intentional_step33_change": false
+  },
+  "src/index.html": {
+    "step32_sha256": "7b974c1dad369387d27169b9b579f2a1be0465b11e2466b7f3955ca90c26b3bd",
+    "step33_sha256": "7eada2d26e4cdc70f1c9eb13becc3474ca90c43f6f7cd20fc6cee50d17780906",
+    "identical": false,
+    "intentional_step33_change": true
+  },
+  "src/scripts/app-shell.js": {
+    "step32_sha256": "043f30795c23f388533855c05a874a09d5b4a0f7c68182de6eb0e68f313eaa8c",
+    "step33_sha256": "1ef0ae026b2e291b87b6199a0f7e59e31277bdd4f9b5fa8aade71f8e2f5850f6",
+    "identical": false,
+    "intentional_step33_change": true
+  }
+}

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Area Explorer - Step 27</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/diagram-primitives.css">
+  <link rel="stylesheet" href="styles/area-explorer.css">
+  <style>
+    body { margin: 0; background: #f4f6fa; color: #172033; font-family: system-ui, sans-serif; }
+    main { width: min(1180px, calc(100% - 2rem)); margin: 0 auto; padding: 1.5rem 0 2rem; }
+    .demo-heading { margin-bottom: 1rem; }
+    .demo-heading h1 { margin: 0 0 .35rem; font-size: clamp(1.5rem, 3vw, 2.2rem); }
+    .demo-heading p { margin: .25rem 0; max-width: 76ch; color: #526075; }
+    .demo-checks { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+    .demo-checks span { background: white; border: 1px solid #d7dce5; border-radius: 999px; padding: .35rem .65rem; font-size: .9rem; }
+  </style>
+</head>
+<body data-learning-mode="understand">
+  <main>
+    <section class="demo-heading">
+      <h1>Step 27 - Area Explorer</h1>
+      <p>Move either limit, reverse their order, switch between functions that stay above or cross the axis, and add optional split points. The axes stay fixed while signed regions update.</p>
+      <div class="demo-checks" aria-label="Validation cases">
+        <span>Lower limit can be 0</span>
+        <span>Arbitrary / reversed limits</span>
+        <span>Axis crossings</span>
+        <span>User-selected split points</span>
+        <span>Signed integral + geometrical area</span>
+      </div>
+    </section>
+    <div id="area-explorer-demo"></div>
+  </main>
+  <script type="module" src="scripts/area-explorer-demo.js"></script>
+</body>
+</html>

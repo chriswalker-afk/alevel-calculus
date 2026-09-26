@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import { INTEGRATION_METHOD_TAGS, INTEGRATION_METHOD_TAG_LIST, INTEGRATION_METHOD_LABELS, getIntegrationMethodLabel } from '../src/scripts/integration-method-vocabulary.js';
+import { auditIntegrationQuestionDefinitions, INTEGRATION_METHOD_AUDIT_GROUPS, LEGACY_INTEGRATION_METHOD_ALIASES } from '../src/scripts/integration-method-audit.js';
+import { INTEGRATION_METHOD_TAGS as legacyExport } from '../src/scripts/trig-integration-data.js';
+import { REVERSE_CHAIN_RECOGNITION_EXAMPLES } from '../src/scripts/reverse-chain-recognition-data.js';
+assert.equal(legacyExport,INTEGRATION_METHOD_TAGS,'legacy trig data export must point to the canonical vocabulary object');
+assert.deepEqual(INTEGRATION_METHOD_TAG_LIST,['standard-integral','reverse-chain','f-prime-over-f','trig-identity','substitution','integration-by-parts','partial-fractions','parametric-area','limit-of-sum','trapezium-rule']);
+assert.equal(new Set(Object.values(INTEGRATION_METHOD_LABELS)).size,INTEGRATION_METHOD_TAG_LIST.length,'student-facing method labels must be unique');
+for(const tag of INTEGRATION_METHOD_TAG_LIST) assert.notEqual(getIntegrationMethodLabel(tag),tag,`human label missing for ${tag}`);
+const audit=auditIntegrationQuestionDefinitions(); assert.equal(audit.questionCount,74); assert.deepEqual(audit.issues,[]);
+for(const [,defs] of INTEGRATION_METHOD_AUDIT_GROUPS) for(const d of defs) for(const alias of LEGACY_INTEGRATION_METHOD_ALIASES) assert.ok(!d.methodTags.includes(alias),`${d.templateId} still uses legacy method alias ${alias}`);
+for(const ex of REVERSE_CHAIN_RECOGNITION_EXAMPLES) for(const tag of ex.methodTags) assert.ok(INTEGRATION_METHOD_TAG_LIST.includes(tag),`recognition example ${ex.id} leaks non-method metadata into methodTags`);
+assert.ok(REVERSE_CHAIN_RECOGNITION_EXAMPLES.some(ex=>ex.structureTags.includes('definite')));
+console.log('Step 71 integration method-tag audit passed.');

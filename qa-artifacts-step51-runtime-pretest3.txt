@@ -1,0 +1,13 @@
+PASS static AppShell, shared QuestionShell, staged hints, structured worked solutions and persistence checks
+file:///mnt/data/calc49/Calculus_Website_New_Chat_Handoff_After_Step_48_2026-09-25/runtime/calculus-site/src/scripts/memory-item.js:20
+  if (!VALID_KINDS.has(input.kind)) throw new Error(`Unknown MemoryItem kind: ${input.kind}`);
+                                          ^
+
+Error: Unknown MemoryItem kind: fact
+    at defineMemoryItem (file:///mnt/data/calc49/Calculus_Website_New_Chat_Handoff_After_Step_48_2026-09-25/runtime/calculus-site/src/scripts/memory-item.js:20:43)
+    at file:///mnt/data/calc49/Calculus_Website_New_Chat_Handoff_After_Step_48_2026-09-25/runtime/calculus-site/src/scripts/memory-content.js:296:2
+    at ModuleJob.run (node:internal/modules/esm/module_job:274:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:644:26)
+    at async file:///mnt/data/calc49/Calculus_Website_New_Chat_Handoff_After_Step_48_2026-09-25/runtime/calculus-site/tests/appshell_dom_test.mjs:465:1
+
+Node.js v22.16.0

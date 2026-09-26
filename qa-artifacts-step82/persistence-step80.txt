@@ -1,0 +1,1 @@
+PASS Step 80 persistence/state-recovery audit (586 canonical activity routes)

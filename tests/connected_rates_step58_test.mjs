@@ -1,0 +1,50 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import { connectedRatesTopic } from '../src/scripts/topic-content/connected-rates.js';
+import { connectedRatesLearningModes } from '../src/scripts/connected-rates-activities.js';
+import { connectedRateUnit, interpretRateSign, multiplyRateChain } from '../src/scripts/connected-rates-understand.js';
+import { RATE_FLOW_DEFINITIONS, chainRuleExpression, createRateFlowState, checkRateFlowState } from '../src/scripts/rate-flow-diagram.js';
+import { getQuestionSetDefinitionForActivity } from '../src/scripts/question-catalogue.js';
+import { createGeneratorRunner } from '../src/scripts/generator-runner.js';
+import { getMemoryItemsForTopic } from '../src/scripts/memory-content.js';
+import { getMemoryGamePackForTopic } from '../src/scripts/memory-game-content.js';
+import { getMemoryReviewPackForTopic } from '../src/scripts/memory-review-content.js';
+import { getSupportTargetForMicroSkill } from '../src/scripts/help-content.js';
+import { getVocabularyTerm } from '../src/scripts/vocabulary-data.js';
+
+assert.equal(connectedRatesTopic.sequence,250);
+assert.deepEqual(connectedRatesTopic.modes,['understand','memorise','ao1','ao2','ao3']);
+assert.equal(connectedRatesTopic.scopeId,'y13-additional');
+for(const mode of connectedRatesTopic.modes) assert.ok(connectedRatesLearningModes[mode].activities.length>0,`missing ${mode}`);
+assert.equal(connectedRateUnit('cm²','s'),'cm² s⁻¹');
+assert.match(interpretRateSign(-2,'volume'),/decreasing/);
+assert.match(interpretRateSign(3,'area'),/increasing/);
+assert.equal(multiplyRateChain([2,36*Math.PI,-.1]),-7.2*Math.PI);
+
+const circle=RATE_FLOW_DEFINITIONS.find(d=>d.id==='expanding-circle');
+const sphere=RATE_FLOW_DEFINITIONS.find(d=>d.id==='sphere-density-chain');
+assert.equal(chainRuleExpression(circle),'dA/dt = dA/dr × dr/dt');
+assert.equal(chainRuleExpression(sphere),'dm/dt = dm/dV × dV/dr × dr/dt');
+const solved=createRateFlowState(circle,{order:['t','r','A'],orientations:{'r-t':'forward','A-r':'forward',target:'forward'}});
+assert.equal(checkRateFlowState(circle,solved).overallCorrect,true);
+
+for(const tag of connectedRatesTopic.vocabularyTags) assert.ok(getVocabularyTerm(tag),`missing vocab ${tag}`);
+const questionActivities=connectedRatesTopic.activities.filter(a=>a.activityType==='question-set');
+const runner=createGeneratorRunner({debugSeed:'step58'});
+for(const a of questionActivities){const set=getQuestionSetDefinitionForActivity(a.activityId);assert.ok(set,`missing set ${a.activityId}`);const generated=runner.generateSet(set);assert.ok(generated.questions.length>0);assert.ok(generated.questions.every(q=>q.metadata.topicId===connectedRatesTopic.topicId));}
+const ao1=questionActivities.filter(a=>a.mode==='ao1').flatMap(a=>getQuestionSetDefinitionForActivity(a.activityId).definitions);
+assert.ok(ao1.some(d=>d.microSkillId.endsWith('sign-and-units')));
+const ao3=getQuestionSetDefinitionForActivity('activity:y13:differentiation:connected-rates:ao3:modelling').definitions;
+assert.ok(ao3.some(d=>d.microSkillId.endsWith('applications')));
+assert.ok(getMemoryItemsForTopic(connectedRatesTopic.topicId).length>=7);
+assert.ok(getMemoryGamePackForTopic(connectedRatesTopic.topicId));
+assert.ok(getMemoryReviewPackForTopic(connectedRatesTopic.topicId));
+assert.equal(getSupportTargetForMicroSkill('skill:y13:differentiation:connected-rates:derivative-orientation','understand').activityId,'activity:y13:differentiation:connected-rates:understand:rate-flow');
+assert.equal(getSupportTargetForMicroSkill('skill:y13:differentiation:connected-rates:sign-and-units','ao1').activityId,'activity:y13:differentiation:connected-rates:ao1:signs-units');
+const understand=await fs.readFile(new URL('../src/scripts/connected-rates-understand.js',import.meta.url),'utf8');
+assert.match(understand,/RateFlowDiagram/); assert.match(understand,/disabled=true/); assert.match(understand,/chain rule/i); assert.match(understand,/negative/i); assert.match(understand,/multi-stage/i);
+const app=await fs.readFile(new URL('../src/scripts/app-shell.js',import.meta.url),'utf8');
+assert.match(app,/topic:y13:differentiation:connected-rates/); assert.match(app,/customConnectedRatesUnderstand/);
+const index=await fs.readFile(new URL('../src/index.html',import.meta.url),'utf8');
+assert.match(index,/data-topic-id="topic:y13:differentiation:connected-rates"/); assert.match(index,/topic-index">25/);
+console.log('PASS Step 58 dependency-first RateFlowDiagram, derivative orientation, signs/units, multi-stage chains, Memory Lab and AO1-AO3 contracts');

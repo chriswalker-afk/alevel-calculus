@@ -1,0 +1,137 @@
+import { getVocabularyTerm } from "./vocabulary-data.js";
+
+let popoverSequence = 0;
+
+function plainTextFromSegments(segments) {
+  return segments.map((segment) => {
+    if (typeof segment === "string") return segment;
+    return segment.text ?? getVocabularyTerm(segment.termId)?.label ?? "";
+  }).join("");
+}
+
+function createVocabularyTermElement(term, { isFirstEncounter, onOpenWordBank }) {
+  const wrapper = document.createElement("span");
+  wrapper.className = "vocabulary-term-wrap";
+  wrapper.dataset.vocabularyTermId = term.id;
+  wrapper.dataset.popoverOpen = "false";
+
+  const popoverId = `vocabulary-popover-${++popoverSequence}`;
+  const definitionId = `${popoverId}-definition`;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = `vocabulary-term ${isFirstEncounter ? "vocabulary-term--new" : "vocabulary-term--known"}`;
+  button.dataset.vocabularyTerm = term.id;
+  button.setAttribute("aria-expanded", "false");
+  button.setAttribute("aria-controls", popoverId);
+  button.setAttribute("aria-describedby", definitionId);
+
+  const label = document.createElement("span");
+  label.textContent = term.label;
+  button.append(label);
+
+  if (isFirstEncounter) {
+    const marker = document.createElement("span");
+    marker.className = "vocabulary-new-marker";
+    marker.textContent = "NEW";
+    marker.setAttribute("aria-label", "New vocabulary");
+    button.append(marker);
+  }
+
+  const popover = document.createElement("span");
+  popover.className = "vocabulary-popover";
+  popover.id = popoverId;
+  popover.setAttribute("role", "dialog");
+  popover.setAttribute("aria-label", `${term.label} definition`);
+
+  const termName = document.createElement("strong");
+  termName.className = "vocabulary-popover__term";
+  termName.textContent = term.label;
+
+  const definition = document.createElement("span");
+  definition.className = "vocabulary-popover__definition";
+  definition.id = definitionId;
+  definition.textContent = term.definition;
+
+  const openButton = document.createElement("button");
+  openButton.type = "button";
+  openButton.className = "vocabulary-popover__open-bank";
+  openButton.textContent = "Open in Word Bank";
+  openButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    wrapper.dataset.popoverOpen = "false";
+    button.setAttribute("aria-expanded", "false");
+    onOpenWordBank?.(term.id, button);
+  });
+
+  popover.append(termName, definition, openButton);
+  wrapper.append(button, popover);
+
+  button.addEventListener("click", () => {
+    const willOpen = wrapper.dataset.popoverOpen !== "true";
+    wrapper.dataset.popoverOpen = willOpen ? "true" : "false";
+    button.setAttribute("aria-expanded", willOpen ? "true" : "false");
+  });
+
+  button.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || wrapper.dataset.popoverOpen !== "true") return;
+    event.preventDefault();
+    wrapper.dataset.popoverOpen = "false";
+    button.setAttribute("aria-expanded", "false");
+  });
+
+  return wrapper;
+}
+
+export function renderVocabularyRichText(container, segments, {
+  store,
+  context,
+  onOpenWordBank,
+  onEncountered
+} = {}) {
+  if (!Array.isArray(segments) || segments.length === 0) {
+    return { encounteredIds: [], newTermIds: [] };
+  }
+
+  const termSegments = segments.filter((segment) => typeof segment === "object" && segment?.termId);
+  const encounteredIds = [...new Set(termSegments.map((segment) => segment.termId))];
+  const wasEncountered = new Map(encounteredIds.map((termId) => [termId, Boolean(store?.hasEncountered(termId))]));
+
+  if (typeof document.createElement !== "function" || typeof document.createDocumentFragment !== "function" || typeof container.replaceChildren !== "function") {
+    container.textContent = plainTextFromSegments(segments);
+  } else {
+    const fragment = document.createDocumentFragment();
+    const seenInRender = new Set();
+
+    for (const segment of segments) {
+      if (typeof segment === "string") {
+        fragment.append(document.createTextNode(segment));
+        continue;
+      }
+
+      const term = getVocabularyTerm(segment.termId);
+      if (!term) {
+        fragment.append(document.createTextNode(segment.text ?? ""));
+        continue;
+      }
+
+      const firstHere = !wasEncountered.get(term.id) && !seenInRender.has(term.id);
+      seenInRender.add(term.id);
+      fragment.append(createVocabularyTermElement(term, {
+        isFirstEncounter: firstHere,
+        onOpenWordBank
+      }));
+    }
+    container.replaceChildren(fragment);
+  }
+
+  const newTermIds = [];
+  for (const termId of encounteredIds) {
+    const result = store?.encounter(termId, context);
+    if (result?.isNew) newTermIds.push(termId);
+  }
+
+  onEncountered?.({ encounteredIds, newTermIds });
+  return { encounteredIds, newTermIds };
+}

@@ -1,0 +1,68 @@
+.year12-mastery-summary {
+  margin-top: var(--space-5);
+  padding: clamp(1rem, 2vw, 1.4rem);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+
+.year12-mastery-summary__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.year12-mastery-summary__heading h2,
+.year12-mastery-summary__columns h3 { margin: 0; }
+.year12-mastery-summary__heading p { max-width: 64ch; }
+
+.year12-mastery-summary__evidence {
+  flex: 0 0 auto;
+  padding: .5rem .75rem;
+  border-radius: 999px;
+  background: var(--surface-subtle);
+}
+
+.year12-mastery-summary__columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.year12-mastery-summary__columns section {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface-subtle);
+}
+
+.year12-mastery-summary__columns ul {
+  margin: var(--space-3) 0 0;
+  padding-left: 1.25rem;
+}
+
+.year12-mastery-summary__columns li + li { margin-top: var(--space-3); }
+
+.year12-mastery-summary__next-step {
+  min-height: 44px;
+  margin-top: .45rem;
+  padding: .55rem .75rem;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.year12-mastery-summary__next-step:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+@media (max-width: 720px) {
+  .year12-mastery-summary__heading { flex-direction: column; }
+  .year12-mastery-summary__columns { grid-template-columns: 1fr; }
+}

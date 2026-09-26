@@ -1,0 +1,36 @@
+import { defineTopicMetadata } from '../topic-metadata.js';
+const prefix='y12:integration:area';
+const skill=(slug)=>`skill:${prefix}:${slug}`;
+const activity=(slug,mode='understand')=>`activity:${prefix}:${mode}:${slug}`;
+export const integrationAreaVocabularyTags=Object.freeze(['vocab:definite-integral','vocab:lower-limit','vocab:upper-limit','vocab:area-under-curve','vocab:accumulated-area','vocab:adjacent-intervals']);
+export const integrationAreaTopic=defineTopicMetadata({
+ topicId:`topic:${prefix}`,scopeId:'y12',strand:'integration',slug:'area',title:'Integration as area',sequence:90,
+ modes:['understand','memorise','ao1','ao2','ao3'],prerequisiteTopicIds:['topic:y12:integration:definite-indefinite'],prerequisiteTags:['definite-integral','evaluation-brackets'],vocabularyTags:integrationAreaVocabularyTags,
+ journey:[
+  {id:'lower-zero',title:'Begin at zero',summary:'Interpret a definite integral of a positive function as a shaded area from 0 to b.',microSkillIds:[skill('lower-limit-zero')],vocabularyTags:['vocab:area-under-curve','vocab:definite-integral']},
+  {id:'remove-first',title:'Remove the unwanted first region',summary:'Build an arbitrary lower limit by subtracting the accumulated area from 0 to a.',microSkillIds:[skill('arbitrary-lower-limit')],vocabularyTags:['vocab:accumulated-area','vocab:lower-limit']},
+  {id:'endpoint-difference',title:'Connect area to F(b)−F(a)',summary:'Link the visual subtraction to endpoint evaluation.',microSkillIds:[skill('endpoint-difference')],vocabularyTags:['vocab:definite-integral']},
+  {id:'properties',title:'See the properties',summary:'Visualise identical limits, adjacent intervals and reversed limits.',microSkillIds:[skill('visual-properties')],vocabularyTags:['vocab:adjacent-intervals','vocab:lower-limit','vocab:upper-limit']}
+ ],
+ microSkills:[
+  {microSkillId:skill('lower-limit-zero'),slug:'lower-limit-zero',title:'Relate ∫₀ᵇf(x)dx to the shaded area for a positive function',prerequisiteTags:['definite-integral'],vocabularyTags:['vocab:area-under-curve','vocab:definite-integral'],supportTargets:{understand:activity('lower-limit-zero'),memorise:activity('area-meaning','memorise'),ao1:activity('lower-zero-area','ao1')}},
+  {microSkillId:skill('arbitrary-lower-limit'),slug:'arbitrary-lower-limit',title:'Construct ∫ₐᵇ by removing the unwanted 0-to-a accumulation',prerequisiteTags:['lower-limit-zero'],vocabularyTags:['vocab:accumulated-area','vocab:lower-limit'],supportTargets:{understand:activity('remove-unwanted-region'),memorise:activity('remove-first-region','memorise'),ao1:activity('arbitrary-lower-area','ao1')}},
+  {microSkillId:skill('endpoint-difference'),slug:'endpoint-difference',title:'Connect area subtraction to F(b)−F(a)',prerequisiteTags:['evaluation-brackets'],vocabularyTags:['vocab:definite-integral'],supportTargets:{understand:activity('endpoint-difference'),memorise:activity('endpoint-difference','memorise'),ao1:activity('arbitrary-lower-area','ao1')}},
+  {microSkillId:skill('visual-properties'),slug:'visual-properties',title:'Interpret identical, adjacent and reversed limits visually',prerequisiteTags:['limit-properties'],vocabularyTags:['vocab:adjacent-intervals','vocab:lower-limit','vocab:upper-limit'],supportTargets:{understand:activity('visual-properties'),memorise:activity('visual-properties','memorise'),ao1:activity('visual-properties','ao1')}},
+  {microSkillId:skill('reasoning'),slug:'reasoning',title:'Explain the visual meaning of lower limits and endpoint subtraction',prerequisiteTags:['definite-integral'],vocabularyTags:['vocab:accumulated-area'],supportTargets:{understand:activity('remove-unwanted-region')}},
+  {microSkillId:skill('applications'),slug:'applications',title:'Apply area under a positive curve in a simple context',prerequisiteTags:['definite-integral'],vocabularyTags:['vocab:area-under-curve'],supportTargets:{}}
+ ],
+ activities:[
+  {activityId:activity('lower-limit-zero'),mode:'understand',slug:'lower-limit-zero',title:'Begin with lower limit zero',activityType:'interactive',microSkillIds:[skill('lower-limit-zero')],vocabularyTags:integrationAreaVocabularyTags,implementationStep:46},
+  {activityId:activity('remove-unwanted-region'),mode:'understand',slug:'remove-unwanted-region',title:'Remove the unwanted first region',activityType:'interactive',microSkillIds:[skill('arbitrary-lower-limit'),skill('reasoning')],vocabularyTags:integrationAreaVocabularyTags,implementationStep:46},
+  {activityId:activity('endpoint-difference'),mode:'understand',slug:'endpoint-difference',title:'From accumulated area to F(b)−F(a)',activityType:'interactive',microSkillIds:[skill('endpoint-difference')],vocabularyTags:integrationAreaVocabularyTags,implementationStep:46},
+  {activityId:activity('visual-properties'),mode:'understand',slug:'visual-properties',title:'Basic properties, seen on the graph',activityType:'interactive',microSkillIds:[skill('visual-properties')],vocabularyTags:integrationAreaVocabularyTags,implementationStep:46},
+  ...['area-meaning','remove-first-region','endpoint-difference','visual-properties','vocabulary-recall','memory-games','mixed-review'].map((slug,i)=>({activityId:activity(slug,'memorise'),mode:'memorise',slug,title:['Area from zero','Remove the first region','F(b) − F(a)','Visual properties','Vocabulary recall','Memory games','Mixed review'][i],activityType:'memory',microSkillIds:[skill(i===0?'lower-limit-zero':i===1?'arbitrary-lower-limit':i===2?'endpoint-difference':i===3?'visual-properties':'lower-limit-zero')],vocabularyTags:integrationAreaVocabularyTags,implementationStep:46})),
+  {activityId:activity('lower-zero-area','ao1'),mode:'ao1',slug:'lower-zero-area',title:'Area from zero',activityType:'question-set',microSkillIds:[skill('lower-limit-zero')],vocabularyTags:integrationAreaVocabularyTags,implementationStep:46},
+  {activityId:activity('arbitrary-lower-area','ao1'),mode:'ao1',slug:'arbitrary-lower-area',title:'Remove the initial accumulation',activityType:'question-set',microSkillIds:[skill('arbitrary-lower-limit'),skill('endpoint-difference')],vocabularyTags:integrationAreaVocabularyTags,implementationStep:46},
+  {activityId:activity('visual-properties','ao1'),mode:'ao1',slug:'visual-properties',title:'Visual limit properties',activityType:'question-set',microSkillIds:[skill('visual-properties')],vocabularyTags:integrationAreaVocabularyTags,implementationStep:46},
+  {activityId:activity('explain-lower-limit','ao2'),mode:'ao2',slug:'explain-lower-limit',title:'Explain the lower limit',activityType:'question-set',microSkillIds:[skill('reasoning'),skill('arbitrary-lower-limit')],vocabularyTags:integrationAreaVocabularyTags,implementationStep:46},
+  {activityId:activity('diagnose-area-reasoning','ao2'),mode:'ao2',slug:'diagnose-area-reasoning',title:'Diagnose area reasoning',activityType:'question-set',microSkillIds:[skill('reasoning'),skill('endpoint-difference')],vocabularyTags:integrationAreaVocabularyTags,implementationStep:46},
+  {activityId:activity('simple-area-applications','ao3'),mode:'ao3',slug:'simple-area-applications',title:'Simple area applications',activityType:'question-set',microSkillIds:[skill('applications')],vocabularyTags:integrationAreaVocabularyTags,implementationStep:46}
+ ]
+});

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Linked Function / Gradient Explorer - Step 24</title>
+  <link rel="stylesheet" href="./styles/tokens.css">
+  <link rel="stylesheet" href="./styles/diagram-primitives.css">
+  <link rel="stylesheet" href="./styles/linked-function-gradient-explorer.css">
+  <style>
+    body { margin: 0; background: var(--color-surface-muted, #f2f5f9); color: var(--color-text, #172033); font-family: Inter, system-ui, sans-serif; }
+    main { width: min(1500px, calc(100% - 2rem)); margin: 0 auto; padding: 1.25rem 0 2rem; }
+    h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.25rem); }
+    .intro { max-width: 78ch; color: var(--color-text-muted, #526174); }
+    .note { margin-top: 1rem; padding: 0.75rem 0.9rem; border-radius: 12px; background: var(--color-surface-raised, #fff); border: 1px solid var(--color-border-subtle, #d7dde8); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Linked Function / Gradient Explorer</h1>
+    <p class="intro">Move the point along <strong>f(x)</strong>. The tangent gradient is plotted at the same x-coordinate on <strong>f′(x)</strong>. Reveal the derivative graphs progressively to support prediction before comparison.</p>
+    <div id="linked-gradient-demo"></div>
+    <p class="note"><strong>Keyboard:</strong> focus the movable point and use Left/Right arrows. Pointer dragging uses the same interaction path for mouse, pen and touch.</p>
+  </main>
+  <script type="module" src="./scripts/linked-function-gradient-explorer-demo.js"></script>
+</body>
+</html>

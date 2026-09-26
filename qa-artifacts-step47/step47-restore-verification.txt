@@ -1,0 +1,5 @@
+Restore archive preliminary verification: PASS
+- Archive extracted into a clean directory.
+- Full runtime automated test suite passed from extracted contents.
+- Static build passed from extracted contents.
+- Archive was rebuilt after adding this verification record; final ZIP integrity is checked separately.

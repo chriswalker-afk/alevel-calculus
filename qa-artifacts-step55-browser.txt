@@ -1,0 +1,1 @@
+Managed Chromium visual screenshot not produced in this environment; visual-browser QA not claimed.

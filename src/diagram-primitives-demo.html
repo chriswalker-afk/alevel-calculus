@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diagram primitives demonstration</title>
+  <link rel="stylesheet" href="./styles/tokens.css">
+  <link rel="stylesheet" href="./styles/diagram-primitives.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--surface-canvas); color: var(--text-primary); font-family: var(--font-ui); }
+    body { padding: clamp(12px, 2vw, 28px); }
+    main { width: min(1120px, 100%); margin: 0 auto; display: grid; gap: var(--space-4); }
+    .demo-header, .demo-card { background: var(--surface-base); border: 1px solid var(--border-default); border-radius: var(--radius-xl); box-shadow: var(--shadow-raised); }
+    .demo-header { padding: clamp(16px, 2.5vw, 28px); }
+    .demo-header p { max-width: 72ch; margin: var(--space-2) 0 0; color: var(--text-secondary); line-height: var(--leading-normal); }
+    .demo-header h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2rem); }
+    .demo-card { padding: clamp(12px, 2vw, 22px); display: grid; gap: var(--space-4); min-width: 0; }
+    .demo-status { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+    .demo-status strong { font-size: var(--text-sm); }
+    .demo-status output { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-secondary); }
+    .demo-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+    .demo-notes { display: flex; gap: var(--space-3); flex-wrap: wrap; color: var(--text-secondary); font-size: var(--text-sm); }
+    .demo-notes span { padding: var(--space-2) var(--space-3); border-radius: var(--radius-pill); background: var(--surface-subtle); }
+    @media (max-width: 680px) {
+      body { padding: 8px; }
+      .demo-controls { grid-template-columns: 1fr; }
+      .demo-header, .demo-card { border-radius: var(--radius-lg); }
+    }
+  </style>
+</head>
+<body data-learning-mode="understand">
+  <main>
+    <header class="demo-header">
+      <h1>Interactive diagram controls</h1>
+      <p>Use the movable point, the keyboard arrow keys and the sliders to explore the common interaction patterns used by calculus diagrams.</p>
+    </header>
+    <section class="demo-card" aria-labelledby="diagram-heading">
+      <div class="demo-status">
+        <strong id="diagram-heading">Coordinate diagram</strong>
+        <output data-point-coordinates aria-live="polite"></output>
+      </div>
+      <div data-diagram-demo></div>
+      <div class="demo-controls" data-diagram-controls></div>
+      <div class="demo-notes" aria-label="Available interaction methods">
+        <span>Pointer / touch</span><span>Arrow keys</span><span>Range controls</span><span>Reduced-motion safe</span>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="./scripts/diagram-primitives-demo.js"></script>
+</body>
+</html>

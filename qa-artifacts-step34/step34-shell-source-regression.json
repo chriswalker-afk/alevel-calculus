@@ -1,0 +1,44 @@
+{
+  "compared_against": "Step 33 runtime",
+  "files": {
+    "src/index.html": {
+      "step33_sha256": "7eada2d26e4cdc70f1c9eb13becc3474ca90c43f6f7cd20fc6cee50d17780906",
+      "step34_sha256": "7eada2d26e4cdc70f1c9eb13becc3474ca90c43f6f7cd20fc6cee50d17780906",
+      "identical": true
+    },
+    "src/styles/app-shell.css": {
+      "step33_sha256": "b245a4391a76b06b38a4acd98792de7ecbf8b7012728a2be117eda3ee57dcc9e",
+      "step34_sha256": "b245a4391a76b06b38a4acd98792de7ecbf8b7012728a2be117eda3ee57dcc9e",
+      "identical": true
+    },
+    "src/styles/tokens.css": {
+      "step33_sha256": "dd7d6f206971315373b062e813d45bddd2383bf2ec35eff16f807a48cea576d5",
+      "step34_sha256": "dd7d6f206971315373b062e813d45bddd2383bf2ec35eff16f807a48cea576d5",
+      "identical": true
+    },
+    "src/styles/memory-lab.css": {
+      "step33_sha256": "346df4018f392add26ba04e64ff3d891ee6754194492d26279724fcd355f53b1",
+      "step34_sha256": "346df4018f392add26ba04e64ff3d891ee6754194492d26279724fcd355f53b1",
+      "identical": true
+    },
+    "src/scripts/basics-understand.js": {
+      "step33_sha256": "37129bafd87f86e26282fd346283884636c3300ee08100d18e5c5f9cada4a01d",
+      "step34_sha256": "37129bafd87f86e26282fd346283884636c3300ee08100d18e5c5f9cada4a01d",
+      "identical": true
+    },
+    "src/styles/basics-understand.css": {
+      "step33_sha256": "17bc91031cec5e56e319364079a5e33a66292c9e28ea633e20ef3840818c533f",
+      "step34_sha256": "17bc91031cec5e56e319364079a5e33a66292c9e28ea633e20ef3840818c533f",
+      "identical": true
+    }
+  },
+  "intentional_changes": {
+    "src/scripts/app-shell.js": {
+      "step33_sha256": "1ef0ae026b2e291b87b6199a0f7e59e31277bdd4f9b5fa8aade71f8e2f5850f6",
+      "step34_sha256": "d4e7724e5935869ec2daae7a6e5c214cc55037f9ceff64a2e1f5da4cf69b3169",
+      "identical": false,
+      "reason": "Generic Memory Lab game routing preserves stable Step 18/19 identities after adding Step 34 canonical activities."
+    }
+  },
+  "all_locked_presentation_files_identical": true
+}

@@ -1,0 +1,30 @@
+{
+  "baseline": "Step 26 restore point",
+  "files": [
+    {
+      "file": "src/index.html",
+      "step26Sha256": "7b974c1dad369387d27169b9b579f2a1be0465b11e2466b7f3955ca90c26b3bd",
+      "step27Sha256": "7b974c1dad369387d27169b9b579f2a1be0465b11e2466b7f3955ca90c26b3bd",
+      "unchanged": true
+    },
+    {
+      "file": "src/styles/app-shell.css",
+      "step26Sha256": "b245a4391a76b06b38a4acd98792de7ecbf8b7012728a2be117eda3ee57dcc9e",
+      "step27Sha256": "b245a4391a76b06b38a4acd98792de7ecbf8b7012728a2be117eda3ee57dcc9e",
+      "unchanged": true
+    },
+    {
+      "file": "src/styles/tokens.css",
+      "step26Sha256": "dd7d6f206971315373b062e813d45bddd2383bf2ec35eff16f807a48cea576d5",
+      "step27Sha256": "dd7d6f206971315373b062e813d45bddd2383bf2ec35eff16f807a48cea576d5",
+      "unchanged": true
+    },
+    {
+      "file": "src/scripts/app-shell.js",
+      "step26Sha256": "043f30795c23f388533855c05a874a09d5b4a0f7c68182de6eb0e68f313eaa8c",
+      "step27Sha256": "043f30795c23f388533855c05a874a09d5b4a0f7c68182de6eb0e68f313eaa8c",
+      "unchanged": true
+    }
+  ],
+  "allUnchanged": true
+}

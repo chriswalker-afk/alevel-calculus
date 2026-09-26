@@ -1,0 +1,9 @@
+Step 36 browser visual QA attempt
+Date: 2026-09-25
+Target: http://127.0.0.1:8899/index.html
+Browser path: /usr/bin/chromium, driven through Python Playwright
+Requested viewport: 1440x900
+Result: BLOCKED BY ENVIRONMENT POLICY
+Exact navigation error: Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at http://127.0.0.1:8899/index.html
+
+Because the managed browser blocks localhost/file/data preview URLs, Step 36 does not claim desktop/tablet/phone screenshot QA. Responsive/accessibility acceptance is covered by the reference-topic regression test plus the existing component tests; unrestricted-browser visual inspection remains the only environment-limited item.
