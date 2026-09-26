@@ -267,7 +267,7 @@ export function createQuestionShell(root, {
     solutionRenderer.render(question.solutionSteps);
 
     renderSelfReview(question, state);
-    fields.nextButton.disabled = selfReviewQuestion ? !state.selfReviewOutcome : !state.checked;
+    fields.nextButton.disabled = selfReviewQuestion ? state.selfReviewOutcome !== "secure" : !state.checked;
   }
 
   function renderOptions(question) {
