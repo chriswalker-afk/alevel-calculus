@@ -246,6 +246,23 @@ const helpDrawerClose = new FakeElement('helpDrawerClose');
 const helpDrawerScrim = new FakeElement('helpDrawerScrim');
 helpDrawerScrim.hidden = true;
 const helpContext = new FakeElement('helpContext');
+const topicGoalsTrigger = new FakeElement('topicGoalsTrigger');
+topicGoalsTrigger.setAttribute('aria-expanded', 'false');
+const topicGoalsDialog = new FakeElement('topicGoalsDialog');
+topicGoalsDialog.open = false;
+topicGoalsDialog.showModal = function () { this.open = true; };
+topicGoalsDialog.close = function () { this.open = false; const handler = listeners.get('topicGoalsDialog:close'); if (handler) handler(); };
+const topicGoalsClose = new FakeElement('topicGoalsClose');
+const topicGoalsHeading = new FakeElement('topicGoalsHeading');
+const topicGoalsTopic = new FakeElement('topicGoalsTopic');
+const topicGoalsList = new FakeElement('topicGoalsList');
+const topicGoalsFooter = new FakeElement('topicGoalsFooter');
+const topicObjectivesInline = new FakeElement('topicObjectivesInline');
+topicObjectivesInline.hidden = true;
+const topicObjectivesInlineEyebrow = new FakeElement('topicObjectivesInlineEyebrow');
+const topicObjectivesInlineHeading = new FakeElement('topicObjectivesInlineHeading');
+const topicObjectivesInlineList = new FakeElement('topicObjectivesInlineList');
+const topicObjectivesInlineFooter = new FakeElement('topicObjectivesInlineFooter');
 const wordBankDrawer = new FakeElement('wordBankDrawer');
 wordBankDrawer.setAttribute('aria-hidden', 'true');
 const wordBankTrigger = new FakeElement('wordBankTrigger');
@@ -375,6 +392,18 @@ const documentMap = new Map([
   ['[data-help-drawer-close]', helpDrawerClose],
   ['[data-help-drawer-scrim]', helpDrawerScrim],
   ['[data-help-context]', helpContext],
+  ['[data-topic-goals-trigger]', topicGoalsTrigger],
+  ['[data-topic-goals-dialog]', topicGoalsDialog],
+  ['[data-topic-goals-close]', topicGoalsClose],
+  ['[data-topic-goals-heading]', topicGoalsHeading],
+  ['[data-topic-goals-topic]', topicGoalsTopic],
+  ['[data-topic-goals-list]', topicGoalsList],
+  ['[data-topic-goals-footer]', topicGoalsFooter],
+  ['[data-topic-objectives-inline]', topicObjectivesInline],
+  ['[data-topic-objectives-inline-eyebrow]', topicObjectivesInlineEyebrow],
+  ['[data-topic-objectives-inline-heading]', topicObjectivesInlineHeading],
+  ['[data-topic-objectives-inline-list]', topicObjectivesInlineList],
+  ['[data-topic-objectives-inline-footer]', topicObjectivesInlineFooter],
   ['[data-word-bank-drawer]', wordBankDrawer],
   ['[data-word-bank-trigger]', wordBankTrigger],
   ['[data-word-bank-close]', wordBankClose],
@@ -519,6 +548,21 @@ assert(shell.dataset.wordBankOpen === 'false', 'Word Bank drawer should initiali
 assert(wordBankDrawer.getAttribute('aria-hidden') === 'true', 'Closed Word Bank should be hidden from accessibility tree');
 assert(wordBankScrim.hidden === true, 'Word Bank scrim should initialize hidden');
 assert(wordBankCount.textContent === '2', 'Initial tagged vocabulary should be collected automatically');
+assert(topicObjectivesInline.hidden === false, 'Initial Topic goals should render on the first Understand activity');
+assert(topicObjectivesInlineHeading.textContent === 'In this topic you will learn to…', 'Initial Topic goals should use the teaching-topic heading');
+assert(topicObjectivesInlineList.appended.length >= 3, 'Initial Topic goals should render several student-facing objectives');
+
+const goalsClick = listeners.get('topicGoalsTrigger:click');
+assert(typeof goalsClick === 'function', 'Topic goals control should have a click handler');
+goalsClick();
+assert(topicGoalsDialog.open === true, 'Topic goals control should open the goals dialog');
+assert(topicGoalsHeading.textContent === 'In this topic you will learn to…', 'Goals dialog should use the current topic objective heading');
+assert(topicGoalsTopic.textContent === 'Basics of differentiation', 'Goals dialog should identify the current topic');
+assert(topicGoalsList.appended.length >= 3, 'Goals dialog should list the topic objectives');
+assert(topicGoalsClose.focused === true, 'Opening Topic goals should move focus to the close button');
+listeners.get('topicGoalsClose:click')();
+assert(topicGoalsDialog.open === false, 'Topic goals close control should close the dialog');
+
 
 stage.dataset.answerDraft = '3x^2';
 stage.dataset.sliderValue = '0.63';
