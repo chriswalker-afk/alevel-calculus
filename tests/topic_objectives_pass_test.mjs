@@ -15,7 +15,7 @@ assert.equal(topicObjectiveCount,33,"The objective registry must cover all 33 re
 assert.equal(configs.length,33);
 assert.equal(new Set(configs.map((entry)=>entry.topicId)).size,33,"Topic objective IDs must be unique.");
 
-const usefulVerbs=/^(interpret|distinguish|compare|calculate|explain|recognise|recognize|connect|read|differentiate|rewrite|derive|use|form|handle|apply|find|classify|solve|include|check|evaluate|identify|construct|combine|bring|select|separate|integrate|adjust|choose|track|convert|translate|decide|execute|diagnose|carry)/i;
+const usefulVerbs=/^(adjust|apply|bring|build|calculate|carry|check|choose|classify|collect|combine|compare|complete|confirm|connect|construct|convert|decide|derive|determine|diagnose|differentiate|distinguish|evaluate|execute|explain|find|form|handle|identify|include|integrate|interpret|orient|read|recognise|recognize|reverse|rewrite|select|separate|solve|split|substitute|track|transform|translate|treat|use|write)/i;
 for(const entry of configs){
   assert.ok(entry.objectives.length>=3 && entry.objectives.length<=6,entry.topicId+" should have 3–6 objectives.");
   assert.equal(new Set(entry.objectives).size,entry.objectives.length,entry.topicId+" objectives should not repeat.");
