@@ -3,7 +3,9 @@ import { evaluatePolynomial } from "./linked-function-gradient-explorer.js";
 
 export const interactiveQuestionVisualKinds = Object.freeze([
   "calculus-interval-selector",
-  "calculus-point-classifier"
+  "calculus-point-classifier",
+  "calculus-region-selector",
+  "calculus-split-selector"
 ]);
 
 function createElement(documentRef, tag, className = "") {
@@ -18,6 +20,18 @@ function sample(coefficients, xDomain, count = 120) {
     const x = xMin + (index / count) * (xMax - xMin);
     return { x, y: evaluatePolynomial(coefficients, x) };
   }).filter(({ y }) => Number.isFinite(y));
+}
+
+function sampleBetween(upperCoefficients, lowerCoefficients, left, right, count = 64) {
+  const upper = Array.from({ length: count + 1 }, (_, index) => {
+    const x = left + (index / count) * (right - left);
+    return { x, y: evaluatePolynomial(upperCoefficients, x) };
+  });
+  const lower = Array.from({ length: count + 1 }, (_, index) => {
+    const x = right - (index / count) * (right - left);
+    return { x, y: evaluatePolynomial(lowerCoefficients, x) };
+  });
+  return [...upper, ...lower].filter(({ y }) => Number.isFinite(y));
 }
 
 function valueFromConfig(question, directKey, parameterKeyKey, fallback) {
@@ -80,6 +94,45 @@ export function intervalSelectionFromResponse(config, response) {
   return Object.freeze(raw.split("|").filter((id) => allowed.has(id)));
 }
 
+function selectionResponse(config, items, prefix, selectedIds) {
+  const order = (items ?? []).map((item) => item.id);
+  const key = intervalSelectionKey(selectedIds, order);
+  if (!key) return "";
+  return config?.responseMap?.[key] ?? `${prefix}:${key}`;
+}
+
+function selectionFromResponse(config, items, prefix, response) {
+  const text = String(response ?? "");
+  if (!text) return Object.freeze([]);
+  const responseMap = config?.responseMap ?? {};
+  const mapped = Object.entries(responseMap).find(([, mappedResponse]) => mappedResponse === text)?.[0];
+  const raw = mapped ?? (text.startsWith(`${prefix}:`) ? text.slice(prefix.length + 1) : "");
+  const allowed = new Set((items ?? []).map((item) => item.id));
+  return Object.freeze(raw.split("|").filter((id) => allowed.has(id)));
+}
+
+export function regionResponseFromSelection(config, regionIds) {
+  return selectionResponse(config, config?.regions, "regions", regionIds);
+}
+
+export function regionSelectionFromResponse(config, response) {
+  return selectionFromResponse(config, config?.regions, "regions", response);
+}
+
+export function splitResponseFromSelection(config, splitIds) {
+  return selectionResponse(config, config?.splitCandidates, "splits", splitIds);
+}
+
+export function splitSelectionFromResponse(config, response) {
+  if (String(response ?? "") === String(config?.noneResponse ?? "__never__")) {
+    return Object.freeze({ ids: Object.freeze([]), none: true });
+  }
+  return Object.freeze({
+    ids: selectionFromResponse(config, config?.splitCandidates, "splits", response),
+    none: false
+  });
+}
+
 export function isInteractiveQuestionVisual(question) {
   const kind = question?.diagramConfig?.kind;
   if (!interactiveQuestionVisualKinds.includes(kind)) return false;
@@ -87,6 +140,21 @@ export function isInteractiveQuestionVisual(question) {
   if (!validGraphSpec(spec)) return false;
   if (kind === "calculus-interval-selector") {
     return Array.isArray(question.diagramConfig.segments) && question.diagramConfig.segments.length >= 2;
+  }
+  if (kind === "calculus-region-selector") {
+    return Array.isArray(question.diagramConfig.regions)
+      && question.diagramConfig.regions.length >= 2
+      && question.diagramConfig.regions.every((region) =>
+        Array.isArray(region.upperCoefficients)
+        && Array.isArray(region.lowerCoefficients)
+        && Number.isFinite(Number(region.from))
+        && Number.isFinite(Number(region.to))
+      );
+  }
+  if (kind === "calculus-split-selector") {
+    return Array.isArray(question.diagramConfig.splitCandidates)
+      && question.diagramConfig.splitCandidates.length >= 1
+      && question.diagramConfig.splitCandidates.every((candidate) => Number.isFinite(Number(candidate.x)));
   }
   const point = pointSpec(question);
   return Boolean(
@@ -134,7 +202,8 @@ export function createQuestionVisualRenderer(host, { onResponseChange = () => {}
     yDomain,
     tone = "curve",
     ariaLabel,
-    minHeight = 190
+    minHeight = 190,
+    extraCurves = []
   }) {
     const card = createElement(documentRef, "section", "question-graph-card");
     const heading = createElement(documentRef, "h3", "question-graph-card__title");
@@ -153,6 +222,20 @@ export function createQuestionVisualRenderer(host, { onResponseChange = () => {}
     diagram.grid({ xStep: 1, yStep: 1 });
     diagram.axes({ tickStep: 1 });
     diagram.polyline(sample(coefficients, xDomain), { tone });
+    for (const curve of extraCurves) {
+      if (!Array.isArray(curve?.coefficients)) continue;
+      diagram.polyline(sample(curve.coefficients, xDomain), { tone: curve.tone ?? "accent" });
+      if (curve.label && curve.labelAt && Number.isFinite(Number(curve.labelAt.x)) && Number.isFinite(Number(curve.labelAt.y))) {
+        diagram.label({
+          x: Number(curve.labelAt.x),
+          y: Number(curve.labelAt.y),
+          text: curve.label,
+          dx: curve.labelAt.dx ?? 0,
+          dy: curve.labelAt.dy ?? -12,
+          tone: curve.tone ?? "accent"
+        });
+      }
+    }
     diagrams.push(diagram);
     return { card, plot, diagram };
   }
@@ -414,6 +497,267 @@ export function createQuestionVisualRenderer(host, { onResponseChange = () => {}
     return true;
   }
 
+  function renderRegionSelector(question, response) {
+    const config = question.diagramConfig;
+    const spec = graphSpec(question);
+    if (!validGraphSpec(spec)) return false;
+
+    const selected = new Set(regionSelectionFromResponse(config, response));
+    const allowMultiple = Boolean(config.allowMultiple);
+    const wrap = createElement(documentRef, "section", "question-graph-interaction question-graph-interaction--regions");
+    const intro = createElement(documentRef, "div", "question-graph-interaction__intro");
+    const title = createElement(documentRef, "h3", "question-graph-interaction__title");
+    title.textContent = config.title ?? "Select the required region";
+    const instruction = createElement(documentRef, "p", "question-graph-interaction__instruction");
+    instruction.textContent = config.instruction ?? "Select the region on the graph. Use the large buttons below as an alternative.";
+    intro.append(title, instruction);
+
+    const graphHost = createElement(documentRef, "div", "question-graph-interaction__graph");
+    const controls = createElement(documentRef, "div", "question-region-selector__choices");
+    controls.setAttribute("role", "group");
+    controls.setAttribute("aria-label", config.controlLabel ?? "Selectable graph regions");
+    const status = createElement(documentRef, "p", "question-graph-interaction__status");
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
+    wrap.append(intro, graphHost, controls, status);
+    host.append(wrap);
+    host.hidden = false;
+    host.dataset.visualKind = config.kind;
+
+    const { diagram } = addGraph(graphHost, {
+      title: config.graphTitle ?? "Graph",
+      coefficients: spec.coefficients,
+      xDomain: spec.xDomain,
+      yDomain: spec.yDomain,
+      tone: config.primaryTone ?? "curve",
+      ariaLabel: config.ariaLabel ?? "Graph with selectable calculus regions",
+      minHeight: 250,
+      extraCurves: config.secondaryCurves ?? []
+    });
+
+    const regionElements = new Map();
+    const controlButtons = new Map();
+
+    function emitSelection() {
+      onResponseChange(regionResponseFromSelection(config, [...selected]));
+    }
+
+    function chooseRegion(id) {
+      if (!allowMultiple) {
+        const alreadySelected = selected.has(id) && selected.size === 1;
+        selected.clear();
+        if (!alreadySelected) selected.add(id);
+      } else if (selected.has(id)) {
+        selected.delete(id);
+      } else {
+        selected.add(id);
+      }
+      sync();
+      emitSelection();
+    }
+
+    function sync() {
+      for (const region of config.regions) {
+        const active = selected.has(region.id);
+        const polygon = regionElements.get(region.id);
+        const button = controlButtons.get(region.id);
+        polygon?.setAttribute("aria-pressed", active ? "true" : "false");
+        if (polygon) {
+          polygon.dataset.selected = active ? "true" : "false";
+          polygon.style.opacity = active ? "0.18" : "0.035";
+        }
+        button?.setAttribute("aria-pressed", active ? "true" : "false");
+      }
+      const labels = config.regions.filter((region) => selected.has(region.id)).map((region) => region.label);
+      status.textContent = labels.length ? `Selected: ${labels.join(" and ")}.` : "No region selected yet.";
+    }
+
+    for (const region of config.regions) {
+      const polygon = diagram.shadedRegion(
+        sampleBetween(region.upperCoefficients, region.lowerCoefficients, Number(region.from), Number(region.to)),
+        { tone: region.tone ?? "region", opacity: selected.has(region.id) ? 0.18 : 0.035 }
+      ).element;
+      polygon.classList.add("question-region-selector__region");
+      polygon.setAttribute("tabindex", "0");
+      polygon.setAttribute("role", "button");
+      polygon.setAttribute("aria-label", region.ariaLabel ?? `Select ${region.label}`);
+      polygon.setAttribute("aria-pressed", selected.has(region.id) ? "true" : "false");
+      polygon.style.pointerEvents = "all";
+      polygon.style.cursor = "pointer";
+      const clickHandler = () => chooseRegion(region.id);
+      const keyHandler = (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        chooseRegion(region.id);
+      };
+      polygon.addEventListener("click", clickHandler);
+      polygon.addEventListener("keydown", keyHandler);
+      addCleanup(() => polygon.removeEventListener("click", clickHandler));
+      addCleanup(() => polygon.removeEventListener("keydown", keyHandler));
+      regionElements.set(region.id, polygon);
+      if (!focusTarget) focusTarget = polygon;
+
+      const button = createElement(documentRef, "button", "question-region-selector__choice");
+      button.type = "button";
+      button.setAttribute("aria-pressed", selected.has(region.id) ? "true" : "false");
+      const label = createElement(documentRef, "span", "question-region-selector__label");
+      label.textContent = region.label;
+      const cue = createElement(documentRef, "span", "question-region-selector__cue");
+      cue.textContent = region.cue ?? "";
+      button.append(label, cue);
+      const buttonHandler = () => chooseRegion(region.id);
+      button.addEventListener("click", buttonHandler);
+      addCleanup(() => button.removeEventListener("click", buttonHandler));
+      controls.append(button);
+      controlButtons.set(region.id, button);
+    }
+    sync();
+    return true;
+  }
+
+  function renderSplitSelector(question, response) {
+    const config = question.diagramConfig;
+    const spec = graphSpec(question);
+    if (!validGraphSpec(spec)) return false;
+
+    const restored = splitSelectionFromResponse(config, response);
+    const selected = new Set(restored.ids);
+    let noneSelected = restored.none;
+    const allowMultiple = config.allowMultiple !== false;
+
+    const wrap = createElement(documentRef, "section", "question-graph-interaction question-graph-interaction--splits");
+    const intro = createElement(documentRef, "div", "question-graph-interaction__intro");
+    const title = createElement(documentRef, "h3", "question-graph-interaction__title");
+    title.textContent = config.title ?? "Select the split point(s)";
+    const instruction = createElement(documentRef, "p", "question-graph-interaction__instruction");
+    instruction.textContent = config.instruction ?? "Select every x-value where the integral must be split.";
+    intro.append(title, instruction);
+    const graphHost = createElement(documentRef, "div", "question-graph-interaction__graph");
+    const controls = createElement(documentRef, "div", "question-split-selector__choices");
+    controls.setAttribute("role", "group");
+    controls.setAttribute("aria-label", config.controlLabel ?? "Candidate split points");
+    const status = createElement(documentRef, "p", "question-graph-interaction__status");
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
+    wrap.append(intro, graphHost, controls, status);
+    host.append(wrap);
+    host.hidden = false;
+    host.dataset.visualKind = config.kind;
+
+    const { diagram } = addGraph(graphHost, {
+      title: config.graphTitle ?? "Graph",
+      coefficients: spec.coefficients,
+      xDomain: spec.xDomain,
+      yDomain: spec.yDomain,
+      tone: config.primaryTone ?? "curve",
+      ariaLabel: config.ariaLabel ?? "Graph with candidate split points",
+      minHeight: 250,
+      extraCurves: config.secondaryCurves ?? []
+    });
+
+    const [yMin, yMax] = spec.yDomain.map(Number);
+    const markerById = new Map();
+    const hitById = new Map();
+    const buttonById = new Map();
+
+    function emitSelection() {
+      if (noneSelected) {
+        onResponseChange(config.noneResponse ?? "");
+        return;
+      }
+      onResponseChange(splitResponseFromSelection(config, [...selected]));
+    }
+
+    function chooseSplit(id) {
+      noneSelected = false;
+      if (!allowMultiple) selected.clear();
+      if (selected.has(id)) selected.delete(id);
+      else selected.add(id);
+      sync();
+      emitSelection();
+    }
+
+    function chooseNone() {
+      selected.clear();
+      noneSelected = true;
+      sync();
+      emitSelection();
+    }
+
+    function sync() {
+      for (const candidate of config.splitCandidates) {
+        const active = selected.has(candidate.id);
+        markerById.get(candidate.id)?.element.setAttribute("data-selected", active ? "true" : "false");
+        hitById.get(candidate.id)?.setAttribute("aria-pressed", active ? "true" : "false");
+        buttonById.get(candidate.id)?.setAttribute("aria-pressed", active ? "true" : "false");
+      }
+      const noneButton = controls.querySelector("[data-split-none]");
+      noneButton?.setAttribute("aria-pressed", noneSelected ? "true" : "false");
+      const labels = config.splitCandidates.filter((candidate) => selected.has(candidate.id)).map((candidate) => candidate.label);
+      status.textContent = noneSelected
+        ? "Selected: no split is needed."
+        : labels.length
+          ? `Selected split point${labels.length > 1 ? "s" : ""}: ${labels.join(" and ")}.`
+          : "No split point selected yet.";
+    }
+
+    for (const candidate of config.splitCandidates) {
+      const x = Number(candidate.x);
+      const y = Number.isFinite(Number(candidate.y)) ? Number(candidate.y) : 0;
+      if (config.showGuides !== false) {
+        diagram.line({ x1: x, y1: yMin, x2: x, y2: yMax, tone: "bound", dashed: true });
+      }
+      const marker = diagram.point({ x, y, radius: 11, tone: "accent", label: candidate.graphLabel ?? candidate.label });
+      const hit = diagram.point({ x, y, radius: 46, tone: "interactive" }).element;
+      hit.classList.add("question-split-selector__hit");
+      hit.style.opacity = "0.001";
+      hit.style.pointerEvents = "all";
+      hit.style.cursor = "pointer";
+      hit.setAttribute("tabindex", "0");
+      hit.setAttribute("role", "button");
+      hit.setAttribute("aria-label", candidate.ariaLabel ?? `Toggle split at ${candidate.label}`);
+      hit.setAttribute("aria-pressed", selected.has(candidate.id) ? "true" : "false");
+      const hitClick = () => chooseSplit(candidate.id);
+      const hitKey = (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        chooseSplit(candidate.id);
+      };
+      hit.addEventListener("click", hitClick);
+      hit.addEventListener("keydown", hitKey);
+      addCleanup(() => hit.removeEventListener("click", hitClick));
+      addCleanup(() => hit.removeEventListener("keydown", hitKey));
+      markerById.set(candidate.id, marker);
+      hitById.set(candidate.id, hit);
+      if (!focusTarget) focusTarget = hit;
+
+      const button = createElement(documentRef, "button", "question-split-selector__choice");
+      button.type = "button";
+      button.textContent = candidate.label;
+      button.setAttribute("aria-pressed", selected.has(candidate.id) ? "true" : "false");
+      const buttonHandler = () => chooseSplit(candidate.id);
+      button.addEventListener("click", buttonHandler);
+      addCleanup(() => button.removeEventListener("click", buttonHandler));
+      controls.append(button);
+      buttonById.set(candidate.id, button);
+    }
+
+    if (config.noneResponse) {
+      const noneButton = createElement(documentRef, "button", "question-split-selector__choice");
+      noneButton.type = "button";
+      noneButton.dataset.splitNone = "";
+      noneButton.textContent = config.noneLabel ?? "No split needed";
+      noneButton.setAttribute("aria-pressed", noneSelected ? "true" : "false");
+      const noneHandler = () => chooseNone();
+      noneButton.addEventListener("click", noneHandler);
+      addCleanup(() => noneButton.removeEventListener("click", noneHandler));
+      controls.append(noneButton);
+    }
+
+    sync();
+    return true;
+  }
+
   function handlesResponse(question) {
     return isInteractiveQuestionVisual(question);
   }
@@ -424,6 +768,8 @@ export function createQuestionVisualRenderer(host, { onResponseChange = () => {}
     if (kind === "function-derivative-choice") return renderDerivativeMatch(question);
     if (kind === "calculus-interval-selector") return renderIntervalSelector(question, response);
     if (kind === "calculus-point-classifier") return renderPointClassifier(question, response);
+    if (kind === "calculus-region-selector") return renderRegionSelector(question, response);
+    if (kind === "calculus-split-selector") return renderSplitSelector(question, response);
     return false;
   }
 
