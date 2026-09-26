@@ -168,7 +168,7 @@ export function createMathEntryEnhancement({ inputGroup, input } = {}) {
 
   function setMode(responseType) {
     shell.dataset.responseType = responseType ?? "";
-    toolbarWrap.hidden = responseType !== "algebraic" && responseType !== "numeric";
+    toolbarWrap.hidden = responseType !== "algebraic";
   }
 
   sync(input.value);
