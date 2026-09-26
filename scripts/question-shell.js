@@ -1,4 +1,4 @@
-import { createQuestionVisualRenderer } from "./question-visual-renderer.js";
+import { createQuestionVisualRenderer } from "./question-visual-renderer.js?v=interactions1";
 import {
   getHintActionLabel,
   getHintProgressLabel,
@@ -91,7 +91,21 @@ export function createQuestionShell(root, {
   });
 
   const solutionRenderer = createWorkedSolutionRenderer(fields.solutionSteps);
-  const visualRenderer = createQuestionVisualRenderer(fields.visual);
+  const visualRenderer = createQuestionVisualRenderer(fields.visual, {
+    onResponseChange(response) {
+      const question = currentQuestion();
+      if (!question) return;
+      const state = stateFor(question);
+      state.response = response;
+      state.checked = false;
+      state.feedback = null;
+      state.diagnostic = null;
+      state.solutionOpen = false;
+      renderFeedback(state);
+      renderDiagnostic(state);
+      renderPanels(question, state);
+    }
+  });
   const optionRows = Array.from(root.querySelectorAll("[data-question-shell-option]"));
   if (optionRows.length < 4) throw new Error("QuestionShell requires at least four reusable choice-option rows.");
 
@@ -152,6 +166,7 @@ export function createQuestionShell(root, {
   }
 
   function readResponse(question) {
+    if (visualRenderer.handlesResponse(question)) return stateFor(question).response;
     if (question.responseType === "choice") {
       const selected = optionRows
         .map((row) => row.querySelector("[data-question-shell-choice]"))
@@ -296,6 +311,10 @@ export function createQuestionShell(root, {
   }
 
   function focusResponse(question) {
+    if (visualRenderer.handlesResponse(question)) {
+      visualRenderer.focusResponse();
+      return;
+    }
     if (question.responseType === "choice") {
       optionRows.find((row) => !row.hidden)?.querySelector("[data-question-shell-choice]")?.focus?.();
       return;
@@ -313,17 +332,17 @@ export function createQuestionShell(root, {
 
     root.dataset.questionResponseType = question.responseType;
     root.dataset.questionId = question.id;
-    fields.format.textContent = responseTypeLabel(question.responseType);
+    const interactiveVisual = visualRenderer.handlesResponse(question);
+    fields.format.textContent = interactiveVisual ? "Graph selection" : responseTypeLabel(question.responseType);
     fields.counter.textContent = `${batchPrefix}Question ${position}`;
     fields.progress.textContent = `${batchPrefix}Question ${position}`;
     fields.prompt.textContent = question.prompt;
     fields.math.textContent = question.math || "";
     fields.math.hidden = !question.math;
-    visualRenderer.render(question);
 
     const inputResponse = question.responseType === "numeric" || question.responseType === "algebraic";
     fields.inputGroup.hidden = !inputResponse;
-    fields.choiceGroup.hidden = question.responseType !== "choice";
+    fields.choiceGroup.hidden = question.responseType !== "choice" || interactiveVisual;
     fields.reasoningGroup.hidden = question.responseType !== "short-reasoning";
 
     fields.inputLabel.textContent = question.responseLabel || "Your answer";
@@ -336,6 +355,7 @@ export function createQuestionShell(root, {
     mathEntry.setMode(question.responseType);
     renderOptions(question);
     writeResponse(question, state);
+    visualRenderer.render(question, { response: state.response });
     renderFeedback(state);
     renderDiagnostic(state);
     renderPanels(question, state);

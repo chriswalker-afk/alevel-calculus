@@ -826,3 +826,140 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Interactive assessment pass: large, accessible visual targets for calculus reasoning. */
+.question-graph-interaction {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: var(--surface-subtle);
+}
+
+.question-graph-interaction__intro {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.question-graph-interaction__title {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: var(--text-base);
+}
+
+.question-graph-interaction__instruction,
+.question-graph-interaction__status {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.question-graph-interaction__status {
+  min-height: 1.5em;
+  font-weight: var(--weight-semibold);
+}
+
+.question-graph-interaction__graph {
+  min-width: 0;
+}
+
+.question-graph-interaction__graph > .question-graph-card {
+  padding: var(--space-2);
+}
+
+.question-interval-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: var(--space-2);
+}
+
+.question-interval-selector__segment,
+.question-point-classifier__choice {
+  min-height: 52px;
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--surface-base);
+  color: var(--text-primary);
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+
+.question-interval-selector__segment {
+  display: grid;
+  gap: 2px;
+  align-content: center;
+}
+
+.question-interval-selector__segment:hover,
+.question-interval-selector__segment:focus-visible,
+.question-point-classifier__choice:hover,
+.question-point-classifier__choice:focus-visible {
+  border-color: var(--mode-accent);
+  outline: none;
+  box-shadow: 0 0 0 var(--focus-ring-width) color-mix(in srgb, var(--mode-accent) 22%, transparent);
+}
+
+.question-interval-selector__segment[aria-pressed="true"],
+.question-point-classifier__choice[aria-pressed="true"] {
+  border-color: var(--mode-accent);
+  background: var(--mode-soft);
+  color: var(--mode-soft-text);
+}
+
+.question-interval-selector__segment-label {
+  font-family: var(--font-math);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+}
+
+.question-interval-selector__segment-cue {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.question-interval-selector__region {
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.question-point-classifier__choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-2);
+}
+
+.question-point-classifier__choice[hidden] {
+  display: none;
+}
+
+.question-graph-interaction [data-selected="true"].diagram-primitives__point {
+  stroke-width: 8;
+}
+
+@media (max-width: 680px) {
+  .question-graph-interaction {
+    padding: var(--space-2);
+  }
+
+  .question-interval-selector,
+  .question-point-classifier__choices {
+    grid-template-columns: 1fr;
+  }
+
+  .question-interval-selector__segment,
+  .question-point-classifier__choice {
+    min-height: 56px;
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .question-interval-selector__region {
+    transition: none;
+  }
+}
