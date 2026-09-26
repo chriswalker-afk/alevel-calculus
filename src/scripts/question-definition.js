@@ -138,6 +138,7 @@ export function defineQuestionDefinition(config) {
     responseType,
     responseLabel: config.responseLabel ? assertString(config.responseLabel, "responseLabel") : "",
     placeholder: config.placeholder ? assertString(config.placeholder, "placeholder") : "",
+    selfReviewCriteria: optionalFrozenValue(config.selfReviewCriteria ?? []),
     parameterGenerator,
     promptRenderer,
     mathRenderer: optionalFunction(config.mathRenderer, "mathRenderer"),
