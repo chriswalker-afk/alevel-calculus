@@ -1,0 +1,30 @@
+import assert from "node:assert/strict";
+import { tokeniseMathExpression } from "../src/scripts/math-renderer.js";
+
+const derivative = tokeniseMathExpression("dy/dx = 3x²");
+assert.equal(derivative[0].type, "fraction");
+assert.equal(derivative[0].numerator, "dy");
+assert.equal(derivative[0].denominator, "dx");
+assert.equal(derivative[0].derivative, true);
+
+const operator = tokeniseMathExpression("d/dx [x^3] = 3x^2");
+assert.equal(operator[0].type, "fraction");
+assert.equal(operator[0].numerator, "d");
+assert.equal(operator[0].denominator, "dx");
+
+const second = tokeniseMathExpression("d²y/dx² < 0");
+assert.equal(second[0].numerator, "d²y");
+assert.equal(second[0].denominator, "dx²");
+
+const ordinary = tokeniseMathExpression("y = 3/x² + 1/(x+1)");
+const fractions = ordinary.filter((token) => token.type === "fraction");
+assert.equal(fractions.length, 2);
+assert.deepEqual(
+  fractions.map(({ numerator, denominator }) => [numerator, denominator]),
+  [["3", "x²"], ["1", "x+1"]]
+);
+
+const prose = tokeniseMathExpression("Differentiate with respect to x.");
+assert.deepEqual(prose, [{ type: "text", value: "Differentiate with respect to x." }]);
+
+console.log("Math renderer tokenisation regression passed.");
