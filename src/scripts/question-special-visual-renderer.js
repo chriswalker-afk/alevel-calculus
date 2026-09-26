@@ -4,7 +4,8 @@ import { evaluatePolynomial } from "./linked-function-gradient-explorer.js";
 export const specialInteractiveQuestionVisualKinds = Object.freeze([
   "calculus-parametric-point-selector",
   "calculus-parametric-direction-selector",
-  "calculus-trapezium-ordinate-selector"
+  "calculus-trapezium-ordinate-selector",
+  "calculus-trapezium-bound-selector"
 ]);
 
 function createElement(documentRef, tag, className = "") {
@@ -137,10 +138,27 @@ function validTrapeziumConfig(config) {
     && config.ordinates.length === xValues.length;
 }
 
+function validTrapeziumBoundConfig(config) {
+  return Array.isArray(config?.coefficients)
+    && config.coefficients.length > 0
+    && config.coefficients.every((value) => Number.isFinite(Number(value)))
+    && Array.isArray(config?.xValues)
+    && Array.isArray(config?.yValues)
+    && config.xValues.length >= 2
+    && config.xValues.length === config.yValues.length
+    && config.xValues.every((value) => Number.isFinite(Number(value)))
+    && config.yValues.every((value) => Number.isFinite(Number(value)))
+    && validDomain(config.xDomain)
+    && validDomain(config.yDomain)
+    && Array.isArray(config.boundChoices)
+    && config.boundChoices.length >= 2;
+}
+
 export function isSpecialInteractiveQuestionVisual(question) {
   const config = question?.diagramConfig ?? {};
   if (!specialInteractiveQuestionVisualKinds.includes(config.kind)) return false;
   if (config.kind === "calculus-trapezium-ordinate-selector") return validTrapeziumConfig(config);
+  if (config.kind === "calculus-trapezium-bound-selector") return validTrapeziumBoundConfig(config);
 
   const spec = resolvedParametricSpec(question);
   if (!validParametricSpec(spec)) return false;
@@ -510,12 +528,90 @@ export function createSpecialQuestionVisualRenderer(host, { onResponseChange = (
     return true;
   }
 
+  function renderTrapeziumBoundSelector(question, response) {
+    const config = question.diagramConfig;
+    if (!validTrapeziumBoundConfig(config)) return false;
+
+    const selectedResponse = String(response ?? "");
+    const selectedChoice = config.boundChoices.find((choice) =>
+      String(config.responseMap?.[choice.id] ?? choice.id) === selectedResponse
+    )?.id ?? "";
+
+    const { graphHost, controls, status } = shell(config, "question-graph-interaction--trapezium-bound");
+    controls.className = "question-trapezium-bound__choices";
+    controls.setAttribute("role", "group");
+    controls.setAttribute("aria-label", config.controlLabel ?? "Trapezium estimate classification");
+
+    const { card, diagram } = createGraphCard(
+      config.graphTitle ?? "Curve and trapezium approximation",
+      config.xDomain,
+      config.yDomain,
+      config.ariaLabel ?? "Curve with trapezium chords",
+      260
+    );
+    graphHost.append(card);
+
+    const [xMin, xMax] = config.xDomain.map(Number);
+    diagram.polyline(
+      Array.from({ length: 161 }, (_, index) => {
+        const x = xMin + (index / 160) * (xMax - xMin);
+        return { x, y: evaluatePolynomial(config.coefficients, x) };
+      }),
+      { tone: "curve" }
+    );
+
+    const points = config.xValues.map((x, index) => ({ x: Number(x), y: Number(config.yValues[index]) }));
+    for (let index = 0; index < points.length - 1; index += 1) {
+      const left = points[index];
+      const right = points[index + 1];
+      diagram.shadedRegion([
+        { x: left.x, y: 0 },
+        left,
+        right,
+        { x: right.x, y: 0 }
+      ], { tone: "region", opacity: 0.06 });
+      diagram.line({ x1: left.x, y1: left.y, x2: right.x, y2: right.y, tone: "tangent" });
+    }
+    for (const point of points) {
+      diagram.line({ x1: point.x, y1: 0, x2: point.x, y2: point.y, tone: "bound" });
+      diagram.point({ x: point.x, y: point.y, radius: 8, tone: "accent" });
+    }
+
+    const buttons = new Map();
+    for (const choice of config.boundChoices) {
+      const button = createElement(documentRef, "button", "question-trapezium-bound__choice");
+      button.type = "button";
+      button.setAttribute("aria-pressed", choice.id === selectedChoice ? "true" : "false");
+      const label = createElement(documentRef, "span", "question-trapezium-bound__label");
+      label.textContent = choice.label;
+      const cue = createElement(documentRef, "span", "question-trapezium-bound__cue");
+      cue.textContent = choice.cue ?? "";
+      button.append(label, cue);
+      const handler = () => {
+        const mapped = config.responseMap?.[choice.id] ?? choice.id;
+        for (const [id, item] of buttons) item.setAttribute("aria-pressed", id === choice.id ? "true" : "false");
+        status.textContent = `Selected: ${choice.label}.`;
+        onResponseChange(mapped);
+      };
+      button.addEventListener("click", handler);
+      addCleanup(() => button.removeEventListener("click", handler));
+      controls.append(button);
+      buttons.set(choice.id, button);
+      if (!focusTarget) focusTarget = button;
+    }
+    status.textContent = selectedChoice
+      ? `Selected: ${config.boundChoices.find((choice) => choice.id === selectedChoice)?.label ?? ""}.`
+      : "Choose how the trapezium estimate compares with the exact integral.";
+    return true;
+  }
+
   function render(question, { response = "" } = {}) {
     clear();
     const kind = question?.diagramConfig?.kind;
     if (kind === "calculus-parametric-point-selector") return renderParametricPointSelector(question, response);
     if (kind === "calculus-parametric-direction-selector") return renderDirectionSelector(question, response);
     if (kind === "calculus-trapezium-ordinate-selector") return renderTrapeziumSelector(question, response);
+    if (kind === "calculus-trapezium-bound-selector") return renderTrapeziumBoundSelector(question, response);
     return false;
   }
 
