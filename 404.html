@@ -1,0 +1,1515 @@
+<!doctype html>
+<html lang="en" data-course-scope="y12" data-learning-mode="understand">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive calculus learning site for Pearson Edexcel 8MA0 / 9MA0.">
+  <title>Calculus | Learning workspace</title>
+  <link rel="stylesheet" href="/alevel-calculus/styles/tokens.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/app-shell.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/question-shell.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/memory-lab.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/diagram-primitives.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/linked-function-gradient-explorer.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/chord-to-tangent-explorer.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/basics-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/pre-calculus-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/first-principles-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/tangents-normals-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/stationary-points-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/interval-selection-overlay.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/increasing-decreasing-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/integration-intro-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/definite-indefinite-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/integration-area-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/signed-area-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/year12-review.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/standard-functions-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/trig-first-principles-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/product-quotient-chain-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/parametric-curve-tracer.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/parametric-differentiation-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/implicit-differentiation-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/trig-identities-inverse-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/concavity-inflection-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/connected-rates-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/standard-integrals-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/reverse-chain-rule-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/trig-identity-integration-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/substitution-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/integration-by-parts-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/partial-fractions-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/year13-areas.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/parametric-area-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/limit-of-sum-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/differential-equations-understand.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/calculus-modelling.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/trapezium-rule-builder.css">
+  <link rel="stylesheet" href="/alevel-calculus/styles/trapezium-integration-understand.css">
+</head>
+<body>
+  <div class="app-shell" data-app-shell data-navigation-open="false">
+    <header class="app-shell__topbar" data-shell-topbar>
+      <a class="brand" href="/alevel-calculus/" aria-label="Calculus home">
+        <span class="brand__mark" aria-hidden="true">∫</span>
+        <span class="brand__text">Calculus</span>
+      </a>
+
+      <button
+        class="topic-navigation-toggle"
+        type="button"
+        aria-controls="topic-navigation"
+        aria-expanded="false"
+        data-topic-navigation-toggle
+      >
+        <span class="topic-navigation-toggle__icon" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span>Topics</span>
+      </button>
+
+      <div class="topbar__context" aria-label="Current location">
+        <span class="breadcrumb" data-current-topic-breadcrumb>Differentiation <span aria-hidden="true">›</span> Basics</span>
+        <span class="scope-badge" data-scope-badge data-course-scope="y12"></span>
+      </div>
+
+      <div class="topbar__status" aria-label="Course status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Course pathway</span>
+      </div>
+    </header>
+
+    <div class="app-shell__body">
+      <button
+        class="navigation-scrim"
+        type="button"
+        aria-label="Close topics"
+        data-navigation-scrim
+        hidden
+      ></button>
+
+      <nav
+        class="topic-navigation"
+        id="topic-navigation"
+        aria-label="Calculus topics"
+        data-topic-navigation
+      >
+        <div class="topic-navigation__heading-row">
+          <div class="topic-navigation__heading">
+            <span class="eyebrow">Topics</span>
+            <span class="topic-navigation__course">Calculus pathway</span>
+          </div>
+          <div class="topic-navigation__actions">
+            <button class="data-management-trigger" type="button" aria-haspopup="dialog" aria-controls="data-management-dialog" data-data-management-trigger>
+              <span aria-hidden="true">↕</span>
+              <span>Data</span>
+            </button>
+            <button class="topic-navigation__close" type="button" aria-label="Close topics" data-topic-navigation-close>
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+        </div>
+
+        <section class="topic-navigation__section" aria-labelledby="year-12-heading" data-scope-section="y12">
+          <div class="topic-navigation__section-heading">
+            <span class="topic-navigation__section-label" id="year-12-heading">Year 12 pathway</span>
+            <span class="scope-badge scope-badge--compact" data-scope-badge data-scope-badge-variant="compact" data-course-scope="y12"></span>
+          </div>
+          <ol class="topic-list">
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y12:foundations:pre-calculus" data-topic-label="Pre-calculus">
+                <span class="topic-index">01</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Pre-calculus</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link is-current" type="button" data-topic-progress-item data-topic-id="topic:y12:differentiation:basics" data-topic-label="Basics of differentiation" aria-current="page">
+                <span class="topic-index">02</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Basics of differentiation</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y12:differentiation:first-principles" data-topic-label="First principles">
+                <span class="topic-index">03</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">First principles</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y12:differentiation:tangents-normals" data-topic-label="Tangents &amp; normals">
+                <span class="topic-index">04</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Tangents &amp; normals</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y12:differentiation:stationary-points" data-topic-label="Stationary points">
+                <span class="topic-index">05</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Stationary points</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y12:differentiation:increasing-decreasing" data-topic-label="Increasing &amp; decreasing">
+                <span class="topic-index">06</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Increasing &amp; decreasing</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y12:integration:introduction" data-topic-label="Introduction to integration">
+                <span class="topic-index">07</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Introduction to integration</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y12:integration:definite-indefinite" data-topic-label="Definite &amp; indefinite integration">
+                <span class="topic-index">08</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Definite &amp; indefinite integration</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y12:integration:area" data-topic-label="Integration as area">
+                <span class="topic-index">09</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Integration as area</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y12:integration:signed-area" data-topic-label="Areas below &amp; crossing the axis">
+                <span class="topic-index">10</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Areas below &amp; crossing the axis</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link topic-link--review" type="button" data-topic-progress-item data-topic-id="topic:y12:review:calculus-mastery" data-topic-label="Year 12 review &amp; mastery">
+                <span class="topic-index">R</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Year 12 review &amp; mastery</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+          </ol>
+        </section>
+
+        <div class="topic-navigation__checkpoint" role="separator" aria-label="Year 12 mastery checkpoint">
+          <span class="checkpoint-rule" aria-hidden="true"></span>
+          <span class="checkpoint-copy">
+            <strong>Year 12 mastery checkpoint</strong>
+            <span>8MA0 boundary before additional Year 13 calculus</span>
+          </span>
+          <span class="checkpoint-rule" aria-hidden="true"></span>
+        </div>
+
+        <section class="topic-navigation__section" aria-labelledby="year-13-heading" data-scope-section="y13-additional">
+          <div class="topic-navigation__section-heading">
+            <span class="topic-navigation__section-label" id="year-13-heading">Additional Year 13</span>
+            <span class="scope-badge scope-badge--compact" data-scope-badge data-scope-badge-variant="compact" data-course-scope="y13-additional"></span>
+          </div>
+          <ol class="topic-list topic-list--secondary">
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:differentiation:standard-functions" data-topic-label="Standard functions">
+                <span class="topic-index">18</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Standard functions</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:differentiation:trig-first-principles" data-topic-label="Trig proofs from first principles">
+                <span class="topic-index">19</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Trig proofs from first principles</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:differentiation:product-quotient-chain" data-topic-label="Product, quotient &amp; chain">
+                <span class="topic-index">20</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Product, quotient &amp; chain</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:differentiation:parametric-differentiation" data-topic-label="Parametric differentiation">
+                <span class="topic-index">21</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Parametric differentiation</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:differentiation:implicit-differentiation" data-topic-label="Implicit differentiation">
+                <span class="topic-index">22</span>
+                <span class="topic-link__body"><span class="topic-link__title">Implicit differentiation</span><span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true"><span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span></span><span class="visually-hidden" data-topic-progress-description></span></span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:differentiation:trig-identities-inverse" data-topic-label="Trig identities and inverse trig differentiation">
+                <span class="topic-index">23</span>
+                <span class="topic-link__body"><span class="topic-link__title">Trig identities & inverse trig</span><span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true"><span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span></span><span class="visually-hidden" data-topic-progress-description></span></span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:differentiation:concavity-inflection" data-topic-label="Concavity, convexity and inflection">
+                <span class="topic-index">24</span>
+                <span class="topic-link__body"><span class="topic-link__title">Concavity, convexity &amp; inflection</span><span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true"><span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span></span><span class="visually-hidden" data-topic-progress-description></span></span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:differentiation:connected-rates" data-topic-label="Connected rates of change">
+                <span class="topic-index">25</span>
+                <span class="topic-link__body"><span class="topic-link__title">Connected rates of change</span><span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true"><span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span></span><span class="visually-hidden" data-topic-progress-description></span></span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:integration:standard-integrals" data-topic-label="Standard integrals to memorise">
+                <span class="topic-index">27</span>
+                <span class="topic-link__body"><span class="topic-link__title">Standard integrals</span><span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true"><span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span></span><span class="visually-hidden" data-topic-progress-description></span></span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:integration:reverse-chain-rule" data-topic-label="Recognition and reverse chain rule">
+                <span class="topic-index">28</span>
+                <span class="topic-link__body"><span class="topic-link__title">Recognition &amp; reverse chain</span><span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true"><span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span></span><span class="visually-hidden" data-topic-progress-description></span></span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:integration:trig-identities" data-topic-label="Integration using trigonometric identities">
+                <span class="topic-index">29</span>
+                <span class="topic-link__body"><span class="topic-link__title">Integration using trig identities</span><span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true"><span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span><span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span></span><span class="visually-hidden" data-topic-progress-description></span></span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:integration:substitution" data-topic-label="Integration by substitution">
+                <span class="topic-index">30</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Integration by substitution</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:integration:by-parts" data-topic-label="Integration by parts">
+                <span class="topic-index">31</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Integration by parts</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:integration:partial-fractions" data-topic-label="Integration using partial fractions">
+                <span class="topic-index">32</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Integration using partial fractions</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:integration:areas" data-topic-label="Areas with Year 13 techniques">
+                <span class="topic-index">33</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Areas with Year 13 techniques</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:integration:parametric-area" data-topic-label="Area using parametric equations">
+                <span class="topic-index">34</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Area using parametric equations</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:integration:limit-of-sum" data-topic-label="Integration as the limit of a sum">
+                <span class="topic-index">35</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Integration as the limit of a sum</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:integration:numerical-integration" data-topic-label="Numerical integration and the trapezium rule">
+                <span class="topic-index">36</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Numerical integration and the trapezium rule</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:differential-equations:first-order" data-topic-label="First-order differential equations">
+                <span class="topic-index">37</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">First-order differential equations</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+            <li>
+              <button class="topic-link" type="button" data-topic-progress-item data-topic-id="topic:y13:modelling:calculus" data-topic-label="Full 9MA0 calculus modelling">
+                <span class="topic-index">38</span>
+                <span class="topic-link__body">
+                  <span class="topic-link__title">Full 9MA0 calculus modelling</span>
+                  <span class="topic-mode-progress" data-topic-mode-progress aria-hidden="true">
+                    <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+                    <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+                  </span>
+                  <span class="visually-hidden" data-topic-progress-description></span>
+                </span>
+                <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+              </button>
+            </li>
+          </ol>
+        </section>
+
+        <div class="topic-navigation__full-course" role="button" tabindex="0" aria-label="Open full A level differentiation review and mastery" data-scope-section="full-alevel" data-course-scope="full-alevel" data-topic-progress-item data-topic-id="topic:full:review:calculus-mastery" data-topic-label="Differentiation review and mastery">
+          <div class="topic-navigation__full-course-heading">
+            <span class="scope-badge scope-badge--compact" data-scope-badge data-scope-badge-variant="compact" data-course-scope="full-alevel"></span>
+            <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+          </div>
+          <div>
+            <strong>Differentiation review &amp; mastery</strong>
+            <span>Topic-blind differentiation across 8MA0 + additional 9MA0</span>
+            <span class="topic-mode-progress topic-mode-progress--full" data-topic-mode-progress aria-hidden="true">
+              <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+              <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+              <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+              <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+              <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+            </span>
+            <span class="visually-hidden" data-topic-progress-description></span>
+          </div>
+        </div>
+
+        <div class="topic-navigation__full-course" role="button" tabindex="0" aria-label="Open full 9MA0 calculus mastery" data-course-scope="full-alevel" data-topic-progress-item data-topic-id="topic:full:review:full-calculus-mastery" data-topic-label="Full 9MA0 calculus mastery">
+          <div class="topic-navigation__full-course-heading">
+            <span class="scope-badge scope-badge--compact" data-scope-badge data-scope-badge-variant="compact" data-course-scope="full-alevel"></span>
+            <span class="topic-state-marker" data-topic-state-marker aria-hidden="true"></span>
+          </div>
+          <div>
+            <strong>Full 9MA0 calculus mastery</strong>
+            <span>Topic-blind method selection, mixed AO1–AO3 practice and precise diagnostics</span>
+            <span class="topic-mode-progress topic-mode-progress--full" data-topic-mode-progress aria-hidden="true">
+              <span class="mode-progress-marker" data-mode-progress="understand"><span>U</span><span data-mode-progress-symbol></span></span>
+              <span class="mode-progress-marker" data-mode-progress="memorise"><span>M</span><span data-mode-progress-symbol></span></span>
+              <span class="mode-progress-marker" data-mode-progress="ao1"><span>1</span><span data-mode-progress-symbol></span></span>
+              <span class="mode-progress-marker" data-mode-progress="ao2"><span>2</span><span data-mode-progress-symbol></span></span>
+              <span class="mode-progress-marker" data-mode-progress="ao3"><span>3</span><span data-mode-progress-symbol></span></span>
+            </span>
+            <span class="visually-hidden" data-topic-progress-description></span>
+          </div>
+        </div>
+      </nav>
+
+      <main class="learning-workspace" data-learning-workspace>
+        <section class="workspace-header" aria-label="Activity context">
+          <div>
+            <p class="eyebrow" data-current-topic-label>Basics of differentiation</p>
+            <h1>Learning workspace</h1>
+          </div>
+          <div class="mode-tabs" role="tablist" aria-label="Learning mode" data-mode-tabs>
+            <button class="mode-tab" id="mode-tab-understand" type="button" role="tab" aria-selected="true" aria-controls="learning-mode-panel" tabindex="0" data-mode-tab="understand" data-learning-mode="understand">
+              <span class="mode-tab__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.6"/></svg>
+              </span>
+              <span class="mode-tab__text"><span class="mode-tab__label">Understand</span><span class="mode-tab__sublabel">Explore</span></span>
+            </button>
+            <button class="mode-tab" id="mode-tab-memorise" type="button" role="tab" aria-selected="false" aria-controls="learning-mode-panel" tabindex="-1" data-mode-tab="memorise" data-learning-mode="memorise">
+              <span class="mode-tab__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><rect x="5" y="4" width="12" height="14" rx="2"/><path d="M8 8h6M8 11h6M8 14h4M17 7h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9"/></svg>
+              </span>
+              <span class="mode-tab__text"><span class="mode-tab__label">Memorise</span><span class="mode-tab__sublabel">Recall</span></span>
+            </button>
+            <button class="mode-tab" id="mode-tab-ao1" type="button" role="tab" aria-selected="false" aria-controls="learning-mode-panel" tabindex="-1" data-mode-tab="ao1" data-learning-mode="ao1">
+              <span class="mode-tab__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="m4 20 4.2-1 10-10a2.1 2.1 0 0 0-3-3l-10 10L4 20Z"/><path d="m13.8 7.2 3 3"/></svg>
+              </span>
+              <span class="mode-tab__text"><span class="mode-tab__label">AO1</span><span class="mode-tab__sublabel">Practise</span></span>
+            </button>
+            <button class="mode-tab" id="mode-tab-ao2" type="button" role="tab" aria-selected="false" aria-controls="learning-mode-panel" tabindex="-1" data-mode-tab="ao2" data-learning-mode="ao2">
+              <span class="mode-tab__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-4.5 3v-3H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/><path d="M7 9h10M7 13h7"/></svg>
+              </span>
+              <span class="mode-tab__text"><span class="mode-tab__label">AO2</span><span class="mode-tab__sublabel">Explain</span></span>
+            </button>
+            <button class="mode-tab" id="mode-tab-ao3" type="button" role="tab" aria-selected="false" aria-controls="learning-mode-panel" tabindex="-1" data-mode-tab="ao3" data-learning-mode="ao3">
+              <span class="mode-tab__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5 5-2Z"/></svg>
+              </span>
+              <span class="mode-tab__text"><span class="mode-tab__label">AO3</span><span class="mode-tab__sublabel">Apply</span></span>
+            </button>
+          </div>
+        </section>
+
+        <section class="activity-frame" id="learning-mode-panel" role="tabpanel" aria-labelledby="mode-tab-understand" aria-live="polite" aria-atomic="false" data-mode-panel>
+          <div class="activity-stage" data-activity-stage>
+            <div class="activity-stage__header">
+              <span class="activity-chip" data-activity-kicker>Understand</span>
+              <div class="activity-stage__tools">
+                <button
+                  class="classwiz-support-button"
+                  type="button"
+                  aria-controls="classwiz-support-panel"
+                  aria-expanded="false"
+                  aria-label="Open ClassWiz calculator support"
+                  data-classwiz-trigger
+                >
+                  <span class="classwiz-support-button__icon" aria-hidden="true">fx</span>
+                  <span class="classwiz-support-button__label">ClassWiz</span>
+                </button>
+                <button
+                  class="word-bank-button"
+                  type="button"
+                  aria-controls="word-bank-drawer"
+                  aria-expanded="false"
+                  aria-label="Open Word Bank"
+                  data-word-bank-trigger
+                >
+                  <span class="word-bank-button__icon" aria-hidden="true">Aa</span>
+                  <span class="word-bank-button__label">Word Bank</span>
+                  <span class="word-bank-button__count" data-word-bank-count aria-label="0 words encountered">0</span>
+                </button>
+                <button
+                  class="activity-help-button"
+                  type="button"
+                  aria-controls="help-drawer"
+                  aria-expanded="false"
+                  data-help-drawer-trigger
+                >
+                  <span class="activity-help-button__icon" aria-hidden="true">?</span>
+                  <span>Need a reminder?</span>
+                </button>
+                <span class="activity-position" data-activity-position>1 of 3</span>
+              </div>
+            </div>
+            <div class="activity-stage__content" data-standard-activity-content>
+              <div class="activity-copy">
+                <p class="activity-overline" data-activity-overline>Explore the idea</p>
+                <h2 data-activity-title>See the derivative as a gradient function</h2>
+                <p data-activity-body>Start from what the graph is doing, then connect that visual change to the derivative rather than beginning with a rule to memorise.</p>
+                <div class="activity-callout" data-activity-callout>
+                  <span class="activity-callout__label">Mode purpose</span>
+                  <p>Explore, notice and make sense of the mathematics before formalising the method.</p>
+                </div>
+              </div>
+              <div class="math-placeholder" aria-label="Mathematics workspace placeholder" data-activity-visual>
+                <div class="math-placeholder__grid" aria-hidden="true"></div>
+                <div class="math-placeholder__formula" data-activity-formula>f(x) ↔ f′(x)</div>
+                <p class="math-placeholder__caption" data-activity-caption>The linked-function explorer will live here; the mathematics remains the visual focus of the workspace.</p>
+              </div>
+            </div>
+
+            <section class="memory-lab" data-memory-lab aria-label="Memory Lab" hidden>
+              <header class="memory-lab__header">
+                <div class="memory-lab__identity">
+                  <span class="memory-lab__title">Memory Lab</span>
+                  <span class="memory-lab__summary" data-memory-lab-bank-summary>Learn, retrieve and vary the same key facts.</span>
+                </div>
+                <div class="memory-lab__tabs" role="tablist" aria-label="Memory Lab activities">
+                  <button class="memory-lab__tab" id="memory-lab-tab-learn" type="button" role="tab" aria-selected="true" aria-controls="memory-lab-panel-learn" tabindex="0" data-memory-lab-view="learn">Learn</button>
+                  <button class="memory-lab__tab" id="memory-lab-tab-flashcards" type="button" role="tab" aria-selected="false" aria-controls="memory-lab-panel-flashcards" tabindex="-1" data-memory-lab-view="flashcards">Flashcards</button>
+                  <button class="memory-lab__tab" id="memory-lab-tab-games" type="button" role="tab" aria-selected="false" aria-controls="memory-lab-panel-games" tabindex="-1" data-memory-lab-view="games">Games</button>
+                  <button class="memory-lab__tab" id="memory-lab-tab-review" type="button" role="tab" aria-selected="false" aria-controls="memory-lab-panel-review" tabindex="-1" data-memory-lab-view="review">Review</button>
+                </div>
+              </header>
+
+              <div class="memory-lab__workspace">
+                <section class="memory-lab__panel" id="memory-lab-panel-learn" role="tabpanel" aria-labelledby="memory-lab-tab-learn" data-memory-lab-panel="learn">
+                  <div class="memory-panel-heading">
+                    <p class="memory-panel-heading__eyebrow">Learn</p>
+                    <h2>Build a compact mental reference</h2>
+                    <p data-memory-learn-summary>Key facts from this topic are collected here before retrieval.</p>
+                  </div>
+                  <div class="memory-learn-list" data-memory-learn-list></div>
+                  <div class="memory-learn-footer">
+                    <button class="memory-learn-complete" type="button" data-memory-learn-complete>I’m ready to retrieve</button>
+                  </div>
+                </section>
+
+                <section class="memory-lab__panel" id="memory-lab-panel-flashcards" role="tabpanel" aria-labelledby="memory-lab-tab-flashcards" data-memory-lab-panel="flashcards" hidden>
+                  <div class="memory-flashcard-layout">
+                    <div class="memory-flashcard-copy">
+                      <p class="memory-panel-heading__eyebrow">Flashcards</p>
+                      <h2>Recall before you reveal</h2>
+                      <p>Say or think the answer first. Reveal it, then judge whether you knew it without help.</p>
+                    </div>
+                    <div class="memory-flashcard-stage">
+                      <button class="memory-flashcard" type="button" aria-pressed="false" data-flashcard-card>
+                        <span class="memory-flashcard__topline">
+                          <span data-flashcard-cue>Recall the fact</span>
+                          <span data-flashcard-counter>1 of 1</span>
+                        </span>
+                        <span class="memory-flashcard__face">
+                          <span class="memory-flashcard__face-label" data-flashcard-face-label>Prompt</span>
+                          <span class="memory-flashcard__content" data-flashcard-content></span>
+                        </span>
+                        <span class="memory-flashcard__prompt" data-flashcard-prompt>Tap, click or press Enter to reveal.</span>
+                      </button>
+                      <div class="memory-flashcard-rating" data-flashcard-rating hidden>
+                        <button class="memory-rating-button memory-rating-button--not-yet" type="button" data-flashcard-not-yet>Not yet</button>
+                        <button class="memory-rating-button memory-rating-button--know" type="button" data-flashcard-know>Know it</button>
+                      </div>
+                      <p class="memory-engine-status" role="status" aria-live="polite" data-flashcard-status></p>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="memory-lab__panel" id="memory-lab-panel-games" role="tabpanel" aria-labelledby="memory-lab-tab-games" data-memory-lab-panel="games" hidden>
+                  <div class="memory-games-layout">
+                    <div class="memory-games-heading">
+                      <div>
+                        <p class="memory-panel-heading__eyebrow">Games</p>
+                        <h2>Retrieval games</h2>
+                        <p>Same core knowledge, different retrieval formats.</p>
+                      </div>
+                      <div class="memory-game-tabs" role="tablist" aria-label="Memory games">
+                        <button class="memory-game-tab" id="memory-game-tab-match" type="button" role="tab" aria-selected="true" aria-controls="memory-game-panel-match" tabindex="0" data-memory-game="match">Match</button>
+                        <button class="memory-game-tab" id="memory-game-tab-build" type="button" role="tab" aria-selected="false" aria-controls="memory-game-panel-build" tabindex="-1" data-memory-game="build">Build</button>
+                        <button class="memory-game-tab" id="memory-game-tab-missing" type="button" role="tab" aria-selected="false" aria-controls="memory-game-panel-missing" tabindex="-1" data-memory-game="missing-piece">Missing piece</button>
+                        <button class="memory-game-tab" id="memory-game-tab-sort" type="button" role="tab" aria-selected="false" aria-controls="memory-game-panel-sort" tabindex="-1" data-memory-game="sort">Sort</button>
+                        <button class="memory-game-tab" id="memory-game-tab-impostor" type="button" role="tab" aria-selected="false" aria-controls="memory-game-panel-impostor" tabindex="-1" data-memory-game="impostor">Impostor</button>
+                      </div>
+                    </div>
+
+                    <div class="memory-game-stage">
+                      <section class="memory-game-panel" id="memory-game-panel-match" role="tabpanel" aria-labelledby="memory-game-tab-match" data-memory-game-panel="match">
+                        <div class="memory-match-layout">
+                          <div class="memory-match-heading">
+                            <div>
+                              <p class="memory-panel-heading__eyebrow">Match</p>
+                              <h3>Connect each cue to its partner</h3>
+                              <p>Choose one item from each column.</p>
+                            </div>
+                            <span class="memory-match-progress" data-match-progress>0 of 4 matched</span>
+                          </div>
+                          <div class="memory-match-board">
+                            <div class="memory-match-column">
+                              <span class="memory-match-column__label">Cue</span>
+                              <div class="memory-match-column" data-match-left></div>
+                            </div>
+                            <div class="memory-match-column">
+                              <span class="memory-match-column__label">Match</span>
+                              <div class="memory-match-column" data-match-right></div>
+                            </div>
+                          </div>
+                          <div class="memory-match-footer">
+                            <p class="memory-engine-status" role="status" aria-live="polite" data-match-status>Choose one item from each column.</p>
+                            <button class="memory-game-secondary" type="button" data-match-reset>Shuffle match</button>
+                          </div>
+                        </div>
+                      </section>
+
+                      <section class="memory-game-panel" id="memory-game-panel-build" role="tabpanel" aria-labelledby="memory-game-tab-build" data-memory-game-panel="build" hidden>
+                        <div class="memory-single-game">
+                          <div class="memory-single-game__heading">
+                            <p class="memory-panel-heading__eyebrow">Build the rule</p>
+                            <h3 data-build-prompt>Build the right-hand side of the general power rule.</h3>
+                            <p>Select tokens in order. Use Undo or Reset whenever you want to change the construction.</p>
+                          </div>
+                          <div class="memory-build-expression" aria-label="Build the rule">
+                            <span class="memory-build-context" data-build-context>d/dx (axⁿ) =</span>
+                            <span class="memory-build-slots" data-build-slots></span>
+                          </div>
+                          <div class="memory-game-token-bank" aria-label="Available tokens" data-build-tokens></div>
+                          <div class="memory-game-footer">
+                            <p class="memory-engine-status" role="status" aria-live="polite" data-build-status>Choose tokens from left to right.</p>
+                            <div class="memory-game-actions">
+                              <button class="memory-game-secondary" type="button" data-build-undo>Undo</button>
+                              <button class="memory-game-secondary" type="button" data-build-reset>Reset</button>
+                              <button class="memory-game-primary" type="button" data-build-check>Check</button>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+
+                      <section class="memory-game-panel" id="memory-game-panel-missing" role="tabpanel" aria-labelledby="memory-game-tab-missing" data-memory-game-panel="missing-piece" hidden>
+                        <div class="memory-single-game">
+                          <div class="memory-single-game__heading">
+                            <p class="memory-panel-heading__eyebrow">Missing piece</p>
+                            <h3 data-missing-prompt>Which expression belongs in the missing exponent?</h3>
+                            <p>Choose one piece, then check it.</p>
+                          </div>
+                          <div class="memory-game-expression" data-missing-expression>d/dx (xⁿ) = nx^( ? )</div>
+                          <div class="memory-game-choice-grid" data-missing-options></div>
+                          <div class="memory-game-footer">
+                            <p class="memory-engine-status" role="status" aria-live="polite" data-missing-status>Choose the missing piece.</p>
+                            <div class="memory-game-actions">
+                              <button class="memory-game-secondary" type="button" data-missing-reset>Reset</button>
+                              <button class="memory-game-primary" type="button" data-missing-check>Check</button>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+
+                      <section class="memory-game-panel" id="memory-game-panel-sort" role="tabpanel" aria-labelledby="memory-game-tab-sort" data-memory-game-panel="sort" hidden>
+                        <div class="memory-sort-layout">
+                          <div class="memory-single-game__heading">
+                            <p class="memory-panel-heading__eyebrow">Sort</p>
+                            <h3 data-sort-prompt>Sort each expression by what you should do before applying the power rule.</h3>
+                            <p>Select an expression, then choose its bucket. This is the keyboard/touch alternative to dragging.</p>
+                          </div>
+                          <span class="memory-sort-progress" data-sort-progress>0 of 6 placed</span>
+                          <div class="memory-sort-workspace">
+                            <div>
+                              <span class="memory-match-column__label">Expressions</span>
+                              <div class="memory-sort-items" data-sort-items></div>
+                            </div>
+                            <div>
+                              <span class="memory-match-column__label">Send selected expression to</span>
+                              <div class="memory-sort-buckets" data-sort-buckets></div>
+                            </div>
+                          </div>
+                          <div class="memory-game-footer">
+                            <p class="memory-engine-status" role="status" aria-live="polite" data-sort-status>Choose an expression, then choose its bucket.</p>
+                            <div class="memory-game-actions">
+                              <button class="memory-game-secondary" type="button" data-sort-reset>Reset</button>
+                              <button class="memory-game-primary" type="button" data-sort-check>Check</button>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+
+                      <section class="memory-game-panel" id="memory-game-panel-impostor" role="tabpanel" aria-labelledby="memory-game-tab-impostor" data-memory-game-panel="impostor" hidden>
+                        <div class="memory-single-game">
+                          <div class="memory-single-game__heading">
+                            <p class="memory-panel-heading__eyebrow">Spot the impostor</p>
+                            <h3 data-impostor-prompt>One derivative is incorrect. Which is the impostor?</h3>
+                            <p>Choose the one statement that breaks the rule.</p>
+                          </div>
+                          <div class="memory-impostor-options" data-impostor-options></div>
+                          <div class="memory-game-footer">
+                            <p class="memory-engine-status" role="status" aria-live="polite" data-impostor-status>Choose the single incorrect statement.</p>
+                            <div class="memory-game-actions">
+                              <button class="memory-game-secondary" type="button" data-impostor-reset>Reset</button>
+                              <button class="memory-game-primary" type="button" data-impostor-check>Check</button>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="memory-lab__panel" id="memory-lab-panel-review" role="tabpanel" aria-labelledby="memory-lab-tab-review" data-memory-lab-panel="review" hidden>
+                  <div class="memory-review-layout">
+                    <div class="memory-review-heading">
+                      <div>
+                        <p class="memory-panel-heading__eyebrow">Review</p>
+                        <h2>Mix the retrieval, not the content</h2>
+                        <p>Use an untimed mixed review, or focus on rapid recall or diagram recall. The timer is always optional.</p>
+                      </div>
+                      <div class="memory-review-mode-tabs" role="tablist" aria-label="Review activities">
+                        <button class="memory-review-mode-tab" type="button" role="tab" aria-selected="true" tabindex="0" data-memory-review-mode="mix">Mixed review</button>
+                        <button class="memory-review-mode-tab" type="button" role="tab" aria-selected="false" tabindex="-1" data-memory-review-mode="rapid">Rapid recall</button>
+                        <button class="memory-review-mode-tab" type="button" role="tab" aria-selected="false" tabindex="-1" data-memory-review-mode="diagram">Diagram recall</button>
+                      </div>
+                    </div>
+
+                    <div class="memory-review-stage" data-memory-mix>
+                      <div class="memory-mix__topline">
+                        <span class="memory-mix__counter" data-memory-mix-counter>Retrieval 1 of 5</span>
+                        <strong class="memory-mix__task" data-memory-mix-task-label>Rapid recall</strong>
+                      </div>
+
+                      <div class="memory-review-task-stage">
+                        <section class="memory-review-task-panel" data-memory-review-task-panel="rapid">
+                          <div class="memory-rapid-layout">
+                            <div class="memory-single-game__heading">
+                              <p class="memory-panel-heading__eyebrow">Rapid recall</p>
+                              <h3 data-rapid-prompt>Recall one fact at a time.</h3>
+                              <p data-rapid-cue>Choose the best answer. Accuracy comes before speed.</p>
+                            </div>
+                            <div class="memory-rapid-topline">
+                              <span class="memory-match-progress" data-rapid-progress>1 of 5</span>
+                              <div class="memory-rapid-timer-controls">
+                                <button class="memory-game-secondary" type="button" aria-pressed="false" data-rapid-timer-toggle>Timer off</button>
+                                <span class="memory-rapid-timer" data-rapid-timer hidden></span>
+                              </div>
+                            </div>
+                            <div class="memory-rapid-options" data-rapid-options></div>
+                            <div class="memory-game-footer">
+                              <p class="memory-engine-status" role="status" aria-live="polite" data-rapid-status>Choose the best answer.</p>
+                              <div class="memory-game-actions">
+                                <button class="memory-game-secondary" type="button" data-rapid-reset>Restart</button>
+                                <button class="memory-game-primary" type="button" data-rapid-next disabled>Next</button>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+
+                        <section class="memory-review-task-panel" data-memory-review-task-panel="diagram" hidden>
+                          <div class="memory-diagram-layout">
+                            <div class="memory-diagram-recall__canvas" data-diagram-recall-canvas></div>
+                            <div class="memory-diagram-recall__prompt">
+                              <div class="memory-single-game__heading">
+                                <p class="memory-panel-heading__eyebrow">Diagram recall</p>
+                                <h3 data-diagram-recall-prompt>Which label points to the tangent line?</h3>
+                                <p>Read the diagram first, then choose the callout label.</p>
+                              </div>
+                              <span class="memory-match-progress" data-diagram-recall-progress>1 of 3</span>
+                              <div class="memory-diagram-options" data-diagram-recall-options></div>
+                              <div class="memory-game-footer">
+                                <p class="memory-engine-status" role="status" aria-live="polite" data-diagram-recall-status>Choose the label that matches the prompt.</p>
+                                <div class="memory-game-actions">
+                                  <button class="memory-game-secondary" type="button" data-diagram-recall-reset>Restart</button>
+                                  <button class="memory-game-primary" type="button" data-diagram-recall-next disabled>Next</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+
+                        <section class="memory-review-task-panel" data-memory-review-task-panel="build" hidden>
+                          <div class="memory-single-game">
+                            <div class="memory-single-game__heading">
+                              <p class="memory-panel-heading__eyebrow">Build the rule</p>
+                              <h3 data-build-prompt>Build the right-hand side of the general power rule.</h3>
+                              <p>Select tokens in order.</p>
+                            </div>
+                            <div class="memory-build-expression" aria-label="Build the rule">
+                              <span class="memory-build-context" data-build-context>d/dx (axⁿ) =</span>
+                              <span class="memory-build-slots" data-build-slots></span>
+                            </div>
+                            <div class="memory-game-token-bank" aria-label="Available tokens" data-build-tokens></div>
+                            <div class="memory-game-footer">
+                              <p class="memory-engine-status" role="status" aria-live="polite" data-build-status>Choose tokens from left to right.</p>
+                              <div class="memory-game-actions">
+                                <button class="memory-game-secondary" type="button" data-build-undo>Undo</button>
+                                <button class="memory-game-secondary" type="button" data-build-reset>Reset</button>
+                                <button class="memory-game-primary" type="button" data-build-check>Check</button>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+
+                        <section class="memory-review-task-panel" data-memory-review-task-panel="missing-piece" hidden>
+                          <div class="memory-single-game">
+                            <div class="memory-single-game__heading">
+                              <p class="memory-panel-heading__eyebrow">Missing piece</p>
+                              <h3 data-missing-prompt>Which expression belongs in the missing exponent?</h3>
+                              <p>Choose one piece, then check it.</p>
+                            </div>
+                            <div class="memory-game-expression" data-missing-expression>d/dx (xⁿ) = nx^( ? )</div>
+                            <div class="memory-game-choice-grid" data-missing-options></div>
+                            <div class="memory-game-footer">
+                              <p class="memory-engine-status" role="status" aria-live="polite" data-missing-status>Choose the missing piece.</p>
+                              <div class="memory-game-actions">
+                                <button class="memory-game-secondary" type="button" data-missing-reset>Reset</button>
+                                <button class="memory-game-primary" type="button" data-missing-check>Check</button>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+
+                        <section class="memory-review-task-panel" data-memory-review-task-panel="impostor" hidden>
+                          <div class="memory-single-game">
+                            <div class="memory-single-game__heading">
+                              <p class="memory-panel-heading__eyebrow">Spot the impostor</p>
+                              <h3 data-impostor-prompt>One derivative is incorrect. Which is the impostor?</h3>
+                              <p>Choose the one statement that breaks the rule.</p>
+                            </div>
+                            <div class="memory-impostor-options" data-impostor-options></div>
+                            <div class="memory-game-footer">
+                              <p class="memory-engine-status" role="status" aria-live="polite" data-impostor-status>Choose the single incorrect statement.</p>
+                              <div class="memory-game-actions">
+                                <button class="memory-game-secondary" type="button" data-impostor-reset>Reset</button>
+                                <button class="memory-game-primary" type="button" data-impostor-check>Check</button>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+                      </div>
+
+                      <div class="memory-mix__footer">
+                        <p class="memory-engine-status" role="status" aria-live="polite" data-memory-mix-status>Complete the current retrieval before moving on.</p>
+                        <div class="memory-game-actions">
+                          <button class="memory-game-secondary" type="button" data-memory-mix-restart>New mix</button>
+                          <button class="memory-game-primary" type="button" data-memory-mix-next disabled>Next retrieval</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </section>
+
+            <section class="question-shell" data-question-shell aria-label="Practice question" hidden>
+              <div class="question-shell__topline">
+                <span class="question-shell__format" data-question-shell-format>Algebraic response</span>
+                <span class="question-shell__counter" data-question-shell-counter>Question 1 of 4</span>
+              </div>
+
+              <div class="question-shell__body">
+                <section class="question-shell__prompt" aria-labelledby="question-shell-prompt">
+                  <p class="question-shell__prompt-label">Question</p>
+                  <h2 id="question-shell-prompt" data-question-shell-prompt>Differentiate with respect to x.</h2>
+                  <div class="question-shell__math" data-question-shell-math>y = 3x⁴ − 5x² + 7</div>
+                  <div class="question-shell__visual" data-question-shell-visual hidden></div>
+                </section>
+
+                <section class="question-shell__response" aria-label="Your response">
+                  <div class="question-response-group" data-question-response="input">
+                    <label class="question-response-label" for="question-shell-input" data-question-shell-input-label>Your answer</label>
+                    <input class="question-response-input" id="question-shell-input" type="text" autocomplete="off" spellcheck="false" data-question-shell-input>
+                  </div>
+
+                  <fieldset class="question-response-group question-choice-group" data-question-response="choice" hidden>
+                    <legend>Choose one answer</legend>
+                    <div class="question-choice-options">
+                      <label class="question-option" data-question-shell-option>
+                        <input type="radio" name="question-shell-choice" data-question-shell-choice>
+                        <span class="question-option__marker" data-question-shell-choice-marker>A</span>
+                        <span class="question-option__label" data-question-shell-choice-label></span>
+                      </label>
+                      <label class="question-option" data-question-shell-option>
+                        <input type="radio" name="question-shell-choice" data-question-shell-choice>
+                        <span class="question-option__marker" data-question-shell-choice-marker>B</span>
+                        <span class="question-option__label" data-question-shell-choice-label></span>
+                      </label>
+                      <label class="question-option" data-question-shell-option>
+                        <input type="radio" name="question-shell-choice" data-question-shell-choice>
+                        <span class="question-option__marker" data-question-shell-choice-marker>C</span>
+                        <span class="question-option__label" data-question-shell-choice-label></span>
+                      </label>
+                      <label class="question-option" data-question-shell-option>
+                        <input type="radio" name="question-shell-choice" data-question-shell-choice>
+                        <span class="question-option__marker" data-question-shell-choice-marker>D</span>
+                        <span class="question-option__label" data-question-shell-choice-label></span>
+                      </label>
+                    </div>
+                  </fieldset>
+
+                  <div class="question-response-group" data-question-response="short-reasoning" hidden>
+                    <label class="question-response-label" for="question-shell-reasoning" data-question-shell-reasoning-label>Your explanation</label>
+                    <textarea class="question-response-textarea" id="question-shell-reasoning" rows="4" spellcheck="true" data-question-shell-reasoning></textarea>
+                  </div>
+
+                  <div class="question-shell__actions">
+                    <button class="question-shell__button" type="button" aria-expanded="false" aria-controls="question-shell-hint-panel" data-question-shell-hint>Show hint</button>
+                    <button class="question-shell__button" type="button" aria-expanded="false" aria-controls="question-shell-solution-panel" data-question-shell-solution disabled>Worked solution</button>
+                    <button class="question-shell__button question-shell__button--check" type="button" data-question-shell-check>Check answer</button>
+                  </div>
+
+                  <div class="question-shell__feedback" role="status" aria-live="polite" data-question-shell-feedback hidden>
+                    <span class="question-shell__feedback-symbol" aria-hidden="true" data-question-shell-feedback-symbol></span>
+                    <div>
+                      <strong data-question-shell-feedback-title></strong>
+                      <p data-question-shell-feedback-message></p>
+                    </div>
+                  </div>
+
+                  <aside class="question-shell__diagnostic" aria-label="Suggested next step" data-question-shell-diagnostic hidden>
+                    <span class="question-shell__diagnostic-icon" aria-hidden="true">↗</span>
+                    <div class="question-shell__diagnostic-body">
+                      <span class="question-shell__diagnostic-kind" data-question-shell-diagnostic-kind></span>
+                      <strong data-question-shell-diagnostic-title></strong>
+                      <p data-question-shell-diagnostic-message></p>
+                      <a class="question-shell__diagnostic-link" href="#" data-question-shell-diagnostic-link>Open support</a>
+                    </div>
+                  </aside>
+
+                  <div class="question-shell__reveal question-shell__hints" id="question-shell-hint-panel" data-question-shell-hint-panel hidden>
+                    <div>
+                      <div class="question-shell__reveal-heading">
+                        <strong>Hints</strong>
+                        <span data-question-shell-hint-progress></span>
+                      </div>
+                      <div class="question-hint-list" data-question-shell-hint-list></div>
+                    </div>
+                  </div>
+
+                  <div class="question-shell__reveal question-shell__solution" id="question-shell-solution-panel" data-question-shell-solution-panel hidden>
+                    <div>
+                      <div class="question-shell__reveal-heading">
+                        <strong>Worked solution</strong>
+                        <span>Step by step</span>
+                      </div>
+                      <div class="worked-solution-steps" data-question-shell-solution-steps></div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              <footer class="question-shell__footer">
+                <span class="question-shell__progress" data-question-shell-progress>Question 1 of 4</span>
+                <span class="question-shell__footer-spacer" aria-hidden="true"></span>
+                <button class="question-shell__button question-shell__button--next" type="button" data-question-shell-next disabled>
+                  <span>Next question</span>
+                  <span aria-hidden="true">→</span>
+                </button>
+              </footer>
+            </section>
+
+            <section class="year12-mastery-summary" data-year12-mastery-summary aria-labelledby="year12-mastery-summary-title" hidden>
+              <div class="year12-mastery-summary__heading">
+                <div>
+                  <p class="eyebrow">Diagnostic mastery</p>
+                  <h2 id="year12-mastery-summary-title">Your evidence and next steps</h2>
+                  <p>Evidence is grouped by the exact Year 12 micro-skill. This is diagnostic feedback, not a single score.</p>
+                </div>
+                <strong class="year12-mastery-summary__evidence" data-year12-mastery-summary-evidence>0 attempts</strong>
+              </div>
+              <p class="year12-mastery-summary__empty" data-year12-mastery-summary-empty>Complete questions in this mastery set to build your diagnostic picture.</p>
+              <div class="year12-mastery-summary__columns" data-year12-mastery-summary-columns hidden>
+                <section>
+                  <h3>Strengths shown</h3>
+                  <ul data-year12-mastery-strengths></ul>
+                </section>
+                <section>
+                  <h3>Specific next steps</h3>
+                  <ul data-year12-mastery-weaknesses></ul>
+                </section>
+              </div>
+            </section>
+
+            <section class="year12-mastery-summary" data-full-differentiation-mastery-summary aria-labelledby="full-differentiation-mastery-summary-title" hidden>
+              <div class="year12-mastery-summary__heading">
+                <div>
+                  <p class="eyebrow">Differentiation mastery</p>
+                  <h2 id="full-differentiation-mastery-summary-title">Method recognition and execution</h2>
+                  <p>Evidence is grouped by exact micro-skill. Recognition errors and execution errors are counted separately and routed to precise support.</p>
+                </div>
+                <strong class="year12-mastery-summary__evidence" data-full-differentiation-mastery-summary-evidence>0 attempts</strong>
+              </div>
+              <p class="year12-mastery-summary__empty" data-full-differentiation-mastery-summary-empty>Complete questions in this mastery set to build your diagnostic picture.</p>
+              <div class="year12-mastery-summary__columns" data-full-differentiation-mastery-summary-columns hidden>
+                <section><h3>Strengths shown</h3><ul data-full-differentiation-mastery-strengths></ul></section>
+                <section><h3>Specific next steps</h3><ul data-full-differentiation-mastery-weaknesses></ul></section>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <footer class="activity-controls" data-activity-controls>
+          <button class="activity-button activity-button--secondary" type="button" data-previous-activity>
+            <span aria-hidden="true">←</span>
+            <span>Previous</span>
+          </button>
+          <div class="activity-controls__summary" aria-live="polite">
+            <span class="eyebrow">Activity</span>
+            <strong data-footer-position>1 of 3</strong>
+          </div>
+          <button class="activity-button activity-button--primary" type="button" data-next-activity>
+            <span>Next</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </footer>
+      </main>
+
+      <button
+        class="classwiz-support-scrim"
+        type="button"
+        aria-label="Close ClassWiz calculator support"
+        data-classwiz-scrim
+        hidden
+      ></button>
+
+      <aside
+        class="classwiz-support-panel"
+        id="classwiz-support-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="classwiz-support-title"
+        aria-hidden="true"
+        data-classwiz-panel
+      >
+        <div class="classwiz-support-panel__header">
+          <div>
+            <p class="eyebrow">Optional numerical check</p>
+            <h2 id="classwiz-support-title">ClassWiz support</h2>
+          </div>
+          <button class="classwiz-support-panel__close" type="button" aria-label="Close ClassWiz support" data-classwiz-close>
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="classwiz-support-panel__body">
+          <p class="classwiz-support-panel__intro">Use the calculator to check a numerical result after you have set up the mathematics. It should not replace working that the course expects you to show.</p>
+
+          <div class="classwiz-use-case-tabs" role="tablist" aria-label="Calculator check type">
+            <button type="button" role="tab" aria-selected="true" tabindex="0" data-classwiz-use-case="derivative-check">Numerical d/dx</button>
+            <button type="button" role="tab" aria-selected="false" tabindex="-1" data-classwiz-use-case="integral-check">Numerical integral</button>
+          </div>
+
+          <section class="classwiz-support-section" aria-labelledby="classwiz-helps-heading">
+            <p class="classwiz-support-section__eyebrow" id="classwiz-helps-heading">What it can help with</p>
+            <p data-classwiz-helps></p>
+            <div class="classwiz-example">
+              <strong>Sample check</strong>
+              <p data-classwiz-example></p>
+            </div>
+            <p class="classwiz-radians-reminder" data-classwiz-radians hidden></p>
+          </section>
+
+          <section class="classwiz-support-section" aria-labelledby="classwiz-model-heading">
+            <div class="classwiz-support-section__heading">
+              <p class="classwiz-support-section__eyebrow" id="classwiz-model-heading">Model-specific steps</p>
+              <strong data-classwiz-model-name>fx-991CW</strong>
+            </div>
+            <div class="classwiz-model-tabs" role="tablist" aria-label="Calculator model">
+              <button type="button" role="tab" aria-selected="true" tabindex="0" data-classwiz-model="cw">fx-991CW</button>
+              <button type="button" role="tab" aria-selected="false" tabindex="-1" data-classwiz-model="ex">fx-991EX</button>
+            </div>
+            <ol class="classwiz-steps" data-classwiz-steps></ol>
+          </section>
+
+          <section class="classwiz-support-section classwiz-support-section--warning" aria-labelledby="classwiz-not-replace-heading">
+            <p class="classwiz-support-section__eyebrow" id="classwiz-not-replace-heading">What it does not replace</p>
+            <p data-classwiz-does-not-replace></p>
+          </section>
+          <p class="classwiz-support-panel__return-note">Close this panel to return to the same answer, hint, diagram or retrieval state.</p>
+        </div>
+      </aside>
+
+      <button
+        class="help-drawer-scrim"
+        type="button"
+        aria-label="Close reminder help"
+        data-help-drawer-scrim
+        hidden
+      ></button>
+
+      <aside
+        class="help-drawer"
+        id="help-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="help-drawer-title"
+        aria-hidden="true"
+        data-help-drawer
+      >
+        <div class="help-drawer__header">
+          <div>
+            <p class="eyebrow">Quick support</p>
+            <h2 id="help-drawer-title">Need a reminder?</h2>
+          </div>
+          <button class="help-drawer__close" type="button" aria-label="Close reminder help" data-help-drawer-close>
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+
+        <div class="help-drawer__body">
+          <p class="help-drawer__context" data-help-context>Choose one quick route back to the idea you need. Your current work will stay here.</p>
+          <div class="help-drawer__targets" aria-label="Reminder options">
+            <a class="help-target" href="#" data-help-target="understand" data-learning-mode="understand">
+              <span class="help-target__badge" data-help-target-label></span>
+              <span class="help-target__content">
+                <strong data-help-target-title></strong>
+                <span class="help-target__description" data-help-target-description></span>
+              </span>
+              <span class="help-target__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="help-target" href="#" data-help-target="memorise" data-learning-mode="memorise">
+              <span class="help-target__badge" data-help-target-label></span>
+              <span class="help-target__content">
+                <strong data-help-target-title></strong>
+                <span class="help-target__description" data-help-target-description></span>
+              </span>
+              <span class="help-target__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="help-target" href="#" data-help-target="ao1" data-learning-mode="ao1">
+              <span class="help-target__badge" data-help-target-label></span>
+              <span class="help-target__content">
+                <strong data-help-target-title></strong>
+                <span class="help-target__description" data-help-target-description></span>
+              </span>
+              <span class="help-target__arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+          <p class="help-drawer__return-note">Close the drawer at any time to continue exactly where you left off.</p>
+        </div>
+      </aside>
+
+      <button
+        class="word-bank-drawer-scrim"
+        type="button"
+        aria-label="Close Word Bank"
+        data-word-bank-scrim
+        hidden
+      ></button>
+
+      <aside
+        class="word-bank-drawer"
+        id="word-bank-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="word-bank-title"
+        aria-hidden="true"
+        data-word-bank-drawer
+      >
+        <div class="word-bank-drawer__header">
+          <div>
+            <p class="eyebrow">Ongoing vocabulary</p>
+            <h2 id="word-bank-title">Word Bank</h2>
+          </div>
+          <button class="word-bank-drawer__close" type="button" aria-label="Close Word Bank" data-word-bank-close>
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+
+        <div class="word-bank-drawer__body">
+          <div class="word-bank-search">
+            <label for="word-bank-search">Search encountered words</label>
+            <input id="word-bank-search" type="search" autocomplete="off" placeholder="Search terms or definitions" data-word-bank-search>
+          </div>
+
+          <div class="word-bank-filters" role="group" aria-label="Word Bank filters">
+            <button type="button" class="word-bank-filter is-active" aria-pressed="true" data-word-bank-filter="all">All</button>
+            <button type="button" class="word-bank-filter" aria-pressed="false" data-word-bank-filter="y12">Year 12</button>
+            <button type="button" class="word-bank-filter" aria-pressed="false" data-word-bank-filter="y13">Year 13</button>
+            <button type="button" class="word-bank-filter" aria-pressed="false" data-word-bank-filter="needs-review">Needs review</button>
+          </div>
+
+          <p class="word-bank-results-summary" aria-live="polite" data-word-bank-results-summary></p>
+
+          <div class="word-bank-content">
+            <div class="word-bank-list" role="list" aria-label="Encountered vocabulary" data-word-bank-list></div>
+            <p class="word-bank-empty" data-word-bank-empty hidden>No encountered words match this view yet.</p>
+
+            <section class="word-bank-detail" aria-live="polite" data-word-bank-detail hidden>
+              <div class="word-bank-detail__heading">
+                <div>
+                  <span class="word-bank-detail__scope" data-word-bank-detail-scope></span>
+                  <h3 data-word-bank-detail-term></h3>
+                </div>
+                <button class="word-bank-review-toggle" type="button" aria-pressed="false" data-word-bank-review-toggle>Mark for review</button>
+              </div>
+              <dl class="word-bank-detail__grid">
+                <div>
+                  <dt>Definition</dt>
+                  <dd data-word-bank-detail-definition></dd>
+                </div>
+                <div>
+                  <dt>Notation / representation</dt>
+                  <dd class="word-bank-detail__notation" data-word-bank-detail-notation></dd>
+                </div>
+                <div>
+                  <dt>First encountered</dt>
+                  <dd data-word-bank-detail-first></dd>
+                </div>
+                <div>
+                  <dt>Also appears in</dt>
+                  <dd data-word-bank-detail-related></dd>
+                </div>
+              </dl>
+            </section>
+          </div>
+
+          <p class="word-bank-drawer__note">Words are collected automatically as you meet them. Close the Word Bank to continue exactly where you left off.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <dialog class="data-management-dialog" id="data-management-dialog" aria-labelledby="data-management-title" data-data-management-dialog>
+    <form method="dialog" class="data-management-dialog__panel">
+      <div class="data-management-dialog__header">
+        <div>
+          <p class="eyebrow">This browser</p>
+          <h2 id="data-management-title">Progress data</h2>
+        </div>
+        <button class="data-management-dialog__close" value="close" aria-label="Close progress data">×</button>
+      </div>
+
+      <p class="data-management-dialog__intro">Your completion, practice history and Word Bank are saved locally on this device. Security is stored separately from completion.</p>
+
+      <div class="data-management-summary">
+        <div>
+          <span class="data-management-summary__label">Storage</span>
+          <strong data-storage-status>Saved on this device</strong>
+        </div>
+        <div>
+          <span class="data-management-summary__label">Schema</span>
+          <strong>Version <span data-state-schema-version>1</span></strong>
+        </div>
+        <div>
+          <span class="data-management-summary__label">Activity records</span>
+          <strong data-progress-record-count>0</strong>
+        </div>
+        <div>
+          <span class="data-management-summary__label">Word Bank</span>
+          <strong><span data-vocabulary-record-count>0</span> words</strong>
+        </div>
+      </div>
+
+      <div class="data-management-actions">
+        <section class="data-management-card">
+          <div>
+            <h3>Export</h3>
+            <p>Save a small JSON backup that can be restored on another browser or device.</p>
+          </div>
+          <button class="data-management-button" type="button" data-export-progress>Export progress</button>
+        </section>
+
+        <section class="data-management-card">
+          <div>
+            <h3>Import</h3>
+            <p>Select a Calculus Website progress file. Nothing is replaced until you confirm the import.</p>
+          </div>
+          <div class="data-import-controls">
+            <label class="data-management-button data-management-button--secondary" for="progress-import-file">Choose file</label>
+            <input id="progress-import-file" class="visually-hidden" type="file" accept="application/json,.json" data-import-progress-file>
+            <span class="data-import-filename" data-import-filename>No file selected</span>
+          </div>
+          <div class="data-import-preview" data-import-preview hidden>
+            <p data-import-preview-summary></p>
+            <button class="data-management-button" type="button" data-confirm-import>Import selected file</button>
+          </div>
+        </section>
+
+        <section class="data-management-card data-management-card--danger">
+          <div>
+            <h3>Reset</h3>
+            <p>Clear saved progress and Word Bank records on this browser. This cannot be undone unless you exported a backup.</p>
+          </div>
+          <button class="data-management-button data-management-button--danger" type="button" data-reset-progress>Reset local data</button>
+          <div class="data-reset-confirmation" data-reset-confirmation hidden>
+            <strong>Reset all local data?</strong>
+            <span>This clears completion, attempts, security and vocabulary records.</span>
+            <div>
+              <button class="data-management-button data-management-button--danger" type="button" data-confirm-reset>Yes, reset everything</button>
+              <button class="data-management-button data-management-button--secondary" type="button" data-cancel-reset>Cancel</button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <p class="data-management-status" role="status" aria-live="polite" data-data-management-status></p>
+    </form>
+  </dialog>
+
+  <noscript>This site needs JavaScript to switch learning modes and activities and to open the topic, help and Word Bank drawers.</noscript>
+  <script type="module" src="/alevel-calculus/scripts/app-shell.js"></script>
+</body>
+</html>

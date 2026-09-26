@@ -1,0 +1,38 @@
+import { defineTopicMetadata } from '../topic-metadata.js';
+const prefix='y13:differentiation:connected-rates';
+const skill=s=>`skill:${prefix}:${s}`; const activity=(s,m='understand')=>`activity:${prefix}:${m}:${s}`;
+export const connectedRatesVocabularyTags=Object.freeze(['vocab:connected-rate','vocab:rate-flow-diagram','vocab:rate-unit','vocab:chain-rule']);
+export const connectedRatesTopic=defineTopicMetadata({
+ topicId:`topic:${prefix}`,scopeId:'y13-additional',strand:'differentiation',slug:'connected-rates',title:'Connected rates of change',sequence:250,
+ modes:['understand','memorise','ao1','ao2','ao3'],prerequisiteTopicIds:['topic:y13:differentiation:product-quotient-chain'],prerequisiteTags:['chain-rule','differential-notation','geometry-formulae'],vocabularyTags:connectedRatesVocabularyTags,
+ journey:[
+  {id:'dependency',title:'Start with what depends on what',summary:'Represent a practical changing situation as an ordered dependency chain before calculating.',microSkillIds:[skill('dependency-chain')],vocabularyTags:['vocab:rate-flow-diagram']},
+  {id:'orientation',title:'Orient each derivative',summary:'Match every dependency arrow x → y with dy/dx and identify the target rate.',microSkillIds:[skill('derivative-orientation')],vocabularyTags:['vocab:connected-rate']},
+  {id:'method',title:'Connect rates through the chain rule',summary:'Write the relationship, connect derivative factors, then substitute values for the instant concerned.',microSkillIds:[skill('chain-rule-connection')],vocabularyTags:['vocab:chain-rule']},
+  {id:'interpret',title:'Interpret sign and units',summary:'Use the sign to describe increase/decrease and derive the units of the required rate.',microSkillIds:[skill('sign-and-units')],vocabularyTags:['vocab:rate-unit']},
+  {id:'applications',title:'Model multi-stage rate chains',summary:'Apply the same dependency-first method to geometric and unfamiliar contexts.',microSkillIds:[skill('applications')],vocabularyTags:['vocab:connected-rate','vocab:rate-unit']}
+ ],
+ microSkills:[
+  {microSkillId:skill('dependency-chain'),slug:'dependency-chain',title:'Arrange quantities into a dependency chain',prerequisiteTags:['modelling'],vocabularyTags:['vocab:rate-flow-diagram'],supportTargets:{understand:activity('practical-dependency'),memorise:activity('method','memorise'),ao1:activity('rate-chain','ao1')}},
+  {microSkillId:skill('derivative-orientation'),slug:'derivative-orientation',title:'Orient each derivative to match the dependency arrow',prerequisiteTags:['differential-notation'],vocabularyTags:['vocab:connected-rate'],supportTargets:{understand:activity('rate-flow'),memorise:activity('orientation','memorise'),ao1:activity('rate-chain','ao1')}},
+  {microSkillId:skill('chain-rule-connection'),slug:'chain-rule-connection',title:'Connect rates by the chain rule before substitution',prerequisiteTags:['chain-rule'],vocabularyTags:['vocab:chain-rule'],supportTargets:{understand:activity('consistent-method'),memorise:activity('method','memorise'),ao1:activity('geometry-rates','ao1')}},
+  {microSkillId:skill('sign-and-units'),slug:'sign-and-units',title:'Interpret positive/negative rates and units',prerequisiteTags:['units'],vocabularyTags:['vocab:rate-unit'],supportTargets:{understand:activity('signs-units'),memorise:activity('signs-units','memorise'),ao1:activity('signs-units','ao1')}},
+  {microSkillId:skill('applications'),slug:'applications',title:'Apply connected rates to multi-stage and unfamiliar models',prerequisiteTags:['geometry-formulae','chain-rule'],vocabularyTags:['vocab:connected-rate','vocab:rate-unit'],supportTargets:{understand:activity('multi-stage'),memorise:activity('method','memorise'),ao1:activity('geometry-rates','ao1')}}
+ ],
+ activities:[
+  {activityId:activity('practical-dependency'),mode:'understand',slug:'practical-dependency',title:'Changing quantities and dependency',activityType:'interactive',microSkillIds:[skill('dependency-chain')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58},
+  {activityId:activity('rate-flow'),mode:'understand',slug:'rate-flow',title:'Build the rate-flow diagram',activityType:'interactive',microSkillIds:[skill('dependency-chain'),skill('derivative-orientation')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58},
+  {activityId:activity('consistent-method'),mode:'understand',slug:'consistent-method',title:'Use the connected-rates method',activityType:'lesson',microSkillIds:[skill('chain-rule-connection'),skill('dependency-chain')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58},
+  {activityId:activity('signs-units'),mode:'understand',slug:'signs-units',title:'Interpret signs and units',activityType:'lesson',microSkillIds:[skill('sign-and-units'),skill('chain-rule-connection')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58},
+  {activityId:activity('multi-stage'),mode:'understand',slug:'multi-stage',title:'Multi-stage connected rates',activityType:'interactive',microSkillIds:[skill('applications'),skill('derivative-orientation'),skill('chain-rule-connection')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58},
+  {activityId:activity('method','memorise'),mode:'memorise',slug:'method',title:'Dependency-first method',activityType:'memory',microSkillIds:[skill('dependency-chain'),skill('chain-rule-connection'),skill('applications')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58},
+  {activityId:activity('orientation','memorise'),mode:'memorise',slug:'orientation',title:'Derivative orientation',activityType:'memory',microSkillIds:[skill('derivative-orientation')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58},
+  {activityId:activity('signs-units','memorise'),mode:'memorise',slug:'signs-units',title:'Signs and rate units',activityType:'memory',microSkillIds:[skill('sign-and-units')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58},
+  {activityId:activity('geometry-rates','ao1'),mode:'ao1',slug:'geometry-rates',title:'Circle and sphere rates',activityType:'question-set',microSkillIds:[skill('chain-rule-connection'),skill('applications')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58},
+  {activityId:activity('rate-chain','ao1'),mode:'ao1',slug:'rate-chain',title:'Build and orient rate chains',activityType:'question-set',microSkillIds:[skill('dependency-chain'),skill('derivative-orientation')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58},
+  {activityId:activity('signs-units','ao1'),mode:'ao1',slug:'signs-units',title:'Positive, negative and units',activityType:'question-set',microSkillIds:[skill('sign-and-units')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58},
+  {activityId:activity('explain-chain','ao2'),mode:'ao2',slug:'explain-chain',title:'Explain why the rates multiply',activityType:'question-set',microSkillIds:[skill('chain-rule-connection')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58},
+  {activityId:activity('diagnose-orientation','ao2'),mode:'ao2',slug:'diagnose-orientation',title:'Correct reversed derivatives',activityType:'question-set',microSkillIds:[skill('derivative-orientation'),skill('sign-and-units')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58},
+  {activityId:activity('modelling','ao3'),mode:'ao3',slug:'modelling',title:'Connected-rate modelling',activityType:'question-set',microSkillIds:[skill('applications'),skill('chain-rule-connection'),skill('sign-and-units')],vocabularyTags:connectedRatesVocabularyTags,implementationStep:58}
+ ]
+});

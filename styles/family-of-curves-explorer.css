@@ -1,0 +1,189 @@
+.family-curves-explorer {
+  display: grid;
+  gap: var(--space-4, 1rem);
+  min-width: 0;
+}
+
+.family-curves-explorer__controls {
+  display: grid;
+  grid-template-columns: minmax(210px, 0.8fr) minmax(280px, 1.35fr) auto minmax(280px, 1.35fr);
+  gap: var(--space-3, 0.75rem);
+  align-items: end;
+  padding: var(--space-3, 0.75rem);
+  border: 1px solid var(--color-border-subtle, #d7dde8);
+  border-radius: var(--radius-lg, 16px);
+  background: var(--color-surface-raised, #fff);
+}
+
+.family-curves-explorer__select-label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 700;
+}
+
+.family-curves-explorer__select,
+.family-curves-explorer__reset {
+  min-height: 44px;
+  font: inherit;
+  border: 1px solid var(--color-border-strong, #a9b4c5);
+  border-radius: var(--radius-md, 10px);
+  background: var(--color-surface-raised, #fff);
+  color: inherit;
+}
+
+.family-curves-explorer__select {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+}
+
+.family-curves-explorer__reset {
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.family-curves-explorer__select:focus-visible,
+.family-curves-explorer__reset:focus-visible {
+  outline: 3px solid var(--color-focus, #315efb);
+  outline-offset: 2px;
+}
+
+.family-curves-explorer__slider-host {
+  min-width: 0;
+}
+
+.family-curves-explorer__readout {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.family-curves-explorer__readout span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: var(--color-surface-muted, #f2f5f9);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.family-curves-explorer__graphs {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: var(--space-3, 0.75rem);
+  align-items: stretch;
+}
+
+.family-curves-explorer__card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border-subtle, #d7dde8);
+  border-radius: var(--radius-lg, 16px);
+  background: var(--color-surface-raised, #fff);
+}
+
+.family-curves-explorer__card-heading {
+  min-height: 74px;
+  padding: 0.75rem 0.9rem 0.55rem;
+  border-bottom: 1px solid var(--color-border-subtle, #d7dde8);
+}
+
+.family-curves-explorer__card-title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.family-curves-explorer__expression {
+  margin: 0.28rem 0 0;
+  color: var(--color-text-muted, #526174);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.88rem;
+}
+
+.family-curves-explorer__diagram {
+  min-width: 0;
+}
+
+.family-curves-explorer__comparison-curve {
+  opacity: 0.42;
+  stroke-dasharray: 9 8;
+}
+
+.family-curves-explorer__active-curve {
+  stroke-width: 5;
+}
+
+.family-curves-explorer__derivative-curve {
+  stroke-width: 4;
+}
+
+.family-curves-explorer__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.family-curves-explorer__legend-item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--color-border-subtle, #d7dde8);
+  border-radius: 999px;
+  background: var(--color-surface-raised, #fff);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.family-curves-explorer__legend-item--comparison::before {
+  content: "";
+  width: 1.8rem;
+  margin-right: 0.45rem;
+  border-top: 2px dashed currentColor;
+  opacity: 0.55;
+}
+
+.family-curves-explorer__legend-item--active::before,
+.family-curves-explorer__legend-item--derivative::before {
+  content: "";
+  width: 1.8rem;
+  margin-right: 0.45rem;
+  border-top: 3px solid currentColor;
+}
+
+.family-curves-explorer__message {
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--radius-md, 10px);
+  background: var(--color-surface-muted, #f2f5f9);
+  color: var(--color-text-muted, #526174);
+}
+
+@media (max-width: 980px) {
+  .family-curves-explorer__controls {
+    grid-template-columns: minmax(180px, 0.8fr) minmax(260px, 1.2fr) auto;
+  }
+
+  .family-curves-explorer__readout {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .family-curves-explorer__controls,
+  .family-curves-explorer__graphs {
+    grid-template-columns: 1fr;
+  }
+
+  .family-curves-explorer__readout {
+    grid-column: auto;
+  }
+
+  .family-curves-explorer__card-heading {
+    min-height: auto;
+  }
+}

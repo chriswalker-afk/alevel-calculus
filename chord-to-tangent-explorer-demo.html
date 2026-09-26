@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chord-to-Tangent Explorer - Step 25</title>
+  <link rel="stylesheet" href="./styles/tokens.css">
+  <link rel="stylesheet" href="./styles/diagram-primitives.css">
+  <link rel="stylesheet" href="./styles/chord-to-tangent-explorer.css">
+  <style>
+    body { margin: 0; background: var(--color-surface-muted, #f2f5f9); color: var(--color-text, #172033); font-family: Inter, system-ui, sans-serif; }
+    main { width: min(1280px, calc(100% - 2rem)); margin: 0 auto; padding: 1.25rem 0 2rem; }
+    h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.25rem); }
+    .intro { max-width: 82ch; color: var(--color-text-muted, #526174); }
+    .presets { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.75rem 0 1rem; }
+    .presets button { min-height: 44px; padding: 0.55rem 0.8rem; border: 1px solid var(--color-border-strong, #a9b4c5); border-radius: 10px; background: white; color: inherit; font: inherit; font-weight: 700; cursor: pointer; }
+    .note { margin-top: 1rem; padding: 0.75rem 0.9rem; border-radius: 12px; background: var(--color-surface-raised, #fff); border: 1px solid var(--color-border-subtle, #d7dde8); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Chord-to-Tangent Explorer</h1>
+    <p class="intro">Point <strong>P</strong> stays fixed. Move <strong>Q</strong> along the curve and compare the chord PQ with the tangent at P. As h gets smaller, the chord gradient approaches the tangent gradient.</p>
+    <div class="presets" aria-label="Set h to a useful comparison value">
+      <button type="button" data-h-preset="1">h = 1</button>
+      <button type="button" data-h-preset="0.5">h = 0.5</button>
+      <button type="button" data-h-preset="0.1">h = 0.1</button>
+      <button type="button" data-h-preset="0.01">h = 0.01</button>
+      <button type="button" data-h-preset="-0.5">h = -0.5</button>
+    </div>
+    <div id="chord-tangent-demo"></div>
+    <p class="note"><strong>Keyboard:</strong> focus Q and use Left/Right arrows. Pointer dragging uses the same interaction path for mouse, pen and touch. Use <strong>Numbers shown</strong> to test the activity-mode visibility contract.</p>
+  </main>
+  <script type="module" src="./scripts/chord-to-tangent-explorer-demo.js"></script>
+</body>
+</html>
