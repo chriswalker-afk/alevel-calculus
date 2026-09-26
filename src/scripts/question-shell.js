@@ -1,4 +1,5 @@
 import { createQuestionVisualRenderer } from "./question-visual-renderer.js";
+import { createSpecialQuestionVisualRenderer, isSpecialInteractiveQuestionVisual } from "./question-special-visual-renderer.js";
 import {
   getHintActionLabel,
   getHintProgressLabel,
@@ -91,21 +92,38 @@ export function createQuestionShell(root, {
   });
 
   const solutionRenderer = createWorkedSolutionRenderer(fields.solutionSteps);
+  function handleVisualResponseChange(response) {
+    const question = currentQuestion();
+    if (!question) return;
+    const state = stateFor(question);
+    state.response = response;
+    state.checked = false;
+    state.feedback = null;
+    state.diagnostic = null;
+    state.solutionOpen = false;
+    renderFeedback(state);
+    renderDiagnostic(state);
+    renderPanels(question, state);
+  }
   const visualRenderer = createQuestionVisualRenderer(fields.visual, {
-    onResponseChange(response) {
-      const question = currentQuestion();
-      if (!question) return;
-      const state = stateFor(question);
-      state.response = response;
-      state.checked = false;
-      state.feedback = null;
-      state.diagnostic = null;
-      state.solutionOpen = false;
-      renderFeedback(state);
-      renderDiagnostic(state);
-      renderPanels(question, state);
-    }
+    onResponseChange: handleVisualResponseChange
   });
+  const specialVisualRenderer = createSpecialQuestionVisualRenderer(fields.visual, {
+    onResponseChange: handleVisualResponseChange
+  });
+
+  function handlesInteractiveVisual(question) {
+    return handlesInteractiveVisual(question) || isSpecialInteractiveQuestionVisual(question);
+  }
+
+  function renderInteractiveVisual(question, response) {
+    if (isSpecialInteractiveQuestionVisual(question)) {
+      visualRenderer.clear();
+      return specialVisualRenderer.render(question, { response });
+    }
+    specialVisualRenderer.clear();
+    return visualRenderer.render(question, { response });
+  }
   const optionRows = Array.from(root.querySelectorAll("[data-question-shell-option]"));
   if (optionRows.length < 4) throw new Error("QuestionShell requires at least four reusable choice-option rows.");
 
@@ -166,7 +184,7 @@ export function createQuestionShell(root, {
   }
 
   function readResponse(question) {
-    if (visualRenderer.handlesResponse(question)) return stateFor(question).response;
+    if (handlesInteractiveVisual(question)) return stateFor(question).response;
     if (question.responseType === "choice") {
       const selected = optionRows
         .map((row) => row.querySelector("[data-question-shell-choice]"))
@@ -311,8 +329,9 @@ export function createQuestionShell(root, {
   }
 
   function focusResponse(question) {
-    if (visualRenderer.handlesResponse(question)) {
-      visualRenderer.focusResponse();
+    if (handlesInteractiveVisual(question)) {
+      if (isSpecialInteractiveQuestionVisual(question)) specialVisualRenderer.focusResponse();
+      else visualRenderer.focusResponse();
       return;
     }
     if (question.responseType === "choice") {
@@ -332,7 +351,7 @@ export function createQuestionShell(root, {
 
     root.dataset.questionResponseType = question.responseType;
     root.dataset.questionId = question.id;
-    const interactiveVisual = visualRenderer.handlesResponse(question);
+    const interactiveVisual = handlesInteractiveVisual(question);
     fields.format.textContent = interactiveVisual ? "Graph selection" : responseTypeLabel(question.responseType);
     fields.counter.textContent = `${batchPrefix}Question ${position}`;
     fields.progress.textContent = `${batchPrefix}Question ${position}`;
@@ -355,7 +374,7 @@ export function createQuestionShell(root, {
     mathEntry.setMode(question.responseType);
     renderOptions(question);
     writeResponse(question, state);
-    visualRenderer.render(question, { response: state.response });
+    renderInteractiveVisual(question, state.response);
     renderFeedback(state);
     renderDiagnostic(state);
     renderPanels(question, state);
@@ -379,6 +398,7 @@ export function createQuestionShell(root, {
     saveCurrentResponse();
     if (activeSet) setIndex.set(activeSet.id, questionIndex);
     visualRenderer.clear();
+    specialVisualRenderer.clear();
     root.hidden = true;
   }
 
