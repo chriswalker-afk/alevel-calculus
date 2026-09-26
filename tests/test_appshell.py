@@ -85,6 +85,7 @@ diagnostic_router = (SRC / "scripts" / "diagnostic-router.js").read_text(encodin
 mastery_feedback_model = (SRC / "scripts" / "mastery-feedback-model.js").read_text(encoding="utf-8")
 classwiz_support_data = (SRC / "scripts" / "classwiz-support-data.js").read_text(encoding="utf-8")
 classwiz_support_panel = (SRC / "scripts" / "classwiz-support-panel.js").read_text(encoding="utf-8")
+topic_objectives_data = (SRC / "scripts" / "topic-objectives-data.js").read_text(encoding="utf-8")
 power_rule_definitions = (SRC / "scripts" / "question-definitions" / "power-rule.js").read_text(encoding="utf-8")
 memory_item = (SRC / "scripts" / "memory-item.js").read_text(encoding="utf-8")
 memory_content = (SRC / "scripts" / "memory-content.js").read_text(encoding="utf-8")
@@ -131,6 +132,14 @@ required_attrs = {
     "data-help-drawer-close",
     "data-help-drawer-scrim",
     "data-help-target",
+    "data-topic-goals-trigger",
+    "data-topic-goals-dialog",
+    "data-topic-goals-close",
+    "data-topic-goals-heading",
+    "data-topic-goals-list",
+    "data-topic-objectives-inline",
+    "data-topic-objectives-inline-heading",
+    "data-topic-objectives-inline-list",
     "data-word-bank-drawer",
     "data-word-bank-trigger",
     "data-word-bank-close",
@@ -293,6 +302,14 @@ assert '.help-drawer' in css and '.help-target' in css and 'var(--overlay-scrim)
 assert 'role="dialog"' in html and 'aria-modal="true"' in html
 assert html.count('data-help-target=') == 3
 assert 'Need a reminder?' in html
+assert 'Topic goals' in html
+assert 'In this topic you will learn to…' in html
+assert 'data-topic-objectives-inline' in html and 'data-topic-goals-dialog' in html
+assert 'getTopicObjectiveConfig' in js and 'syncInlineTopicObjectives' in js
+assert 'topicObjectiveCount' in topic_objectives_data and 'topicObjectiveCount = Object.keys(topicObjectiveConfigs).length' in topic_objectives_data
+assert topic_objectives_data.count('"topic:') == 33, "Every registered topic should have a student-facing objective set"
+assert '.topic-objectives-card--inline' in css and '.topic-goals-dialog' in css
+
 
 assert 'data-help-target-skill' not in html, "Stable IDs belong in data/metadata, not visible student UI"
 assert 'Exact support targets use the shared Step 5' not in html, "Developer implementation notes must not appear in student UI"
