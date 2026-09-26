@@ -1,0 +1,114 @@
+/* Shared mathematical typesetting pass.
+   Fractions are structural HTML rather than slash-text, and display equations never wrap. */
+.math-typeset {
+  min-width: 0;
+  max-width: 100%;
+  font-family: var(--font-math);
+  font-variant-numeric: lining-nums;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  scrollbar-width: thin;
+  overscroll-behavior-inline: contain;
+}
+
+.math-typeset__content {
+  width: max-content;
+  min-width: max-content;
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  white-space: pre;
+  line-height: 1.25;
+}
+
+.math-typeset--display {
+  width: 100%;
+  text-align: center;
+}
+
+.math-typeset--display > .math-typeset__content {
+  margin-inline: auto;
+  padding: 0.12em 0.08em;
+}
+
+.math-fraction {
+  display: inline-grid;
+  grid-template-rows: auto auto;
+  align-items: center;
+  justify-items: stretch;
+  margin-inline: 0.1em;
+  vertical-align: -0.42em;
+  line-height: 1;
+  text-align: center;
+}
+
+.math-fraction__numerator,
+.math-fraction__denominator {
+  min-width: 1.15em;
+  padding-inline: 0.12em;
+  text-align: center;
+}
+
+.math-fraction__numerator {
+  padding-bottom: 0.08em;
+  border-bottom: 0.065em solid currentColor;
+}
+
+.math-fraction__denominator {
+  padding-top: 0.08em;
+}
+
+.math-script {
+  position: relative;
+  font-size: 0.68em;
+  line-height: 0;
+}
+
+sup.math-script { vertical-align: 0.62em; }
+sub.math-script { vertical-align: -0.22em; }
+
+.question-shell__math.math-typeset,
+.equation-step__expression.math-typeset,
+.memory-learn-item__notation.math-typeset,
+.memory-flashcard__content.math-typeset,
+.memory-game-expression.math-typeset,
+.word-bank-detail__notation.math-typeset {
+  white-space: nowrap;
+}
+
+.equation-step__expression.math-typeset {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.memory-flashcard__content.math-typeset {
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+}
+
+.memory-match-option.math-typeset,
+.memory-game-token.math-typeset,
+.memory-game-choice.math-typeset,
+.memory-impostor-option.math-typeset,
+.memory-sort-item.math-typeset,
+.memory-rapid-option.math-typeset,
+.question-option__label.math-typeset {
+  max-width: 100%;
+}
+
+@media (max-width: 680px) {
+  .question-shell__math.math-typeset {
+    font-size: clamp(1.35rem, 7vw, 2.1rem);
+  }
+
+  .math-typeset--display > .math-typeset__content {
+    margin-inline: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .math-typeset { scroll-behavior: auto; }
+}
