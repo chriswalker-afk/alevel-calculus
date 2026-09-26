@@ -12,7 +12,7 @@ import { buildWordBankEntries, filterWordBankEntries } from "./word-bank-model.j
 import { createQuestionShell } from "./question-shell.js";
 import { getQuestionSetDefinitionForActivity } from "./question-catalogue.js";
 import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner.js";
-import { createMemoryLab } from "./memory-lab.js";
+import { createMemoryLab } from "./memory-lab.js?v=hotfix3";
 import { getMemoryItemsForTopic } from "./memory-content.js";
 import { getMemoryGamePackForTopic } from "./memory-game-content.js";
 import { getMemoryReviewPackForTopic } from "./memory-review-content.js";
