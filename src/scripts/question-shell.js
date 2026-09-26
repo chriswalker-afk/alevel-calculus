@@ -113,7 +113,7 @@ export function createQuestionShell(root, {
   });
 
   function handlesInteractiveVisual(question) {
-    return handlesInteractiveVisual(question) || isSpecialInteractiveQuestionVisual(question);
+    return visualRenderer.handlesResponse(question) || isSpecialInteractiveQuestionVisual(question);
   }
 
   function renderInteractiveVisual(question, response) {
