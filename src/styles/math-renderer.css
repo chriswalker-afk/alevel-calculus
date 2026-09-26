@@ -23,6 +23,17 @@
   line-height: 1.25;
 }
 
+.math-typeset:not(.math-typeset--display) {
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
+.math-typeset:not(.math-typeset--display) > .math-typeset__content {
+  width: auto;
+  min-width: 0;
+  white-space: normal;
+}
+
 .math-typeset--display {
   width: 100%;
   text-align: center;
