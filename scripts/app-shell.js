@@ -9,7 +9,7 @@ import { APP_STATE_SCHEMA_VERSION } from "./local-state-store.js";
 import { activityRouteFromId, createHistoryRouteController } from "./navigation-route.js";
 import { renderVocabularyRichText } from "./vocabulary-term.js";
 import { buildWordBankEntries, filterWordBankEntries } from "./word-bank-model.js";
-import { createQuestionShell } from "./question-shell.js";
+import { createQuestionShell } from "./question-shell.js?v=answerpass1";
 import { getQuestionSetDefinitionForActivity } from "./question-catalogue.js";
 import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner.js";
 import { createMemoryLab } from "./memory-lab.js?v=hotfix3";
