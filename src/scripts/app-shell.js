@@ -34,7 +34,7 @@ import { createIntegrationIntroUnderstandExperience } from "./integration-intro-
 import { integrationIntroLearningModes } from "./integration-intro-activities.js?v=auditstep5";
 import { createDefiniteIndefiniteUnderstandExperience } from "./definite-indefinite-understand.js";
 import { definiteIndefiniteLearningModes } from "./definite-indefinite-activities.js";
-import { createIntegrationAreaUnderstandExperience } from "./integration-area-understand.js?v=auditstep1";
+import { createIntegrationAreaUnderstandExperience } from "./integration-area-understand.js?v=auditstep8";
 import { integrationAreaLearningModes } from "./integration-area-activities.js?v=auditstep1";
 import { createSignedAreaUnderstandExperience } from "./signed-area-understand.js";
 import { signedAreaLearningModes } from "./signed-area-activities.js";
@@ -311,7 +311,18 @@ const stationaryPointsUnderstand = createStationaryPointsUnderstandExperience(cu
 const increasingDecreasingUnderstand = createIncreasingDecreasingUnderstandExperience(customUnderstandHost);
 const integrationIntroUnderstand = createIntegrationIntroUnderstandExperience(customUnderstandHost);
 const definiteIndefiniteUnderstand = createDefiniteIndefiniteUnderstandExperience(customUnderstandHost);
-const integrationAreaUnderstand = createIntegrationAreaUnderstandExperience(customUnderstandHost);
+const integrationAreaUnderstand = createIntegrationAreaUnderstandExperience(customUnderstandHost,{
+  navigateToActivity:(target)=>{
+    if(!target?.topicId||!target?.mode||!target?.activityId)return false;
+    if(target.topicId!==currentTopicId&&!selectTopic(target.topicId,{focusStage:false}))return false;
+    if(target.mode!==activeMode)selectMode(target.mode);
+    const targetIndex=currentLearningModes()[target.mode]?.activities?.findIndex(activity=>activity.activityId===target.activityId)??-1;
+    if(targetIndex<0)return false;
+    renderActivity(targetIndex);
+    stage.focus();
+    return true;
+  }
+});
 const signedAreaUnderstand = createSignedAreaUnderstandExperience(customUnderstandHost);
 const standardFunctionsUnderstand = createStandardFunctionsUnderstandExperience(customUnderstandHost);
 const trigFirstPrinciplesUnderstand = createTrigFirstPrinciplesUnderstandExperience(customUnderstandHost);
