@@ -1,4 +1,4 @@
-import { createLinkedFunctionGradientExplorer, createPolynomialFunctionDefinition } from './linked-function-gradient-explorer.js?v=understand1';
+import { createLinkedFunctionGradientExplorer, createPolynomialFunctionDefinition } from './linked-function-gradient-explorer.js?v=understand1?v=understand1';
 const IDS=new Set(['zero-gradient','max-min-signs','stationary-inflection','classify-from-signs','second-derivative'].map(s=>`activity:y12:differentiation:stationary-points:understand:${s}`));
 const FUNCTIONS=Object.freeze({
  min:createPolynomialFunctionDefinition({id:'sp-min',label:'Local minimum: x²',coefficients:[0,0,1],xDomain:[-3,3],yDomains:{function:[-1,9],derivative:[-7,7],secondDerivative:[-1,3]},initialX:0,description:'Minimum at x=0.'}),
