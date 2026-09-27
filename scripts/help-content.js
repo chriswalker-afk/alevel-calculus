@@ -444,7 +444,7 @@ const lateCourseTopLevelPreferences = Object.freeze({
   "topic:y13:integration:numerical-integration": Object.freeze({understand:"numerical-context",memorise:"rule",ao1:"estimate"}),
   "topic:y13:differential-equations:first-order": Object.freeze({understand:"translate-rate-statements",memorise:"separation-method",ao1:"solve-and-condition"}),
   "topic:y13:modelling:calculus": Object.freeze({understand:"framework",memorise:"framework-recall",ao1:"framework-practice"}),
-  "topic:full:review:full-calculus-mastery": Object.freeze({ao1:"method-only"})
+  "topic:full:review:full-calculus-mastery": Object.freeze({ao1:"select-complete-check"})
 });
 
 const helpPromptByNeed = Object.freeze({
