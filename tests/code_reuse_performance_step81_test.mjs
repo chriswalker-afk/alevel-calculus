@@ -71,7 +71,7 @@ const localGraphImplementations = activityFiles.filter((relative) => /createElem
 assert(localGraphImplementations.length === 0, `Topic activity adapters must not create parallel graph renderers: ${localGraphImplementations.join(', ')}`);
 
 const appShell = read('src/scripts/app-shell.js');
-assert(appShell.includes("from \"./question-shell.js\"") || appShell.includes("from './question-shell.js'"), 'AppShell must continue to consume the shared QuestionShell');
-assert(appShell.includes("from \"./local-state-store.js\"") || appShell.includes("from './local-state-store.js'"), 'AppShell must continue to consume the shared LocalStateStore boundary');
+assert(/from ["']\.\/question-shell\.js(?:\?[^"']+)?["']/.test(appShell), 'AppShell must continue to consume the shared QuestionShell');
+assert(/from ["']\.\/local-state-store\.js(?:\?[^"']+)?["']/.test(appShell), 'AppShell must continue to consume the shared LocalStateStore boundary');
 
 console.log('PASS Step 81 code-reuse/performance cleanup invariants');
