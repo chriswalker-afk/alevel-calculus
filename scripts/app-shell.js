@@ -18,7 +18,8 @@ import { installMathRendering } from "./math-renderer.js?v=ao1math4";
 import { getMemoryItemsForTopic } from "./memory-content.js?v=auditstep13";
 import { getMemoryGamePackForTopic } from "./memory-game-content.js?v=auditstep5";
 import { getMemoryReviewPackForTopic } from "./memory-review-content.js";
-import { createClassWizSupportPanel } from "./classwiz-support-panel.js";
+import { createClassWizSupportPanel } from "./classwiz-support-panel.js?v=auditstep16";
+import { hasClassWizSupport } from "./classwiz-support-data.js?v=auditstep16";
 import { createBasicsUnderstandExperience } from "./basics-understand.js?v=auditstep3";
 import { createPreCalculusUnderstandExperience } from "./pre-calculus-understand.js?v=auditstep2";
 import { preCalculusLearningModes } from "./pre-calculus-activities.js?v=auditstep2";
@@ -1181,7 +1182,7 @@ function downloadProgressExport() {
 }
 
 export function openClassWizSupport() {
-  if (!currentTopicRuntime().classWiz || classWizOpen) return;
+  if (!hasClassWizSupport(currentTopicId) || classWizOpen) return;
   if (navigationOpen) closeTopicNavigation({ restoreFocus: false });
   if (helpOpen) closeHelpDrawer({ restoreFocus: false });
   if (wordBankOpen) closeWordBank({ restoreFocus: false });
@@ -1335,9 +1336,11 @@ function syncCurrentTopicChrome() {
   const topScopeBadge = scopeBadges.find((badge) => !badge.classList.contains("scope-badge--compact") && badge.closest?.("[data-shell-topbar]"));
   if (topScopeBadge) topScopeBadge.dataset.courseScope = currentScopeId;
   syncScopeBadges();
-  classWizTrigger.hidden = !runtime.classWiz;
-  classWizTrigger.disabled = !runtime.classWiz;
-  if (!runtime.classWiz && classWizOpen) closeClassWizSupport({ restoreFocus: false });
+  const classWizAvailable = hasClassWizSupport(currentTopicId);
+  classWizTrigger.hidden = !classWizAvailable;
+  classWizTrigger.disabled = !classWizAvailable;
+  if (classWizAvailable) classWizSupportPanel.setTopic(currentTopicId);
+  if (!classWizAvailable && classWizOpen) closeClassWizSupport({ restoreFocus: false });
 
   for (const item of topicProgressItems) {
     const current = item.dataset.topicId === currentTopicId;
