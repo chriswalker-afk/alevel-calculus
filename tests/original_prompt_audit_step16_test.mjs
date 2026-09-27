@@ -144,9 +144,9 @@ assert.match(panel,/button\.dataset\.classwizUseCase=useCase\.id/);
 const app=read('src/scripts/app-shell.js');
 assert.match(app,/hasClassWizSupport\(currentTopicId\)/);
 assert.match(app,/classWizSupportPanel\.setTopic\(currentTopicId\)/);
-assert.match(app,/help-content\.js\?v=auditstep16/);
-assert.match(app,/classwiz-support-panel\.js\?v=auditstep16/);
-assert.match(app,/classwiz-support-data\.js\?v=auditstep16/);
+assert.match(app,/help-content\.js\?v=auditstep16final/);
+assert.match(app,/classwiz-support-panel\.js\?v=auditstep16final/);
+assert.match(app,/classwiz-support-data\.js\?v=auditstep16final/);
 assert.match(app,/currentTopicId = topicId;[\s\S]*?syncCurrentTopicChrome\(\);[\s\S]*?syncHelpTargets\(\);/,'Changing topic must update the topic ID before rebuilding Help links.');
 assert.match(app,/function syncCurrentTopicChrome\(\)[\s\S]*?classWizSupportPanel\.setTopic\(currentTopicId\)/,'Changing topic must rebind the calculator panel to the current topic pack.');
 
@@ -159,7 +159,7 @@ for(const [source,published] of [
 }
 
 for(const path of ['src/index.html','index.html','404.html']){
-  assert.match(read(path),/app-shell\.js\?v=auditstep16/,path+' must load the Step 16 runtime.');
+  assert.match(read(path),/app-shell\.js\?v=auditstep16final/,path+' must load the Step 16 runtime.');
 }
 
 console.log('PASS Original-prompt audit Step 16 late Help routing, complete calculator opportunity audit, shared ClassWiz checks and topic-synced panel');
