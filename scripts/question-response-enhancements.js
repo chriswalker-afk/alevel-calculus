@@ -1,4 +1,4 @@
-import { renderMathElement } from "./math-renderer.js?v=ao1math4";
+import { renderMathElement } from "./math-renderer.js?v=mathnotation1";
 
 const mathToolbar = Object.freeze([
   Object.freeze({ label: "x²", insert: "^2", cursorBack: 0, ariaLabel: "Insert squared power" }),
