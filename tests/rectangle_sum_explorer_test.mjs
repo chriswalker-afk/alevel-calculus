@@ -71,7 +71,7 @@ const source = fs.readFileSync(path.join(root, "src/scripts/rectangle-sum-explor
 const css = fs.readFileSync(path.join(root, "src/styles/rectangle-sum-explorer.css"), "utf8");
 const demo = fs.readFileSync(path.join(root, "src/rectangle-sum-explorer-demo.html"), "utf8");
 
-assert.match(source, /from "\.\/diagram-primitives\.js"/, "RectangleSumExplorer must compose DiagramPrimitives.");
+assert.match(source, /from "\.\/diagram-primitives\.js(?:\?[^"]*)?"/, "RectangleSumExplorer must compose DiagramPrimitives.");
 assert.match(source, /from "\.\/area-explorer\.js"/, "Exact integral comparison should reuse AreaExplorer's canonical integration helper.");
 assert.match(source, /from "\.\/linked-function-gradient-explorer\.js"/, "Function definitions should reuse the shared function contract.");
 assert.doesNotMatch(source, /createElementNS|<svg|canvas/i, "RectangleSumExplorer must not create a parallel SVG/canvas system.");
