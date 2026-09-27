@@ -1,4 +1,4 @@
-import { DiagramPrimitives, clamp, normalizeDomain } from "./diagram-primitives.js";
+import { DiagramPrimitives, clamp, normalizeDomain } from "./diagram-primitives.js?v=diagramfix3";
 import { POLYNOMIAL_FUNCTIONS, validateFunctionDefinition } from "./linked-function-gradient-explorer.js";
 
 function finiteNumber(value, fallback = 0) {
