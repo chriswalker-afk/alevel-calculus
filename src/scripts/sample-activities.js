@@ -48,9 +48,9 @@ export const learningModes = Object.freeze({
         microSkillId: "skill:y12:differentiation:basics:gradient-function",
         kicker: "Understand", overline: "Polynomial explorer",
         title: "Does the idea survive when the function changes?",
-        body: "Change the polynomial coefficients, then move the tangent. The derivative graph must still record the gradient of the original function at every x-value.",
+        body: "Type a polynomial (up to degree 6) or edit its coefficients, then move the tangent. The derivative graph must still record the gradient of the original function at every x-value.",
         calloutLabel: "Keep fixed", callout: "Function, tangent and derivative stay linked. Changing the algebra changes the curves, not what the derivative means.",
-        formula: "f(x) ↔ tangent ↔ f′(x)", caption: "Edit a polynomial and test the gradient-function relationship.", basicsUnderstand: true
+        formula: "f(x) ↔ tangent ↔ f′(x)", caption: "Type a polynomial such as 3x^4 − 2x + 7, or use the coefficient controls, then test the gradient-function relationship.", basicsUnderstand: true
       }),
       Object.freeze({
         activityId: "activity:y12:differentiation:basics:understand:derivative-notation",

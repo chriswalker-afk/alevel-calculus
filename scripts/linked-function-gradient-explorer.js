@@ -38,6 +38,67 @@ export function polynomialToText(coefficients, variable = "x") {
   }).join("");
 }
 
+export function parsePolynomialExpression(input, { maxDegree = 6, maxCoefficient = 20 } = {}) {
+  let source = String(input ?? "").trim().toLowerCase()
+    .replace(/[−–—]/g, "-")
+    .replace(/\s+/g, "");
+  source = source.replace(/^(?:f\(x\)|y)=/, "");
+  source = source.replace(/\*\*/g, "^");
+  source = source.replace(/x([⁰¹²³⁴⁵⁶⁷⁸⁹]+)/g, (_, digits) => {
+    const map = { "⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9" };
+    return `x^${[...digits].map((digit) => map[digit]).join("")}`;
+  });
+  source = source.replace(/(\d|\.)\*x/g, "$1x");
+
+  if (!source) throw new Error("Type a polynomial first.");
+  if (!/^[0-9x+\-.^]+$/.test(source)) {
+    throw new Error("Use only numbers, x, +, − and whole-number powers.");
+  }
+
+  const terms = source.match(/[+-]?[^+-]+/g) ?? [];
+  if (!terms.length || terms.join("") !== source) throw new Error("Check the polynomial syntax.");
+
+  const coefficients = Array(maxDegree + 1).fill(0);
+  for (const term of terms) {
+    const xCount = (term.match(/x/g) ?? []).length;
+    if (xCount > 1) throw new Error("Each term can contain x only once.");
+
+    let coefficient;
+    let power;
+    if (xCount === 1) {
+      const [coefficientText, powerText] = term.split("x");
+      if (coefficientText === "" || coefficientText === "+") coefficient = 1;
+      else if (coefficientText === "-") coefficient = -1;
+      else coefficient = Number(coefficientText);
+
+      if (powerText === "") power = 1;
+      else {
+        if (!/^\^\d+$/.test(powerText)) throw new Error("Write powers like x^4 or x⁴.");
+        power = Number(powerText.slice(1));
+      }
+    } else {
+      coefficient = Number(term);
+      power = 0;
+    }
+
+    if (!Number.isFinite(coefficient)) throw new Error(`“${term}” is not a valid polynomial term.`);
+    if (!Number.isInteger(power) || power < 0) throw new Error("Polynomial powers must be non-negative whole numbers.");
+    if (power > maxDegree) throw new Error(`Keep the polynomial at degree ${maxDegree} or below for this explorer.`);
+    if (Math.abs(coefficient) > maxCoefficient) throw new Error(`Keep each coefficient between −${maxCoefficient} and ${maxCoefficient}.`);
+    coefficients[power] += coefficient;
+    if (Math.abs(coefficients[power]) > maxCoefficient) throw new Error(`The combined coefficient of x^${power} is too large for this explorer.`);
+  }
+
+  let last = coefficients.length - 1;
+  while (last > 0 && Math.abs(coefficients[last]) < 1e-12) last -= 1;
+  const trimmed = coefficients.slice(0, last + 1).map((value) => Math.abs(value) < 1e-12 ? 0 : value);
+  return Object.freeze({
+    coefficients: Object.freeze(trimmed),
+    degree: last,
+    canonicalText: polynomialToText(trimmed)
+  });
+}
+
 export function derivativeCoefficients(coefficients) {
   if (!Array.isArray(coefficients) || coefficients.length <= 1) return [0];
   return coefficients.slice(1).map((coefficient, powerIndex) => finiteNumber(coefficient) * (powerIndex + 1));

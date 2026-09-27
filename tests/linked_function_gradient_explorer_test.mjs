@@ -6,6 +6,7 @@ import {
   createPolynomialFunctionDefinition,
   derivativeCoefficients,
   evaluatePolynomial,
+  parsePolynomialExpression,
   polynomialToText,
   validateFunctionDefinition
 } from "../src/scripts/linked-function-gradient-explorer.js";
@@ -14,6 +15,12 @@ assert.deepEqual(derivativeCoefficients([5, -2, 3]), [-2, 6]);
 assert.deepEqual(derivativeCoefficients([7]), [0]);
 assert.equal(evaluatePolynomial([1, -4, 1], 3), -2);
 assert.equal(polynomialToText([0, -3, 0, 1]), "x^3 − 3x");
+assert.deepEqual(parsePolynomialExpression("3x^4 - 2x + 7").coefficients, [7,-2,0,0,3]);
+assert.deepEqual(parsePolynomialExpression("y = -x⁶ + 0.5x²").coefficients, [0,0,0.5,0,0,0,-1]);
+assert.equal(parsePolynomialExpression("f(x)=x+x+1").canonicalText, "2x + 1");
+assert.throws(()=>parsePolynomialExpression("1/x"), /Use only numbers/);
+assert.throws(()=>parsePolynomialExpression("x^7"), /degree 6 or below/);
+assert.throws(()=>parsePolynomialExpression("sin(x)"), /Use only numbers/);
 
 const cubic = createPolynomialFunctionDefinition({
   id: "test-cubic",

@@ -2,8 +2,10 @@ import {
   LinkedFunctionGradientExplorer,
   POLYNOMIAL_FUNCTIONS,
   createPolynomialFunctionDefinition,
+  derivativeCoefficients,
+  parsePolynomialExpression,
   polynomialToText
-} from './linked-function-gradient-explorer.js?v=understand1?v=understand1';
+} from './linked-function-gradient-explorer.js?v=auditstep3';
 
 const STEP33_IDS = new Set([
   'activity:y12:differentiation:basics:understand:curve-tangent-gradient',
@@ -58,17 +60,25 @@ function differentiationMachineResult(key) {
   })[key] ?? ['x³', '3x²'];
 }
 
+function polynomialMagnitudeBound(coefficients, radius) {
+  return coefficients.reduce((sum, coefficient, power) => sum + Math.abs(Number(coefficient) || 0) * radius ** power, 0);
+}
+
 function buildPolynomialDefinition(coefficients) {
-  const [a0, a1, a2, a3, a4] = coefficients;
-  const extent = Math.max(8, Math.abs(a0) + Math.abs(a1) * 3 + Math.abs(a2) * 9 + Math.abs(a3) * 27 + Math.abs(a4) * 81);
-  const dExtent = Math.max(8, Math.abs(a1) + 6 * Math.abs(a2) + 27 * Math.abs(a3) + 108 * Math.abs(a4));
+  const degree = Math.max(0, coefficients.length - 1);
+  const radius = degree >= 5 ? 2 : 3;
+  const first = derivativeCoefficients(coefficients);
+  const second = derivativeCoefficients(first);
+  const extent = Math.max(8, polynomialMagnitudeBound(coefficients, radius) * 1.08);
+  const dExtent = Math.max(8, polynomialMagnitudeBound(first, radius) * 1.08);
+  const ddExtent = Math.max(8, polynomialMagnitudeBound(second, radius) * 1.08);
   return createPolynomialFunctionDefinition({
     id: 'student-polynomial',
     label: polynomialToText(coefficients),
     coefficients,
-    xDomain: [-3, 3],
-    yDomains: { function: [-extent, extent], derivative: [-dExtent, dExtent], secondDerivative: [-20, 20] },
-    initialX: 0.5
+    xDomain: [-radius, radius],
+    yDomains: { function: [-extent, extent], derivative: [-dExtent, dExtent], secondDerivative: [-ddExtent, ddExtent] },
+    initialX: Math.min(0.5, radius)
   });
 }
 
@@ -184,33 +194,112 @@ export class BasicsUnderstandExperience {
   }
 
   render_polynomial_explorer() {
-    const body = this.#panel('Change the polynomial; keep the meaning', '3 · Polynomial explorer');
+    const body = this.#panel('Type a polynomial; keep the meaning', '3 · Polynomial explorer');
+
+    const entry = el(this.document, 'div', 'basics-understand__polynomial-entry');
+    const entryLabel = el(this.document, 'label', 'basics-understand__polynomial-label');
+    entryLabel.append(el(this.document, 'span', '', 'Type a polynomial'));
+    const expressionInput = el(this.document, 'input', 'basics-understand__polynomial-input');
+    expressionInput.type = 'text';
+    expressionInput.value = 'x^3 - 3x';
+    expressionInput.placeholder = 'e.g. 3x^4 - 2x + 7';
+    expressionInput.autocomplete = 'off';
+    expressionInput.spellcheck = false;
+    expressionInput.setAttribute('aria-describedby', 'polynomial-entry-help polynomial-entry-status');
+    entryLabel.append(expressionInput);
+
+    const apply = button(this.document, 'Use this polynomial', () => applyTypedPolynomial(), 'basics-understand__button basics-understand__button--primary');
+    const help = el(this.document, 'p', 'basics-understand__polynomial-help', 'Use x with whole-number powers up to 6. Examples: 3x^4 − 2x + 7, −x⁶ + 0.5x², or y = 2x³ − x.');
+    help.id = 'polynomial-entry-help';
+    const status = el(this.document, 'p', 'basics-understand__status', 'Showing f(x) = x^3 − 3x.');
+    status.id = 'polynomial-entry-status';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    entry.append(entryLabel, apply, help, status);
+    body.append(entry);
+
+    const fallbackLabel = el(this.document, 'div', 'basics-understand__coefficient-heading');
+    fallbackLabel.append(
+      el(this.document, 'strong', '', 'Or edit the coefficients'),
+      el(this.document, 'span', '', 'These controls update the same polynomial.')
+    );
+    body.append(fallbackLabel);
+
     const controls = el(this.document, 'div', 'basics-understand__coefficients');
-    const coefficients = [0, -3, 0, 1, 0];
+    const coefficients = [0, -3, 0, 1, 0, 0, 0];
     const inputs = [];
-    ['constant', 'x', 'x²', 'x³', 'x⁴'].forEach((label, index) => {
+    ['constant', 'x', 'x²', 'x³', 'x⁴', 'x⁵', 'x⁶'].forEach((label, index) => {
       const wrapper = el(this.document, 'label', 'basics-understand__coefficient');
       wrapper.append(el(this.document, 'span', '', label));
       const input = el(this.document, 'input');
-      input.type = 'number'; input.step = '0.5'; input.min = '-5'; input.max = '5'; input.value = String(coefficients[index]);
+      input.type = 'number';
+      input.step = '0.5';
+      input.min = '-20';
+      input.max = '20';
+      input.value = String(coefficients[index]);
       input.setAttribute('aria-label', `Coefficient of ${label}`);
-      wrapper.append(input); controls.append(wrapper); inputs.push(input);
+      wrapper.append(input);
+      controls.append(wrapper);
+      inputs.push(input);
     });
     body.append(controls);
-    const graphHost = el(this.document, 'div', 'basics-understand__graph-host'); body.append(graphHost);
-    const mount = () => {
+
+    const graphHost = el(this.document, 'div', 'basics-understand__graph-host');
+    body.append(graphHost);
+
+    const mount = (next) => {
       this.#destroyExplorer();
-      const next = inputs.map((input) => Math.max(-5, Math.min(5, Number(input.value) || 0)));
       const definition = buildPolynomialDefinition(next);
       this.explorer = new LinkedFunctionGradientExplorer(graphHost, {
-        functions: [definition], revealDerivative: true, allowSecondDerivative: false,
-        showFunctionSelector: false, showDerivativeControls: false
+        functions: [definition],
+        revealDerivative: true,
+        allowSecondDerivative: false,
+        showFunctionSelector: false,
+        showDerivativeControls: false
       });
     };
+
+    const syncCoefficientInputs = (next) => {
+      inputs.forEach((input, index) => {
+        input.value = String(next[index] ?? 0);
+      });
+    };
+
+    const applyTypedPolynomial = () => {
+      try {
+        const parsed = parsePolynomialExpression(expressionInput.value, { maxDegree: 6, maxCoefficient: 20 });
+        expressionInput.setAttribute('aria-invalid', 'false');
+        expressionInput.value = parsed.canonicalText;
+        syncCoefficientInputs(parsed.coefficients);
+        mount(parsed.coefficients);
+        status.textContent = `Showing f(x) = ${parsed.canonicalText}. Move the tangent and compare it with f′(x).`;
+      } catch (error) {
+        expressionInput.setAttribute('aria-invalid', 'true');
+        status.textContent = error instanceof Error ? error.message : 'Check the polynomial and try again.';
+      }
+    };
+
+    const typedKeydown = (event) => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      applyTypedPolynomial();
+    };
+    expressionInput.addEventListener('keydown', typedKeydown);
+    this.cleanup.push(() => expressionInput.removeEventListener('keydown', typedKeydown));
+
     for (const input of inputs) {
-      const listener = () => mount(); input.addEventListener('change', listener); this.cleanup.push(() => input.removeEventListener('change', listener));
+      const listener = () => {
+        const next = inputs.map((field) => Math.max(-20, Math.min(20, Number(field.value) || 0)));
+        expressionInput.value = polynomialToText(next);
+        expressionInput.setAttribute('aria-invalid', 'false');
+        status.textContent = `Showing f(x) = ${expressionInput.value}. The coefficient controls and typed expression describe the same polynomial.`;
+        mount(next);
+      };
+      input.addEventListener('change', listener);
+      this.cleanup.push(() => input.removeEventListener('change', listener));
     }
-    mount();
+
+    applyTypedPolynomial();
   }
 
   render_derivative_notation() {
