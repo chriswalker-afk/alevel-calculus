@@ -14,7 +14,7 @@ import { getQuestionPracticeDefinitionForActivity } from "./question-catalogue.j
 import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner.js";
 import { createQuestionPracticeSession } from "./question-practice-session.js?v=generatorpass1";
 import { createMemoryLab } from "./memory-lab.js?v=hotfix3";
-import { installMathRendering } from "./math-renderer.js?v=mathpass2";
+import { installMathRendering } from "./math-renderer.js?v=mathpass3";
 import { getMemoryItemsForTopic } from "./memory-content.js?v=notation1";
 import { getMemoryGamePackForTopic } from "./memory-game-content.js?v=notation1";
 import { getMemoryReviewPackForTopic } from "./memory-review-content.js";
