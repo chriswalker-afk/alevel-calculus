@@ -51,7 +51,7 @@ const root = path.resolve(import.meta.dirname, "..");
 const source = fs.readFileSync(path.join(root, "src/scripts/rate-flow-diagram.js"), "utf8");
 const css = fs.readFileSync(path.join(root, "src/styles/rate-flow-diagram.css"), "utf8");
 const demo = fs.readFileSync(path.join(root, "src/rate-flow-diagram-demo.html"), "utf8");
-assert.match(source, /from "\.\/diagram-primitives\.js"/, "RateFlowDiagram must compose DiagramPrimitives.");
+assert.match(source, /from "\.\/diagram-primitives\.js(?:\?[^"]*)?"/, "RateFlowDiagram must compose DiagramPrimitives.");
 assert.doesNotMatch(source, /createElementNS|<svg|canvas/i, "RateFlowDiagram must not create a parallel SVG/canvas system.");
 assert.match(source, /this\.diagram\.arrow\(/, "Dependency direction must use shared arrow primitives.");
 assert.match(source, /this\.diagram\.point\(/, "Variables must reuse shared point primitives.");
