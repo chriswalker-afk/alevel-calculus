@@ -332,6 +332,45 @@ const numericalIntegrationUnderstand = createNumericalIntegrationUnderstandExper
 const differentialEquationsUnderstand = createDifferentialEquationsUnderstandExperience(activityVisual);
 const calculusModellingUnderstand = createCalculusModellingUnderstandExperience(activityVisual);
 
+const understandExperiences = Object.freeze([
+  basicsUnderstand,
+  preCalculusUnderstand,
+  firstPrinciplesUnderstand,
+  tangentsNormalsUnderstand,
+  stationaryPointsUnderstand,
+  increasingDecreasingUnderstand,
+  integrationIntroUnderstand,
+  definiteIndefiniteUnderstand,
+  integrationAreaUnderstand,
+  signedAreaUnderstand,
+  standardFunctionsUnderstand,
+  trigFirstPrinciplesUnderstand,
+  productQuotientChainUnderstand,
+  parametricDifferentiationUnderstand,
+  implicitDifferentiationUnderstand,
+  trigIdentitiesInverseUnderstand,
+  concavityInflectionUnderstand,
+  connectedRatesUnderstand,
+  standardIntegralsUnderstand,
+  reverseChainRuleUnderstand,
+  trigIdentityIntegrationUnderstand,
+  substitutionUnderstand,
+  integrationByPartsUnderstand,
+  partialFractionsUnderstand,
+  year13AreasUnderstand,
+  parametricAreaUnderstand,
+  limitOfSumUnderstand,
+  numericalIntegrationUnderstand,
+  differentialEquationsUnderstand,
+  calculusModellingUnderstand
+]);
+
+function destroyUnderstandExperiences({ except = null } = {}) {
+  for (const experience of understandExperiences) {
+    if (experience && experience !== except) experience.destroy?.();
+  }
+}
+
 const baseTopicRuntime = Object.freeze({
   "topic:y12:differentiation:basics": Object.freeze({
     topicId: "topic:y12:differentiation:basics",
@@ -1298,15 +1337,7 @@ export function selectTopic(topicId, { focusStage = true } = {}) {
   }
 
   activityIndexByTopicMode.set(topicModeKey(), activityIndex);
-  basicsUnderstand.destroy();
-  preCalculusUnderstand.destroy();
-  firstPrinciplesUnderstand.destroy();
-  tangentsNormalsUnderstand.destroy();
-  stationaryPointsUnderstand.destroy();
-  increasingDecreasingUnderstand.destroy();
-  integrationIntroUnderstand.destroy();
-  definiteIndefiniteUnderstand.destroy();
-  integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy(); standardIntegralsUnderstand.destroy(); reverseChainRuleUnderstand.destroy(); trigIdentityIntegrationUnderstand.destroy(); substitutionUnderstand.destroy();
+  destroyUnderstandExperiences();
   questionShell.hide();
   activeMemoryLab()?.hide();
   currentTopicId = topicId;
@@ -1459,10 +1490,12 @@ export function renderActivity(index) {
   footerPosition.textContent = position;
   syncUnderstandJourneyPages(activity);
   syncActivityNavigation(activities);
+  standardActivityContent.dataset.customUnderstandActive = "false";
 
   const memoryLabView = activeMode === "memorise" ? activity.memoryLabView : null;
   const generatedQuestionSet = generatedQuestionSetForActivity(activity.activityId);
   if (memoryLabView) {
+    destroyUnderstandExperiences();
     const memoryState = activeMemoryLabState();
     if (!memoryState) throw new Error(`No MemoryLab content configured for ${currentTopicId}`);
     standardActivityContent.hidden = true;
@@ -1472,6 +1505,7 @@ export function renderActivity(index) {
       game: memoryState.gameByActivityId.get(activity.activityId) ?? activity.memoryLabGame ?? null
     });
   } else if (generatedQuestionSet) {
+    destroyUnderstandExperiences();
     activeMemoryLab()?.hide();
     standardActivityContent.hidden = true;
     questionShell.loadSet(generatedQuestionSet);
@@ -1479,164 +1513,17 @@ export function renderActivity(index) {
     activeMemoryLab()?.hide();
     questionShell.hide();
     standardActivityContent.hidden = false;
-    connectedRatesUnderstand.destroy();
-    standardIntegralsUnderstand.destroy();
-    reverseChainRuleUnderstand.destroy();
-    const customBasicsUnderstand = activeMode === "understand" && activity.basicsUnderstand && basicsUnderstand.supports(activity.activityId);
-    const customPreCalculusUnderstand = activeMode === "understand" && activity.preCalculusUnderstand && preCalculusUnderstand.supports(activity.activityId);
-    const customFirstPrinciplesUnderstand = activeMode === "understand" && activity.firstPrinciplesUnderstand && firstPrinciplesUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.basicsUnderstandActive = customBasicsUnderstand ? "true" : "false";
-    standardActivityContent.dataset.preCalculusUnderstandActive = customPreCalculusUnderstand ? "true" : "false";
-    standardActivityContent.dataset.firstPrinciplesUnderstandActive = customFirstPrinciplesUnderstand ? "true" : "false";
-    const customTangentsNormalsUnderstand = activeMode === "understand" && activity.tangentsNormalsUnderstand && tangentsNormalsUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.tangentsNormalsUnderstandActive = customTangentsNormalsUnderstand ? "true" : "false";
-    const customStationaryPointsUnderstand = activeMode === "understand" && activity.stationaryPointsUnderstand && stationaryPointsUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.stationaryPointsUnderstandActive = customStationaryPointsUnderstand ? "true" : "false";
-    const customIncreasingDecreasingUnderstand = activeMode === "understand" && activity.increasingDecreasingUnderstand && increasingDecreasingUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.increasingDecreasingUnderstandActive = customIncreasingDecreasingUnderstand ? "true" : "false";
-    const customIntegrationIntroUnderstand = activeMode === "understand" && activity.integrationIntroUnderstand && integrationIntroUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.integrationIntroUnderstandActive = customIntegrationIntroUnderstand ? "true" : "false";
-    const customDefiniteIndefiniteUnderstand = activeMode === "understand" && activity.definiteIndefiniteUnderstand && definiteIndefiniteUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.definiteIndefiniteUnderstandActive = customDefiniteIndefiniteUnderstand ? "true" : "false";
-    const customIntegrationAreaUnderstand = activeMode === "understand" && activity.integrationAreaUnderstand && integrationAreaUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.integrationAreaUnderstandActive = customIntegrationAreaUnderstand ? "true" : "false";
-    const customSignedAreaUnderstand = activeMode === "understand" && activity.signedAreaUnderstand && signedAreaUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.signedAreaUnderstandActive = customSignedAreaUnderstand ? "true" : "false";
-    const customStandardFunctionsUnderstand = activeMode === "understand" && activity.standardFunctionsUnderstand && standardFunctionsUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.standardFunctionsUnderstandActive = customStandardFunctionsUnderstand ? "true" : "false";
-    const customTrigFirstPrinciplesUnderstand = activeMode === "understand" && activity.trigFirstPrinciplesUnderstand && trigFirstPrinciplesUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.trigFirstPrinciplesUnderstandActive = customTrigFirstPrinciplesUnderstand ? "true" : "false";
-    const customProductQuotientChainUnderstand = activeMode === "understand" && activity.productQuotientChainUnderstand && productQuotientChainUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.productQuotientChainUnderstandActive = customProductQuotientChainUnderstand ? "true" : "false";
-    const customParametricDifferentiationUnderstand = activeMode === "understand" && activity.parametricDifferentiationUnderstand && parametricDifferentiationUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.parametricDifferentiationUnderstandActive = customParametricDifferentiationUnderstand ? "true" : "false";
-    const customImplicitDifferentiationUnderstand = activeMode === "understand" && activity.implicitDifferentiationUnderstand && implicitDifferentiationUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.implicitDifferentiationUnderstandActive = customImplicitDifferentiationUnderstand ? "true" : "false";
-    const customTrigIdentitiesInverseUnderstand = activeMode === "understand" && activity.trigIdentitiesInverseUnderstand && trigIdentitiesInverseUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.trigIdentitiesInverseUnderstandActive = customTrigIdentitiesInverseUnderstand ? "true" : "false";
-    const customConnectedRatesUnderstand = activeMode === "understand" && activity.connectedRatesUnderstand && connectedRatesUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.connectedRatesUnderstandActive = customConnectedRatesUnderstand ? "true" : "false";
-    const customStandardIntegralsUnderstand = activeMode === "understand" && activity.standardIntegralsUnderstand && standardIntegralsUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.standardIntegralsUnderstandActive = customStandardIntegralsUnderstand ? "true" : "false";
-    const customReverseChainRuleUnderstand = activeMode === "understand" && activity.reverseChainRuleUnderstand && reverseChainRuleUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.reverseChainRuleUnderstandActive = customReverseChainRuleUnderstand ? "true" : "false";
-    if (!customReverseChainRuleUnderstand) reverseChainRuleUnderstand.destroy();
-    const customTrigIdentityIntegrationUnderstand = activeMode === "understand" && activity.trigIdentityIntegrationUnderstand && trigIdentityIntegrationUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.trigIdentityIntegrationUnderstandActive = customTrigIdentityIntegrationUnderstand ? "true" : "false";
-    if (!customTrigIdentityIntegrationUnderstand) trigIdentityIntegrationUnderstand.destroy();
-    const customSubstitutionUnderstand = activeMode === "understand" && activity.substitutionUnderstand && substitutionUnderstand.supports(activity.activityId);
-    standardActivityContent.dataset.substitutionUnderstandActive = customSubstitutionUnderstand ? "true" : "false";
-    if (!customSubstitutionUnderstand) substitutionUnderstand.destroy();
-    if (customBasicsUnderstand) {
-      preCalculusUnderstand.destroy();
-      firstPrinciplesUnderstand.destroy();
-      tangentsNormalsUnderstand.destroy();
-      stationaryPointsUnderstand.destroy();
-      increasingDecreasingUnderstand.destroy();
-      integrationIntroUnderstand.destroy();
-      definiteIndefiniteUnderstand.destroy();
-  integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      basicsUnderstand.render(activity.activityId);
-    } else if (customPreCalculusUnderstand) {
-      basicsUnderstand.destroy();
-      firstPrinciplesUnderstand.destroy();
-      tangentsNormalsUnderstand.destroy();
-      stationaryPointsUnderstand.destroy();
-      increasingDecreasingUnderstand.destroy();
-      integrationIntroUnderstand.destroy();
-      definiteIndefiniteUnderstand.destroy();
-  integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      preCalculusUnderstand.render(activity.activityId);
-    } else if (customFirstPrinciplesUnderstand) {
-      basicsUnderstand.destroy();
-      preCalculusUnderstand.destroy();
-      tangentsNormalsUnderstand.destroy();
-      stationaryPointsUnderstand.destroy();
-      increasingDecreasingUnderstand.destroy();
-      integrationIntroUnderstand.destroy();
-      definiteIndefiniteUnderstand.destroy();
-  integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      firstPrinciplesUnderstand.render(activity.activityId);
-    } else if (customTangentsNormalsUnderstand) {
-      basicsUnderstand.destroy();
-      preCalculusUnderstand.destroy();
-      firstPrinciplesUnderstand.destroy();
-      stationaryPointsUnderstand.destroy();
-      increasingDecreasingUnderstand.destroy();
-      integrationIntroUnderstand.destroy();
-      definiteIndefiniteUnderstand.destroy();
-  integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      tangentsNormalsUnderstand.render(activity.activityId);
-    } else if (customStationaryPointsUnderstand) {
-      basicsUnderstand.destroy();
-      preCalculusUnderstand.destroy();
-      firstPrinciplesUnderstand.destroy();
-      tangentsNormalsUnderstand.destroy();
-      increasingDecreasingUnderstand.destroy();
-      integrationIntroUnderstand.destroy();
-      definiteIndefiniteUnderstand.destroy();
-  integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      stationaryPointsUnderstand.render(activity.activityId);
-    } else if (customIncreasingDecreasingUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy();
-  integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      increasingDecreasingUnderstand.render(activity.activityId);
-    } else if (customIntegrationIntroUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); definiteIndefiniteUnderstand.destroy();
-  integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      integrationIntroUnderstand.render(activity.activityId);
-    } else if (customDefiniteIndefiniteUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      definiteIndefiniteUnderstand.render(activity.activityId);
-    } else if (customIntegrationAreaUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      integrationAreaUnderstand.render(activity.activityId);
-    } else if (customSignedAreaUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy(); integrationAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      signedAreaUnderstand.render(activity.activityId);
-    } else if (customStandardFunctionsUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy(); integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      standardFunctionsUnderstand.render(activity.activityId);
-    } else if (customTrigFirstPrinciplesUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy(); integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      trigFirstPrinciplesUnderstand.render(activity.activityId);
-    } else if (customProductQuotientChainUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy(); integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      productQuotientChainUnderstand.render(activity.activityId);
-    } else if (customParametricDifferentiationUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy(); integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      parametricDifferentiationUnderstand.render(activity.activityId);
-    } else if (customImplicitDifferentiationUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy(); integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy();
-      implicitDifferentiationUnderstand.render(activity.activityId);
-    } else if (customTrigIdentitiesInverseUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy(); integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy();
-      trigIdentitiesInverseUnderstand.render(activity.activityId);
-    } else if (customConnectedRatesUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy(); integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy(); concavityInflectionUnderstand.destroy();
-      connectedRatesUnderstand.render(activity.activityId);
-    } else if (customStandardIntegralsUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy(); integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy(); concavityInflectionUnderstand.destroy(); connectedRatesUnderstand.destroy();
-      standardIntegralsUnderstand.render(activity.activityId);
-    } else if (customReverseChainRuleUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy(); integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy(); concavityInflectionUnderstand.destroy(); connectedRatesUnderstand.destroy(); standardIntegralsUnderstand.destroy();
-      reverseChainRuleUnderstand.render(activity.activityId);
-    } else if (customTrigIdentityIntegrationUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy(); integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy(); concavityInflectionUnderstand.destroy(); connectedRatesUnderstand.destroy(); standardIntegralsUnderstand.destroy(); reverseChainRuleUnderstand.destroy();
-      trigIdentityIntegrationUnderstand.render(activity.activityId);
-    } else if (customSubstitutionUnderstand) {
-      basicsUnderstand.destroy(); preCalculusUnderstand.destroy(); firstPrinciplesUnderstand.destroy(); tangentsNormalsUnderstand.destroy(); stationaryPointsUnderstand.destroy(); increasingDecreasingUnderstand.destroy(); integrationIntroUnderstand.destroy(); definiteIndefiniteUnderstand.destroy(); integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy(); concavityInflectionUnderstand.destroy(); connectedRatesUnderstand.destroy(); standardIntegralsUnderstand.destroy(); reverseChainRuleUnderstand.destroy(); trigIdentityIntegrationUnderstand.destroy();
-      substitutionUnderstand.render(activity.activityId);
+    const understandExperience = activeMode === "understand"
+      ? currentTopicRuntime().understandExperience
+      : null;
+    const customUnderstand = Boolean(understandExperience?.supports?.(activity.activityId));
+    standardActivityContent.dataset.customUnderstandActive = customUnderstand ? "true" : "false";
+
+    if (customUnderstand) {
+      destroyUnderstandExperiences({ except: understandExperience });
+      understandExperience.render(activity.activityId);
     } else {
-      basicsUnderstand.destroy();
-      preCalculusUnderstand.destroy();
-      firstPrinciplesUnderstand.destroy();
-      tangentsNormalsUnderstand.destroy();
-      stationaryPointsUnderstand.destroy();
-      increasingDecreasingUnderstand.destroy();
-      integrationIntroUnderstand.destroy();
-      definiteIndefiniteUnderstand.destroy();
-  integrationAreaUnderstand.destroy(); signedAreaUnderstand.destroy(); standardFunctionsUnderstand.destroy(); trigFirstPrinciplesUnderstand.destroy(); productQuotientChainUnderstand.destroy(); parametricDifferentiationUnderstand.destroy(); implicitDifferentiationUnderstand.destroy(); trigIdentitiesInverseUnderstand.destroy(); standardIntegralsUnderstand.destroy(); reverseChainRuleUnderstand.destroy(); trigIdentityIntegrationUnderstand.destroy(); substitutionUnderstand.destroy();
+      destroyUnderstandExperiences();
     }
   }
 
