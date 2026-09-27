@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import {
+  createReasoningMathPreview,
   deriveSelfReviewCriteria,
   formatMathInputForDisplay,
   isAo3SelfReviewQuestion,
@@ -36,16 +37,20 @@ assert.equal(isAo3SelfReviewQuestion({
   responseType: "short-reasoning",
   metadata: { assessmentObjective: "ao2" }
 }), false);
+assert.equal(typeof createReasoningMathPreview, "function");
 
 const runner = createGeneratorRunner({ debugSeed: "answer-entry-pass" });
+let ao2ReasoningCount = 0;
 let ao3ReasoningCount = 0;
 for (const definition of listQuestionDefinitions()) {
+  if (definition.assessmentObjective === "ao2" && definition.responseType === "short-reasoning") ao2ReasoningCount += 1;
   if (definition.assessmentObjective !== "ao3" || definition.responseType !== "short-reasoning") continue;
   const question = runner.generate(definition);
   ao3ReasoningCount += 1;
   assert.equal(isAo3SelfReviewQuestion(question), true, definition.templateId);
   assert.ok(deriveSelfReviewCriteria(question).length >= 1, definition.templateId);
 }
+assert.ok(ao2ReasoningCount >= 1);
 assert.ok(ao3ReasoningCount >= 1);
 
-console.log(`Question response enhancement regression passed for ${ao3ReasoningCount} AO3 reasoning templates.`);
+console.log(`Question response enhancement regression passed for ${ao2ReasoningCount} AO2 and ${ao3ReasoningCount} AO3 reasoning templates.`);
