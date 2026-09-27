@@ -1,3 +1,4 @@
+import { getIntegrationMethodMapHelpTarget as getCanonicalIntegrationMethodMapHelpTarget } from "./integration-method-map.js?v=auditstep14";
 export const helpTargetOrder = Object.freeze(["understand", "memorise", "ao1"]);
 
 const gradientFunctionUnderstandTarget = Object.freeze({
@@ -626,4 +627,8 @@ export function getHelpTarget(topicId, need) {
 
 export function getSupportTargetForMicroSkill(microSkillId, need) {
   return supportByMicroSkill[microSkillId]?.[need] ?? null;
+}
+
+export function getIntegrationMethodDecisionHelpTarget(methodTag) {
+  return getCanonicalIntegrationMethodMapHelpTarget(methodTag);
 }
