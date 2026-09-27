@@ -1,7 +1,7 @@
 import { learningModeOrder, learningModes } from "./sample-activities.js?v=auditstep4";
 import { getCourseScope } from "./scope-metadata.js";
 import { getTopicProgress, progressModeOrder } from "./progress-model.js";
-import { getHelpTarget, getHelpTargets } from "./help-content.js?v=auditstep16final";
+import { getHelpTarget, getHelpTargets } from "./help-content.js?v=supportfix2";
 import { createDiagnosticRouter } from "./diagnostic-router.js";
 import { createMasteryFeedbackModel } from "./mastery-feedback-model.js";
 import { localStateStore, progressStore, vocabularyStore } from "./app-state.js";
@@ -77,7 +77,7 @@ import { parametricAreaLearningModes } from "./parametric-area-activities.js";
 import { createLimitOfSumUnderstandExperience } from "./limit-of-sum-understand.js";
 import { limitOfSumLearningModes } from "./limit-of-sum-activities.js";
 import { createNumericalIntegrationUnderstandExperience } from "./trapezium-integration-understand.js?v=auditstep15";
-import { numericalIntegrationLearningModes } from "./trapezium-integration-activities.js?v=auditstep15";
+import { numericalIntegrationLearningModes } from "./trapezium-integration-activities.js?v=supportfix2";
 import { createDifferentialEquationsUnderstandExperience } from "./differential-equations-understand.js";
 import { differentialEquationsLearningModes } from "./differential-equations-activities.js";
 import { createCalculusModellingUnderstandExperience } from "./calculus-modelling-understand.js";
