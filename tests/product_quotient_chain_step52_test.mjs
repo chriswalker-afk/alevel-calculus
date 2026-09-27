@@ -27,7 +27,7 @@ const app=fs.readFileSync(new URL('../src/scripts/app-shell.js',import.meta.url)
 const understand=fs.readFileSync(new URL('../src/scripts/product-quotient-chain-understand.js',import.meta.url),'utf8');
 const highlighter=fs.readFileSync(new URL('../src/scripts/expression-structure-highlighter.js',import.meta.url),'utf8');
 assert.match(html,/topic:y13:differentiation:product-quotient-chain/);assert.match(html,/topic-index">20/);assert.match(html,/product-quotient-chain-understand\.css/);
-assert.match(app,/productQuotientChainLearningModes/);assert.match(app,/productQuotientChainUnderstand\.render/);
+assert.match(app,/productQuotientChainLearningModes/);assert.match(app,/understandExperience:\s*productQuotientChainUnderstand/);
 assert.match(understand,/product.*quotient.*composite.*mixture/s);assert.match(understand,/f\(g\(x\)\)/);assert.match(understand,/g\(f\(x\)\)/);assert.match(understand,/renderEquationSteps/);assert.match(understand,/decorateExpression/);assert.match(understand,/v begins the numerator/);assert.match(understand,/v²/);assert.match(understand,/dy\/dx =/);assert.match(understand,/outer structure first/i);
 assert.match(highlighter,/applyStructuredExpression/);assert.match(highlighter,/structureRole/);
 console.log('PASS Step 52 product/quotient/chain structure classification, composition machines and persistent labelled rule highlighting');
