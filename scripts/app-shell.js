@@ -44,8 +44,8 @@ import { createStandardFunctionsUnderstandExperience } from "./standard-function
 import { standardFunctionsLearningModes } from "./standard-functions-activities.js";
 import { createTrigFirstPrinciplesUnderstandExperience } from "./trig-first-principles-understand.js?v=diagramfix3";
 import { trigFirstPrinciplesLearningModes } from "./trig-first-principles-activities.js";
-import { createProductQuotientChainUnderstandExperience } from "./product-quotient-chain-understand.js?v=understand2";
-import { productQuotientChainLearningModes } from "./product-quotient-chain-activities.js";
+import { createProductQuotientChainUnderstandExperience } from "./product-quotient-chain-understand.js?v=auditstep9";
+import { productQuotientChainLearningModes } from "./product-quotient-chain-activities.js?v=auditstep9";
 import { createParametricDifferentiationUnderstandExperience } from "./parametric-differentiation-understand.js?v=understand2";
 import { parametricDifferentiationLearningModes } from "./parametric-differentiation-activities.js";
 import { createImplicitDifferentiationUnderstandExperience } from "./implicit-differentiation-understand.js?v=understand2";
