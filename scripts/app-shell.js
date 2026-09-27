@@ -10,12 +10,12 @@ import { activityRouteFromId, createHistoryRouteController } from "./navigation-
 import { renderVocabularyRichText } from "./vocabulary-term.js?v=interactionfix1";
 import { buildWordBankEntries, filterWordBankEntries } from "./word-bank-model.js";
 import { createQuestionShell } from "./question-shell.js?v=auditstep7";
-import { getQuestionPracticeDefinitionForActivity } from "./question-catalogue.js?v=auditstep11";
+import { getQuestionPracticeDefinitionForActivity } from "./question-catalogue.js?v=auditstep12";
 import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner.js";
 import { createQuestionPracticeSession } from "./question-practice-session.js?v=generatorpass1";
 import { createMemoryLab } from "./memory-lab.js?v=hotfix3";
 import { installMathRendering } from "./math-renderer.js?v=ao1math4";
-import { getMemoryItemsForTopic } from "./memory-content.js?v=auditstep11";
+import { getMemoryItemsForTopic } from "./memory-content.js?v=auditstep12";
 import { getMemoryGamePackForTopic } from "./memory-game-content.js?v=auditstep5";
 import { getMemoryReviewPackForTopic } from "./memory-review-content.js";
 import { createClassWizSupportPanel } from "./classwiz-support-panel.js";
@@ -48,8 +48,8 @@ import { createProductQuotientChainUnderstandExperience } from "./product-quotie
 import { productQuotientChainLearningModes } from "./product-quotient-chain-activities.js?v=auditstep10";
 import { createParametricDifferentiationUnderstandExperience } from "./parametric-differentiation-understand.js?v=auditstep11";
 import { parametricDifferentiationLearningModes } from "./parametric-differentiation-activities.js?v=auditstep11";
-import { createImplicitDifferentiationUnderstandExperience } from "./implicit-differentiation-understand.js?v=understand2";
-import { implicitDifferentiationLearningModes } from "./implicit-differentiation-activities.js";
+import { createImplicitDifferentiationUnderstandExperience } from "./implicit-differentiation-understand.js?v=auditstep12";
+import { implicitDifferentiationLearningModes } from "./implicit-differentiation-activities.js?v=auditstep12";
 import { createTrigIdentitiesInverseUnderstandExperience } from "./trig-identities-inverse-understand.js?v=understand2";
 import { trigIdentitiesInverseLearningModes } from "./trig-identities-inverse-activities.js";
 import { createConcavityInflectionUnderstandExperience } from "./concavity-inflection-understand.js?v=understand2";
