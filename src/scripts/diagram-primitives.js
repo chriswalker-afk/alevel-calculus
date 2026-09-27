@@ -76,6 +76,15 @@ function numericStep(domain) {
   return (max - min) / 100;
 }
 
+function parseAspectRatio(value, fallback = [16, 9]) {
+  const match = String(value ?? "").match(/^\s*(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)\s*$/);
+  if (!match) return fallback;
+  const width = Number(match[1]);
+  const height = Number(match[2]);
+  if (!(width > 0) || !(height > 0)) return fallback;
+  return [width, height];
+}
+
 export class DiagramPrimitives {
   constructor(root, {
     xDomain = [-5, 5],
@@ -90,7 +99,8 @@ export class DiagramPrimitives {
     this.xDomain = normalizeDomain(xDomain, [-5, 5]);
     this.yDomain = normalizeDomain(yDomain, [-5, 5]);
     this.width = 1000;
-    this.height = 600;
+    const [aspectWidth, aspectHeight] = parseAspectRatio(aspectRatio);
+    this.height = Math.round(this.width * aspectHeight / aspectWidth);
     this.padding = Object.freeze({ left: 72, right: 34, top: 34, bottom: 62 });
     this.id = `diagram-primitives-${++instanceCounter}`;
     this.layers = new Map();
@@ -102,7 +112,7 @@ export class DiagramPrimitives {
 
     this.svg = svgElement(this.document, "svg", {
       viewBox: `0 0 ${this.width} ${this.height}`,
-      preserveAspectRatio: "none",
+      preserveAspectRatio: "xMidYMid meet",
       role: "img",
       "aria-label": ariaLabel,
       class: "diagram-primitives__svg"
