@@ -38,6 +38,28 @@ for (const topic of CURRICULUM_AUDIT_TOPICS) {
 assert(routeCount > 200, 'Step 80 route audit should cover the full implemented curriculum.');
 assert(resolveActivityRoute('/y13/integration/not-real/ao1/nope', topicRuntime) === null, 'Unknown routes must not resolve.');
 
+const journeyRuntime = {
+  'topic:y12:differentiation:basics': {
+    availableModes: ['understand'],
+    learningModes: {
+      understand: {
+        activities: [
+          { activityId: 'activity:y12:differentiation:basics:understand:topic-goals' },
+          { activityId: 'activity:y12:differentiation:basics:understand:gradient-function' },
+          { activityId: 'activity:y12:differentiation:basics:understand:next-steps' }
+        ]
+      }
+    }
+  }
+};
+for (const slug of ['topic-goals', 'next-steps']) {
+  const activityId = `activity:y12:differentiation:basics:understand:${slug}`;
+  const route = `/y12/differentiation/basics/understand/${slug}`;
+  assert(activityRouteFromId(activityId) === route, `Understand bookend route should derive from its stable ID: ${slug}`);
+  assert(parseActivityRoute(route)?.activityId === activityId, `Understand bookend route should parse back to its stable ID: ${slug}`);
+  assert(resolveActivityRoute(route, journeyRuntime)?.activityId === activityId, `Understand bookend route should resolve in the augmented runtime: ${slug}`);
+}
+
 const productionAppStateSource = await import('node:fs').then(({ readFileSync }) => readFileSync(new URL('../src/scripts/app-state.js', import.meta.url), 'utf8'));
 assert(!productionAppStateSource.includes('sampleInitialState'), 'A genuinely clean production profile must not be seeded with prototype progress.');
 assert(productionAppStateSource.includes('initialState: createBlankAppState()'), 'Production app state must initialise from a blank versioned state.');
