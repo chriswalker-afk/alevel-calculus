@@ -1,4 +1,4 @@
-import { applyStructuredExpression, structureLegend } from './expression-structure-highlighter.js';
+import { applyStructuredExpression, structureLegend } from './expression-structure-highlighter.js?v=understand1';
 import { renderEquationSteps } from './equation-step-renderer.js';
 import { REVERSE_CHAIN_RECOGNITION_EXAMPLES, RECOGNITION_FAMILIES, STANDARD_INTEGRAL_RECOGNITION_SOURCE } from './reverse-chain-recognition-data.js';
 const IDS=new Set(['discover-pattern','recognition-first','constant-adjustment','f-prime-over-f','trig-recognition','definite-recognition'].map(s=>`activity:y13:integration:reverse-chain-rule:understand:${s}`));
