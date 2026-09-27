@@ -123,3 +123,25 @@ sub.math-script { vertical-align: -0.22em; }
 @media (prefers-reduced-motion: reduce) {
   .math-typeset { scroll-behavior: auto; }
 }
+
+/* AO1 notation pass: typeset mathematical fragments inside prose without turning
+   the whole sentence into display maths or forcing it onto one line. */
+.math-typeset[data-math-prose] {
+  font-family: inherit;
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
+.math-typeset[data-math-prose] > .math-typeset__content {
+  width: auto;
+  min-width: 0;
+  display: inline;
+  white-space: normal;
+  line-height: inherit;
+}
+
+.math-typeset[data-math-prose] .math-fraction,
+.math-typeset[data-math-prose] .math-script {
+  font-family: var(--font-math);
+}
+
