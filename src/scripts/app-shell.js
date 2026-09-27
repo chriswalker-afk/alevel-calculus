@@ -7,7 +7,7 @@ import { createMasteryFeedbackModel } from "./mastery-feedback-model.js";
 import { localStateStore, progressStore, vocabularyStore } from "./app-state.js";
 import { APP_STATE_SCHEMA_VERSION } from "./local-state-store.js";
 import { activityRouteFromId, createHistoryRouteController } from "./navigation-route.js";
-import { renderVocabularyRichText } from "./vocabulary-term.js";
+import { renderVocabularyRichText } from "./vocabulary-term.js?v=interactionfix1";
 import { buildWordBankEntries, filterWordBankEntries } from "./word-bank-model.js";
 import { createQuestionShell } from "./question-shell.js?v=ao3math1";
 import { getQuestionPracticeDefinitionForActivity } from "./question-catalogue.js?v=ao3math1";
@@ -1211,7 +1211,7 @@ export function openWordBank(termId = null, returnFocus = null) {
   wordBankScrim.hidden = false;
   setHelpBackgroundInert(true);
   renderWordBank();
-  wordBankSearch.focus();
+  wordBankSearch.focus({ preventScroll: true });
 }
 
 export function closeWordBank({ restoreFocus = true } = {}) {
@@ -1222,7 +1222,7 @@ export function closeWordBank({ restoreFocus = true } = {}) {
   wordBankDrawer.setAttribute("aria-hidden", "true");
   wordBankScrim.hidden = true;
   setHelpBackgroundInert(false);
-  if (restoreFocus) (wordBankReturnFocus ?? wordBankTrigger).focus?.();
+  if (restoreFocus) (wordBankReturnFocus ?? wordBankTrigger).focus?.({ preventScroll: true });
   wordBankReturnFocus = null;
 }
 
@@ -1239,7 +1239,7 @@ export function openHelpDrawer() {
   helpDrawerScrim.hidden = false;
   helpContext.textContent = `Quick support for “${fields.title.textContent}”. Choose what you need; your current work stays here.`;
   setHelpBackgroundInert(true);
-  helpDrawerClose.focus();
+  helpDrawerClose.focus({ preventScroll: true });
 }
 
 export function closeHelpDrawer({ restoreFocus = true } = {}) {
@@ -1250,7 +1250,7 @@ export function closeHelpDrawer({ restoreFocus = true } = {}) {
   helpDrawer.setAttribute("aria-hidden", "true");
   helpDrawerScrim.hidden = true;
   setHelpBackgroundInert(false);
-  if (restoreFocus) helpDrawerTrigger.focus();
+  if (restoreFocus) helpDrawerTrigger.focus({ preventScroll: true });
 }
 
 function followSupportTarget(target) {
@@ -1283,7 +1283,7 @@ export function openTopicNavigation() {
   topicNavigation.setAttribute("aria-hidden", "false");
   navigationScrim.hidden = false;
   setBackgroundInert(true);
-  topicNavigationClose.focus();
+  topicNavigationClose.focus({ preventScroll: true });
 }
 
 export function closeTopicNavigation({ restoreFocus = true } = {}) {
@@ -1300,7 +1300,7 @@ export function closeTopicNavigation({ restoreFocus = true } = {}) {
   }
 
   if (restoreFocus && compactNavigationMedia.matches) {
-    topicNavigationToggle.focus();
+    topicNavigationToggle.focus({ preventScroll: true });
   }
 }
 
@@ -1716,7 +1716,7 @@ dataManagementDialog.addEventListener("close", () => {
   resetConfirmation.hidden = true;
   clearImportSelection();
   setDataStatus("");
-  (dataDialogReturnFocus ?? dataManagementTrigger).focus?.();
+  (dataDialogReturnFocus ?? dataManagementTrigger).focus?.({ preventScroll: true });
   dataDialogReturnFocus = null;
 });
 
