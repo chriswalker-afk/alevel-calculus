@@ -43,6 +43,12 @@ assert.equal(nestedDerivativeRatio[0].denominator, "dx/dt");
 const slashProse = tokeniseMathExpression("substitution/parts/trig");
 assert.deepEqual(slashProse, [{ type: "text", value: "substitution/parts/trig" }]);
 
+const scriptedDenominator = tokeniseMathExpression("m_normal = −1/m_tangent");
+const scriptedFraction = scriptedDenominator.find((token) => token.type === "fraction");
+assert.ok(scriptedFraction);
+assert.equal(scriptedFraction.numerator, "1");
+assert.equal(scriptedFraction.denominator, "m_tangent");
+
 console.log("Math renderer tokenisation regression passed.");
 
 
