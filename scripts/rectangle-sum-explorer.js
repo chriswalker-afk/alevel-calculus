@@ -508,6 +508,7 @@ export class RectangleSumExplorer {
     ]) {
       const item = createElement(this.document, "span", `rectangle-sum-explorer__formula rectangle-sum-explorer__formula--${className}`);
       item.textContent = text;
+      item.setAttribute("data-math-render", "");
       this.elements.formulaFlow.append(item);
     }
 
