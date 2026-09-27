@@ -49,7 +49,7 @@ const source = fs.readFileSync(path.join(root, "src/scripts/family-of-curves-exp
 const css = fs.readFileSync(path.join(root, "src/styles/family-of-curves-explorer.css"), "utf8");
 const demo = fs.readFileSync(path.join(root, "src/family-of-curves-explorer-demo.html"), "utf8");
 
-assert.match(source, /from "\.\/diagram-primitives\.js"/, "Explorer must compose DiagramPrimitives.");
+assert.match(source, /from "\.\/diagram-primitives\.js(?:\?[^"]*)?"/, "Explorer must compose DiagramPrimitives.");
 assert.match(source, /from "\.\/linked-function-gradient-explorer\.js"/, "Explorer should reuse the established function-definition contract.");
 assert.doesNotMatch(source, /createElementNS|<svg|canvas/i, "Explorer must not create a parallel SVG/canvas system.");
 assert.match(source, /familyDiagram\.slider\(/, "C must use the shared accessible range-slider primitive.");
