@@ -595,7 +595,10 @@ function withUnderstandJourney(runtime) {
 }
 
 const topicRuntime = Object.freeze(Object.fromEntries(
-  Object.entries(baseTopicRuntime).map(([topicId, runtime]) => [topicId, withUnderstandJourney(runtime)])
+  Object.entries(baseTopicRuntime).map(([topicId, runtime]) => [
+    topicId,
+    withUnderstandJourney(Object.freeze({...runtime,classWiz:hasClassWizSupport(topicId)}))
+  ])
 ));
 
 const activityIndexByTopicMode = new Map(
