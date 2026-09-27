@@ -44,7 +44,7 @@ assert.equal(getSupportTargetForMicroSkill('skill:y13:differentiation:connected-
 const understand=await fs.readFile(new URL('../src/scripts/connected-rates-understand.js',import.meta.url),'utf8');
 assert.match(understand,/RateFlowDiagram/); assert.match(understand,/disabled=true/); assert.match(understand,/chain rule/i); assert.match(understand,/negative/i); assert.match(understand,/multi-stage/i);
 const app=await fs.readFile(new URL('../src/scripts/app-shell.js',import.meta.url),'utf8');
-assert.match(app,/topic:y13:differentiation:connected-rates/); assert.match(app,/customConnectedRatesUnderstand/);
+assert.match(app,/topic:y13:differentiation:connected-rates/); assert.match(app,/understandExperience:\s*connectedRatesUnderstand/);
 const index=await fs.readFile(new URL('../src/index.html',import.meta.url),'utf8');
 assert.match(index,/data-topic-id="topic:y13:differentiation:connected-rates"/); assert.match(index,/topic-index">25/);
 console.log('PASS Step 58 dependency-first RateFlowDiagram, derivative orientation, signs/units, multi-stage chains, Memory Lab and AO1-AO3 contracts');
