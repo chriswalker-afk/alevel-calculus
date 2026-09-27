@@ -136,7 +136,7 @@ sub.math-script { vertical-align: -0.22em; }
   width: auto;
   min-width: 0;
   display: inline;
-  white-space: normal;
+  white-space: inherit;
   line-height: inherit;
 }
 
