@@ -77,8 +77,14 @@
   line-height: 0;
 }
 
-sup.math-script { vertical-align: 0.62em; }
-sub.math-script { vertical-align: -0.22em; }
+sup.math-script {
+  top: -0.48em;
+  vertical-align: baseline;
+}
+sub.math-script {
+  top: 0.2em;
+  vertical-align: baseline;
+}
 
 .question-shell__math.math-typeset,
 .equation-step__expression.math-typeset,
