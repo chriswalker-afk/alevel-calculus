@@ -13,6 +13,7 @@ const FRACTION_ATOM_PATTERN = `(?:${PAREN_GROUP_PATTERN}|${SQUARE_GROUP_PATTERN}
 const FRACTION_PATTERN = new RegExp(`(?<![A-Za-z])(?:${DERIVATIVE_PATTERN}|${FRACTION_ATOM_PATTERN}\\s*\\/\\s*${FRACTION_ATOM_PATTERN})(?![A-Za-z])`, "g");
 const SCRIPT_PATTERN = /([_^])(\([^)]{1,60}\)|-?\d+|[A-Za-z]+)/g;
 const INTEGRAL_PATTERN = /∫(?:_\(([^)]{1,80})\)|_([A-Za-z0-9π∞+−-]+))?(?:\^\(([^)]{1,80})\)|\^([A-Za-z0-9π∞+−-]+))?/g;
+const EVALUATION_PATTERN = /\[([^\[\]\n]{1,140})\](?:_\(([^)]{1,80})\)|_([A-Za-z0-9π∞+−-]+))(?:\^\(([^)]{1,80})\)|\^([A-Za-z0-9π∞+−-]+))/g;
 const SUPERSCRIPT_MAP = Object.freeze({
   "⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9",
   "ⁿ":"n","⁺":"+","⁻":"-"
@@ -195,20 +196,61 @@ function appendScriptsOnly(parent, value, doc) {
   if (cursor < text.length) parent.append(doc.createTextNode(text.slice(cursor)));
 }
 
+function createEvaluationNode({ expression = "", lower = "", upper = "" } = {}, doc) {
+  const evaluation = doc.createElement("span");
+  evaluation.className = "math-evaluation";
+
+  const body = doc.createElement("span");
+  body.className = "math-evaluation__body";
+  body.append(doc.createTextNode("["));
+  appendMathText(body, expression, doc);
+  body.append(doc.createTextNode("]"));
+
+  const limits = doc.createElement("span");
+  limits.className = "math-evaluation__limits";
+  const upperNode = doc.createElement("span");
+  upperNode.className = "math-evaluation__upper";
+  const lowerNode = doc.createElement("span");
+  lowerNode.className = "math-evaluation__lower";
+  if (upper) appendMathText(upperNode, upper, doc);
+  if (lower) appendMathText(lowerNode, lower, doc);
+  limits.append(upperNode, lowerNode);
+
+  evaluation.append(body, limits);
+  return evaluation;
+}
+
+function appendEvaluationAwareText(parent, value, doc) {
+  const text = String(value ?? "");
+  let cursor = 0;
+  EVALUATION_PATTERN.lastIndex = 0;
+  for (const match of text.matchAll(EVALUATION_PATTERN)) {
+    const index = match.index ?? 0;
+    if (index > cursor) appendScriptsOnly(parent, text.slice(cursor, index), doc);
+    parent.append(createEvaluationNode({
+      expression: match[1] ?? "",
+      lower: match[2] ?? match[3] ?? "",
+      upper: match[4] ?? match[5] ?? ""
+    }, doc));
+    cursor = index + match[0].length;
+  }
+  if (cursor < text.length) appendScriptsOnly(parent, text.slice(cursor), doc);
+}
+
 function appendScriptedText(parent, value, doc) {
   const text = String(value ?? "");
   let cursor = 0;
   INTEGRAL_PATTERN.lastIndex = 0;
   for (const match of text.matchAll(INTEGRAL_PATTERN)) {
     const index = match.index ?? 0;
-    if (index > cursor) appendScriptsOnly(parent, text.slice(cursor, index), doc);
+    if (index > cursor) appendEvaluationAwareText(parent, text.slice(cursor, index), doc);
     parent.append(createIntegralNode({
       lower: match[1] ?? match[2] ?? "",
       upper: match[3] ?? match[4] ?? ""
     }, doc));
     cursor = index + match[0].length;
   }
-  if (cursor < text.length) appendScriptsOnly(parent, text.slice(cursor), doc);
+  if (cursor < text.length) appendEvaluationAwareText(parent, text.slice(cursor), doc);
 }
 
 function appendMathText(parent, value, doc) {
