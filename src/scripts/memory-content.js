@@ -70,9 +70,9 @@ export const basicsDifferentiationFactItems = Object.freeze([
   defineMemoryItem({
     id: "memory-item:y12:differentiation:basics:a-over-x-power",
     courseScope: "y12", topicId, microSkillId: skill("rewrite-powers"), kind: "rule",
-    learn: { label: "a divided by xⁿ", statement: "For a positive whole-number n, rewrite ax⁻ⁿ and use the power rule.", notation: "d/dx (a/xⁿ) = −an/xⁿ⁺¹" },
-    flashcard: { front: "d/dx (a/xⁿ)", back: "−an/xⁿ⁺¹", reverse: true, cue: "Recall the reciprocal-power pattern" },
-    match: { left: "d/dx (a/xⁿ)", right: "−an/xⁿ⁺¹" }, prerequisiteTags: ["indices"], vocabularyTags: ["vocab:power-index"]
+    learn: { label: "a divided by xⁿ", statement: "For a positive whole-number n, rewrite ax⁻ⁿ and use the power rule.", notation: "d/dx (a/xⁿ) = −(an)/(xⁿ⁺¹)" },
+    flashcard: { front: "d/dx (a/xⁿ)", back: "−(an)/(xⁿ⁺¹)", reverse: true, cue: "Recall the reciprocal-power pattern" },
+    match: { left: "d/dx (a/xⁿ)", right: "−(an)/(xⁿ⁺¹)" }, prerequisiteTags: ["indices"], vocabularyTags: ["vocab:power-index"]
   }),
   defineMemoryItem({
     id: "memory-item:y12:differentiation:basics:a-root-x",
@@ -112,9 +112,9 @@ export const basicsDifferentiationFactItems = Object.freeze([
   defineMemoryItem({
     id: "memory-item:y12:differentiation:basics:derivative-notation",
     courseScope: "y12", topicId, microSkillId: skill("derivative-notation"), kind: "notation",
-    learn: { label: "Derivative notation", statement: getVocabularyTerm("vocab:derivative")?.definition ?? "The derivative is the gradient function.", notation: "f′(x), dy/dx" },
-    flashcard: { front: "f′(x) or dy/dx", back: "the derivative / gradient function", reverse: true, cue: "Recall what the notation means" },
-    match: { left: "f′(x), dy/dx", right: "derivative / gradient function" }, prerequisiteTags: [], vocabularyTags: ["vocab:derivative", "vocab:gradient-function"]
+    learn: { label: "Derivative notation", statement: getVocabularyTerm("vocab:derivative")?.definition ?? "The derivative is the gradient function.", notation: "f′(x) = dy/dx" },
+    flashcard: { front: "f′(x) = dy/dx", back: "the derivative / gradient function", reverse: true, cue: "Recall what the notation means" },
+    match: { left: "f′(x) = dy/dx", right: "derivative / gradient function" }, prerequisiteTags: [], vocabularyTags: ["vocab:derivative", "vocab:gradient-function"]
   }),
   defineMemoryItem({
     id: "memory-item:y12:differentiation:basics:d-dx-operator",
