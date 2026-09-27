@@ -175,6 +175,48 @@ export function createMathEntryEnhancement({ inputGroup, input } = {}) {
   return Object.freeze({ sync, setMode, enhanced: true });
 }
 
+
+export function createReasoningMathPreview({ reasoningGroup, reasoning } = {}) {
+  const doc = reasoning?.ownerDocument ?? reasoningGroup?.ownerDocument ?? null;
+  if (!doc?.createElement || !reasoningGroup?.append || !reasoning) {
+    return Object.freeze({ sync() {}, enhanced: false, element: null });
+  }
+
+  const wrap = doc.createElement("div");
+  wrap.className = "question-reasoning-preview-wrap";
+  wrap.hidden = true;
+  wrap.setAttribute("data-question-reasoning-preview-wrap", "");
+
+  const label = doc.createElement("span");
+  label.className = "question-reasoning-preview__label";
+  label.textContent = "Formatted explanation";
+
+  const preview = doc.createElement("div");
+  preview.className = "question-reasoning-preview";
+  preview.setAttribute("data-question-reasoning-preview", "");
+  preview.setAttribute("data-math-prose", "");
+  preview.setAttribute("aria-label", "Formatted explanation preview");
+
+  wrap.append(label, preview);
+  reasoningGroup.append(wrap);
+
+  function sync(value) {
+    const raw = String(value ?? "").trim();
+    wrap.hidden = !raw;
+    if (!raw) {
+      preview.replaceChildren();
+      preview.classList.remove("math-typeset", "math-typeset--display");
+      delete preview.dataset.mathSource;
+      return;
+    }
+    renderMathElement(preview, { source: formatMathInputForDisplay(raw) });
+  }
+
+  reasoning.addEventListener?.("input", () => sync(reasoning.value));
+  sync(reasoning.value);
+  return Object.freeze({ sync, enhanced: true, element: wrap });
+}
+
 export function createSelfReviewPanel({
   beforeElement,
   onCriterionChange = () => {},
