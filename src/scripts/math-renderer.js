@@ -1,8 +1,13 @@
 const SUPERSCRIPT_CHARACTERS = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 const DERIVATIVE_PATTERN = `(?:d(?:[${SUPERSCRIPT_CHARACTERS}]+|\\^\\d+)?[A-Za-z]*\\/d[A-Za-z]+(?:[${SUPERSCRIPT_CHARACTERS}]+|\\^\\d+)?|∂(?:[${SUPERSCRIPT_CHARACTERS}]+|\\^\\d+)?[A-Za-z]*\\/∂[A-Za-z]+(?:[${SUPERSCRIPT_CHARACTERS}]+|\\^\\d+)?)`;
-const FRACTION_ATOM_PATTERN = `(?:\\([^()\\n]{1,60}\\)|√?[A-Za-zπ\\d]+[${SUPERSCRIPT_CHARACTERS}]*)`;
-const FRACTION_PATTERN = new RegExp(`${DERIVATIVE_PATTERN}|${FRACTION_ATOM_PATTERN}\\/${FRACTION_ATOM_PATTERN}`, "g");
-const SCRIPT_PATTERN = /([_^])(\([^)]{1,40}\)|-?\d+|[A-Za-z]+)/g;
+const FUNCTION_PATTERN = "(?:sin|cos|tan|sec|cosec|cot|ln|log|exp)";
+const SIMPLE_MATH_ATOM_PATTERN = `(?:\\d+(?:\\.\\d+)?|(?:Δ[A-Za-z]|[A-Za-zπ])(?:[′']{1,2})?(?:[${SUPERSCRIPT_CHARACTERS}]+)?|${FUNCTION_PATTERN}[${SUPERSCRIPT_CHARACTERS}]*\\s*[A-Za-zπ](?:[${SUPERSCRIPT_CHARACTERS}]+)?|[A-Za-zπ](?:[′']{1,2})?\\([^()\\n]{1,50}\\)|\\?)`;
+const PAREN_GROUP_PATTERN = `\\((?:[^()\\n]|\\([^()\\n]{0,60}\\)){1,140}\\)`;
+const SQUARE_GROUP_PATTERN = `\\[[^\\[\\]\\n]{1,140}\\]`;
+const ABS_GROUP_PATTERN = `\\|[^|\\n]{1,100}\\|`;
+const FRACTION_ATOM_PATTERN = `(?:${PAREN_GROUP_PATTERN}|${SQUARE_GROUP_PATTERN}|${ABS_GROUP_PATTERN}|${SIMPLE_MATH_ATOM_PATTERN})`;
+const FRACTION_PATTERN = new RegExp(`(?<![A-Za-z])(?:${DERIVATIVE_PATTERN}|${FRACTION_ATOM_PATTERN}\\s*\\/\\s*${FRACTION_ATOM_PATTERN})(?![A-Za-z])`, "g");
+const SCRIPT_PATTERN = /([_^])(\([^)]{1,60}\)|-?\d+|[A-Za-z]+)/g;
 
 export const mathRenderSelector = [
   "[data-activity-formula]",
@@ -45,6 +50,35 @@ function trimOuterParentheses(value) {
   return text;
 }
 
+function trimFractionGrouping(value) {
+  const text = String(value ?? "").trim();
+  if ((text.startsWith("(") && text.endsWith(")")) || (text.startsWith("[") && text.endsWith("]"))) {
+    return text.slice(1, -1).trim();
+  }
+  return text;
+}
+
+function findTopLevelSlash(value) {
+  const text = String(value ?? "");
+  let roundDepth = 0;
+  let squareDepth = 0;
+  let absoluteDepth = 0;
+  for (let index = 0; index < text.length; index += 1) {
+    const character = text[index];
+    if (character === "|" && roundDepth === 0 && squareDepth === 0) {
+      absoluteDepth = absoluteDepth ? 0 : 1;
+      continue;
+    }
+    if (absoluteDepth) continue;
+    if (character === "(") roundDepth += 1;
+    else if (character === ")") roundDepth = Math.max(0, roundDepth - 1);
+    else if (character === "[") squareDepth += 1;
+    else if (character === "]") squareDepth = Math.max(0, squareDepth - 1);
+    else if (character === "/" && roundDepth === 0 && squareDepth === 0) return index;
+  }
+  return text.indexOf("/");
+}
+
 function pushTextToken(tokens, value) {
   if (!value) return;
   const previous = tokens[tokens.length - 1];
@@ -61,12 +95,12 @@ export function tokeniseMathExpression(source) {
     const index = match.index ?? 0;
     pushTextToken(tokens, text.slice(cursor, index));
     const raw = match[0];
-    const slash = raw.indexOf("/");
+    const slash = findTopLevelSlash(raw);
     tokens.push({
       type: "fraction",
-      numerator: trimOuterParentheses(raw.slice(0, slash)),
-      denominator: trimOuterParentheses(raw.slice(slash + 1)),
-      derivative: raw.startsWith("d") || raw.startsWith("∂")
+      numerator: trimFractionGrouping(raw.slice(0, slash)),
+      denominator: trimFractionGrouping(raw.slice(slash + 1)),
+      derivative: raw.trimStart().startsWith("d") || raw.trimStart().startsWith("∂")
     });
     cursor = index + raw.length;
   }
@@ -83,11 +117,18 @@ function appendScriptedText(parent, value, doc) {
     if (index > cursor) parent.append(doc.createTextNode(text.slice(cursor, index)));
     const script = doc.createElement(match[1] === "^" ? "sup" : "sub");
     script.className = "math-script";
-    script.textContent = trimOuterParentheses(match[2]);
+    appendMathText(script, trimOuterParentheses(match[2]), doc);
     parent.append(script);
     cursor = index + match[0].length;
   }
   if (cursor < text.length) parent.append(doc.createTextNode(text.slice(cursor)));
+}
+
+function appendMathText(parent, value, doc) {
+  for (const token of tokeniseMathExpression(String(value ?? ""))) {
+    if (token.type === "fraction") parent.append(createFractionNode(token, doc));
+    else appendScriptedText(parent, token.value, doc);
+  }
 }
 
 function createFractionNode(token, doc) {
@@ -95,10 +136,10 @@ function createFractionNode(token, doc) {
   fraction.className = token.derivative ? "math-fraction math-fraction--derivative" : "math-fraction";
   const numerator = doc.createElement("span");
   numerator.className = "math-fraction__numerator";
-  appendScriptedText(numerator, token.numerator, doc);
+  appendMathText(numerator, token.numerator, doc);
   const denominator = doc.createElement("span");
   denominator.className = "math-fraction__denominator";
-  appendScriptedText(denominator, token.denominator, doc);
+  appendMathText(denominator, token.denominator, doc);
   fraction.append(numerator, denominator);
   return fraction;
 }
@@ -125,10 +166,7 @@ export function renderMathElement(element, { source = null } = {}) {
   wrapper.className = "math-typeset__content";
   wrapper.setAttribute("data-math-rendered-content", "");
 
-  for (const token of tokeniseMathExpression(raw)) {
-    if (token.type === "fraction") wrapper.append(createFractionNode(token, doc));
-    else appendScriptedText(wrapper, token.value, doc);
-  }
+  appendMathText(wrapper, raw, doc);
 
   element.classList.add("math-typeset");
   if (typeof element.matches === "function" && element.matches(displayMathSelector)) element.classList.add("math-typeset--display");
