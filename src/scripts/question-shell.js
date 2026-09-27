@@ -154,6 +154,7 @@ export function createQuestionShell(root, {
   const setIndex = new Map();
   const stateByQuestionId = new Map();
   const mathEntry = createMathEntryEnhancement({ inputGroup: fields.inputGroup, input: fields.input });
+  const reasoningPreview = createReasoningMathPreview({ reasoningGroup: fields.reasoningGroup, reasoning: fields.reasoning });
   let selfReview = null;
 
   function stateFor(question) {
@@ -236,6 +237,7 @@ export function createQuestionShell(root, {
       fields.input.value = state.response;
     }
     mathEntry.sync(fields.input.value);
+    reasoningPreview.sync(fields.reasoning.value);
   }
 
   function saveCurrentResponse() {
@@ -326,6 +328,17 @@ export function createQuestionShell(root, {
     fields.nextButton.disabled = selfReviewQuestion ? state.selfReviewOutcome !== "secure" : !state.checked;
   }
 
+  const mathFunctionWords = new Set(["sin", "cos", "tan", "sec", "cosec", "cot", "ln", "log", "exp", "lim"]);
+
+  function shouldUseAo2ProseOption(question, option) {
+    if (question?.metadata?.assessmentObjective !== "ao2") return false;
+    const text = String(option?.label ?? "").trim();
+    if (!text) return false;
+    const words = text.match(/[A-Za-z]{3,}/g) ?? [];
+    const proseWords = words.filter((word) => !mathFunctionWords.has(word.toLowerCase()));
+    return /[.!?;:]/.test(text) || proseWords.length >= 3;
+  }
+
   function renderOptions(question) {
     optionRows.forEach((row, index) => {
       const option = question.options?.[index] ?? null;
@@ -336,6 +349,8 @@ export function createQuestionShell(root, {
       if (!input || !label || !marker) return;
       input.disabled = !option;
       input.value = option?.id ?? "";
+      if (shouldUseAo2ProseOption(question, option)) label.setAttribute("data-math-prose", "");
+      else label.removeAttribute("data-math-prose");
       label.textContent = option?.label ?? "";
       marker.textContent = String.fromCharCode(65 + index);
     });
