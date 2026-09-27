@@ -330,8 +330,8 @@ export function createQuestionShell(root, {
 
   const mathFunctionWords = new Set(["sin", "cos", "tan", "sec", "cosec", "cot", "ln", "log", "exp", "lim"]);
 
-  function shouldUseAo2ProseOption(question, option) {
-    if (question?.metadata?.assessmentObjective !== "ao2") return false;
+  function shouldUseReasoningProseOption(question, option) {
+    if (!["ao2", "ao3"].includes(question?.metadata?.assessmentObjective)) return false;
     const text = String(option?.label ?? "").trim();
     if (!text) return false;
     const words = text.match(/[A-Za-z]{3,}/g) ?? [];
@@ -349,7 +349,7 @@ export function createQuestionShell(root, {
       if (!input || !label || !marker) return;
       input.disabled = !option;
       input.value = option?.id ?? "";
-      if (shouldUseAo2ProseOption(question, option)) label.setAttribute("data-math-prose", "");
+      if (shouldUseReasoningProseOption(question, option)) label.setAttribute("data-math-prose", "");
       else label.removeAttribute("data-math-prose");
       label.textContent = option?.label ?? "";
       marker.textContent = String.fromCharCode(65 + index);
