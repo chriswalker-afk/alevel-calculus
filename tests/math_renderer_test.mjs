@@ -77,6 +77,11 @@ assert.equal(functionQuotient[0].type, "fraction");
 assert.equal(functionQuotient[0].numerator, "sin(x²+1)");
 assert.equal(functionQuotient[0].denominator, "x+3");
 
+const coefficientFraction = tokeniseMathExpression("∫ a√x dx = (2a/3)x³ᐟ² + C");
+const coefficientFractionToken = coefficientFraction.find((token) => token.type === "fraction" && token.numerator === "2a");
+assert.ok(coefficientFractionToken, "Integration coefficients such as 2a/3 should render as structural fractions.");
+assert.equal(coefficientFractionToken.denominator, "3");
+
 console.log("Math renderer tokenisation regression passed.");
 
 
@@ -96,6 +101,10 @@ assert.match(sourceHtml, /styles\/math-renderer\.css/);
 assert.match(mathCss, /white-space:\s*nowrap/);
 assert.match(mathCss, /overflow-x:\s*auto/);
 assert.match(mathCss, /\[data-math-prose\]/);
+assert.match(mathCss, /\.math-integral__limits/);
+assert.match(mathCss, /\.math-evaluation__limits/);
+assert.match(readFileSync(new URL("../src/scripts/math-renderer.js", import.meta.url), "utf8"), /INTEGRAL_PATTERN/);
+assert.match(readFileSync(new URL("../src/scripts/math-renderer.js", import.meta.url), "utf8"), /EVALUATION_PATTERN/);
 assert.match(questionShellSource, /data-math-prose/);
 assert.match(equationStepSource, /equation-step__explanation" data-math-prose/);
 assert.doesNotMatch(firstPrinciplesAssessment, /lim h→0/);
