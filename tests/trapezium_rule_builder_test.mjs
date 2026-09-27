@@ -5,6 +5,7 @@ import {
   TRAPEZIUM_RULE_FUNCTIONS,
   buildCoefficientSummary,
   buildLongWayTerms,
+  buildTrapeziumComparison,
   calculateTrapeziumRule,
   classifyTrapeziumBound,
   normalizeTrapeziumCount
@@ -17,6 +18,7 @@ const two = calculateTrapeziumRule(quadratic,{lower:0,upper:2,n:2});
 assert.equal(two.h,1); assert.deepEqual(two.ordinates.map(o=>o.y),[0,1,4]); assert.equal(two.trapezia.length,2); assert.equal(two.estimate,3); assert.ok(Math.abs(two.exactIntegral-8/3)<1e-7); assert.ok(Math.abs(two.percentageError-12.5)<1e-6);
 assert.deepEqual(buildLongWayTerms(two),["½h(y0+y1)","½h(y1+y2)"]);
 assert.deepEqual(buildCoefficientSummary(two).coefficients,[1,2,1]); assert.equal(buildCoefficientSummary(two).expression,"y0 + 2y1 + y2");
+const refinement=buildTrapeziumComparison(quadratic,{lower:0,upper:2,counts:[1,2,4,8]}); assert.deepEqual(refinement.map(row=>row.n),[1,2,4,8]); assert.ok(refinement.slice(1).every((row,index)=>row.absoluteError<refinement[index].absoluteError)); assert.ok(refinement.slice(1).every(row=>row.errorShrank===true));
 assert.equal(classifyTrapeziumBound(quadratic,0,2).kind,"overestimate");
 const concave=TRAPEZIUM_RULE_FUNCTIONS.find(d=>d.id==="trapezium-concave"); assert.equal(classifyTrapeziumBound(concave,0,3).kind,"underestimate");
 const mixed=TRAPEZIUM_RULE_FUNCTIONS.find(d=>d.id==="trapezium-inflection"); assert.equal(classifyTrapeziumBound(mixed,0,3).kind,"mixed");
