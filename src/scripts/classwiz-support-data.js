@@ -77,12 +77,13 @@ export const SHARED_CLASSWIZ_USE_CASES=freeze({
     id:'derivative-check',label:'Numerical d/dx',
     helpsWith:'Checking a derivative value at one chosen point after differentiating symbolically.',
     example:'For f(x)=sin x at x=π/3, the numerical derivative should be approximately 0.5.',
-    radiansRequired:true,radiansReminder:'Use RADIAN mode for this trigonometric derivative check.',
+    radiansRequired: true,radiansReminder:'Use RADIAN mode for this trigonometric derivative check.',
     doesNotReplace:'This checks one numerical derivative value. It does not replace finding the derivative algebraically or showing the differentiation method required by the question.',
     models:derivativeSteps
   }),
   integralCheck:useCase({
     id:'integral-check',label:'Numerical integral',
+    radiansRequired: false,
     helpsWith:'Checking the value of a definite integral after the exact setup and method have been completed.',
     example:'For ∫₀²(3x²+1) dx, the calculator should give 10.',
     doesNotReplace:'This checks a definite numerical value. It does not replace exact integration, method selection, algebraic working, or +C in indefinite integration.',
@@ -92,7 +93,7 @@ export const SHARED_CLASSWIZ_USE_CASES=freeze({
     id:'trig-integral-check',label:'Trig integral check',
     helpsWith:'Checking a definite trigonometric integral after the exact identity or integration method has been shown.',
     example:'In radians, compare your exact value for ∫₀^(π/2) sin x dx with the calculator value 1.',
-    radiansRequired:true,radiansReminder:'Set the angle unit to RADIAN before checking a trigonometric integral.',
+    radiansRequired: true,radiansReminder:'Set the angle unit to RADIAN before checking a trigonometric integral.',
     doesNotReplace:'The numerical value does not replace the trig identity, exact antiderivative, limits or exact working required in the solution.',
     models:integralSteps
   }),
@@ -121,7 +122,7 @@ export const SHARED_CLASSWIZ_USE_CASES=freeze({
     id:'small-angle-table',label:'TABLE: small-angle evidence',
     helpsWith:'Seeing numerical evidence that sin h / h approaches 1 as h approaches 0.',
     example:'In radians, compare sin(x)/x at x=0.1, 0.01 and 0.001.',
-    radiansRequired:true,radiansReminder:'RADIAN mode is essential for this small-angle limit evidence.',
+    radiansRequired: true,radiansReminder:'RADIAN mode is essential for this small-angle limit evidence.',
     doesNotReplace:'The table supplies numerical evidence only. Do not use it to replace the limit argument or the first-principles proof.',
     models:tableSteps()
   }),
