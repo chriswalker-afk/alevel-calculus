@@ -45,7 +45,7 @@ import {
   simpleApplicationRateDefinition,
   termByTermDefinition,
   unknownCoefficientsDefinition
-} from "./question-definitions/basics-assessment.js";
+} from "./question-definitions/basics-assessment.js?v=mathnotation1";
 
 import {
   standardFunctionsAssessmentQuestionDefinitions, standardRuleDefinition, scaledRuleDefinition, mixedRoutineDefinition as standardFunctionsMixedRoutineDefinition, explainScaleDefinition, diagnoseDefinition as standardFunctionsDiagnoseDefinition, applicationDefinition as standardFunctionsApplicationDefinition, stationaryApplicationDefinition as standardFunctionsStationaryApplicationDefinition
