@@ -3,7 +3,7 @@ import {
   POLYNOMIAL_FUNCTIONS,
   createPolynomialFunctionDefinition,
   polynomialToText
-} from './linked-function-gradient-explorer.js?v=understand1';
+} from './linked-function-gradient-explorer.js?v=understand1?v=understand1';
 
 const STEP33_IDS = new Set([
   'activity:y12:differentiation:basics:understand:curve-tangent-gradient',
