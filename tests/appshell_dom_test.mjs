@@ -219,6 +219,8 @@ classWizTrigger.setAttribute('aria-expanded', 'false');
 const classWizClose = new FakeElement('classWizClose');
 const classWizScrim = new FakeElement('classWizScrim');
 classWizScrim.hidden = true;
+const classWizUseCaseTabList = new FakeElement('classWizUseCaseTabList');
+const classWizIntro = new FakeElement('classWizIntro');
 const classWizUseCaseTabs = ['derivative-check', 'integral-check'].map((id, index) => {
   const button = new FakeElement(`classWizUseCase-${id}`);
   button.dataset.classwizUseCase = id;
@@ -237,6 +239,8 @@ for (const selector of [
   '[data-classwiz-helps]', '[data-classwiz-example]', '[data-classwiz-radians]', '[data-classwiz-steps]',
   '[data-classwiz-does-not-replace]', '[data-classwiz-model-name]'
 ]) classWizPanel.children.set(selector, new FakeElement(`classWiz:${selector}`));
+classWizPanel.children.set('.classwiz-use-case-tabs', classWizUseCaseTabList);
+classWizPanel.children.set('.classwiz-support-panel__intro', classWizIntro);
 classWizPanel.collections.set('[data-classwiz-use-case]', classWizUseCaseTabs);
 classWizPanel.collections.set('[data-classwiz-model]', classWizModelTabs);
 
