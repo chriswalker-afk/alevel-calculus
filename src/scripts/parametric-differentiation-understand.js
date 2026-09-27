@@ -32,6 +32,7 @@ export class ParametricDifferentiationUnderstandExperience{
 
   const explorer=el(this.document,'div','parametric-differentiation-understand__range-explorer');
   explorer.hidden=true;
+  let explorerMounted=false;
   const handoff=el(this.document,'div','parametric-differentiation-understand__callout');
   handoff.innerHTML='<strong>Now transfer that idea to parametrics.</strong><span>The allowed t-values form the parameter domain. Those t-values generate corresponding x-values and y-values, so restricting t can change both coordinate ranges.</span>';
   const readout=el(this.document,'div','parametric-differentiation-understand__range-grid');
@@ -40,6 +41,11 @@ export class ParametricDifferentiationUnderstandExperience{
 
   const revealExplorer=()=>{
    explorer.hidden=false;
+   if(!explorerMounted){
+    this.mountTracer(explorer,{initialCurveId:'parametric-cubic',initialStage:'coordinates',onChange:update});
+    explorerMounted=true;
+    update({state:this.tracer.getState()});
+   }
    status.textContent='Correct. Domain means allowed inputs. Now restrict the t-domain and watch the resulting x- and y-ranges.';
    explorer.scrollIntoView?.({block:'nearest',behavior:'smooth'});
   };
@@ -65,8 +71,6 @@ export class ParametricDifferentiationUnderstandExperience{
    const ranges=calculateCoordinateRanges(def,state.interval);
    readout.innerHTML=`<div><span>t-domain</span><strong>[${fmt(state.interval[0])}, ${fmt(state.interval[1])}]</strong></div><div><span>x-range</span><strong>[${fmt(ranges.xRange[0])}, ${fmt(ranges.xRange[1])}]</strong></div><div><span>y-range</span><strong>[${fmt(ranges.yRange[0])}, ${fmt(ranges.yRange[1])}]</strong></div>`;
   };
-  this.mountTracer(explorer,{initialCurveId:'parametric-cubic',initialStage:'coordinates',onChange:update});
-  update({state:this.tracer.getState()});
  }
  render_eliminate_parameter(){const p=this.panel('From paired equations back to a Cartesian relationship','Treat x=f(t), y=g(t) like simultaneous equations sharing the same parameter. Eliminate t when the algebra allows it.');const steps=el(this.document,'div','parametric-differentiation-understand__steps');p.append(steps);renderEquationSteps(steps,[{id:'e1',kind:'setup',label:'Parametric pair',expression:'x = t + 1,    y = t²',explanation:'Both coordinates use the same t.'},{id:'e2',kind:'working',label:'Solve one equation for t',expression:'t = x − 1',explanation:'This is the elimination link to simultaneous equations.'},{id:'e3',kind:'working',label:'Substitute into the other',expression:'y = (x − 1)²',explanation:'The parameter has disappeared.'},{id:'e4',kind:'result',label:'Cartesian form',expression:'y = (x − 1)²',explanation:'Any restriction on t must also be translated into the corresponding x/y range.'}]);const note=el(this.document,'p','parametric-differentiation-understand__note','Elimination is a connection, not always the best way to work. For gradients, staying in t is often more efficient.');p.append(note);}
  render_derive_gradient(){const p=this.panel('The ratio formula comes from the chain rule','The formal derivation is the chain rule applied to y=y(x(t)). Any fraction-like “cancellation” picture comes only afterwards as an A-level memory aid.');const steps=el(this.document,'div','parametric-differentiation-understand__steps');p.append(steps);renderEquationSteps(steps,[{id:'c1',kind:'setup',label:'Think of y as changing through x, and x through t',expression:'y = y(x(t))',explanation:'This is a composite function.'},{id:'c2',kind:'working',label:'Apply the chain rule with respect to t',expression:'dy/dt = (dy/dx)(dx/dt)',explanation:'The rate in t factors through x.'},{id:'c3',kind:'working',label:'Rearrange when dx/dt ≠ 0',expression:'dy/dx = (dy/dt) / (dx/dt)',explanation:'This is the parametric gradient rule.'},{id:'c4',kind:'result',label:'Important condition',expression:'dx/dt ≠ 0',explanation:'If dx/dt=0, do not divide by zero; inspect the geometry and dy/dt.'}]);const hint=el(this.document,'div','parametric-differentiation-understand__intuition');hint.innerHTML='<strong>A-level intuition, not proof:</strong><span data-math-render>At A level it can be useful to think of the differentials as if dt cancels when moving from (dy/dt)/(dx/dt) to dy/dx. Treat that only as a mnemonic or intuition: the chain rule above is the justification. Differentials are not ordinary algebraic factors that may always be cancelled, and later mathematics treats differential notation more carefully.</span>';p.append(hint);}
