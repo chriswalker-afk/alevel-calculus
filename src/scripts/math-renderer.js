@@ -18,6 +18,21 @@ const SUPERSCRIPT_MAP = Object.freeze({
   "⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9",
   "ⁿ":"n","⁺":"+","⁻":"-"
 });
+const SUBSCRIPT_LIMIT_MAP = Object.freeze({
+  "₀":"0","₁":"1","₂":"2","₃":"3","₄":"4","₅":"5","₆":"6","₇":"7","₈":"8","₉":"9",
+  "₊":"+","₋":"-","ₐ":"a","ᵦ":"b","ₑ":"e","ₕ":"h","ᵢ":"i","ⱼ":"j","ₖ":"k","ₗ":"l","ₘ":"m",
+  "ₙ":"n","ₒ":"o","ₚ":"p","ᵣ":"r","ₛ":"s","ₜ":"t","ₓ":"x"
+});
+const SUPERSCRIPT_LIMIT_MAP = Object.freeze({
+  ...SUPERSCRIPT_MAP,
+  "ᵃ":"a","ᵇ":"b","ᶜ":"c","ᵈ":"d","ᵉ":"e","ᶠ":"f","ᵍ":"g","ʰ":"h","ⁱ":"i","ʲ":"j",
+  "ᵏ":"k","ˡ":"l","ᵐ":"m","ᵒ":"o","ᵖ":"p","ʳ":"r","ˢ":"s","ᵗ":"t","ᵘ":"u","ᵛ":"v",
+  "ʷ":"w","ˣ":"x","ʸ":"y","ᶻ":"z"
+});
+const UNICODE_SUBSCRIPT_LIMITS = "₀₁₂₃₄₅₆₇₈₉₊₋ₐᵦₑₕᵢⱼₖₗₘₙₒₚᵣₛₜₓ";
+const UNICODE_SUPERSCRIPT_LIMITS = "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖʳˢᵗᵘᵛʷˣʸᶻ";
+const UNICODE_INTEGRAL_LIMIT_PATTERN = new RegExp(`∫([${UNICODE_SUBSCRIPT_LIMITS}]+)([${UNICODE_SUPERSCRIPT_LIMITS}]+)?`, "g");
+const UNICODE_EVALUATION_LIMIT_PATTERN = new RegExp(`(\\])([${UNICODE_SUBSCRIPT_LIMITS}]+)([${UNICODE_SUPERSCRIPT_LIMITS}]+)`, "g");
 const SUPERSCRIPT_FRACTION_PATTERN = /([⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ⁺⁻]+)[ᐟ⁄]([⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ⁺⁻]+)/g;
 const COMPLEX_SUPERSCRIPT_PATTERN = /[⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ⁺⁻]*[ⁿ⁺⁻][⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ⁺⁻]*/g;
 
@@ -25,8 +40,18 @@ function decodeSuperscript(value) {
   return [...String(value ?? "")].map((character) => SUPERSCRIPT_MAP[character] ?? character).join("");
 }
 
+function decodeLimit(value, map) {
+  return [...String(value ?? "")].map((character) => map[character] ?? character).join("");
+}
+
 export function normaliseMathSource(source) {
   let text = String(source ?? "");
+  text = text.replace(UNICODE_INTEGRAL_LIMIT_PATTERN, (_, lower, upper = "") =>
+    `∫_(${decodeLimit(lower, SUBSCRIPT_LIMIT_MAP)})${upper ? `^(${decodeLimit(upper, SUPERSCRIPT_LIMIT_MAP)})` : ""}`
+  );
+  text = text.replace(UNICODE_EVALUATION_LIMIT_PATTERN, (_, bracket, lower, upper) =>
+    `${bracket}_(${decodeLimit(lower, SUBSCRIPT_LIMIT_MAP)})^(${decodeLimit(upper, SUPERSCRIPT_LIMIT_MAP)})`
+  );
   text = text.replace(SUPERSCRIPT_FRACTION_PATTERN, (_, numerator, denominator) =>
     `^(${decodeSuperscript(numerator)}/${decodeSuperscript(denominator)})`
   );
