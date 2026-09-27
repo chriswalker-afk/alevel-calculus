@@ -390,7 +390,7 @@ const documentMap = new Map([
   ['[data-activity-stage]', stage],
   ['[data-standard-activity-content]', standardActivityContent],
   ['[data-activity-visual]', activityVisual],
-  ['[data-custom-understand-host]', customUnderstandHost],
+  ['[data-understand-visual-host]', customUnderstandHost],
   ['[data-question-shell]', questionShellElement],
   ['[data-memory-lab]', memoryLabElement],
   ['[data-previous-activity]', previousButton],
@@ -529,6 +529,7 @@ assert(root.dataset.learningMode === 'understand', 'Understand should be the ini
 assert(shell.dataset.learningMode === 'understand', 'Shell should expose the active learning mode');
 assert(shell.dataset.activityIndex === '0', 'Initial activity index should be 0');
 assert(title.textContent === 'Goals for Basics of differentiation', 'Understand should open on its dedicated Topic goals page');
+assert(customUnderstandHost.hidden === true, 'Topic goals should keep the dedicated custom visual host hidden');
 assert(stage.scrollTop === 0, 'Initial render should reset only the activity-stage scroll position');
 
 const preCalcClick = listeners.get('topicPreCalculus:click');
@@ -701,6 +702,7 @@ for (let i = 0; i < 9; i += 1) listeners.get('next:click')();
 assert(shell.dataset.activityIndex === '9', 'Understand should finish on the dedicated pathway page');
 assert(title.textContent === 'Turn understanding into recall and practice', 'Final Understand page should explain the next learning sequence');
 assert(topicPathway.hidden === false, 'Final Understand page should reveal the pathway panel');
+assert(customUnderstandHost.hidden === true, 'The final pathway page should hide the custom visual host');
 assert(nextButton.disabled === true, 'Next should be disabled at the end of Understand');
 listeners.get('next:click')();
 assert(shell.dataset.activityIndex === '9', 'Next from the final Understand page must not wrap to Topic goals');
