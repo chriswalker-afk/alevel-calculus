@@ -1,4 +1,4 @@
-import { STANDARD_INTEGRAL_FACTS, LINEAR_STANDARD_INTEGRAL_FORMS, FUNDAMENTAL_THEOREM_STATEMENT } from './standard-integrals-data.js';
+import { STANDARD_INTEGRAL_FACTS, LINEAR_STANDARD_INTEGRAL_FORMS, FUNDAMENTAL_THEOREM_STATEMENT } from './standard-integrals-data.js?v=integrationmath1';
 import { renderEquationSteps } from './equation-step-renderer.js';
 const IDS=new Set(['reverse-link','standard-array','linear-forms','fundamental-theorem','recover-function'].map(s=>`activity:y13:integration:standard-integrals:understand:${s}`));
 const el=(d,n,c='',t='')=>{const x=d.createElement(n);if(c)x.className=c;if(t)x.textContent=t;return x;};
