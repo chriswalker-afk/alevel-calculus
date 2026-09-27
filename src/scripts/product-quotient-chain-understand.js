@@ -1,5 +1,5 @@
 import { renderEquationSteps } from './equation-step-renderer.js';
-import { applyStructuredExpression, structureLegend } from './expression-structure-highlighter.js';
+import { applyStructuredExpression, structureLegend } from './expression-structure-highlighter.js?v=auditstep9';
 const IDS=new Set(['activity:y13:differentiation:product-quotient-chain:understand:rule-orientation','activity:y13:differentiation:product-quotient-chain:understand:classify-structure','activity:y13:differentiation:product-quotient-chain:understand:function-machines','activity:y13:differentiation:product-quotient-chain:understand:inside-outside-builder','activity:y13:differentiation:product-quotient-chain:understand:rule-application','activity:y13:differentiation:product-quotient-chain:understand:nested-mixtures']);
 function el(d,t,c='',x=''){const n=d.createElement(t);if(c)n.className=c;if(x)n.textContent=x;return n;}
 function button(d,label,fn){const b=el(d,'button','pqc__button',label);b.type='button';b.addEventListener('click',fn);return b;}
