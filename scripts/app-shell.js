@@ -1,7 +1,7 @@
 import { learningModeOrder, learningModes } from "./sample-activities.js?v=auditstep4";
 import { getCourseScope } from "./scope-metadata.js";
 import { getTopicProgress, progressModeOrder } from "./progress-model.js";
-import { getHelpTarget, getHelpTargets } from "./help-content.js?v=supportfix2";
+import { getHelpTarget, getHelpTargets } from "./help-content.js?v=helpfix3";
 import { createDiagnosticRouter } from "./diagnostic-router.js";
 import { createMasteryFeedbackModel } from "./mastery-feedback-model.js";
 import { localStateStore, progressStore, vocabularyStore } from "./app-state.js";
