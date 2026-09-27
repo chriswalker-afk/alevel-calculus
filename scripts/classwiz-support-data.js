@@ -181,7 +181,8 @@ const noPackAuditReasons=freeze({
   'topic:y13:differentiation:connected-rates':'The main difficulty is modelling the dependency and units, not a calculator operation.',
   'topic:full:review:calculus-mastery':'This review is topic-blind. Calculator checks should be used from the relevant source topic after the method has been identified.',
   'topic:y13:differential-equations:first-order':'The assessed work is separation, exact integration, constants and interpretation; a generic calculator action would not verify the complete method reliably.',
-  'topic:y13:modelling:calculus':'Calculator opportunities depend on the selected model. Source-topic calculator support is more accurate than a generic modelling pack.'
+  'topic:y13:modelling:calculus':'Calculator opportunities depend on the selected model. Source-topic calculator support is more accurate than a generic modelling pack.',
+  'topic:full:review:full-calculus-mastery':'Full calculus mastery is deliberately topic-blind. Once a method is identified, use the calculator support from the relevant source topic rather than a generic mastery pack.'
 });
 
 export const CLASSWIZ_OPPORTUNITY_AUDIT=freeze([
