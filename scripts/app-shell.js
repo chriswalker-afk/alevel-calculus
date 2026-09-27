@@ -35,7 +35,7 @@ import { integrationIntroLearningModes } from "./integration-intro-activities.js
 import { createDefiniteIndefiniteUnderstandExperience } from "./definite-indefinite-understand.js?v=understand2";
 import { definiteIndefiniteLearningModes } from "./definite-indefinite-activities.js";
 import { createIntegrationAreaUnderstandExperience } from "./integration-area-understand.js?v=auditstep8";
-import { integrationAreaLearningModes } from "./integration-area-activities.js?v=auditstep1";
+import { integrationAreaLearningModes } from "./integration-area-activities.js?v=auditstep8";
 import { createSignedAreaUnderstandExperience } from "./signed-area-understand.js?v=understand2";
 import { signedAreaLearningModes } from "./signed-area-activities.js";
 import { year12ReviewLearningModes } from "./year12-review-activities.js";
