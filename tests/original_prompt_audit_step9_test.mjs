@@ -57,8 +57,9 @@ assert.match(builderSource,/No differentiation is needed yet/);
 assert.doesNotMatch(builderSource,/u′v|vu′|f′\(|g′\(|dy\/dx/,'The second composition interaction must still precede formal chain-rule execution.');
 
 const formalSource=source.slice(formalStart,mixedStart);
-assert.match(formalSource,/y′ = u′v \+ uv′/,'The existing formal product-rule page must be preserved.');
-assert.match(formalSource,/y′ = \(vu′ − uv′\)\/v²/,'The existing formal quotient-rule page must be preserved.');
-assert.match(formalSource,/dy\/dx = f′\(g\(x\)\) · g′\(x\)/,'The existing formal chain-rule page must be preserved.');
+assert.match(formalSource,/RULE_WORKED_EXAMPLES/,'The formal-rule page must still render the three formal rule definitions.');
+assert.match(source,/y′ = u′v \+ uv′/,'The existing formal product rule must be preserved.');
+assert.match(source,/y′ = \(vu′ − uv′\)\/v²/,'The existing formal quotient rule must be preserved.');
+assert.match(source,/dy\/dx = f′\(g\(x\)\) · g′\(x\)/,'The existing formal chain rule must be preserved.');
 
 console.log('PASS Original-prompt audit Step 9 PQC orientation, classification and two-stage composition sequence');
