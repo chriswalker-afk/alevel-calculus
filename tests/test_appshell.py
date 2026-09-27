@@ -118,6 +118,7 @@ required_attrs = {
     "data-learning-workspace",
     "data-activity-stage",
     "data-activity-controls",
+    "data-understand-visual-host",
     "data-classwiz-panel",
     "data-classwiz-trigger",
     "data-classwiz-close",
