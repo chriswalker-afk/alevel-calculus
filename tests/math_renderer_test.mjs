@@ -97,3 +97,7 @@ assert.match(responseEnhancements, /preview\.replaceChildren\(\);[\s\S]*renderMa
 assert.match(reverseChainAssessment, /∫5x e\^\(x²\+1\) dx/);
 assert.match(reverseChainAssessment, /g′\(x\)=2x/);
 assert.match(standardIntegralsAssessment, /F′\(x\)=f\(x\)/);
+assert.match(standardIntegralsAssessment, /s\(π\/2\)/);
+assert.doesNotMatch(standardIntegralsAssessment, /Find s\(pi\/2\) exactly/);
+assert.match(reverseChainAssessment, /∫₀\^\(π\/8\) cot\(2x\+π\/4\) dx/);
+assert.match(reverseChainAssessment, /ln\(√2\)/);
