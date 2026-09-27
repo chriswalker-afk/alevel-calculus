@@ -2,9 +2,11 @@ const SUPERSCRIPT_CHARACTERS = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 const DERIVATIVE_PATTERN = `(?:d(?:[${SUPERSCRIPT_CHARACTERS}]+|\\^\\d+)?[A-Za-z]*\\/d[A-Za-z]+(?:[${SUPERSCRIPT_CHARACTERS}]+|\\^\\d+)?|∂(?:[${SUPERSCRIPT_CHARACTERS}]+|\\^\\d+)?[A-Za-z]*\\/∂[A-Za-z]+(?:[${SUPERSCRIPT_CHARACTERS}]+|\\^\\d+)?)`;
 const FUNCTION_PATTERN = "(?:sin|cos|tan|sec|cosec|cot|ln|log|exp)";
 const SCRIPT_SUFFIX_PATTERN = "(?:[_^](?:\\([^)]{1,60}\\)|-?\\d+|[A-Za-z]+))*";
-const SIMPLE_MATH_ATOM_PATTERN = `(?:\\d+(?:\\.\\d+)?${SCRIPT_SUFFIX_PATTERN}|(?:Δ[A-Za-z]|[A-Za-zπ])(?:[′']{1,2})?(?:[${SUPERSCRIPT_CHARACTERS}]+)?${SCRIPT_SUFFIX_PATTERN}|${FUNCTION_PATTERN}[${SUPERSCRIPT_CHARACTERS}]*\\s*[A-Za-zπ](?:[${SUPERSCRIPT_CHARACTERS}]+)?${SCRIPT_SUFFIX_PATTERN}|[A-Za-zπ](?:[′']{1,2})?\\([^()\\n]{1,50}\\)${SCRIPT_SUFFIX_PATTERN}|\\?)`;
-const PAREN_GROUP_PATTERN = `\\((?:[^()\\n]|\\([^()\\n]{0,60}\\)){1,140}\\)`;
-const SQUARE_GROUP_PATTERN = `\\[[^\\[\\]\\n]{1,140}\\]`;
+const FUNCTION_CALL_PATTERN = `${FUNCTION_PATTERN}\\([^()\\n]{1,80}\\)${SCRIPT_SUFFIX_PATTERN}`;
+const ROOT_PATTERN = `√(?:\\([^()\\n]{1,100}\\)|[A-Za-zπ\\d]+(?:[${SUPERSCRIPT_CHARACTERS}]+)?)${SCRIPT_SUFFIX_PATTERN}`;
+const SIMPLE_MATH_ATOM_PATTERN = `(?:\\d+(?:\\.\\d+)?${SCRIPT_SUFFIX_PATTERN}|(?:Δ[A-Za-z]|[A-Za-zπ])(?:[′']{1,2})?(?:[${SUPERSCRIPT_CHARACTERS}]+)?${SCRIPT_SUFFIX_PATTERN}|${FUNCTION_CALL_PATTERN}|${FUNCTION_PATTERN}[${SUPERSCRIPT_CHARACTERS}]*\\s*[A-Za-zπ](?:[${SUPERSCRIPT_CHARACTERS}]+)?${SCRIPT_SUFFIX_PATTERN}|[A-Za-zπ](?:[′']{1,2})?\\([^()\\n]{1,50}\\)${SCRIPT_SUFFIX_PATTERN}|${ROOT_PATTERN}|\\?)`;
+const PAREN_GROUP_PATTERN = `\\((?:[^()\\n]|\\([^()\\n]{0,60}\\)){1,140}\\)${SCRIPT_SUFFIX_PATTERN}`;
+const SQUARE_GROUP_PATTERN = `\\[[^\\[\\]\\n]{1,140}\\]${SCRIPT_SUFFIX_PATTERN}`;
 const ABS_GROUP_PATTERN = `\\|[^|\\n]{1,100}\\|`;
 const FRACTION_ATOM_PATTERN = `(?:${PAREN_GROUP_PATTERN}|${SQUARE_GROUP_PATTERN}|${ABS_GROUP_PATTERN}|${SIMPLE_MATH_ATOM_PATTERN})`;
 const FRACTION_PATTERN = new RegExp(`(?<![A-Za-z])(?:${DERIVATIVE_PATTERN}|${FRACTION_ATOM_PATTERN}\\s*\\/\\s*${FRACTION_ATOM_PATTERN})(?![A-Za-z])`, "g");
@@ -14,6 +16,7 @@ export const mathRenderSelector = [
   "[data-activity-formula]",
   "[data-question-shell-math]",
   "[data-question-shell-choice-label]",
+  "[data-math-render]",
   ".equation-step__expression",
   ".memory-learn-item__notation",
   ".memory-flashcard__content",
@@ -30,7 +33,8 @@ export const mathRenderSelector = [
   "[class*=\"__formula\"]",
   "[class*=\"__equation\"]",
   "[class*=\"__expression\"]",
-  "[class*=\"__notation\"]"
+  "[class*=\"__notation\"]",
+  "[class*=\"__math\"]"
 ].join(",");
 
 const displayMathSelector = [
