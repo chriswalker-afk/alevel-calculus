@@ -103,8 +103,8 @@ const sourceApp=read('src/scripts/app-shell.js');
 const publishedApp=read('scripts/app-shell.js');
 assert.match(sourceApp,/trapezium-integration-understand\.js\?v=auditstep15/);
 assert.match(publishedApp,/trapezium-integration-understand\.js\?v=auditstep15/);
-assert.match(sourceApp,/trapezium-integration-activities\.js\?v=auditstep15/);
-assert.match(publishedApp,/trapezium-integration-activities\.js\?v=auditstep15/);
+assert.match(sourceApp,/trapezium-integration-activities\.js\?v=supportfix2/);
+assert.match(publishedApp,/trapezium-integration-activities\.js\?v=supportfix2/);
 assert.match(sourceApp,/topic-objectives-data\.js\?v=auditstep15/);
 assert.match(publishedApp,/topic-objectives-data\.js\?v=auditstep15/);
 
