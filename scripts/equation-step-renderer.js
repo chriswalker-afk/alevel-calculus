@@ -30,7 +30,7 @@ export function renderEquationSteps(container, steps, options = {}) {
       <div class="equation-step__content">
         ${row.label ? `<span class="equation-step__label">${escapeHtml(row.label)}</span>` : ""}
         ${row.expression ? `<div class="equation-step__expression">${escapeHtml(row.expression)}</div>` : ""}
-        ${row.explanation ? `<p class="equation-step__explanation">${escapeHtml(row.explanation)}</p>` : ""}
+        ${row.explanation ? `<p class="equation-step__explanation" data-math-prose>${escapeHtml(row.explanation)}</p>` : ""}
       </div>
     </li>`).join("")}</ol>`;
   if (typeof options.decorateExpression === "function" && typeof container.querySelector === "function") {
