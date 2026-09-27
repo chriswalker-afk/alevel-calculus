@@ -39,6 +39,12 @@ assert.equal(isAo3SelfReviewQuestion({
 }), false);
 assert.equal(typeof createReasoningMathPreview, "function");
 
+const responseEnhancementSource = await import("node:fs").then(({ readFileSync }) =>
+  readFileSync(new URL("../src/scripts/question-response-enhancements.js", import.meta.url), "utf8")
+);
+assert.match(responseEnhancementSource, /question-self-review__criterion/);
+assert.match(responseEnhancementSource, /span\.setAttribute\("data-math-prose", ""\)/);
+
 const runner = createGeneratorRunner({ debugSeed: "answer-entry-pass" });
 let ao2ReasoningCount = 0;
 let ao3ReasoningCount = 0;
