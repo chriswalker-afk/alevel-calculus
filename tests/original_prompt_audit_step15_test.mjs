@@ -115,4 +115,8 @@ assert.match(publishedIndex,/trapezium-integration-understand\.css\?v=auditstep1
 assert.match(sourceIndex,/app-shell\.js\?v=auditstep15/);
 assert.match(publishedIndex,/app-shell\.js\?v=auditstep15/);
 
+const deepLink=read('404.html');
+assert.match(deepLink,/trapezium-integration-understand\.css\?v=auditstep15/);
+assert.match(deepLink,/app-shell\.js\?v=auditstep15/);
+
 console.log('PASS Original-prompt audit Step 15 trapezium refinement, calculator context, normal-density motivation and preserved error/bound content');
