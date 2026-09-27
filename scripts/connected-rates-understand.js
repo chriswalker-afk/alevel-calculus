@@ -1,4 +1,4 @@
-import { RateFlowDiagram, RATE_FLOW_DEFINITIONS, chainRuleExpression } from './rate-flow-diagram.js';
+import { RateFlowDiagram, RATE_FLOW_DEFINITIONS, chainRuleExpression } from './rate-flow-diagram.js?v=understand1';
 import { renderEquationSteps } from './equation-step-renderer.js';
 const IDS=new Set(['practical-dependency','rate-flow','consistent-method','signs-units','multi-stage'].map(s=>`activity:y13:differentiation:connected-rates:understand:${s}`));
 const el=(d,n,c='',t='')=>{const x=d.createElement(n);if(c)x.className=c;if(t)x.textContent=t;return x;};
