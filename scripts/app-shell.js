@@ -1345,7 +1345,7 @@ export function selectTopic(topicId, { focusStage = true } = {}) {
   currentTopicId = topicId;
   mountMemoryLabForTopic(currentTopicId);
 
-  if (!runtime.availableModes.includes(activeMode)) activeMode = runtime.availableModes[0] ?? "understand";
+  activeMode = runtime.availableModes.includes("memorise") ? "memorise" : (runtime.availableModes[0] ?? "understand");
   root.dataset.learningMode = activeMode;
   syncCurrentTopicChrome();
   syncModeTabs();
