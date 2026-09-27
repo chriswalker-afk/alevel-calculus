@@ -61,7 +61,7 @@ assert.match(css,/grid-column:\s*1\s*\/\s*-1/);
 assert.match(css,/topic-goals-dialog/);
 assert.match(css,/@media \(max-width: 680px\)/);
 
-assert.match(appShell,/activity:y12:differentiation:basics:understand/);
+assert.match(appShell,/activity:\$\{routeScope\}:\$\{strand\}:\$\{topicSlug\}:understand:/);
 assert.match(appShell,/topic-goals/);
 assert.match(appShell,/next-steps/);
 assert.match(appShell,/nextButton\.disabled = linearUnderstand && atEnd/);
