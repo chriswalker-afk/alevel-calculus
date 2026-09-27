@@ -1,4 +1,4 @@
-import { createQuestionVisualRenderer } from "./question-visual-renderer.js";
+import { createQuestionVisualRenderer } from "./question-visual-renderer.js?v=auditstep7";
 import {
   getHintActionLabel,
   getHintProgressLabel,

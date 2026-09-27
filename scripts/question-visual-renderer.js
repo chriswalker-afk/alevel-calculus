@@ -2,6 +2,7 @@ import { DiagramPrimitives } from "./diagram-primitives.js";
 import { evaluatePolynomial } from "./linked-function-gradient-explorer.js";
 
 export const interactiveQuestionVisualKinds = Object.freeze([
+  "calculus-graph-classifier",
   "calculus-interval-selector",
   "calculus-point-classifier",
   "calculus-region-selector",
@@ -139,9 +140,51 @@ export function splitSelectionFromResponse(config, response) {
   });
 }
 
+export function graphClassificationResponse(graphId, signId) {
+  const graph = String(graphId ?? "").trim();
+  const sign = String(signId ?? "").trim();
+  return graph && sign ? `graph:${graph}|sign:${sign}` : "";
+}
+
+export function graphClassificationFromResponse(response) {
+  const match = /^graph:([^|]+)\|sign:(positive|negative|zero)$/.exec(String(response ?? ""));
+  return Object.freeze({
+    graphId: match?.[1] ?? "",
+    signId: match?.[2] ?? ""
+  });
+}
+
+function graphClassifierChoices(question) {
+  const config = question?.diagramConfig ?? {};
+  const key = config.choicesKey;
+  return key && question?.parameters ? question.parameters[key] : config.choices;
+}
+
+function validGraphClassifierChoice(choice) {
+  return Boolean(
+    choice
+    && typeof choice.id === "string"
+    && validGraphSpec({
+      coefficients: choice.coefficients,
+      xDomain: choice.xDomain,
+      yDomain: choice.yDomain
+    })
+  );
+}
+
 export function isInteractiveQuestionVisual(question) {
   const kind = question?.diagramConfig?.kind;
   if (!interactiveQuestionVisualKinds.includes(kind)) return false;
+  if (kind === "calculus-graph-classifier") {
+    const choices = graphClassifierChoices(question);
+    const signOptions = question?.diagramConfig?.signOptions;
+    return Array.isArray(choices)
+      && choices.length >= 2
+      && choices.length <= 4
+      && choices.every(validGraphClassifierChoice)
+      && Array.isArray(signOptions)
+      && signOptions.length >= 2;
+  }
   const spec = graphSpec(question);
   if (!validGraphSpec(spec)) return false;
   if (kind === "calculus-interval-selector") {
@@ -503,6 +546,148 @@ export function createQuestionVisualRenderer(host, { onResponseChange = () => {}
     return true;
   }
 
+  function renderGraphClassifier(question, response) {
+    const config = question.diagramConfig;
+    const choices = graphClassifierChoices(question);
+    if (!Array.isArray(choices) || !choices.every(validGraphClassifierChoice)) return false;
+
+    const restored = graphClassificationFromResponse(response);
+    let selectedGraphId = restored.graphId;
+    let selectedSignId = restored.signId;
+    const interval = Array.isArray(question?.parameters?.interval) ? question.parameters.interval.map(Number) : null;
+    const intervalLabel = question?.parameters?.intervalLabel ?? "Whole displayed interval";
+
+    const wrap = createElement(documentRef, "section", "question-graph-interaction question-graph-interaction--graph-classifier");
+    const intro = createElement(documentRef, "div", "question-graph-interaction__intro");
+    const title = createElement(documentRef, "h3", "question-graph-interaction__title");
+    title.textContent = config.title ?? "Stage 1 · Choose from appearance";
+    const instruction = createElement(documentRef, "p", "question-graph-interaction__instruction");
+    instruction.textContent = config.instruction ?? "Select the graph that matches the requested behaviour.";
+    intro.append(title, instruction);
+
+    const graphGrid = createElement(documentRef, "div", "question-graph-classifier__grid");
+    graphGrid.setAttribute("role", "group");
+    graphGrid.setAttribute("aria-label", "Selectable graph options");
+
+    const signStage = createElement(documentRef, "section", "question-graph-classifier__stage-two");
+    const signTitle = createElement(documentRef, "h4", "question-graph-classifier__stage-title");
+    signTitle.textContent = "Stage 2 · Connect appearance to the derivative";
+    const signInstruction = createElement(documentRef, "p", "question-graph-interaction__instruction");
+    signInstruction.textContent = "Now choose the sign of f′(x) on the interval you just classified.";
+    const signChoices = createElement(documentRef, "div", "question-graph-classifier__sign-choices");
+    signChoices.setAttribute("role", "group");
+    signChoices.setAttribute("aria-label", "Derivative sign");
+    signStage.append(signTitle, signInstruction, signChoices);
+
+    const status = createElement(documentRef, "p", "question-graph-interaction__status");
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
+
+    wrap.append(intro, graphGrid, signStage, status);
+    host.append(wrap);
+    host.hidden = false;
+    host.dataset.visualKind = config.kind;
+
+    const graphButtons = [];
+    const signButtons = [];
+
+    function emitIfComplete() {
+      onResponseChange(graphClassificationResponse(selectedGraphId, selectedSignId));
+    }
+
+    function sync() {
+      graphButtons.forEach((button) => {
+        const active = button.dataset.graphChoice === selectedGraphId;
+        button.setAttribute("aria-pressed", active ? "true" : "false");
+        button.dataset.selected = active ? "true" : "false";
+      });
+      const graphSelected = Boolean(selectedGraphId);
+      signStage.hidden = !graphSelected;
+      signButtons.forEach((button) => {
+        const active = button.dataset.signChoice === selectedSignId;
+        button.setAttribute("aria-pressed", active ? "true" : "false");
+      });
+      if (!graphSelected) {
+        status.textContent = "Stage 1: select a graph from appearance.";
+      } else if (!selectedSignId) {
+        status.textContent = "Graph selected. Stage 2 is now available: connect its behaviour to the sign of f′(x).";
+      } else {
+        status.textContent = "Both stages selected. Check your answer when ready.";
+      }
+    }
+
+    choices.forEach((choice, index) => {
+      const graphButton = createElement(documentRef, "button", "question-graph-classifier__card");
+      graphButton.type = "button";
+      graphButton.dataset.graphChoice = choice.id;
+      graphButton.setAttribute("aria-pressed", choice.id === selectedGraphId ? "true" : "false");
+      graphButton.setAttribute("aria-label", `Select Graph ${String.fromCharCode(65 + index)}. ${intervalLabel}.`);
+      const heading = createElement(documentRef, "span", "question-graph-classifier__label");
+      heading.textContent = `Graph ${String.fromCharCode(65 + index)}`;
+      const plot = createElement(documentRef, "span", "question-graph-classifier__plot");
+      const cue = createElement(documentRef, "span", "question-graph-classifier__cue");
+      cue.textContent = intervalLabel;
+      graphButton.append(heading, plot, cue);
+      graphGrid.append(graphButton);
+      graphButtons.push(graphButton);
+
+      const diagram = new DiagramPrimitives(plot, {
+        xDomain: choice.xDomain,
+        yDomain: choice.yDomain,
+        ariaLabel: `Graph ${String.fromCharCode(65 + index)} for visual increasing or decreasing classification`,
+        minHeight: 180,
+        aspectRatio: "4 / 3"
+      });
+      diagrams.push(diagram);
+      diagram.grid({ xStep: 1, yStep: 1 });
+      diagram.axes({ tickStep: 1 });
+      if (interval && interval.length === 2 && interval.every(Number.isFinite)) {
+        const [left, right] = interval;
+        const [yMin, yMax] = choice.yDomain.map(Number);
+        diagram.shadedRegion([
+          { x:left, y:yMin }, { x:right, y:yMin }, { x:right, y:yMax }, { x:left, y:yMax }
+        ], { tone:"region", opacity:0.08 });
+        diagram.line({ x1:left, y1:yMin, x2:left, y2:yMax, tone:"warning", dashed:true });
+        diagram.line({ x1:right, y1:yMin, x2:right, y2:yMax, tone:"warning", dashed:true });
+      }
+      diagram.polyline(sample(choice.coefficients, choice.xDomain), { tone:"curve" });
+
+      const chooseGraph = () => {
+        const changed = selectedGraphId !== choice.id;
+        selectedGraphId = choice.id;
+        if (changed) {
+          selectedSignId = "";
+          onResponseChange("");
+        }
+        sync();
+      };
+      graphButton.addEventListener("click", chooseGraph);
+      addCleanup(() => graphButton.removeEventListener("click", chooseGraph));
+    });
+
+    for (const option of config.signOptions ?? []) {
+      const button = createElement(documentRef, "button", "question-graph-classifier__sign-choice");
+      button.type = "button";
+      button.dataset.signChoice = option.id;
+      button.textContent = option.label;
+      button.setAttribute("aria-pressed", option.id === selectedSignId ? "true" : "false");
+      const chooseSign = () => {
+        if (!selectedGraphId) return;
+        selectedSignId = option.id;
+        sync();
+        emitIfComplete();
+      };
+      button.addEventListener("click", chooseSign);
+      addCleanup(() => button.removeEventListener("click", chooseSign));
+      signButtons.push(button);
+      signChoices.append(button);
+    }
+
+    focusTarget = graphButtons[0] ?? null;
+    sync();
+    return true;
+  }
+
   function renderRegionSelector(question, response) {
     const config = question.diagramConfig;
     const spec = graphSpec(question);
@@ -772,6 +957,7 @@ export function createQuestionVisualRenderer(host, { onResponseChange = () => {}
     clear();
     const kind = question?.diagramConfig?.kind;
     if (kind === "function-derivative-choice") return renderDerivativeMatch(question);
+    if (kind === "calculus-graph-classifier") return renderGraphClassifier(question, response);
     if (kind === "calculus-interval-selector") return renderIntervalSelector(question, response);
     if (kind === "calculus-point-classifier") return renderPointClassifier(question, response);
     if (kind === "calculus-region-selector") return renderRegionSelector(question, response);

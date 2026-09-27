@@ -19,7 +19,7 @@ import {
 } from "./question-definitions/stationary-points-assessment.js";
 import {
   increasingDecreasingAssessmentQuestionDefinitions, visualClassificationDefinition, derivativeSignDefinition, intervalFromGraphDefinition, solveInequalityDefinition, explainSignsDefinition, stationaryBoundaryDefinition, applicationDefinition as increasingDecreasingApplicationDefinition
-} from "./question-definitions/increasing-decreasing-assessment.js";
+} from "./question-definitions/increasing-decreasing-assessment.js?v=auditstep7";
 import {
   integrationIntroAssessmentQuestionDefinitions, reverseDifferentiateDefinition, powerRuleIntegrationDefinition, rewriteIntegrateDefinition, termByTermIntegrationDefinition, whyPlusCDefinition, diagnoseIntegrationDefinition, integrationApplicationDefinition
 } from "./question-definitions/integration-intro-assessment.js";

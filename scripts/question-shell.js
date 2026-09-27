@@ -1,4 +1,4 @@
-import { createQuestionVisualRenderer } from "./question-visual-renderer.js?v=ao3math1";
+import { createQuestionVisualRenderer } from "./question-visual-renderer.js?v=auditstep7";
 import { createSpecialQuestionVisualRenderer, isSpecialInteractiveQuestionVisual } from "./question-special-visual-renderer.js?v=ao3math1";
 import { createConceptQuestionVisualRenderer, isConceptInteractiveQuestionVisual } from "./question-concept-visual-renderer.js?v=ao3math1";
 import {
