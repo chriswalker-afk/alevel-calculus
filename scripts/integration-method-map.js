@@ -21,7 +21,6 @@ export const INTEGRATION_METHOD_MAP_BRANCHES=freeze([
  freeze({
   id:'standard',order:2,label:'Standard integral',question:'After rewriting, is the integrand already one of the standard forms?',cue:'If yes, integrate directly and check by differentiating.',
   methodTags:freeze([INTEGRATION_METHOD_TAGS.standard]),
-  methodSelectionTemplateIds:freeze(['question-template:y13:integration:standard-integrals:core-array']),
   targets:freeze([target('Standard integrals','topic:y13:integration:standard-integrals','activity:y13:integration:standard-integrals:understand:standard-array','/y13/integration/standard-integrals/understand/standard-array')])
  }),
  freeze({
@@ -51,7 +50,6 @@ export const INTEGRATION_METHOD_MAP_BRANCHES=freeze([
  freeze({
   id:'by-parts',order:7,label:'Integration by parts — late option',question:'After the earlier routes fail, is there a factor whose differentiation genuinely simplifies the remaining integral while the other factor integrates reliably?',cue:'A product is not enough. Use parts because the new integral is easier, not because two factors are visible.',
   methodTags:freeze([INTEGRATION_METHOD_TAGS.byParts]),late:true,
-  methodSelectionTemplateIds:freeze(['question-template:y13:integration:by-parts:choose-complete']),
   targets:freeze([target('Integration by parts','topic:y13:integration:by-parts','activity:y13:integration:by-parts:understand:method-positioning','/y13/integration/by-parts/understand/method-positioning')])
  })
 ]);
