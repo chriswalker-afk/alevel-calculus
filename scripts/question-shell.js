@@ -8,7 +8,8 @@ import {
   nextHintRevealCount
 } from "./hint-sequence.js";
 import { createWorkedSolutionRenderer } from "./worked-solution-renderer.js?v=ao3math1";
-import { createMathEntryEnhancement, createReasoningMathPreview, createSelfReviewPanel, deriveSelfReviewCriteria, isAo3SelfReviewQuestion } from "./question-response-enhancements.js?v=ao3math1";
+import { createMathEntryEnhancement, createReasoningMathPreview, createSelfReviewPanel, deriveSelfReviewCriteria, isAo3SelfReviewQuestion } from "./question-response-enhancements.js?v=questionfix1";
+import { renderMathElement } from "./math-renderer.js?v=questionfix1";
 
 export const questionResponseTypes = Object.freeze([
   "numeric",
@@ -61,6 +62,7 @@ export function createQuestionShell(root, {
   const fields = Object.freeze({
     format: assertElement(root.querySelector("[data-question-shell-format]"), "format label"),
     counter: assertElement(root.querySelector("[data-question-shell-counter]"), "question counter"),
+    newButton: assertElement(root.querySelector("[data-question-shell-new]"), "new question button"),
     prompt: assertElement(root.querySelector("[data-question-shell-prompt]"), "prompt"),
     math: assertElement(root.querySelector("[data-question-shell-math]"), "mathematics prompt"),
     visual: root.querySelector("[data-question-shell-visual]"),
@@ -380,6 +382,36 @@ export function createQuestionShell(root, {
     else fields.input.focus?.();
   }
 
+  function renderPrompt(question) {
+    const segments = Array.isArray(question?.promptSegments) ? question.promptSegments : null;
+    const doc = fields.prompt?.ownerDocument ?? null;
+    if (!segments?.length || !doc?.createElement || !fields.prompt?.replaceChildren) {
+      fields.prompt.textContent = question?.prompt ?? "";
+      return;
+    }
+
+    fields.prompt.replaceChildren();
+    for (const segment of segments) {
+      if (!segment || typeof segment !== "object") continue;
+      if (segment.type === "break") {
+        fields.prompt.append(doc.createElement("br"));
+        continue;
+      }
+      const value = String(segment.value ?? "");
+      if (!value) continue;
+      if (segment.type === "math") {
+        const span = doc.createElement("span");
+        span.className = "question-shell__inline-math";
+        span.setAttribute("data-math-render", "");
+        span.textContent = value;
+        fields.prompt.append(span);
+        renderMathElement(span, { source: value });
+      } else {
+        fields.prompt.append(doc.createTextNode(value));
+      }
+    }
+  }
+
   function render({ focus = false } = {}) {
     const question = currentQuestion();
     if (!question || !activeSet) return;
@@ -393,7 +425,7 @@ export function createQuestionShell(root, {
     fields.format.textContent = interactiveVisual ? "Graph selection" : responseTypeLabel(question.responseType);
     fields.counter.textContent = `${batchPrefix}Question ${position}`;
     fields.progress.textContent = `${batchPrefix}Question ${position}`;
-    fields.prompt.textContent = question.prompt;
+    renderPrompt(question);
     fields.math.textContent = question.math || "";
     fields.math.hidden = !question.math;
 
@@ -548,6 +580,22 @@ export function createQuestionShell(root, {
     return state.feedback;
   }
 
+  function requestFreshQuestion() {
+    const question = currentQuestion();
+    if (!question || !activeSet) return null;
+    saveCurrentResponse();
+    const freshSet = onRequestFreshSet(Object.freeze({
+      setId: activeSet.id,
+      questionId: question.id,
+      templateId: question.templateId ?? null,
+      practiceBatch: activeSet.practiceBatch ?? null,
+      source: "manual-new-question"
+    }));
+    if (!freshSet) return null;
+    loadSet(freshSet, { focus: true, resetIndex: true });
+    return freshSet;
+  }
+
   function moveNext() {
     const question = currentQuestion();
     if (!question) return;
@@ -612,12 +660,14 @@ export function createQuestionShell(root, {
     event.preventDefault();
     onDiagnosticNavigate(diagnostic.target, diagnostic);
   });
+  fields.newButton.addEventListener("click", requestFreshQuestion);
   fields.nextButton.addEventListener("click", moveNext);
 
   return Object.freeze({
     loadSet,
     hide,
     checkCurrent,
+    newQuestion: requestFreshQuestion,
     nextQuestion: moveNext,
     getActiveQuestionId: () => currentQuestion()?.id ?? null,
     getSnapshot: () => {
