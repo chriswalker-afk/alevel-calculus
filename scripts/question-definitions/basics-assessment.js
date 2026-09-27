@@ -9,15 +9,16 @@ const superscripts = Object.freeze({0:"⁰",1:"¹",2:"²",3:"³",4:"⁴",5:"⁵"
 function sup(n){ if(n===1) return ""; return String(n).split("").map(d=>superscripts[d] ?? d).join(""); }
 function compact(value){ return String(value ?? "").toLowerCase().replace(/[\s·×*]/g,"").replace(/−/g,"-").replace(/√x/g,"sqrt(x)").replace(/⁻/g,"^-").replace(/⁰/g,"0").replace(/¹/g,"1").replace(/²/g,"2").replace(/³/g,"3").replace(/⁴/g,"4").replace(/\+\-/g,"-"); }
 function numeric(expected, response){ const v=Number(String(response ?? "").trim()); return Number.isFinite(v) && Math.abs(v-expected)<=1e-9; }
-function signedPolynomial(terms){
+function signedVariablePolynomial(terms, variable="x"){
   return terms.filter(t=>t.coefficient!==0).map((t,i)=>{
     const c=t.coefficient, mag=Math.abs(c), sign=c<0?"−":"+";
     const coeff=t.power!==0 && mag===1?"":String(mag);
-    const body=t.power===0?"":`x${sup(t.power)}`;
+    const body=t.power===0?"":`${variable}${sup(t.power)}`;
     const term=`${coeff}${body}`;
     return i===0?(c<0?`−${term}`:term):`${sign} ${term}`;
   }).join(" ") || "0";
 }
+function signedPolynomial(terms){ return signedVariablePolynomial(terms,"x"); }
 function asciiPolynomial(terms){
   return terms.filter(t=>t.coefficient!==0).map((t,i)=>{
     const c=t.coefficient, mag=Math.abs(c), raw=t.power===0?String(mag):`${mag===1?"":mag}x${t.power===1?"":`^${t.power}`}`;
@@ -239,8 +240,18 @@ export const unknownCoefficientsDefinition = defineQuestionDefinition({
   }, defaultDiagnostic:{kind:"execution",supportNeed:"ao1",supportMicroSkillId:skill("term-by-term")},
   responseType:"numeric",responseLabel:"Value of a",placeholder:"Enter a",
   parameterGenerator({random}){ const a=random.int(1,5),b=random.int(-5,5)||2; return {a,b,m:3*a+2*b,n:12*a+4*b}; },
-  promptRenderer({m,n}){ return `f(x)=ax³+bx². Given f′(1)=${m} and f′(2)=${n}, find a.`; },
-  mathRenderer(){ return `f(x) = ax³ + bx²`; },
+  promptRenderer({m,n}){ return `For f(x)=ax³+bx², given f′(1)=${m} and f′(2)=${n}, find a.`; },
+  promptSegmentsRenderer({m,n}){ return [
+    {type:"text",value:"For "},
+    {type:"math",value:"f(x) = ax³ + bx²"},
+    {type:"text",value:", given "},
+    {type:"math",value:`f′(1) = ${m}`},
+    {type:"text",value:" and "},
+    {type:"math",value:`f′(2) = ${n}`},
+    {type:"text",value:", find "},
+    {type:"math",value:"a"},
+    {type:"text",value:"."}
+  ]; },
   answerChecker(response,{a,b,m,n}){
     if(numeric(a,response)) return {tone:"correct",title:"Correct",message:"You used the derivative conditions to determine the coefficient."};
     if(numeric(m,response)||numeric(n,response)) return {tone:"incorrect",errorCategory:"used-function-values",title:"Use both derivative conditions",message:"The given numbers are gradient values, not the coefficient a."};
@@ -267,8 +278,17 @@ export const simpleApplicationRateDefinition = defineQuestionDefinition({
   }, defaultDiagnostic:{kind:"execution",supportNeed:"ao1",supportMicroSkillId:skill("power-rule")},
   responseType:"numeric",responseLabel:"Rate of change",placeholder:"Enter the signed rate",
   parameterGenerator({random}){ const a=random.int(1,3),b=-random.int(4,9),c=random.int(6,14),t=random.int(1,3); return {a,b,c,t,rate:3*a*t*t+2*b*t+c}; },
-  promptRenderer({t}){ return `The height h metres of a test object after t seconds is modelled by h(t)=at³+bt²+ct. Using the model shown, find its instantaneous vertical velocity at t=${t}. Give a signed answer.`; },
-  mathRenderer({a,b,c}){ return `h(t) = ${a===1?"":a}t³ ${b<0?"−":"+"} ${Math.abs(b)}t² + ${c}t`; },
+  promptRenderer({a,b,c,t}){ const model=signedVariablePolynomial([{coefficient:a,power:3},{coefficient:b,power:2},{coefficient:c,power:1}],"t"); return `The height h metres of a test object after t seconds is modelled by h(t)=${model}. Find its instantaneous vertical velocity at t=${t}. Give a signed answer.`; },
+  promptSegmentsRenderer({a,b,c,t}){ const model=signedVariablePolynomial([{coefficient:a,power:3},{coefficient:b,power:2},{coefficient:c,power:1}],"t"); return [
+    {type:"text",value:"The height h metres of a test object after t seconds is modelled by "},
+    {type:"math",value:`h(t) = ${model}`},
+    {type:"text",value:"."},
+    {type:"break"},
+    {type:"break"},
+    {type:"text",value:"Find its instantaneous vertical velocity at "},
+    {type:"math",value:`t = ${t}`},
+    {type:"text",value:". Give a signed answer."}
+  ]; },
   answerChecker(response,{a,b,c,t,rate}){
     if(numeric(rate,response)) return {tone:"correct",title:"Correct",message:`The instantaneous vertical velocity is ${rate} m/s.`};
     const height=a*t**3+b*t**2+c*t;
@@ -296,8 +316,12 @@ export const simpleApplicationInterpretDefinition = defineQuestionDefinition({
   }, defaultDiagnostic:{kind:"recognition",supportNeed:"understand",supportMicroSkillId:skill("gradient-on-curve")},
   responseType:"short-reasoning",responseLabel:"Interpret the derivative",placeholder:"State what the sign and magnitude mean in context.",
   parameterGenerator({random}){ const rate=random.pick([-12,-8,-5,6,9,14]); return {rate}; },
-  promptRenderer({rate}){ return `At a particular instant, a height model has h′(t)=${rate}. Interpret this value in context.`; },
-  mathRenderer({rate}){ return `h′(t) = ${rate} m/s`; },
+  promptRenderer({rate}){ return `At a particular instant, a height model has h′(t)=${rate} m/s. Interpret this value in context.`; },
+  promptSegmentsRenderer({rate}){ return [
+    {type:"text",value:"At a particular instant, a height model has "},
+    {type:"math",value:`h′(t) = ${rate} m/s`},
+    {type:"text",value:". Interpret this value in context."}
+  ]; },
   answerChecker(response,{rate}){
     const s=String(response??"").toLowerCase(); const direction=rate<0?["down","decreas","fall"]:["up","increas","ris"];
     const hasDirection=direction.some(t=>s.includes(t)); const hasRate=/m\/s|metre|meter|per second|rate|velocity/.test(s);
