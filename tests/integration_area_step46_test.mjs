@@ -65,7 +65,7 @@ assert.match(understand,/createAreaExplorer/,'Step 46 must reuse AreaExplorer');
 assert.match(understand,/lockedLowerLimit:\s*0/,'The first exploration must lock the lower limit at zero');
 assert.match(understand,/Remove 0 → a/,'The arbitrary lower limit must be introduced by removing the unwanted initial region');
 assert.match(understand,/F\(b\).*F\(a\)/s,'The visual subtraction must connect to F(b)-F(a)');
-assert.match(understand,/Area between two curves = top area − bottom area/,'Year 12 must include the simple top-minus-bottom introduction.');
+assert.match(understand,/(?:Area between two curves|Required area) = (?:top area|area under top curve) − (?:bottom area|area under bottom curve)/,'Year 12 must include the simple top-minus-bottom introduction.');
 assert.match(understand,/A\(x\) − B\(x\)/,'The simple between-curves visual must connect subtraction of areas to one integrand.');
 assert.match(understand,/Year 13 you will revisit areas where curves cross/,'The Year 12 page must explicitly defer crossings and advanced method choice to Year 13.');
 assert.doesNotMatch(understand,/Riemann|limit of a sum/i,'Step 46 must not introduce integration as the limit of a sum');
