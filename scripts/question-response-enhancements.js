@@ -210,6 +210,7 @@ export function createReasoningMathPreview({ reasoningGroup, reasoning } = {}) {
       delete preview.dataset.mathSource;
       return;
     }
+    preview.replaceChildren();
     renderMathElement(preview, { source: formatMathInputForDisplay(raw) });
   }
 
