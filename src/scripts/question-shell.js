@@ -94,7 +94,9 @@ export function createQuestionShell(root, {
 
   for (const element of [
     fields.prompt,
+    fields.feedbackTitle,
     fields.feedbackMessage,
+    fields.diagnosticTitle,
     fields.diagnosticMessage,
     fields.hintList,
     fields.inputLabel,
