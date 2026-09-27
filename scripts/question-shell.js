@@ -1,14 +1,14 @@
-import { createQuestionVisualRenderer } from "./question-visual-renderer.js?v=ao1math4";
-import { createSpecialQuestionVisualRenderer, isSpecialInteractiveQuestionVisual } from "./question-special-visual-renderer.js?v=ao1math4";
-import { createConceptQuestionVisualRenderer, isConceptInteractiveQuestionVisual } from "./question-concept-visual-renderer.js?v=ao1math4";
+import { createQuestionVisualRenderer } from "./question-visual-renderer.js?v=ao2math1";
+import { createSpecialQuestionVisualRenderer, isSpecialInteractiveQuestionVisual } from "./question-special-visual-renderer.js?v=ao2math1";
+import { createConceptQuestionVisualRenderer, isConceptInteractiveQuestionVisual } from "./question-concept-visual-renderer.js?v=ao2math1";
 import {
   getHintActionLabel,
   getHintProgressLabel,
   getVisibleHints,
   nextHintRevealCount
 } from "./hint-sequence.js";
-import { createWorkedSolutionRenderer } from "./worked-solution-renderer.js?v=ao1math4";
-import { createMathEntryEnhancement, createReasoningMathPreview, createSelfReviewPanel, deriveSelfReviewCriteria, isAo3SelfReviewQuestion } from "./question-response-enhancements.js?v=ao1math4";
+import { createWorkedSolutionRenderer } from "./worked-solution-renderer.js?v=ao2math1";
+import { createMathEntryEnhancement, createReasoningMathPreview, createSelfReviewPanel, deriveSelfReviewCriteria, isAo3SelfReviewQuestion } from "./question-response-enhancements.js?v=ao2math1";
 
 export const questionResponseTypes = Object.freeze([
   "numeric",
