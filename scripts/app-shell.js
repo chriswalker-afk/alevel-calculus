@@ -42,7 +42,7 @@ import { year12ReviewLearningModes } from "./year12-review-activities.js";
 import { getYear12ReviewMicroSkillLabel } from "./year12-review-model.js";
 import { createStandardFunctionsUnderstandExperience } from "./standard-functions-understand.js?v=understand2";
 import { standardFunctionsLearningModes } from "./standard-functions-activities.js";
-import { createTrigFirstPrinciplesUnderstandExperience } from "./trig-first-principles-understand.js?v=understand2";
+import { createTrigFirstPrinciplesUnderstandExperience } from "./trig-first-principles-understand.js?v=diagramfix3";
 import { trigFirstPrinciplesLearningModes } from "./trig-first-principles-activities.js";
 import { createProductQuotientChainUnderstandExperience } from "./product-quotient-chain-understand.js?v=understand2";
 import { productQuotientChainLearningModes } from "./product-quotient-chain-activities.js";
