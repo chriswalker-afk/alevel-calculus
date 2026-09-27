@@ -2,6 +2,7 @@ import { getQuestionDefinitionMetadata } from "./question-definition.js";
 import { createHintSequence } from "./hint-sequence.js";
 import { normaliseQuestionCheckResult } from "./question-feedback.js";
 import { normaliseSolutionSteps } from "./solution-step.js";
+import { normaliseStudentMathInput } from "./student-math-input.js?v=questionfix1";
 
 function deepFreeze(value) {
   if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
@@ -145,13 +146,19 @@ export function createGeneratorRunner({ debugSeed = null, runtimeSeed = null } =
       placeholder: definition.placeholder,
       selfReviewCriteria: definition.selfReviewCriteria,
       prompt: definition.promptRenderer(parameters),
+      promptSegments: definition.promptSegmentsRenderer
+        ? deepFreeze(definition.promptSegmentsRenderer(parameters))
+        : undefined,
       math: definition.mathRenderer ? definition.mathRenderer(parameters) : "",
       options: options ? Object.freeze(options.map((option) => Object.freeze({ ...option }))) : undefined,
       hintSequence,
       solutionSteps,
       diagramConfig: definition.diagramConfig,
       check(response) {
-        return normaliseQuestionCheckResult(definition.answerChecker(response, parameters), {
+        const checkedResponse = definition.responseType === "algebraic"
+          ? normaliseStudentMathInput(response)
+          : response;
+        return normaliseQuestionCheckResult(definition.answerChecker(checkedResponse, parameters), {
           allowedErrorCategories: definition.errorCategories
         });
       }
