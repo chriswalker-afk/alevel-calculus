@@ -47,7 +47,7 @@ assert.match(appShell, /currentTopicRuntime\(\)\.understandExperience/);
 assert.match(appShell, /understandExperience\.render\(activity\.activityId\)/);
 assert.match(appShell, /destroyUnderstandExperiences\(\{ except: understandExperience \}\)/);
 
-assert.match(html, /data-custom-understand-host/);
+assert.match(html, /data-understand-visual-host/);
 for (const stylesheet of [
   "family-of-curves-explorer.css",
   "area-explorer.css",
@@ -59,7 +59,7 @@ for (const stylesheet of [
 assert.match(css, /data-custom-understand-active="true"[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\)/);
 assert.match(css, /data-custom-understand-active="true"[\s\S]*?\.math-placeholder[\s\S]*?height:\s*auto/);
 assert.match(css, /data-custom-understand-active="true"[\s\S]*?\.math-placeholder[\s\S]*?overflow:\s*visible/);
-assert.match(css, /\.custom-understand-host\s*\{[\s\S]*?min-width:\s*0/);
+assert.match(css, /\.understand-visual-host\s*\{[\s\S]*?min-width:\s*0/);
 assert.match(css, /@media \(max-width: 820px\)[\s\S]*?linked-gradient-explorer__graphs[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\)/);
 
 console.log("Understand diagram runtime audit passed.");
