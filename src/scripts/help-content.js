@@ -1,5 +1,13 @@
 import { getIntegrationMethodMapHelpTarget as getCanonicalIntegrationMethodMapHelpTarget } from "./integration-method-map.js?v=auditstep14";
 import { INTEGRATION_METHOD_TAGS } from "./integration-method-vocabulary.js";
+import { partialFractionsIntegrationTopic } from "./topic-content/partial-fractions-integration.js";
+import { year13AreasTopic } from "./topic-content/year13-areas.js";
+import { parametricAreaTopic } from "./topic-content/parametric-area.js";
+import { limitOfSumTopic } from "./topic-content/limit-of-sum.js";
+import { numericalIntegrationTopic } from "./topic-content/numerical-integration.js";
+import { differentialEquationsTopic } from "./topic-content/differential-equations.js";
+import { calculusModellingTopic } from "./topic-content/calculus-modelling.js";
+import { fullCalculusMasteryTopic } from "./topic-content/full-calculus-mastery.js";
 export const helpTargetOrder = Object.freeze(["understand", "memorise", "ao1"]);
 
 const integrationMethodSelectionSkillTags = Object.freeze({
@@ -417,6 +425,118 @@ const deConstructAo1Target=Object.freeze({need:"ao1",prompt:"I need practice con
 const deSolveAo1Target=Object.freeze({need:"ao1",prompt:"I need practice applying conditions",supportLabel:"AO1",title:"Solve and apply conditions",description:"Practise separation, integration and using a condition to determine C.",topicId:"topic:y13:differential-equations:first-order",microSkillId:"skill:y13:differential-equations:first-order:initial-condition",activityId:"activity:y13:differential-equations:first-order:ao1:solve-and-condition",route:"/y13/differential-equations/first-order/ao1/solve-and-condition",mode:"ao1"});
 const deInterpretAo1Target=Object.freeze({need:"ao1",prompt:"I need practice interpreting solutions",supportLabel:"AO1",title:"Interpret solutions",description:"Practise signs, units and long-term behaviour before judging realism.",topicId:"topic:y13:differential-equations:first-order",microSkillId:"skill:y13:differential-equations:first-order:interpret-model",activityId:"activity:y13:differential-equations:first-order:ao1:interpret-solutions",route:"/y13/differential-equations/first-order/ao1/interpret-solutions",mode:"ao1"});
 
+const lateCourseHelpTopics = Object.freeze([
+  partialFractionsIntegrationTopic,
+  year13AreasTopic,
+  parametricAreaTopic,
+  limitOfSumTopic,
+  numericalIntegrationTopic,
+  differentialEquationsTopic,
+  calculusModellingTopic,
+  fullCalculusMasteryTopic
+]);
+
+const lateCourseTopLevelPreferences = Object.freeze({
+  "topic:y13:integration:partial-fractions": Object.freeze({understand:"recognise-proper",memorise:"proper-check",ao1:"structure-choice"}),
+  "topic:y13:integration:areas": Object.freeze({understand:"construction-visual",memorise:"construction-order",ao1:"routine-between-curves"}),
+  "topic:y13:integration:parametric-area": Object.freeze({understand:"thin-strip",memorise:"formula-order",ao1:"routine-parametric-area"}),
+  "topic:y13:integration:limit-of-sum": Object.freeze({understand:"rectangle-progression",memorise:"structure-recall",ao1:"recognise-evaluate"}),
+  "topic:y13:integration:numerical-integration": Object.freeze({understand:"numerical-context",memorise:"rule",ao1:"estimate"}),
+  "topic:y13:differential-equations:first-order": Object.freeze({understand:"translate-rate-statements",memorise:"separation-method",ao1:"solve-and-condition"}),
+  "topic:y13:modelling:calculus": Object.freeze({understand:"framework",memorise:"framework-recall",ao1:"framework-practice"}),
+  "topic:full:review:full-calculus-mastery": Object.freeze({ao1:"method-only"})
+});
+
+const helpPromptByNeed = Object.freeze({
+  understand:"I don't understand this",
+  memorise:"I don't remember this",
+  ao1:"I need to practise this"
+});
+
+function activityRoute(activityId){
+  return "/"+String(activityId).replace(/^activity:/,"").split(":").join("/");
+}
+
+function activityForModeAndSlug(topic,mode,slug){
+  return topic.activities.find((activity)=>activity.mode===mode&&activity.slug===slug)??null;
+}
+
+function firstActivityForMicroSkill(topic,mode,microSkillId){
+  return topic.activities.find((activity)=>activity.mode===mode&&activity.microSkillIds?.includes(microSkillId))??null;
+}
+
+function makeLateCourseTarget(topic,activity,need,microSkillId=null){
+  if(!activity)return null;
+  return Object.freeze({
+    need,
+    prompt:helpPromptByNeed[need],
+    supportLabel:need==="ao1"?"AO1":need[0].toUpperCase()+need.slice(1),
+    title:activity.title,
+    description:need==="understand"
+      ? "Return to the teaching page for this idea before continuing."
+      : need==="memorise"
+        ? "Retrieve the key facts and structure before trying the question again."
+        : "Practise the closest AO1 skill before returning to the current question.",
+    topicId:topic.topicId,
+    microSkillId:microSkillId??activity.microSkillIds?.[0]??null,
+    activityId:activity.activityId,
+    route:activityRoute(activity.activityId),
+    mode:activity.mode
+  });
+}
+
+function buildLateCourseTopLevelHelp(){
+  const result={};
+  for(const topic of lateCourseHelpTopics){
+    const prefs=lateCourseTopLevelPreferences[topic.topicId]??{};
+    const group={};
+    for(const need of helpTargetOrder){
+      if(!topic.modes.includes(need))continue;
+      const preferred=activityForModeAndSlug(topic,need,prefs[need]);
+      const fallback=topic.activities.find((activity)=>activity.mode===need)??null;
+      const target=makeLateCourseTarget(topic,preferred??fallback,need);
+      if(target)group[need]=target;
+    }
+    result[topic.topicId]=Object.freeze(group);
+  }
+  return Object.freeze(result);
+}
+
+function buildLateCourseMicroSkillHelp(){
+  const result={};
+  for(const topic of lateCourseHelpTopics){
+    for(const micro of topic.microSkills??[]){
+      const group={};
+      for(const need of helpTargetOrder){
+        if(!topic.modes.includes(need))continue;
+        const declaredId=micro.supportTargets?.[need]??null;
+        const declared=declaredId?topic.activities.find((activity)=>activity.activityId===declaredId&&activity.mode===need):null;
+        const direct=firstActivityForMicroSkill(topic,need,micro.microSkillId);
+        const prefs=lateCourseTopLevelPreferences[topic.topicId]??{};
+        const preferred=activityForModeAndSlug(topic,need,prefs[need]);
+        const fallback=topic.activities.find((activity)=>activity.mode===need)??null;
+        const target=makeLateCourseTarget(topic,declared??direct??preferred??fallback,need,micro.microSkillId);
+        if(target)group[need]=target;
+      }
+      result[micro.microSkillId]=Object.freeze(group);
+    }
+  }
+  return Object.freeze(result);
+}
+
+const lateCourseHelpByTopic=buildLateCourseTopLevelHelp();
+const lateCourseSupportByMicroSkill=buildLateCourseMicroSkillHelp();
+
+export const lateCourseHelpAudit=Object.freeze(lateCourseHelpTopics.map((topic)=>Object.freeze({
+  topicId:topic.topicId,
+  modes:Object.freeze([...topic.modes]),
+  exposedNeeds:Object.freeze(helpTargetOrder.filter((need)=>Boolean(lateCourseHelpByTopic[topic.topicId]?.[need]))),
+  omissions:Object.freeze(helpTargetOrder.filter((need)=>!topic.modes.includes(need)).map((need)=>Object.freeze({
+    need,
+    reason:`${topic.title} has no ${need} mode, so Help does not invent a route to a mode that does not exist.`
+  })))
+})));
+
 const helpByTopic = Object.freeze({
   "topic:y12:differentiation:basics": basicsTargets,
   "topic:y12:foundations:pre-calculus": Object.freeze({ understand: preCalculusUnderstandTarget }),
@@ -628,13 +748,13 @@ const supportByMicroSkill = Object.freeze({
 });
 
 export function getHelpTargets(topicId) {
-  const group = helpByTopic[topicId];
+  const group = lateCourseHelpByTopic[topicId] ?? helpByTopic[topicId];
   if (!group) return [];
   return helpTargetOrder.map((need) => group[need]).filter(Boolean);
 }
 
 export function getHelpTarget(topicId, need) {
-  return helpByTopic[topicId]?.[need] ?? null;
+  return lateCourseHelpByTopic[topicId]?.[need] ?? helpByTopic[topicId]?.[need] ?? null;
 }
 
 export function getSupportTargetForMicroSkill(microSkillId, need) {
@@ -643,7 +763,7 @@ export function getSupportTargetForMicroSkill(microSkillId, need) {
     const canonical = getCanonicalIntegrationMethodMapHelpTarget(methodTag);
     if (canonical) return Object.freeze({...canonical,microSkillId});
   }
-  return supportByMicroSkill[microSkillId]?.[need] ?? null;
+  return supportByMicroSkill[microSkillId]?.[need] ?? lateCourseSupportByMicroSkill[microSkillId]?.[need] ?? null;
 }
 
 export function getIntegrationMethodDecisionHelpTarget(methodTag) {
