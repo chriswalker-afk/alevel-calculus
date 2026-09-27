@@ -46,9 +46,10 @@ assert.match(challenge,/The sign of f″ is the criterion/);
 assert.match(challenge,/one S-shaped curve contains both concave and convex regions/i);
 
 const formal=source.slice(gradientStart,inflectionStart);
-assert.match(formal,/createLinkedFunctionGradientExplorer/);
-assert.match(formal,/revealDerivative:true/);
-assert.match(formal,/revealSecondDerivative:true/);
+assert.match(source,/createLinkedFunctionGradientExplorer/);
+assert.match(source,/revealDerivative:true/);
+assert.match(source,/revealSecondDerivative:true/);
+assert.match(formal,/this\.mount\(b,\[F\.cubic\]\)/,'The existing linked f, f′, f″ explorer must remain on the formal gradient-change page.');
 assert.match(formal,/Use the Edexcel convention: f″<0 is concave and f″>0 is convex/);
 assert.match(formal,/Concave: f″<0\. Convex: f″>0/);
 
