@@ -381,6 +381,7 @@ const fieldSelectors = [
   '[data-activity-caption]'
 ];
 for (const selector of fieldSelectors) stage.children.set(selector, new FakeElement(selector));
+stage.children.set('.activity-stage__tools', new FakeElement('activityStageTools'));
 
 const documentMap = new Map([
   ['[data-app-shell]', shell],
