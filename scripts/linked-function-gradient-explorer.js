@@ -407,8 +407,8 @@ export class LinkedFunctionGradientExplorer {
     });
     this.controllers.derivativePoint.setPosition(x, gradient);
     if (this.controllers.secondDerivativePoint && second !== null) this.controllers.secondDerivativePoint.setPosition(x, second);
-    const derivativeReadout = this.showDerivativeReadout ? `<span>f′(x) = ${formatNumber(gradient)}</span>` : "";
-    this.readout.innerHTML = `<span>x = ${formatNumber(x)}</span><span>f(x) = ${formatNumber(y)}</span>${derivativeReadout}${this.state.secondDerivativeVisible && second !== null ? `<span>f″(x) = ${formatNumber(second)}</span>` : ""}`;
+    const derivativeReadout = this.showDerivativeReadout ? `<span data-math-render>f′(x) = ${formatNumber(gradient)}</span>` : "";
+    this.readout.innerHTML = `<span data-math-render>x = ${formatNumber(x)}</span><span data-math-render>f(x) = ${formatNumber(y)}</span>${derivativeReadout}${this.state.secondDerivativeVisible && second !== null ? `<span data-math-render>f″(x) = ${formatNumber(second)}</span>` : ""}`;
     this.syncing = false;
   }
 
