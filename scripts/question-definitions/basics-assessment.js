@@ -268,7 +268,7 @@ export const simpleApplicationRateDefinition = defineQuestionDefinition({
   responseType:"numeric",responseLabel:"Rate of change",placeholder:"Enter the signed rate",
   parameterGenerator({random}){ const a=random.int(1,3),b=-random.int(4,9),c=random.int(6,14),t=random.int(1,3); return {a,b,c,t,rate:3*a*t*t+2*b*t+c}; },
   promptRenderer({t}){ return `The height h metres of a test object after t seconds is modelled by h(t)=at³+bt²+ct. Using the model shown, find its instantaneous vertical velocity at t=${t}. Give a signed answer.`; },
-  mathRenderer({a,b,c}){ return `h(t) = ${a}t³ ${b<0?"−":"+"} ${Math.abs(b)}t² + ${c}t`; },
+  mathRenderer({a,b,c}){ return `h(t) = ${a===1?"":a}t³ ${b<0?"−":"+"} ${Math.abs(b)}t² + ${c}t`; },
   answerChecker(response,{a,b,c,t,rate}){
     if(numeric(rate,response)) return {tone:"correct",title:"Correct",message:`The instantaneous vertical velocity is ${rate} m/s.`};
     const height=a*t**3+b*t**2+c*t;
