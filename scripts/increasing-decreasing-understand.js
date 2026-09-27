@@ -1,4 +1,4 @@
-import { createLinkedFunctionGradientExplorer } from './linked-function-gradient-explorer.js?v=understand1';
+import { createLinkedFunctionGradientExplorer } from './linked-function-gradient-explorer.js?v=understand1?v=understand1';
 import { createIntervalSelectionOverlay, defineIntervalSegments } from './interval-selection-overlay.js';
 import { increasingDecreasingModels, intervalTruth, signMeaning } from './increasing-decreasing-model.js';
 const IDS=new Set(['appearance-first','tangent-sign','derivative-sign','select-intervals','algebra-bridge'].map(s=>`activity:y12:differentiation:increasing-decreasing:understand:${s}`));
