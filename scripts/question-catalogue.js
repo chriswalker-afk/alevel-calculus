@@ -25,7 +25,7 @@ import {
 } from "./question-definitions/integration-intro-assessment.js";
 import {
   definiteIndefiniteAssessmentQuestionDefinitions, classifyIntegralDefinition, evaluateDefiniteDefinition, cancelCDefinition, limitPropertiesDefinition, explainWorkflowDefinition, diagnoseNotationDefinition, definiteApplicationDefinition
-} from "./question-definitions/definite-indefinite-assessment.js";
+} from "./question-definitions/definite-indefinite-assessment.js?v=integralfix1";
 import {
   integrationAreaAssessmentQuestionDefinitions, lowerZeroAreaDefinition, arbitraryLowerAreaDefinition, endpointDifferenceDefinition, identicalLimitsDefinition, adjacentIntervalsDefinition, reversedLimitsDefinition, explainLowerLimitDefinition, diagnoseAreaReasoningDefinition, areaApplicationDefinition
 } from "./question-definitions/integration-area-assessment.js?v=interactions2";
