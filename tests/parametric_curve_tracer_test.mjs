@@ -22,7 +22,7 @@ const root = path.resolve(import.meta.dirname, "..");
 const source = fs.readFileSync(path.join(root,"src/scripts/parametric-curve-tracer.js"),"utf8");
 const css = fs.readFileSync(path.join(root,"src/styles/parametric-curve-tracer.css"),"utf8");
 const demo = fs.readFileSync(path.join(root,"src/parametric-curve-tracer-demo.html"),"utf8");
-assert.match(source,/from "\.\/diagram-primitives\.js"/,"Tracer must compose DiagramPrimitives.");
+assert.match(source,/from "\.\/diagram-primitives\.js(?:\?[^"]*)?"/,"Tracer must compose DiagramPrimitives.");
 assert.doesNotMatch(source,/createElementNS|<svg|canvas/i,"Tracer must not create a parallel SVG/canvas system.");
 assert.match(source,/diagram\.arrow\(/,"Direction must be shown with shared arrows.");
 assert.match(source,/shadedRegion\(/,"Area-strip overlays must reuse shared region primitives.");
