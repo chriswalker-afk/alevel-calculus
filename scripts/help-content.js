@@ -1,5 +1,17 @@
 import { getIntegrationMethodMapHelpTarget as getCanonicalIntegrationMethodMapHelpTarget } from "./integration-method-map.js?v=auditstep14";
+import { INTEGRATION_METHOD_TAGS } from "./integration-method-vocabulary.js";
 export const helpTargetOrder = Object.freeze(["understand", "memorise", "ao1"]);
+
+const integrationMethodSelectionSkillTags = Object.freeze({
+  "skill:y13:integration:standard-integrals:standard-array": INTEGRATION_METHOD_TAGS.standard,
+  "skill:y13:integration:reverse-chain-rule:recognition-classification": INTEGRATION_METHOD_TAGS.reverseChain,
+  "skill:y13:integration:reverse-chain-rule:f-prime-over-f": INTEGRATION_METHOD_TAGS.fPrimeOverF,
+  "skill:y13:integration:trig-identities:method-choice": INTEGRATION_METHOD_TAGS.trigIdentity,
+  "skill:y13:integration:substitution:choose-u": INTEGRATION_METHOD_TAGS.substitution,
+  "skill:y13:integration:partial-fractions:recognise-proper": INTEGRATION_METHOD_TAGS.partialFractions,
+  "skill:y13:integration:partial-fractions:decomposition-structure": INTEGRATION_METHOD_TAGS.partialFractions,
+  "skill:y13:integration:by-parts:method-positioning": INTEGRATION_METHOD_TAGS.byParts
+});
 
 const gradientFunctionUnderstandTarget = Object.freeze({
   need: "understand",
@@ -626,6 +638,11 @@ export function getHelpTarget(topicId, need) {
 }
 
 export function getSupportTargetForMicroSkill(microSkillId, need) {
+  const methodTag = integrationMethodSelectionSkillTags[microSkillId] ?? null;
+  if (need === "understand" && methodTag) {
+    const canonical = getCanonicalIntegrationMethodMapHelpTarget(methodTag);
+    if (canonical) return Object.freeze({...canonical,microSkillId});
+  }
   return supportByMicroSkill[microSkillId]?.[need] ?? null;
 }
 
