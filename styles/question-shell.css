@@ -132,6 +132,10 @@
   white-space: nowrap;
 }
 
+.question-shell__math[hidden] {
+  display: none;
+}
+
 .question-shell__math {
   display: grid;
   place-items: center;
