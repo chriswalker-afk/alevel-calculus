@@ -426,8 +426,13 @@ export function createQuestionShell(root, {
     fields.counter.textContent = `${batchPrefix}Question ${position}`;
     fields.progress.textContent = `${batchPrefix}Question ${position}`;
     renderPrompt(question);
-    fields.math.textContent = question.math || "";
-    fields.math.hidden = !question.math;
+    const standaloneMath = String(question.math ?? "").trim();
+    fields.math.hidden = !standaloneMath;
+    if (standaloneMath) fields.math.textContent = standaloneMath;
+    else {
+      fields.math.replaceChildren?.();
+      fields.math.textContent = "";
+    }
 
     const inputResponse = question.responseType === "numeric" || question.responseType === "algebraic";
     fields.inputGroup.hidden = !inputResponse;
