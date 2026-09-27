@@ -91,7 +91,7 @@ export class DiagramPrimitives {
     yDomain = [-5, 5],
     ariaLabel = "Interactive mathematical diagram",
     minHeight = 280,
-    aspectRatio = "16 / 9"
+    aspectRatio = "5 / 3"
   } = {}) {
     if (!root?.ownerDocument) throw new Error("DiagramPrimitives requires a DOM host element.");
     this.root = root;
