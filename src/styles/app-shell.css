@@ -2882,6 +2882,9 @@ button {
 .understand-visual-host > * {
   min-width: 0;
   max-width: 100%;
+  height: auto !important;
+  max-height: none;
+  overflow: visible;
 }
 
 .activity-stage__content[data-custom-understand-active="true"] {
