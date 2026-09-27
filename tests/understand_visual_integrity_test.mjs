@@ -7,7 +7,7 @@ const productionHtml = readFileSync(new URL("../index.html", import.meta.url), "
 const appCss = readFileSync(new URL("../src/styles/app-shell.css", import.meta.url), "utf8");
 const diagramSource = readFileSync(new URL("../src/scripts/diagram-primitives.js", import.meta.url), "utf8");
 
-const created = [...appShell.matchAll(/const\s+(\w+Understand)\s*=\s*create\w+UnderstandExperience\(customUnderstandHost\)/g)]
+const created = [...appShell.matchAll(/const\s+(\w+Understand)\s*=\s*create\w+UnderstandExperience\(customUnderstandHost(?:,[^)]*)?\)/g)]
   .map((match) => match[1]);
 assert.ok(created.length >= 30, `Expected the complete Understand renderer set; found ${created.length}.`);
 
