@@ -47,6 +47,7 @@ assert.match(memoryCss, /\.memory-lab button:focus-visible/);
 // Narrow-screen contract: one shell, contained scrolling and visible five-mode strip.
 assert.match(shellCss, /@media \(max-width: 900px\)/);
 assert.match(shellCss, /@media \(max-width: 680px\)/);
+assert.match(shellCss, /html,\s*body\s*\{[\s\S]*?overflow:\s*hidden/);
 assert.match(shellCss, /\.activity-stage\s*\{[\s\S]*?overflow:\s*auto/);
 assert.match(shellCss, /@media \(max-width: 680px\)[\s\S]*?\.mode-tab\s*\{[\s\S]*?min-height:\s*46px/);
 assert.match(shellCss, /\.math-placeholder__formula\s*\{[\s\S]*?overflow-wrap:\s*anywhere/);
@@ -67,15 +68,20 @@ assert.match(classwizJs, /\['ArrowLeft', 'ArrowRight', 'Home', 'End'\]/);
 // Drawers move focus in and return it; background becomes inert.
 assert.match(shellJs, /setHelpBackgroundInert\(true\)/);
 assert.match(shellJs, /classWizClose\.focus/);
-assert.match(shellJs, /wordBankSearch\.focus\(\)/);
-assert.match(shellJs, /helpDrawerClose\.focus\(\)/);
-assert.match(shellJs, /topicNavigationClose\.focus\(\)/);
+assert.match(shellJs, /wordBankSearch\.focus\(\{\s*preventScroll:\s*true\s*\}\)/);
+assert.match(shellJs, /helpDrawerClose\.focus\(\{\s*preventScroll:\s*true\s*\}\)/);
+assert.match(shellJs, /topicNavigationClose\.focus\(\{\s*preventScroll:\s*true\s*\}\)/);
 assert.match(shellJs, /if \(restoreFocus\) classWizTrigger\.focus/);
-assert.match(shellJs, /if \(restoreFocus\) helpDrawerTrigger\.focus/);
+assert.match(shellJs, /if \(restoreFocus\) helpDrawerTrigger\.focus\(\{\s*preventScroll:\s*true\s*\}\)/);
+assert.match(shellJs, /topicNavigationToggle\.focus\(\{\s*preventScroll:\s*true\s*\}\)/);
 
-// Definitions must never be hover-only: focus, click and Escape paths all exist.
-assert.match(shellCss, /\.vocabulary-term-wrap:focus-within \.vocabulary-popover/);
+// Definitions use hover on fine pointers, while touch/keyboard activation can explicitly open them and outside interaction dismisses them.
+assert.match(shellCss, /@media \(hover: hover\) and \(pointer: fine\)[\s\S]*?\.vocabulary-term-wrap:hover \.vocabulary-popover/);
+assert.doesNotMatch(shellCss, /\.vocabulary-term-wrap:focus-within \.vocabulary-popover/);
 assert.match(vocabJs, /button\.addEventListener\("click"/);
+assert.match(vocabJs, /event\.detail === 0/);
+assert.match(vocabJs, /document\.addEventListener\("pointerdown", dismissOutside\)/);
+assert.match(vocabJs, /document\.addEventListener\("focusin", dismissOutside\)/);
 assert.match(vocabJs, /event\.key !== "Escape"/);
 assert.match(vocabJs, /aria-expanded/);
 assert.match(vocabJs, /aria-describedby/);
