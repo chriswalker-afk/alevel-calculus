@@ -143,6 +143,11 @@ const topicObjectivesInlineEyebrow = document.querySelector("[data-topic-objecti
 const topicObjectivesInlineHeading = document.querySelector("[data-topic-objectives-inline-heading]");
 const topicObjectivesInlineList = document.querySelector("[data-topic-objectives-inline-list]");
 const topicObjectivesInlineFooter = document.querySelector("[data-topic-objectives-inline-footer]");
+const topicPathway = document.querySelector("[data-topic-pathway]");
+const topicPathwayHeading = document.querySelector("[data-topic-pathway-heading]");
+const topicPathwayNote = document.querySelector("[data-topic-pathway-note]");
+const topicPathwayModeButtons = Array.from(document.querySelectorAll("[data-topic-pathway-mode]"));
+const topicPathwayRevisit = document.querySelector("[data-topic-pathway-revisit]");
 const wordBankTrigger = document.querySelector("[data-word-bank-trigger]");
 const wordBankClose = document.querySelector("[data-word-bank-close]");
 const wordBankScrim = document.querySelector("[data-word-bank-scrim]");
@@ -217,6 +222,10 @@ const required = [
   topicObjectivesInlineHeading,
   topicObjectivesInlineList,
   topicObjectivesInlineFooter,
+  topicPathway,
+  topicPathwayHeading,
+  topicPathwayNote,
+  topicPathwayRevisit,
   wordBankDrawer,
   wordBankTrigger,
   wordBankClose,
@@ -255,7 +264,7 @@ const required = [
   currentTopicBreadcrumb
 ];
 
-if (required.some((element) => !element) || modeTabs.length !== learningModeOrder.length || helpTargetLinks.length !== 3 || wordBankFilterButtons.length !== 4) {
+if (required.some((element) => !element) || modeTabs.length !== learningModeOrder.length || helpTargetLinks.length !== 3 || wordBankFilterButtons.length !== 4 || topicPathwayModeButtons.length !== 4) {
   throw new Error("AppShell is missing one or more required regions, ModeTabs, HelpDrawer targets, Word Bank controls, QuestionShell host, or progress-data controls.");
 }
 
@@ -323,7 +332,7 @@ const numericalIntegrationUnderstand = createNumericalIntegrationUnderstandExper
 const differentialEquationsUnderstand = createDifferentialEquationsUnderstandExperience(activityVisual);
 const calculusModellingUnderstand = createCalculusModellingUnderstandExperience(activityVisual);
 
-const topicRuntime = Object.freeze({
+const baseTopicRuntime = Object.freeze({
   "topic:y12:differentiation:basics": Object.freeze({
     topicId: "topic:y12:differentiation:basics",
     label: "Basics of differentiation",
@@ -487,6 +496,49 @@ const topicRuntime = Object.freeze({
     learningModes: fullCalculusMasteryLearningModes, availableModes: Object.freeze(["ao1","ao2","ao3"]), understandExperience: null, classWiz: false, scopeId: "full-alevel"
   }),
 });
+
+function understandJourneyActivity(runtime, phase) {
+  const [, routeScope, strand, topicSlug] = runtime.topicId.split(":");
+  const goals = phase === "goals";
+  return Object.freeze({
+    activityId: `activity:${routeScope}:${strand}:${topicSlug}:understand:${goals ? "topic-goals" : "next-steps"}`,
+    microSkillId: null,
+    kicker: "Understand",
+    overline: goals ? "Topic goals" : "What next?",
+    title: goals ? `Goals for ${runtime.label}` : "Turn understanding into recall and practice",
+    body: goals
+      ? "Start by seeing what this topic is building towards. You can return to these goals at any time."
+      : "Use the other learning modes to make the ideas secure, fluent and usable in unfamiliar problems.",
+    calloutLabel: goals ? "Use this page" : "Recommended sequence",
+    callout: goals
+      ? "Keep these goals in mind as you explore the Understand pages."
+      : "Memorise → AO1 → AO2 → AO3, returning to Understand whenever an idea or method needs rebuilding.",
+    formula: "",
+    caption: "",
+    understandJourneyPage: phase
+  });
+}
+
+function withUnderstandJourney(runtime) {
+  const understand = runtime.learningModes?.understand;
+  if (!runtime.availableModes?.includes("understand") || !understand?.activities?.length) return runtime;
+  const activities = Object.freeze([
+    understandJourneyActivity(runtime, "goals"),
+    ...understand.activities,
+    understandJourneyActivity(runtime, "pathway")
+  ]);
+  return Object.freeze({
+    ...runtime,
+    learningModes: Object.freeze({
+      ...runtime.learningModes,
+      understand: Object.freeze({ ...understand, activities })
+    })
+  });
+}
+
+const topicRuntime = Object.freeze(Object.fromEntries(
+  Object.entries(baseTopicRuntime).map(([topicId, runtime]) => [topicId, withUnderstandJourney(runtime)])
+));
 
 const activityIndexByTopicMode = new Map(
   Object.values(topicRuntime).flatMap((topic) => learningModeOrder.map((mode) => [`${topic.topicId}|${mode}`, 0]))
@@ -1303,23 +1355,55 @@ function syncTopicGoalsDialog() {
   renderTopicObjectiveList(topicGoalsList, config.objectives);
 }
 
-function syncInlineTopicObjectives() {
-  const config = getTopicObjectiveConfig(currentTopicId);
-  const activities = currentActivities();
-  const isFirstUnderstand = activeMode === "understand" && activityIndex === 0;
-  const isLastUnderstand = activeMode === "understand" && activities.length > 1 && activityIndex === activities.length - 1;
-  const show = Boolean(config && (isFirstUnderstand || isLastUnderstand));
-  topicObjectivesInline.hidden = !show;
-  if (!show) return;
+function firstUnderstandContentIndex() {
+  if (activeMode !== "understand") return 0;
+  const index = currentActivities().findIndex((activity) => !activity.understandJourneyPage);
+  return index < 0 ? 0 : index;
+}
 
-  const recap = isLastUnderstand && !isFirstUnderstand;
-  topicObjectivesInline.dataset.objectivePhase = recap ? "recap" : "intro";
-  topicObjectivesInlineEyebrow.textContent = recap ? "Topic recap" : "Topic goals";
-  topicObjectivesInlineHeading.textContent = recap ? config.recapHeading : config.heading;
-  topicObjectivesInlineFooter.textContent = recap
-    ? "Use these goals to decide what needs one more look before you move into recall and practice."
-    : config.footer;
-  renderTopicObjectiveList(topicObjectivesInlineList, config.objectives);
+function syncUnderstandJourneyPages(activity) {
+  const config = getTopicObjectiveConfig(currentTopicId);
+  const page = activeMode === "understand" ? activity?.understandJourneyPage ?? "activity" : "activity";
+  standardActivityContent.dataset.understandJourneyPage = page;
+
+  const showGoals = Boolean(config && page === "goals");
+  topicObjectivesInline.hidden = !showGoals;
+  if (showGoals) {
+    topicObjectivesInline.dataset.objectivePhase = "intro";
+    topicObjectivesInlineEyebrow.textContent = "Topic goals";
+    topicObjectivesInlineHeading.textContent = config.heading;
+    topicObjectivesInlineFooter.textContent = config.footer;
+    renderTopicObjectiveList(topicObjectivesInlineList, config.objectives);
+  }
+
+  const showPathway = page === "pathway";
+  topicPathway.hidden = !showPathway;
+  if (!showPathway) return;
+
+  const runtime = currentTopicRuntime();
+  topicPathwayHeading.textContent = `You’ve finished Understand for ${runtime.label}`;
+  const followOnModes = ["memorise", "ao1", "ao2", "ao3"].filter((mode) => runtime.availableModes.includes(mode));
+  topicPathwayNote.textContent = followOnModes.length
+    ? "Now make the topic secure: use Memorise first, then AO1, AO2 and AO3. Return to Understand whenever an idea, method or explanation stops feeling clear."
+    : "This foundation topic finishes its guided Understand journey here. Return to these ideas whenever a later calculus topic needs them.";
+
+  for (const button of topicPathwayModeButtons) {
+    const enabled = runtime.availableModes.includes(button.dataset.topicPathwayMode);
+    button.hidden = !enabled;
+    button.disabled = !enabled;
+    const step = button.closest?.("[data-topic-pathway-step]");
+    if (step) step.hidden = !enabled;
+  }
+}
+
+function syncActivityNavigation(activities) {
+  const linearUnderstand = activeMode === "understand";
+  const atStart = activityIndex === 0;
+  const atEnd = activityIndex === activities.length - 1;
+  previousButton.disabled = linearUnderstand && atStart;
+  nextButton.disabled = linearUnderstand && atEnd;
+  previousButton.setAttribute("aria-disabled", previousButton.disabled ? "true" : "false");
+  nextButton.setAttribute("aria-disabled", nextButton.disabled ? "true" : "false");
 }
 
 function openTopicGoals() {
@@ -1347,7 +1431,9 @@ export function wrappedIndex(index, length = currentActivities().length) {
 export function renderActivity(index) {
   const activities = currentActivities();
   if (activities.length === 0) return;
-  activityIndex = wrappedIndex(index, activities.length);
+  activityIndex = activeMode === "understand"
+    ? Math.min(Math.max(Number(index) || 0, 0), activities.length - 1)
+    : wrappedIndex(index, activities.length);
   activityIndexByTopicMode.set(topicModeKey(), activityIndex);
   const activity = activities[activityIndex];
   const position = `${activityIndex + 1} of ${activities.length}`;
@@ -1371,7 +1457,8 @@ export function renderActivity(index) {
   fields.formula.textContent = activity.formula;
   fields.caption.textContent = activity.caption;
   footerPosition.textContent = position;
-  syncInlineTopicObjectives();
+  syncUnderstandJourneyPages(activity);
+  syncActivityNavigation(activities);
 
   const memoryLabView = activeMode === "memorise" ? activity.memoryLabView : null;
   const generatedQuestionSet = generatedQuestionSetForActivity(activity.activityId);
@@ -1588,7 +1675,11 @@ function syncModeTabs({ focusActive = false } = {}) {
 export function selectMode(mode, { focusTab = false } = {}) {
   if (!learningModeOrder.includes(mode) || !currentTopicRuntime().availableModes.includes(mode)) return;
 
-  activityIndexByTopicMode.set(topicModeKey(), activityIndex);
+  const current = currentActivities()[activityIndex];
+  const rememberedIndex = activeMode === "understand" && current?.understandJourneyPage === "pathway"
+    ? firstUnderstandContentIndex()
+    : activityIndex;
+  activityIndexByTopicMode.set(topicModeKey(), rememberedIndex);
   activeMode = mode;
   root.dataset.learningMode = activeMode;
   syncModeTabs({ focusActive: focusTab });
@@ -1640,6 +1731,18 @@ topicGoalsClose.addEventListener("click", closeTopicGoals);
 topicGoalsDialog.addEventListener("close", () => {
   topicGoalsTrigger.setAttribute("aria-expanded", "false");
   topicGoalsTrigger.focus();
+});
+
+for (const button of topicPathwayModeButtons) {
+  button.addEventListener("click", () => {
+    const mode = button.dataset.topicPathwayMode;
+    if (currentTopicRuntime().availableModes.includes(mode)) selectMode(mode, { focusTab: true });
+  });
+}
+topicPathwayRevisit.addEventListener("click", () => {
+  if (activeMode !== "understand") selectMode("understand");
+  renderActivity(firstUnderstandContentIndex());
+  stage.focus();
 });
 
 helpDrawerTrigger.addEventListener("click", openHelpDrawer);
