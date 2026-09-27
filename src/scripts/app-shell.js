@@ -10,12 +10,12 @@ import { activityRouteFromId, createHistoryRouteController } from "./navigation-
 import { renderVocabularyRichText } from "./vocabulary-term.js?v=interactionfix1";
 import { buildWordBankEntries, filterWordBankEntries } from "./word-bank-model.js";
 import { createQuestionShell } from "./question-shell.js?v=auditstep7";
-import { getQuestionPracticeDefinitionForActivity } from "./question-catalogue.js?v=auditstep12";
+import { getQuestionPracticeDefinitionForActivity } from "./question-catalogue.js?v=auditstep13";
 import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner.js";
 import { createQuestionPracticeSession } from "./question-practice-session.js";
 import { createMemoryLab } from "./memory-lab.js";
 import { installMathRendering } from "./math-renderer.js?v=ao1math4";
-import { getMemoryItemsForTopic } from "./memory-content.js?v=auditstep12";
+import { getMemoryItemsForTopic } from "./memory-content.js?v=auditstep13";
 import { getMemoryGamePackForTopic } from "./memory-game-content.js?v=auditstep5";
 import { getMemoryReviewPackForTopic } from "./memory-review-content.js";
 import { createClassWizSupportPanel } from "./classwiz-support-panel.js";
@@ -52,8 +52,8 @@ import { createImplicitDifferentiationUnderstandExperience } from "./implicit-di
 import { implicitDifferentiationLearningModes } from "./implicit-differentiation-activities.js?v=auditstep12";
 import { createTrigIdentitiesInverseUnderstandExperience } from "./trig-identities-inverse-understand.js";
 import { trigIdentitiesInverseLearningModes } from "./trig-identities-inverse-activities.js";
-import { createConcavityInflectionUnderstandExperience } from "./concavity-inflection-understand.js";
-import { concavityInflectionLearningModes } from "./concavity-inflection-activities.js";
+import { createConcavityInflectionUnderstandExperience } from "./concavity-inflection-understand.js?v=auditstep13";
+import { concavityInflectionLearningModes } from "./concavity-inflection-activities.js?v=auditstep13";
 import { createConnectedRatesUnderstandExperience } from "./connected-rates-understand.js";
 import { connectedRatesLearningModes } from "./connected-rates-activities.js";
 import { fullDifferentiationReviewLearningModes } from "./full-differentiation-review-activities.js";
