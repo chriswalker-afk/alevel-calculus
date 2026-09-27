@@ -1,4 +1,5 @@
-import { renderMathElement } from "./math-renderer.js?v=mathnotation1";
+import { renderMathElement } from "./math-renderer.js?v=questionfix1";
+import { formatStudentMathForDisplay } from "./student-math-input.js?v=questionfix1";
 
 const mathToolbar = Object.freeze([
   Object.freeze({ label: "x²", insert: "^2", cursorBack: 0, ariaLabel: "Insert squared power" }),
@@ -32,13 +33,7 @@ function normaliseCriterion(value) {
 }
 
 export function formatMathInputForDisplay(value) {
-  return String(value ?? "")
-    .replace(/sqrt\s*\(/gi, "√(")
-    .replace(/\bpi\b/gi, "π")
-    .replace(/\*/g, "×")
-    .replace(/<=/g, "≤")
-    .replace(/>=/g, "≥")
-    .replace(/!=/g, "≠");
+  return formatStudentMathForDisplay(value);
 }
 
 export function isAo3SelfReviewQuestion(question) {
