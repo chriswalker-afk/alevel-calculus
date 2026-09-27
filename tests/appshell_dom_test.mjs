@@ -511,7 +511,7 @@ globalThis.window = {
 };
 
 const moduleUrl = new URL('../src/scripts/app-shell.js', import.meta.url);
-await import(`${moduleUrl.href}?test=${Date.now()}`);
+const appShellModule = await import(`${moduleUrl.href}?test=${Date.now()}`);
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -813,6 +813,14 @@ listeners.get('memoryReviewMode-rapid:click')();
 assert(memoryReviewModes[1].getAttribute('aria-selected') === 'true', 'Rapid Recall should be selectable without leaving Review');
 listeners.get('memoryReviewMode-diagram:click')();
 assert(memoryReviewModes[2].getAttribute('aria-selected') === 'true', 'Diagram Recall should be selectable without leaving Review');
+
+appShellModule.selectTopic('topic:y12:differentiation:basics', { focusStage: false });
+listeners.get('mode-ao2:click')();
+assert(root.dataset.learningMode === 'ao2', 'Regression setup should put the current topic in AO2');
+appShellModule.selectTopic('topic:y12:differentiation:stationary-points', { focusStage: false });
+assert(root.dataset.learningMode === 'understand', 'Selecting a different topic must reset the learning mode to Understand rather than carrying AO2 across');
+assert(shell.dataset.learningMode === 'understand', 'Shell mode identity must also reset to Understand on a topic change');
+assert(shell.dataset.activityIndex === '0', 'A newly selected topic should begin at the first Understand page');
 
 listeners.get('dataManagementTrigger:click')();
 assert(dataManagementDialog.open === true, 'Data trigger should open the progress-data dialog');
