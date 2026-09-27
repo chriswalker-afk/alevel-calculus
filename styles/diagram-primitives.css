@@ -143,12 +143,17 @@
 @media (max-width: 680px) {
   .diagram-primitives {
     min-height: min(var(--diagram-min-height, 250px), 44vh);
-    aspect-ratio: 4 / 3;
+    aspect-ratio: var(--diagram-aspect-ratio, 16 / 9);
   }
 
-  .diagram-primitives__tick-label { font-size: 18px; }
-  .diagram-primitives__label { font-size: 21px; }
+  .diagram-primitives__tick-label { font-size: 16px; }
+  .diagram-primitives__label { font-size: 18px; }
   .diagram-primitives__slider { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .diagram-primitives__tick-label { font-size: 14px; }
+  .diagram-primitives__label { font-size: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
