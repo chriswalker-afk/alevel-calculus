@@ -141,6 +141,7 @@ export function defineQuestionDefinition(config) {
     selfReviewCriteria: optionalFrozenValue(config.selfReviewCriteria ?? []),
     parameterGenerator,
     promptRenderer,
+    promptSegmentsRenderer: optionalFunction(config.promptSegmentsRenderer, "promptSegmentsRenderer"),
     mathRenderer: optionalFunction(config.mathRenderer, "mathRenderer"),
     responseOptionsRenderer: optionalFunction(config.responseOptionsRenderer, "responseOptionsRenderer"),
     answerChecker,
