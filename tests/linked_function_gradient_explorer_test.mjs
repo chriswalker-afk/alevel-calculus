@@ -58,7 +58,7 @@ const source = fs.readFileSync(path.join(root, "src/scripts/linked-function-grad
 const css = fs.readFileSync(path.join(root, "src/styles/linked-function-gradient-explorer.css"), "utf8");
 const demo = fs.readFileSync(path.join(root, "src/linked-function-gradient-explorer-demo.html"), "utf8");
 
-assert.match(source, /from "\.\/diagram-primitives\.js"/, "Explorer must compose DiagramPrimitives.");
+assert.match(source, /from "\.\/diagram-primitives\.js(?:\?[^"]*)?"/, "Explorer must compose DiagramPrimitives.");
 assert.doesNotMatch(source, /createElementNS|<svg|canvas/i, "Explorer must not introduce a second SVG/canvas primitive system.");
 assert.match(source, /draggablePoint\(/, "Function point must use the shared accessible draggable primitive.");
 assert.match(source, /tangent\(/, "Tangent must use the shared tangent primitive.");
