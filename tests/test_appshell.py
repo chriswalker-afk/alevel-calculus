@@ -161,6 +161,7 @@ required_attrs = {
     "data-reset-progress",
     "data-confirm-reset",
     "data-standard-activity-content",
+    "data-custom-understand-host",
     "data-question-shell",
     "data-question-shell-input",
     "data-question-shell-choice",
@@ -231,6 +232,9 @@ assert "./styles/tokens.css" in parser.stylesheets
 assert "./styles/app-shell.css" in parser.stylesheets
 assert "./styles/question-shell.css" in parser.stylesheets
 assert "./styles/memory-lab.css" in parser.stylesheets
+assert any("family-of-curves-explorer.css" in sheet for sheet in parser.stylesheets)
+assert any("area-explorer.css" in sheet for sheet in parser.stylesheets)
+assert any("rectangle-sum-explorer.css" in sheet for sheet in parser.stylesheets)
 assert "./scripts/app-shell.js" in parser.scripts
 
 expected_modes = ["understand", "memorise", "ao1", "ao2", "ao3"]
@@ -311,6 +315,9 @@ assert 'Topic goals' in html
 assert 'In this topic you will learn to…' in html
 assert 'data-topic-objectives-inline' in html and 'data-topic-goals-dialog' in html
 assert 'getTopicObjectiveConfig' in js and 'syncUnderstandJourneyPages' in js and 'understandJourneyActivity' in js
+assert 'const understandExperiences = Object.freeze([' in js
+assert 'currentTopicRuntime().understandExperience' in js
+assert 'data-custom-understand-host' in html
 assert 'topicObjectiveCount' in topic_objectives_data and 'topicObjectiveCount = Object.keys(topicObjectiveConfigs).length' in topic_objectives_data
 assert topic_objectives_data.count('"topic:') == 33, "Every registered topic should have a student-facing objective set"
 assert '.topic-objectives-card--inline' in css and '.topic-pathway-card' in css and '.topic-goals-dialog' in css
