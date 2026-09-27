@@ -21,7 +21,7 @@ for (const renderer of created) {
 }
 
 assert.match(appShell, /currentTopicRuntime\(\)\.understandExperience/);
-assert.match(appShell, /understandExperience\.supports\?\.\(activity\.activityId\)/);
+assert.match(appShell, /understandExperience\?\.supports\?\.\(activity\.activityId\)/);
 assert.match(appShell, /understandExperience\.render\(activity\.activityId\)/);
 assert.doesNotMatch(appShell, /const customBasicsUnderstand/);
 
