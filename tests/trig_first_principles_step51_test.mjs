@@ -33,5 +33,5 @@ const app=fs.readFileSync(new URL('../src/scripts/app-shell.js',import.meta.url)
 const understand=fs.readFileSync(new URL('../src/scripts/trig-first-principles-understand.js',import.meta.url),'utf8');
 assert.match(html,/topic:y13:differentiation:trig-first-principles/);assert.match(html,/topic-index">19/);assert.match(html,/trig-first-principles-understand\.css/);
 assert.match(app,/trigFirstPrinciplesLearningModes/);assert.match(app,/classWiz: true/);
-assert.match(understand,/new DiagramPrimitives/);assert.match(understand,/Unit circle/);assert.match(understand,/lim h→0 sin h\/h = 1/);assert.match(understand,/\(cos h−1\)\/h→0/);assert.match(understand,/renderEquationSteps/);assert.match(understand,/RADIAN MODE/);
+assert.match(understand,/new DiagramPrimitives/);assert.match(understand,/Unit circle/);assert.match(understand,/lim_\(h→0\) \(sin h\)\/h = 1/);assert.match(understand,/\(cos h−1\)\/h→0/);assert.match(understand,/renderEquationSteps/);assert.match(understand,/RADIAN MODE/);
 console.log('PASS Step 51 trig first-principles small-angle evidence, proof reconstruction, Memory Lab, ClassWiz evidence and AO1-AO3 contracts');
