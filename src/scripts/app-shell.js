@@ -15,8 +15,8 @@ import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner
 import { createQuestionPracticeSession } from "./question-practice-session.js";
 import { createMemoryLab } from "./memory-lab.js";
 import { installMathRendering } from "./math-renderer.js?v=ao1math4";
-import { getMemoryItemsForTopic } from "./memory-content.js?v=auditstep4";
-import { getMemoryGamePackForTopic } from "./memory-game-content.js?v=auditstep4";
+import { getMemoryItemsForTopic } from "./memory-content.js?v=auditstep5";
+import { getMemoryGamePackForTopic } from "./memory-game-content.js?v=auditstep5";
 import { getMemoryReviewPackForTopic } from "./memory-review-content.js";
 import { createClassWizSupportPanel } from "./classwiz-support-panel.js";
 import { createBasicsUnderstandExperience } from "./basics-understand.js?v=auditstep3";
@@ -30,8 +30,8 @@ import { createStationaryPointsUnderstandExperience } from "./stationary-points-
 import { stationaryPointsLearningModes } from "./stationary-points-activities.js";
 import { createIncreasingDecreasingUnderstandExperience } from "./increasing-decreasing-understand.js";
 import { increasingDecreasingLearningModes } from "./increasing-decreasing-activities.js";
-import { createIntegrationIntroUnderstandExperience } from "./integration-intro-understand.js";
-import { integrationIntroLearningModes } from "./integration-intro-activities.js";
+import { createIntegrationIntroUnderstandExperience } from "./integration-intro-understand.js?v=auditstep5";
+import { integrationIntroLearningModes } from "./integration-intro-activities.js?v=auditstep5";
 import { createDefiniteIndefiniteUnderstandExperience } from "./definite-indefinite-understand.js";
 import { definiteIndefiniteLearningModes } from "./definite-indefinite-activities.js";
 import { createIntegrationAreaUnderstandExperience } from "./integration-area-understand.js?v=auditstep1";

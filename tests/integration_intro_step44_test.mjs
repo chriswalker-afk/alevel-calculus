@@ -26,8 +26,21 @@ assert.deepEqual(integratePowerTerm(6,2),{supported:true,coefficient:2,power:3})
 assert.equal(integratePowerTerm(1,-1).supported,false,'n=-1 must remain an explicit exception');
 const A={derivative:x=>2*x}; const B={derivative:x=>2*x};
 assert(sameDerivativeUpToConstant(A,B));
-assert(getMemoryItemsForTopic(topicId).length>=12);
-assert(getMemoryGamePackForTopic(topicId));
+const memoryItems=getMemoryItemsForTopic(topicId);
+assert(memoryItems.length>=16);
+const byId=new Map(memoryItems.map(item=>[item.id,item]));
+assert.equal(byId.get('memory-item:y12:integration:introduction:a-root-x')?.flashcard.back,'(2a/3)x³ᐟ² + C','a√x must be an explicit Year 12 recall target.');
+assert.equal(byId.get('memory-item:y12:integration:introduction:a-over-root-x')?.flashcard.back,'2a√x + C','a/√x must be an explicit Year 12 recall target.');
+assert.equal(byId.get('memory-item:y12:integration:introduction:a-over-x2')?.flashcard.back,'−a/x + C','a/x² must be an explicit Year 12 recall target.');
+assert.equal(byId.get('memory-item:y12:integration:introduction:a-over-xn')?.learn.notation,'∫a/xⁿ dx = a/(1−n)x¹⁻ⁿ + C, n≥2','Suitable reciprocal powers must have an explicit remembered integration pattern.');
+assert.match(byId.get('memory-item:y12:integration:introduction:exception')?.learn.statement ?? '',/1\/x case is handled later with logarithms/,'The n=-1 exception must be signposted to later logarithm work rather than forced through the power rule.');
+assert(!memoryItems.some(item=>item.id.includes('one-over-x')||item.learn?.notation==='∫1/x dx = ln|x| + C'),'The Year 12 introduction must not pull the logarithmic reciprocal integral into the power-rule recall set.');
+const gamePack=getMemoryGamePackForTopic(topicId);
+assert(gamePack);
+assert(gamePack.impostor.options.some(option=>option.label==='∫√x dx = (2/3)x³ᐟ² + C'),'Memory games must retrieve an explicit root integral.');
+assert(gamePack.impostor.options.some(option=>option.label==='∫3/x² dx = −3/x + C'),'Memory games must retrieve an explicit reciprocal-power integral.');
+assert.equal(gamePack.impostor.answerId,'wrong');
+assert.match(gamePack.impostor.successMessage,/n=−1 exception/);
 assert(getMemoryReviewPackForTopic(topicId));
 const runner=createGeneratorRunner({debugSeed:'step44'});
 for(const mode of ['ao1','ao2','ao3']){
@@ -42,6 +55,11 @@ const understand=readFileSync(new URL('../src/scripts/integration-intro-understa
 assert.match(understand,/createFamilyOfCurvesExplorer/,'Understand must reuse FamilyOfCurvesExplorer');
 assert.match(understand,/shape of a wave doesn't tell us the height of the water/);
 assert.match(understand,/n ≠ −1/);
+assert.match(understand,/∫a√x dx = \(2a\/3\)x³ᐟ² \+ C/,'Understand must surface the common root result explicitly.');
+assert.match(understand,/∫a\/√x dx = 2a√x \+ C/,'Understand must surface the reciprocal-root result explicitly.');
+assert.match(understand,/∫a\/x² dx = −a\/x \+ C/,'Understand must surface a suitable reciprocal-power result explicitly.');
+assert.match(understand,/x⁻¹ = 1\/x is the n=−1 exception: do not force the power rule/,'Understand must explicitly protect the n=-1 exception.');
+assert.match(understand,/Integrate each term → recombine → add one \+C/,'Term-by-term integration must finish with exactly one final +C.');
 const app=readFileSync(new URL('../src/scripts/app-shell.js',import.meta.url),'utf8');
 assert.match(app,/createIntegrationIntroUnderstandExperience/);
 assert.match(app,/integrationIntroMemoryLabHost/);
