@@ -28,6 +28,21 @@ assert.deepEqual(
 const prose = tokeniseMathExpression("Differentiate with respect to x.");
 assert.deepEqual(prose, [{ type: "text", value: "Differentiate with respect to x." }]);
 
+const firstPrinciples = tokeniseMathExpression("f′(x)=lim_(h→0) [f(x+h)−f(x)]/h");
+const differenceQuotient = firstPrinciples.find((token) => token.type === "fraction");
+assert.ok(differenceQuotient);
+assert.equal(differenceQuotient.numerator, "f(x+h)−f(x)");
+assert.equal(differenceQuotient.denominator, "h");
+
+const nestedDerivativeRatio = tokeniseMathExpression("(dy/dt)/(dx/dt)");
+assert.equal(nestedDerivativeRatio.length, 1);
+assert.equal(nestedDerivativeRatio[0].type, "fraction");
+assert.equal(nestedDerivativeRatio[0].numerator, "dy/dt");
+assert.equal(nestedDerivativeRatio[0].denominator, "dx/dt");
+
+const slashProse = tokeniseMathExpression("substitution/parts/trig");
+assert.deepEqual(slashProse, [{ type: "text", value: "substitution/parts/trig" }]);
+
 console.log("Math renderer tokenisation regression passed.");
 
 
