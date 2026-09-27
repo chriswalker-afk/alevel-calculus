@@ -6,7 +6,7 @@
 
 .linked-gradient-explorer__controls {
   display: grid;
-  grid-template-columns: minmax(210px, 1fr) auto minmax(260px, auto);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
   gap: var(--space-3, 0.75rem);
   align-items: end;
   padding: var(--space-3, 0.75rem);
@@ -84,7 +84,7 @@
 
 .linked-gradient-explorer__graphs {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: var(--space-3, 0.75rem);
   align-items: stretch;
 }
