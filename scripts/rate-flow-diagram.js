@@ -371,7 +371,7 @@ export class RateFlowDiagram {
   #renderRateControls() {
     this.ratePanel.replaceChildren();
     const heading = createElement(this.document, "h3"); heading.textContent = "2. Orient the derivatives";
-    const help = createElement(this.document, "p", "rate-flow__help"); help.textContent = "For an arrow x → y, the matching rate is dy/dx, not dx/dy.";
+    const help = createElement(this.document, "p", "rate-flow__help"); help.textContent = "For an arrow x → y, the matching rate is dy/dx, not dx/dy."; help.setAttribute("data-math-render", "");
     const rows = createElement(this.document, "div", "rate-flow__rate-list");
     for (const relation of this.definition.relations) {
       rows.append(this.#rateChoiceRow({
@@ -411,6 +411,7 @@ export class RateFlowDiagram {
     for (const candidate of ["forward", "reverse"]) {
       const button = createElement(this.document, "button", "rate-flow__choice"); button.type = "button";
       button.textContent = derivativeLabel(this.definition, from, to, candidate);
+      button.setAttribute("data-math-render", "");
       button.setAttribute("aria-pressed", String(orientation === candidate));
       const listener = () => onSelect(candidate); button.addEventListener("click", listener, { once: true });
       choices.append(button);
@@ -422,7 +423,7 @@ export class RateFlowDiagram {
   #renderTarget() {
     this.targetPanel.replaceChildren();
     const badge = createElement(this.document, "span", "rate-flow__status rate-flow__status--unknown"); badge.textContent = `${RATE_STATUSES.unknown.symbol} ${RATE_STATUSES.unknown.label}`;
-    const rate = createElement(this.document, "strong"); rate.textContent = derivativeLabel(this.definition, this.definition.targetRate.from, this.definition.targetRate.to, this.state.targetOrientation);
+    const rate = createElement(this.document, "strong"); rate.textContent = derivativeLabel(this.definition, this.definition.targetRate.from, this.definition.targetRate.to, this.state.targetOrientation); rate.setAttribute("data-math-render", "");
     const hint = createElement(this.document, "span"); hint.textContent = "Chain rule target — build it from the direct arrows before substituting values.";
     this.targetPanel.append(badge, rate, hint);
   }
