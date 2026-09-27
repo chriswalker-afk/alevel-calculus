@@ -1,4 +1,4 @@
-import { ParametricCurveTracer, PARAMETRIC_CURVES, calculateCoordinateRanges } from './parametric-curve-tracer.js?v=understand1';
+import { ParametricCurveTracer, PARAMETRIC_CURVES, calculateCoordinateRanges } from './parametric-curve-tracer.js?v=understand1?v=understand1';
 import { renderEquationSteps } from './equation-step-renderer.js';
 const IDS=new Set(['activity:y13:differentiation:parametric-differentiation:understand:trace-curve','activity:y13:differentiation:parametric-differentiation:understand:restrict-domain','activity:y13:differentiation:parametric-differentiation:understand:eliminate-parameter','activity:y13:differentiation:parametric-differentiation:understand:derive-gradient','activity:y13:differentiation:parametric-differentiation:understand:gradient-view']);
 function el(d,t,c='',x=''){const n=d.createElement(t);if(c)n.className=c;if(x)n.textContent=x;return n;}
