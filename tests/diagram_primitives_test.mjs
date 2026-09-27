@@ -36,6 +36,9 @@ assert.ok(source.includes('addEventListener("pointerdown"'), "draggable handles 
 assert.ok(source.includes('addEventListener("keydown"'), "draggable handles need keyboard interaction");
 assert.ok(source.includes('role: "slider"'), "draggable handles need an accessible value role");
 assert.ok(source.includes("ResizeObserver"), "responsive canvas sizing should observe its host");
+assert.match(source, /function parseAspectRatio\(/, "DiagramPrimitives should derive its internal viewBox from the requested aspect ratio.");
+assert.match(source, /this\.height = Math\.round\(this\.width \* aspectHeight \/ aspectWidth\)/, "The SVG viewBox should match the configured aspect ratio.");
+assert.match(source, /preserveAspectRatio: "xMidYMid meet"/, "Responsive hosts must not stretch the mathematical SVG.");
 
 const demo = fs.readFileSync(new URL("../src/diagram-primitives-demo.html", import.meta.url), "utf8");
 assert.match(demo, /data-diagram-demo/);
