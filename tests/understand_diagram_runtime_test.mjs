@@ -39,9 +39,12 @@ const experiences = [
   "calculusModellingUnderstand"
 ];
 
-assert.match(appShell, /const understandExperiences = Object\.freeze\(\[/);
+const poolMatch = appShell.match(/const understandExperiences = Object\.freeze\(\[([\s\S]*?)\]\);/);
+assert.ok(poolMatch, "Shared Understand experience pool must exist.");
+const pool = poolMatch[1];
+assert.equal(experiences.length, 30, "The calculus site should expose 30 Understand experiences.");
 for (const experience of experiences) {
-  assert.ok(appShell.includes(experience), `Shared Understand dispatch is missing ${experience}.`);
+  assert.ok(pool.includes(experience), `Shared Understand dispatch pool is missing ${experience}.`);
 }
 assert.match(appShell, /currentTopicRuntime\(\)\.understandExperience/);
 assert.match(appShell, /understandExperience\.render\(activity\.activityId\)/);
