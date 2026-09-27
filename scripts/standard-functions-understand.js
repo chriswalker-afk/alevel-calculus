@@ -1,4 +1,4 @@
-import { LinkedFunctionGradientExplorer, STANDARD_FUNCTIONS } from './linked-function-gradient-explorer.js?v=understand1';
+import { LinkedFunctionGradientExplorer, STANDARD_FUNCTIONS } from './linked-function-gradient-explorer.js?v=understand1?v=understand1';
 const IDS=new Set(['activity:y13:differentiation:standard-functions:understand:graph-discovery','activity:y13:differentiation:standard-functions:understand:scaled-functions','activity:y13:differentiation:standard-functions:understand:mixed-comparison']);
 function el(d,t,c='',x=''){const n=d.createElement(t);if(c)n.className=c;if(x)n.textContent=x;return n;}
 export class StandardFunctionsUnderstandExperience{
