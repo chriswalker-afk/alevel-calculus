@@ -12,6 +12,69 @@ const COMPOSITES=Object.freeze([
  {e:'e^(2x−1)',inside:'2x−1',outside:'eᵘ',insideChoices:['2x−1','2x','e^(2x−1)'],outsideChoices:['eᵘ','2u−1','u−1']},
  {e:'ln(1+x²)',inside:'1+x²',outside:'ln u',insideChoices:['1+x²','x²','ln(1+x²)'],outsideChoices:['ln u','1+u²','u²']}
 ]);
+export const RULE_WORKED_EXAMPLES=Object.freeze({
+ product:Object.freeze({
+  label:'Product rule',
+  example:'y = x² sin x',
+  identity:'u = x², v = sin x; u′ = 2x, v′ = cos x',
+  cue:'Differentiate the first, leave the second; then vice versa; add.',
+  skeleton:'y′ = [first term] + [second term]',
+  slots:Object.freeze([
+   Object.freeze({id:'product-first',label:'First term',correct:'(2x)(sin x)',options:Object.freeze(['(2x)(sin x)','(x²)(cos x)','(2x)(cos x)'])}),
+   Object.freeze({id:'product-second',label:'Second term',correct:'(x²)(cos x)',options:Object.freeze(['(x²)(cos x)','(2x)(sin x)','(x²)(sin x)'])})
+  ]),
+  roles:Object.freeze(['first','second']),
+  steps:Object.freeze([
+   Object.freeze({id:'product-rule',kind:'working',label:'Rule assembled',expression:"y′ = u′v + uv′",explanation:'Differentiate the first, leave the second; then vice versa; add.'}),
+   Object.freeze({id:'product-substitute',kind:'working',label:'Substitute the differentiated pieces',expression:'y′ = (2x)(sin x) + (x²)(cos x)',explanation:'Each term differentiates one factor and leaves the other unchanged.'}),
+   Object.freeze({id:'product-complete',kind:'result',label:'Completed derivative',expression:'y′ = 2x sin x + x² cos x',explanation:'Both product-rule terms are present.'})
+  ]),
+  structures:Object.freeze({
+   'product-rule':Object.freeze({prefix:"y′ = ",parts:Object.freeze([{text:"u′",role:'first'},{text:'v',role:'second'},{text:' + '},{text:'u',role:'first'},{text:"v′",role:'second'}])})
+  })
+ }),
+ quotient:Object.freeze({
+  label:'Quotient rule',
+  example:'y = (x² + 1)/(x + 1)',
+  identity:'u = x² + 1, v = x + 1; u′ = 2x, v′ = 1',
+  cue:'Fix u and v first. The v in the denominator is the v that begins the numerator, and that same v appears squared in the denominator. Keep the subtraction order v u′ − u v′.',
+  skeleton:'y′ = ([first numerator term] − [second numerator term]) / [denominator]',
+  slots:Object.freeze([
+   Object.freeze({id:'quotient-first',label:'First numerator term',correct:'(x+1)(2x)',options:Object.freeze(['(x+1)(2x)','(x²+1)(1)','(x²+1)(2x)'])}),
+   Object.freeze({id:'quotient-second',label:'Second numerator term',correct:'(x²+1)(1)',options:Object.freeze(['(x²+1)(1)','(x+1)(2x)','(x+1)(1)'])}),
+   Object.freeze({id:'quotient-denominator',label:'Denominator',correct:'(x+1)²',options:Object.freeze(['(x+1)²','x+1','(x²+1)²'])})
+  ]),
+  roles:Object.freeze(['first','second']),
+  steps:Object.freeze([
+   Object.freeze({id:'quotient-rule',kind:'working',label:'Rule assembled',expression:"y′ = (vu′ − uv′)/v²",explanation:'The denominator function v begins the numerator; subtraction stays v u′ − u v′; the denominator is v².'}),
+   Object.freeze({id:'quotient-substitute',kind:'working',label:'Substitute the differentiated pieces',expression:'y′ = [(x+1)(2x) − (x²+1)(1)]/(x+1)²',explanation:'The positional cue keeps the numerator order and denominator square fixed.'}),
+   Object.freeze({id:'quotient-complete',kind:'result',label:'Completed derivative',expression:'y′ = (x² + 2x − 1)/(x+1)²',explanation:'Only simplify after the quotient-rule structure is secure.'})
+  ]),
+  structures:Object.freeze({
+   'quotient-rule':Object.freeze({prefix:"y′ = [",parts:Object.freeze([{text:'v',role:'second'},{text:"u′",role:'first'},{text:' − '},{text:'u',role:'first'},{text:"v′",role:'second'},{text:'] / '},{text:'v²',role:'second'}])})
+  })
+ }),
+ chain:Object.freeze({
+  label:'Chain rule',
+  example:'y = sin(3x² + 1)',
+  identity:'inside = 3x² + 1; outside = sin u; inside derivative = 6x',
+  cue:'Identify inside/outside. Differentiate the outside while leaving the inside in place, then multiply by the inside derivative.',
+  skeleton:'y′ = [outside derivative, inside left in place] × [inside derivative]',
+  slots:Object.freeze([
+   Object.freeze({id:'chain-outer',label:'Outside derivative with inside left in place',correct:'cos(3x²+1)',options:Object.freeze(['cos(3x²+1)','cos x','sin(3x²+1)'])}),
+   Object.freeze({id:'chain-inner',label:'Inside derivative',correct:'6x',options:Object.freeze(['6x','3x²+1','3x'])})
+  ]),
+  roles:Object.freeze(['outer','inner']),
+  steps:Object.freeze([
+   Object.freeze({id:'chain-rule',kind:'working',label:'Rule assembled',expression:"dy/dx = f′(g(x)) · g′(x)",explanation:'Differentiate the outside while leaving the inside in place, then multiply by the inside derivative.'}),
+   Object.freeze({id:'chain-substitute',kind:'working',label:'Substitute the differentiated pieces',expression:'y′ = cos(3x²+1) · 6x',explanation:'The inside expression remains inside cos while the factor 6x is multiplied afterwards.'}),
+   Object.freeze({id:'chain-complete',kind:'result',label:'Completed derivative',expression:'y′ = 6x cos(3x²+1)',explanation:'Outside derivative × inside derivative.'})
+  ]),
+  structures:Object.freeze({
+   'chain-rule':Object.freeze({prefix:'dy/dx = ',parts:Object.freeze([{text:"f′(",role:'outer'},{text:'g(x)',role:'inner'},{text:')',role:'outer'},{text:' · '},{text:"g′(x)",role:'inner'}])})
+  })
+ })
+});
 export class ProductQuotientChainUnderstandExperience{
  constructor(host){if(!host)throw new Error('ProductQuotientChainUnderstandExperience requires a host.');this.host=host;this.document=host.ownerDocument||document;}
  supports(id){return IDS.has(id);} destroy(){this.host.replaceChildren();this.host.classList.remove('pqc');}
@@ -91,7 +154,100 @@ export class ProductQuotientChainUnderstandExperience{
   };
   paint();
  }
- render_rule_application(){const p=this.panel('Formal rules: keep each function attached to its identity','Switch rules. The canonical equation-step renderer owns the lines; semantic labels and colours decorate the same function parts on every line.');let kind='product';const controls=el(this.document,'div','pqc__choices');const work=el(this.document,'div','pqc__work');['product','quotient','chain'].forEach(k=>controls.append(button(this.document,k[0].toUpperCase()+k.slice(1),()=>{kind=k;draw();})));p.append(controls,work);const draw=()=>{work.replaceChildren();let roles,steps,structures;if(kind==='product'){roles=['first','second'];steps=[{id:'product-original',kind:'working',label:'Recognise the two factors',expression:'y = u(x) · v(x)',explanation:'Keep both function identities visible.'},{id:'product-rule',kind:'result',label:'Differentiate each factor in turn',expression:"y′ = u′v + uv′",explanation:'Differentiate the first, leave the second; then vice versa; add.'}];structures={'product-original':{prefix:'y = ',parts:[{text:'u(x)',role:'first'},{text:' · '},{text:'v(x)',role:'second'}]},'product-rule':{prefix:"y′ = ",parts:[{text:"u′",role:'first'},{text:'v',role:'second'},{text:' + '},{text:'u',role:'first'},{text:"v′",role:'second'}]}};}else if(kind==='quotient'){roles=['first','second'];steps=[{id:'quotient-original',kind:'working',label:'Fix u and v before differentiating',expression:'y = u/v',explanation:'The order of u and v matters.'},{id:'quotient-rule',kind:'result',label:'Preserve the numerator order',expression:"y′ = (vu′ − uv′)/v²",explanation:'v begins the numerator; subtraction stays v·u′ − u·v′; the denominator is v².'}];structures={'quotient-original':{prefix:'y = ',parts:[{text:'u',role:'first'},{text:' / '},{text:'v',role:'second'}]},'quotient-rule':{prefix:"y′ = [",parts:[{text:'v',role:'second'},{text:"u′",role:'first'},{text:' − '},{text:'u',role:'first'},{text:"v′",role:'second'},{text:'] / '},{text:'v²',role:'second'}]}};}else{roles=['outer','inner'];steps=[{id:'chain-original',kind:'working',label:'Identify inside and outside',expression:'y = f(g(x))',explanation:'g(x) is evaluated first; f is applied second.'},{id:'chain-rule',kind:'result',label:'Differentiate outside, then multiply by inside derivative',expression:"dy/dx = f′(g(x)) · g′(x)",explanation:'Leave the inside in place while differentiating the outside.'},{id:'chain-leibniz',kind:'reasoning',label:'Leibniz structure',expression:'dy/dx = dy/du · du/dx',explanation:'The product records the two linked rates; this is the justification, not fraction cancellation.'}];structures={'chain-original':{prefix:'y = ',parts:[{text:'f(',role:'outer'},{text:'g(x)',role:'inner'},{text:')',role:'outer'}]},'chain-rule':{prefix:'dy/dx = ',parts:[{text:"f′(",role:'outer'},{text:'g(x)',role:'inner'},{text:')',role:'outer'},{text:' · '},{text:"g′(x)",role:'inner'}]},'chain-leibniz':{prefix:'dy/dx = ',parts:[{text:'dy/du',role:'outer'},{text:' · '},{text:'du/dx',role:'inner'}]}};}work.append(structureLegend(this.document,roles));const host=el(this.document,'div','pqc__steps');work.append(host);renderEquationSteps(host,steps,{decorateExpression:(node,row)=>applyStructuredExpression(node,structures[row.id])});};draw();}
+ render_rule_application(){
+  const p=this.panel('Build each rule before the completed derivative is revealed','Choose a rule, then select the correct differentiated pieces for each slot. The finished derivative stays hidden until the structure is assembled correctly.');
+  let kind='product';
+  const completed=new Set();
+  const tabs=el(this.document,'div','pqc__choices pqc__rule-tabs');
+  const work=el(this.document,'div','pqc__work pqc__rule-worked');
+  const tabButtons=new Map();
+  const selectRule=(next)=>{
+   kind=next;
+   for(const [key,b] of tabButtons){const on=key===kind;b.classList.toggle('is-selected',on);b.setAttribute('aria-pressed',String(on));}
+   draw();
+  };
+  for(const key of ['product','quotient','chain']){
+   const b=button(this.document,RULE_WORKED_EXAMPLES[key].label,()=>selectRule(key));
+   b.setAttribute('aria-pressed','false');
+   tabButtons.set(key,b);
+   tabs.append(b);
+  }
+  p.append(tabs,work);
+
+  const draw=()=>{
+   const cfg=RULE_WORKED_EXAMPLES[kind];
+   work.replaceChildren();
+   const heading=el(this.document,'div','pqc__worked-heading');
+   heading.append(el(this.document,'span','pqc__worked-rule',cfg.label),el(this.document,'div','pqc__expression pqc__worked-example',cfg.example),el(this.document,'p','pqc__worked-identity',cfg.identity));
+   const cue=el(this.document,'div','pqc__rule-cue');
+   cue.append(el(this.document,'strong','','Quick method'),el(this.document,'span','',cfg.cue));
+   const skeleton=el(this.document,'div','pqc__assembly-skeleton',cfg.skeleton);
+   skeleton.setAttribute('aria-label',`${cfg.label} formula with missing pieces`);
+   const assembly=el(this.document,'div','pqc__rule-assembly');
+   assembly.dataset.ruleAssembly=kind;
+   const selections={};
+   const status=el(this.document,'p','pqc__status');
+   status.setAttribute('role','status');
+   status.setAttribute('aria-live','polite');
+   const check=button(this.document,'Check assembled rule',()=>checkAssembly());
+   check.disabled=true;
+   const reveal=el(this.document,'div','pqc__rule-reveal');
+   reveal.hidden=true;
+
+   for(const slot of cfg.slots){
+    const group=el(this.document,'div','pqc__assembly-slot');
+    group.dataset.slotId=slot.id;
+    group.append(el(this.document,'strong','',slot.label));
+    const choices=el(this.document,'div','pqc__builder-choices');
+    for(const value of slot.options){
+     const option=button(this.document,value,()=>{
+      selections[slot.id]=value;
+      for(const candidate of choices.querySelectorAll('button')){const on=candidate===option;candidate.classList.toggle('is-selected',on);candidate.setAttribute('aria-pressed',String(on));}
+      check.disabled=cfg.slots.some(item=>!selections[item.id]);
+      reveal.hidden=true;
+      reveal.replaceChildren();
+      status.textContent='Piece selected. Complete every slot, then check the structure.';
+     });
+     option.setAttribute('aria-pressed','false');
+     choices.append(option);
+    }
+    group.append(choices);
+    assembly.append(group);
+   }
+
+   const checkAssembly=()=>{
+    const wrong=cfg.slots.filter(slot=>selections[slot.id]!==slot.correct);
+    if(wrong.length){
+     if(kind==='quotient'){
+      const reversed=selections['quotient-first']==='(x²+1)(1)'&&selections['quotient-second']==='(x+1)(2x)';
+      if(reversed){status.textContent='The quotient numerator order is reversed. Fix u and v: denominator v must begin the numerator as v u′, then subtract u v′.';return;}
+      if(selections['quotient-denominator']!=='(x+1)²'){status.textContent='Check the denominator: the same v=x+1 is squared below, so the denominator must be (x+1)².';return;}
+      status.textContent='Keep the positional cue visible: v u′ − u v′ over v². Check which differentiated piece belongs in each numerator slot.';
+      return;
+     }
+     if(kind==='product'){status.textContent='Use both product terms: differentiate the first and leave the second, then differentiate the second and leave the first.';return;}
+     status.textContent='Keep the inside expression in place while differentiating the outside, then multiply by the derivative of the inside.';
+     return;
+    }
+    completed.add(kind);
+    status.textContent=`Correct — ${cfg.label} assembled. The completed derivative is now revealed.`;
+    const tab=tabButtons.get(kind);
+    if(tab&&!tab.textContent.endsWith(' ✓'))tab.textContent=`${cfg.label} ✓`;
+    reveal.hidden=false;
+    const legend=structureLegend(this.document,cfg.roles);
+    const stepsHost=el(this.document,'div','pqc__steps');
+    reveal.append(legend,stepsHost);
+    renderEquationSteps(stepsHost,cfg.steps,{decorateExpression:(node,row)=>{const structure=cfg.structures[row.id];if(structure)applyStructuredExpression(node,structure);}});
+   };
+
+   const actions=el(this.document,'div','pqc__choices');
+   actions.append(check);
+   work.append(heading,cue,skeleton,assembly,actions,status,reveal);
+   status.textContent=completed.has(kind)?'Rebuild the rule if you want another retrieval attempt. The completed derivative remains hidden until you check a correct assembly.':'Select one piece for every slot before checking.';
+  };
+
+  selectRule('product');
+ }
  render_nested_mixtures(){const p=this.panel('Mixed structures: peel from the outside in','For each example, identify the outer structure first, then inspect each part for another rule. No differentiation is required yet.');const examples=[['(x²+1)e^(3x)','Outside: product','First factor: standard/power rule · Second factor: composite → chain rule'],['sin(x²+1)/(x+3)','Outside: quotient','Numerator: composite → chain rule · Denominator: standard/power rule'],['[ln(2x+1)]³','Outside: composite','Outer: cube · Inner: ln(2x+1), which itself contains another composite structure']];const grid=el(this.document,'div','pqc__nested-grid');for(const [e,a,b] of examples){const c=el(this.document,'article','pqc__nested-card');c.append(el(this.document,'div','pqc__expression',e),el(this.document,'strong','',a),el(this.document,'p','',b));grid.append(c);}p.append(grid,el(this.document,'div','pqc__takeaway','Rule-choice habit: name the outer structure first. Then inspect the pieces. A mixture can require product/quotient and chain rules in the same derivative.'));}
 }
 export function createProductQuotientChainUnderstandExperience(host){return new ProductQuotientChainUnderstandExperience(host);}
