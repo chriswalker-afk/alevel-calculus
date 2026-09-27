@@ -94,6 +94,7 @@ node tests/original_prompt_audit_step10_test.mjs
 node tests/original_prompt_audit_step11_test.mjs
 node tests/original_prompt_audit_step12_test.mjs
 node tests/original_prompt_audit_step13_test.mjs
+node tests/original_prompt_audit_step14_test.mjs
 
 node tests/parametric_differentiation_step54_test.mjs
 
