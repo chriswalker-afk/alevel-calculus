@@ -2,7 +2,7 @@
   position: relative;
   width: 100%;
   min-height: min(var(--diagram-min-height, 280px), 52vh);
-  aspect-ratio: var(--diagram-aspect-ratio, 16 / 9);
+  aspect-ratio: var(--diagram-aspect-ratio, 5 / 3);
   overflow: hidden;
   border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
