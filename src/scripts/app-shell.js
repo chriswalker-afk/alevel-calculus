@@ -9,7 +9,7 @@ import { APP_STATE_SCHEMA_VERSION } from "./local-state-store.js";
 import { activityRouteFromId, createHistoryRouteController } from "./navigation-route.js";
 import { renderVocabularyRichText } from "./vocabulary-term.js?v=interactionfix1";
 import { buildWordBankEntries, filterWordBankEntries } from "./word-bank-model.js";
-import { createQuestionShell } from "./question-shell.js?v=integrationmath1";
+import { createQuestionShell } from "./question-shell.js?v=integralfix2";
 import { getQuestionPracticeDefinitionForActivity } from "./question-catalogue.js?v=integralfix1";
 import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner.js?v=questionfix1";
 import { createQuestionPracticeSession } from "./question-practice-session.js";
