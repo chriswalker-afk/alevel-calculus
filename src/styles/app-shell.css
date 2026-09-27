@@ -2935,8 +2935,6 @@ button {
 
 .activity-stage__content[data-custom-understand-active="true"] .activity-copy {
   align-self: start;
-  position: sticky;
-  top: 0;
 }
 
 .activity-stage__content[data-custom-understand-active="true"] .math-placeholder {
