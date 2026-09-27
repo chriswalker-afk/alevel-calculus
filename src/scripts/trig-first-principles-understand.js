@@ -1,4 +1,4 @@
-import { DiagramPrimitives } from './diagram-primitives.js';
+import { DiagramPrimitives } from './diagram-primitives.js?v=diagramfix3';
 import { renderEquationSteps } from './equation-step-renderer.js';
 const IDS=new Set(['activity:y13:differentiation:trig-first-principles:understand:small-angle-evidence','activity:y13:differentiation:trig-first-principles:understand:key-limits','activity:y13:differentiation:trig-first-principles:understand:derive-sine','activity:y13:differentiation:trig-first-principles:understand:derive-cosine','activity:y13:differentiation:trig-first-principles:understand:compare-proofs']);
 const SIN_STEPS=Object.freeze([
