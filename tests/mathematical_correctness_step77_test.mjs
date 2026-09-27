@@ -59,10 +59,20 @@ for (const definition of definitions) {
 
     if (question.responseType === 'choice') {
       choiceCount += 1;
-      const judged = question.options.map((option) => ({ option, result: question.check(option.id) }));
-      const correct = judged.filter(({ result }) => result.tone === 'correct');
-      assert.equal(correct.length, 1, `${definition.templateId} must accept exactly one displayed option for seed ${seed}`);
-      assert.ok(correct[0].option.label.trim().length > 0, `${definition.templateId} correct option must have visible text`);
+      if (question.diagramConfig?.kind === 'calculus-graph-classifier') {
+        const stagedResponse = `graph:${question.parameters.correctGraphId}|sign:${question.parameters.correctSign}`;
+        assert.equal(
+          question.check(stagedResponse).tone,
+          'correct',
+          `${definition.templateId} must accept the generated graph plus derivative-sign response for seed ${seed}`
+        );
+        assert.ok(question.options.some((option) => option.id === question.parameters.correctGraphId), `${definition.templateId} correct graph must be one of the displayed graph options`);
+      } else {
+        const judged = question.options.map((option) => ({ option, result: question.check(option.id) }));
+        const correct = judged.filter(({ result }) => result.tone === 'correct');
+        assert.equal(correct.length, 1, `${definition.templateId} must accept exactly one displayed option for seed ${seed}`);
+        assert.ok(correct[0].option.label.trim().length > 0, `${definition.templateId} correct option must have visible text`);
+      }
     } else if (question.responseType !== 'short-reasoning') {
       for (const key of explicitAnswerKeys) {
         if (!(key in question.parameters)) continue;
