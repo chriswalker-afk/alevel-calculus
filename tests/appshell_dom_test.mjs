@@ -204,6 +204,7 @@ const questionShellSelectors = [
   '[data-question-shell-solution-panel]',
   '[data-question-shell-solution-steps]',
   '[data-question-shell-progress]',
+  '[data-question-shell-new]',
   '[data-question-shell-next]'
 ];
 for (const selector of questionShellSelectors) questionShellElement.children.set(selector, new FakeElement(`question:${selector}`));
