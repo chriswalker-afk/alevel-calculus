@@ -103,6 +103,7 @@ const currentTopicBreadcrumb = document.querySelector("[data-current-topic-bread
 const stage = document.querySelector("[data-activity-stage]");
 const standardActivityContent = document.querySelector("[data-standard-activity-content]");
 const activityVisual = document.querySelector("[data-activity-visual]");
+const customUnderstandHost = document.querySelector("[data-custom-understand-host]");
 const questionShellElement = document.querySelector("[data-question-shell]");
 const year12MasterySummary = document.querySelector("[data-year12-mastery-summary]");
 const year12MasteryEvidence = document.querySelector("[data-year12-mastery-summary-evidence]");
@@ -196,6 +197,7 @@ const required = [
   stage,
   standardActivityContent,
   activityVisual,
+  customUnderstandHost,
   questionShellElement,
   memoryLabElement,
   previousButton,
@@ -301,36 +303,36 @@ let currentTopicId = "topic:y12:differentiation:basics";
 let currentTopicLabel = "Basics of differentiation";
 const classWizSupportPanel = createClassWizSupportPanel({ element: classWizPanelElement, topicId: "topic:y12:differentiation:basics" });
 if (!classWizSupportPanel) throw new Error("No ClassWiz support pack exists for the Basics reference topic");
-const basicsUnderstand = createBasicsUnderstandExperience(activityVisual);
-const preCalculusUnderstand = createPreCalculusUnderstandExperience(activityVisual);
-const firstPrinciplesUnderstand = createFirstPrinciplesUnderstandExperience(activityVisual);
-const tangentsNormalsUnderstand = createTangentsNormalsUnderstandExperience(activityVisual);
-const stationaryPointsUnderstand = createStationaryPointsUnderstandExperience(activityVisual);
-const increasingDecreasingUnderstand = createIncreasingDecreasingUnderstandExperience(activityVisual);
-const integrationIntroUnderstand = createIntegrationIntroUnderstandExperience(activityVisual);
-const definiteIndefiniteUnderstand = createDefiniteIndefiniteUnderstandExperience(activityVisual);
-const integrationAreaUnderstand = createIntegrationAreaUnderstandExperience(activityVisual);
-const signedAreaUnderstand = createSignedAreaUnderstandExperience(activityVisual);
-const standardFunctionsUnderstand = createStandardFunctionsUnderstandExperience(activityVisual);
-const trigFirstPrinciplesUnderstand = createTrigFirstPrinciplesUnderstandExperience(activityVisual);
-const productQuotientChainUnderstand = createProductQuotientChainUnderstandExperience(activityVisual);
-const parametricDifferentiationUnderstand = createParametricDifferentiationUnderstandExperience(activityVisual);
-const implicitDifferentiationUnderstand = createImplicitDifferentiationUnderstandExperience(activityVisual);
-const trigIdentitiesInverseUnderstand = createTrigIdentitiesInverseUnderstandExperience(activityVisual);
-const concavityInflectionUnderstand = createConcavityInflectionUnderstandExperience(activityVisual);
-const connectedRatesUnderstand = createConnectedRatesUnderstandExperience(activityVisual);
-const standardIntegralsUnderstand = createStandardIntegralsUnderstandExperience(activityVisual);
-const reverseChainRuleUnderstand = createReverseChainRuleUnderstandExperience(activityVisual);
-const trigIdentityIntegrationUnderstand = createTrigIdentityIntegrationUnderstandExperience(activityVisual);
-const substitutionUnderstand = createSubstitutionUnderstandExperience(activityVisual);
-const integrationByPartsUnderstand = createIntegrationByPartsUnderstandExperience(activityVisual);
-const partialFractionsUnderstand = createPartialFractionsUnderstandExperience(activityVisual);
-const year13AreasUnderstand = createYear13AreasUnderstandExperience(activityVisual);
-const parametricAreaUnderstand = createParametricAreaUnderstandExperience(activityVisual);
-const limitOfSumUnderstand = createLimitOfSumUnderstandExperience(activityVisual);
-const numericalIntegrationUnderstand = createNumericalIntegrationUnderstandExperience(activityVisual);
-const differentialEquationsUnderstand = createDifferentialEquationsUnderstandExperience(activityVisual);
-const calculusModellingUnderstand = createCalculusModellingUnderstandExperience(activityVisual);
+const basicsUnderstand = createBasicsUnderstandExperience(customUnderstandHost);
+const preCalculusUnderstand = createPreCalculusUnderstandExperience(customUnderstandHost);
+const firstPrinciplesUnderstand = createFirstPrinciplesUnderstandExperience(customUnderstandHost);
+const tangentsNormalsUnderstand = createTangentsNormalsUnderstandExperience(customUnderstandHost);
+const stationaryPointsUnderstand = createStationaryPointsUnderstandExperience(customUnderstandHost);
+const increasingDecreasingUnderstand = createIncreasingDecreasingUnderstandExperience(customUnderstandHost);
+const integrationIntroUnderstand = createIntegrationIntroUnderstandExperience(customUnderstandHost);
+const definiteIndefiniteUnderstand = createDefiniteIndefiniteUnderstandExperience(customUnderstandHost);
+const integrationAreaUnderstand = createIntegrationAreaUnderstandExperience(customUnderstandHost);
+const signedAreaUnderstand = createSignedAreaUnderstandExperience(customUnderstandHost);
+const standardFunctionsUnderstand = createStandardFunctionsUnderstandExperience(customUnderstandHost);
+const trigFirstPrinciplesUnderstand = createTrigFirstPrinciplesUnderstandExperience(customUnderstandHost);
+const productQuotientChainUnderstand = createProductQuotientChainUnderstandExperience(customUnderstandHost);
+const parametricDifferentiationUnderstand = createParametricDifferentiationUnderstandExperience(customUnderstandHost);
+const implicitDifferentiationUnderstand = createImplicitDifferentiationUnderstandExperience(customUnderstandHost);
+const trigIdentitiesInverseUnderstand = createTrigIdentitiesInverseUnderstandExperience(customUnderstandHost);
+const concavityInflectionUnderstand = createConcavityInflectionUnderstandExperience(customUnderstandHost);
+const connectedRatesUnderstand = createConnectedRatesUnderstandExperience(customUnderstandHost);
+const standardIntegralsUnderstand = createStandardIntegralsUnderstandExperience(customUnderstandHost);
+const reverseChainRuleUnderstand = createReverseChainRuleUnderstandExperience(customUnderstandHost);
+const trigIdentityIntegrationUnderstand = createTrigIdentityIntegrationUnderstandExperience(customUnderstandHost);
+const substitutionUnderstand = createSubstitutionUnderstandExperience(customUnderstandHost);
+const integrationByPartsUnderstand = createIntegrationByPartsUnderstandExperience(customUnderstandHost);
+const partialFractionsUnderstand = createPartialFractionsUnderstandExperience(customUnderstandHost);
+const year13AreasUnderstand = createYear13AreasUnderstandExperience(customUnderstandHost);
+const parametricAreaUnderstand = createParametricAreaUnderstandExperience(customUnderstandHost);
+const limitOfSumUnderstand = createLimitOfSumUnderstandExperience(customUnderstandHost);
+const numericalIntegrationUnderstand = createNumericalIntegrationUnderstandExperience(customUnderstandHost);
+const differentialEquationsUnderstand = createDifferentialEquationsUnderstandExperience(customUnderstandHost);
+const calculusModellingUnderstand = createCalculusModellingUnderstandExperience(customUnderstandHost);
 
 const understandExperiences = Object.freeze([
   basicsUnderstand,
@@ -1491,6 +1493,7 @@ export function renderActivity(index) {
   syncUnderstandJourneyPages(activity);
   syncActivityNavigation(activities);
   standardActivityContent.dataset.customUnderstandActive = "false";
+  customUnderstandHost.hidden = true;
 
   const memoryLabView = activeMode === "memorise" ? activity.memoryLabView : null;
   const generatedQuestionSet = generatedQuestionSetForActivity(activity.activityId);
@@ -1518,6 +1521,7 @@ export function renderActivity(index) {
       : null;
     const customUnderstand = Boolean(understandExperience?.supports?.(activity.activityId));
     standardActivityContent.dataset.customUnderstandActive = customUnderstand ? "true" : "false";
+    customUnderstandHost.hidden = !customUnderstand;
 
     if (customUnderstand) {
       destroyUnderstandExperiences({ except: understandExperience });
