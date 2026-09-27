@@ -293,8 +293,9 @@ const topicObjectiveConfigs = Object.freeze({
       "construct the trapezium-rule approximation from equally spaced ordinates",
       "use the 1,2,…,2,1 coefficient pattern correctly",
       "calculate the strip width h from the interval and number of trapezia",
+      "explain why more, thinner trapezia generally improve a smooth-curve approximation",
       "use concavity to justify whether a trapezium estimate is an overestimate or underestimate",
-      "interpret numerical-integration accuracy in context"
+      "interpret numerical-integration accuracy and calculator output appropriately in context"
     ]
   }),
   "topic:y13:differential-equations:first-order": freezeConfig({
