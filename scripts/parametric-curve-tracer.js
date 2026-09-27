@@ -1,4 +1,4 @@
-import { DiagramPrimitives, clamp, normalizeDomain } from "./diagram-primitives.js";
+import { DiagramPrimitives, clamp, normalizeDomain } from "./diagram-primitives.js?v=diagramfix3";
 
 const STAGES = Object.freeze(["coordinates", "rates", "gradient", "area"]);
 
