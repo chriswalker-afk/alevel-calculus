@@ -316,6 +316,7 @@ export function createSelfReviewPanel({
       input.dataset.selfReviewCriterion = String(index);
       input.addEventListener("change", () => onCriterionChange(index, input.checked));
       const span = doc.createElement("span");
+      span.setAttribute("data-math-prose", "");
       span.textContent = text;
       label.append(input, span);
       criteria.append(label);
