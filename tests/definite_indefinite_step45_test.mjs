@@ -8,6 +8,7 @@ import { getMemoryGamePackForTopic } from '../src/scripts/memory-game-content.js
 import { getMemoryReviewPackForTopic } from '../src/scripts/memory-review-content.js';
 import { getQuestionSetDefinitionForActivity } from '../src/scripts/question-catalogue.js';
 import { createGeneratorRunner } from '../src/scripts/generator-runner.js';
+import { definiteApplicationDefinition } from '../src/scripts/question-definitions/definite-indefinite-assessment.js';
 import { getSupportTargetForMicroSkill } from '../src/scripts/help-content.js';
 const topicId='topic:y12:integration:definite-indefinite';
 assert.equal(definiteIndefiniteTopic.topicId,topicId);
@@ -34,6 +35,12 @@ assert.equal(reverseLimits(8),-8); assert.equal(zeroWidthIntegral(),0); assert.e
 assert(getMemoryItemsForTopic(topicId).length>=12);
 assert(getMemoryGamePackForTopic(topicId)); assert(getMemoryReviewPackForTopic(topicId));
 const runner=createGeneratorRunner({debugSeed:'step45'});
+const applicationQuestion=runner.generate(definiteApplicationDefinition,{seed:'step45:inline-integration'});
+assert.equal(applicationQuestion.math,'∫_(1)^(3) 2t dt');
+assert(Array.isArray(applicationQuestion.promptSegments));
+assert(applicationQuestion.promptSegments.some(segment=>segment.type==='math'&&segment.value==='r(t) = 2t'));
+assert(applicationQuestion.promptSegments.some(segment=>segment.type==='math'&&segment.value==='t = 1'));
+assert(applicationQuestion.promptSegments.some(segment=>segment.type==='math'&&segment.value==='t = 3'));
 for(const mode of ['ao1','ao2','ao3']) for(const activity of definiteIndefiniteTopic.activities.filter(a=>a.mode===mode)){
  const setDef=getQuestionSetDefinitionForActivity(activity.activityId); assert(setDef,`Missing question set ${activity.activityId}`);
  const set=runner.generateSet(setDef); assert(set.questions.length>0); assert(set.questions.every(q=>q.metadata.assessmentObjective===mode));
