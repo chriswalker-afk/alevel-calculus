@@ -1,6 +1,41 @@
 import { getVocabularyTerm } from "./vocabulary-data.js";
 
 let popoverSequence = 0;
+let outsideDismissBound = false;
+
+function setPopoverOpen(wrapper, button, open) {
+  wrapper.dataset.popoverOpen = open ? "true" : "false";
+  button.setAttribute("aria-expanded", open ? "true" : "false");
+}
+
+function closeOtherVocabularyPopovers(exceptWrapper = null) {
+  if (typeof document === "undefined" || typeof document.querySelectorAll !== "function") return;
+  for (const wrapper of document.querySelectorAll('.vocabulary-term-wrap[data-popover-open="true"]')) {
+    if (wrapper === exceptWrapper) continue;
+    wrapper.dataset.popoverOpen = "false";
+    wrapper.querySelector?.(".vocabulary-term")?.setAttribute?.("aria-expanded", "false");
+  }
+}
+
+function ensureOutsideDismissListener() {
+  if (outsideDismissBound || typeof document === "undefined" || typeof document.addEventListener !== "function") return;
+  outsideDismissBound = true;
+  const dismissOutside = (event) => {
+    const activeWrapper = event.target?.closest?.(".vocabulary-term-wrap") ?? null;
+    closeOtherVocabularyPopovers(activeWrapper);
+  };
+  document.addEventListener("pointerdown", dismissOutside);
+  document.addEventListener("focusin", dismissOutside);
+}
+
+function prefersHoverInteraction() {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") return false;
+  try {
+    return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  } catch {
+    return false;
+  }
+}
 
 function plainTextFromSegments(segments) {
   return segments.map((segment) => {
@@ -14,6 +49,7 @@ function createVocabularyTermElement(term, { isFirstEncounter, onOpenWordBank })
   wrapper.className = "vocabulary-term-wrap";
   wrapper.dataset.vocabularyTermId = term.id;
   wrapper.dataset.popoverOpen = "false";
+  ensureOutsideDismissListener();
 
   const popoverId = `vocabulary-popover-${++popoverSequence}`;
   const definitionId = `${popoverId}-definition`;
@@ -60,25 +96,30 @@ function createVocabularyTermElement(term, { isFirstEncounter, onOpenWordBank })
   openButton.addEventListener("click", (event) => {
     event.preventDefault();
     event.stopPropagation();
-    wrapper.dataset.popoverOpen = "false";
-    button.setAttribute("aria-expanded", "false");
+    setPopoverOpen(wrapper, button, false);
     onOpenWordBank?.(term.id, button);
   });
 
   popover.append(termName, definition, openButton);
   wrapper.append(button, popover);
 
-  button.addEventListener("click", () => {
+  button.addEventListener("click", (event) => {
+    const keyboardActivation = event.detail === 0;
+    if (prefersHoverInteraction() && !keyboardActivation) {
+      setPopoverOpen(wrapper, button, false);
+      return;
+    }
+
     const willOpen = wrapper.dataset.popoverOpen !== "true";
-    wrapper.dataset.popoverOpen = willOpen ? "true" : "false";
-    button.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    if (willOpen) closeOtherVocabularyPopovers(wrapper);
+    setPopoverOpen(wrapper, button, willOpen);
   });
 
-  button.addEventListener("keydown", (event) => {
+  wrapper.addEventListener("keydown", (event) => {
     if (event.key !== "Escape" || wrapper.dataset.popoverOpen !== "true") return;
     event.preventDefault();
-    wrapper.dataset.popoverOpen = "false";
-    button.setAttribute("aria-expanded", "false");
+    setPopoverOpen(wrapper, button, false);
+    button.focus?.({ preventScroll: true });
   });
 
   return wrapper;
