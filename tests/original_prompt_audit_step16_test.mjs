@@ -147,6 +147,8 @@ assert.match(app,/classWizSupportPanel\.setTopic\(currentTopicId\)/);
 assert.match(app,/help-content\.js\?v=auditstep16/);
 assert.match(app,/classwiz-support-panel\.js\?v=auditstep16/);
 assert.match(app,/classwiz-support-data\.js\?v=auditstep16/);
+assert.match(app,/currentTopicId = topicId;[\s\S]*?syncCurrentTopicChrome\(\);[\s\S]*?syncHelpTargets\(\);/,'Changing topic must update the topic ID before rebuilding Help links.');
+assert.match(app,/function syncCurrentTopicChrome\(\)[\s\S]*?classWizSupportPanel\.setTopic\(currentTopicId\)/,'Changing topic must rebind the calculator panel to the current topic pack.');
 
 for(const [source,published] of [
  ['src/scripts/help-content.js','scripts/help-content.js'],
