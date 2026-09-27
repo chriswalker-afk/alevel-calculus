@@ -1,4 +1,4 @@
-import { DiagramPrimitives, clamp, normalizeDomain } from "./diagram-primitives.js";
+import { DiagramPrimitives, clamp, normalizeDomain } from "./diagram-primitives.js?v=diagramfix3";
 
 function finiteNumber(value, fallback = 0) {
   const number = Number(value);
