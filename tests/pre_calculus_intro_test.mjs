@@ -33,7 +33,7 @@ for (const phrase of ['hill', 'Positive, negative or zero', 'steepness', 'same g
 }
 
 const experience = read('src/scripts/pre-calculus-understand.js');
-assert(experience.includes("from './diagram-primitives.js'"), 'Pre-calculus must reuse DiagramPrimitives');
+assert(experience.includes("from './diagram-primitives.js"), 'Pre-calculus must reuse DiagramPrimitives');
 assert(!experience.includes('createElementNS') && !experience.includes('<canvas'), 'Pre-calculus must not create a topic-local graph renderer');
 assert(experience.includes('Drive across hill'), 'Hill intuition must provide an animated/automatic car journey');
 assert(experience.includes("prefers-reduced-motion: reduce"), 'Hill animation must respect reduced-motion preference');
