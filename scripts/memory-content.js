@@ -1,5 +1,5 @@
 import { defineMemoryItem } from "./memory-item.js";
-import { getVocabularyTerm } from "./vocabulary-data.js";
+import { getVocabularyTerm } from "./vocabulary-data.js?v=notation1";
 import { basicsDifferentiationVocabularyTags } from "./topic-content/basics-differentiation.js";
 import { firstPrinciplesVocabularyTags } from "./topic-content/first-principles.js";
 import { tangentsNormalsVocabularyTags } from "./topic-content/tangents-normals.js";
