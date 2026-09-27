@@ -163,6 +163,7 @@ export function createMathEntryEnhancement({ inputGroup, input } = {}) {
       preview.classList.remove("math-typeset", "math-typeset--display");
       return;
     }
+    preview.replaceChildren();
     renderMathElement(preview, { source: formatMathInputForDisplay(raw) });
   }
 
