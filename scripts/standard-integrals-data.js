@@ -22,4 +22,4 @@ export const STANDARD_INTEGRAL_DEFINITIONS=Object.freeze([...STANDARD_INTEGRAL_F
 const byId=new Map(STANDARD_INTEGRAL_DEFINITIONS.map(f=>[f.id,f]));
 export function getStandardIntegralFact(id){return byId.get(id)??null;}
 export function listStandardIntegralFacts({includeLinear=true}={}){return includeLinear?STANDARD_INTEGRAL_DEFINITIONS:STANDARD_INTEGRAL_FACTS;}
-export const FUNDAMENTAL_THEOREM_STATEMENT=Object.freeze({name:'Fundamental Theorem of Calculus',condition:'If F′(x)=f(x)',definite:'∫_a^b f(x) dx = F(b) − F(a)',meaning:'The theorem is the formal bridge between antiderivatives and accumulated signed area.'});
+export const FUNDAMENTAL_THEOREM_STATEMENT=Object.freeze({name:'Fundamental Theorem of Calculus',condition:'If F′(x)=f(x)',definite:'∫_(a)^(b) f(x) dx = F(b) − F(a)',meaning:'The theorem is the formal bridge between antiderivatives and accumulated signed area.'});
