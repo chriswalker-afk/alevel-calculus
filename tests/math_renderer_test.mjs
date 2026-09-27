@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { tokeniseMathExpression } from "../src/scripts/math-renderer.js";
+import { normaliseMathSource, tokeniseMathExpression } from "../src/scripts/math-renderer.js";
 
 const derivative = tokeniseMathExpression("dy/dx = 3x²");
 assert.equal(derivative[0].type, "fraction");
@@ -27,6 +27,19 @@ assert.deepEqual(
 
 const prose = tokeniseMathExpression("Differentiate with respect to x.");
 assert.deepEqual(prose, [{ type: "text", value: "Differentiate with respect to x." }]);
+
+assert.equal(normaliseMathSource("xⁿ⁺¹"), "x^(n+1)");
+assert.equal(normaliseMathSource("x⁻ⁿ"), "x^(-n)");
+assert.equal(normaliseMathSource("x³ᐟ²"), "x^(3/2)");
+
+const reciprocalPower = tokeniseMathExpression("1/xⁿ = x⁻ⁿ");
+assert.equal(reciprocalPower[0].type, "fraction");
+assert.equal(reciprocalPower[0].numerator, "1");
+assert.equal(reciprocalPower[0].denominator, "x^(n)");
+assert.match(reciprocalPower.at(-1).value, /x\^\(-n\)/);
+
+const fractionalPower = tokeniseMathExpression("√x = x^(1/2)");
+assert.deepEqual(fractionalPower, [{ type: "text", value: "√x = x^(1/2)" }]);
 
 const firstPrinciples = tokeniseMathExpression("f′(x)=lim_(h→0) [f(x+h)−f(x)]/h");
 const differenceQuotient = firstPrinciples.find((token) => token.type === "fraction");
