@@ -162,7 +162,6 @@ required_attrs = {
     "data-reset-progress",
     "data-confirm-reset",
     "data-standard-activity-content",
-    "data-custom-understand-host",
     "data-question-shell",
     "data-question-shell-input",
     "data-question-shell-choice",
@@ -318,7 +317,7 @@ assert 'data-topic-objectives-inline' in html and 'data-topic-goals-dialog' in h
 assert 'getTopicObjectiveConfig' in js and 'syncUnderstandJourneyPages' in js and 'understandJourneyActivity' in js
 assert 'const understandExperiences = Object.freeze([' in js
 assert 'currentTopicRuntime().understandExperience' in js
-assert 'data-custom-understand-host' in html
+assert 'data-understand-visual-host' in html
 assert 'topicObjectiveCount' in topic_objectives_data and 'topicObjectiveCount = Object.keys(topicObjectiveConfigs).length' in topic_objectives_data
 assert topic_objectives_data.count('"topic:') == 33, "Every registered topic should have a student-facing objective set"
 assert '.topic-objectives-card--inline' in css and '.topic-pathway-card' in css and '.topic-goals-dialog' in css
