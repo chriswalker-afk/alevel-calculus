@@ -27,7 +27,7 @@ export const simpleLimitDefinition = defineQuestionDefinition({
   responseType: 'numeric', responseLabel: 'Limit', placeholder: 'Enter the value approached',
   parameterGenerator({ random }) { const a = random.int(1, 7), p = random.pick([1, 2]); return { a, p }; },
   promptRenderer({ a, p }) { return `Evaluate the simple limit as h → 0.`; },
-  mathRenderer({ a, p }) { return `lim h→0 (${a} + h${p === 2 ? '²' : ''})`; },
+  mathRenderer({ a, p }) { return `lim_(h→0) (${a} + h${p === 2 ? '²' : ''})`; },
   answerChecker(response, { a }) { return numeric(a, response) ? { tone: 'correct', title: 'Correct', message: 'The output approaches the constant term.' } : { tone: 'incorrect', errorCategory: 'arithmetic-error', title: 'Follow what the expression approaches', message: 'Make h smaller and identify the value the whole expression approaches.' }; },
   workedSolutionGenerator({ a, p }) { return steps([{ label: 'Let h approach zero', expression: `${a} + h${p === 2 ? '²' : ''} → ${a}`, explanation: 'The h-term approaches zero.' }, { kind: 'result', label: 'Limit', expression: `${a}`, explanation: 'So the expression approaches the constant term.' }]); },
   hintSequenceGenerator() { return [{ id: 'approach', text: 'Think about h = 0.1, 0.01, 0.001 rather than treating this as a new algebra rule.' }]; }
@@ -70,9 +70,9 @@ export const x2FirstPrinciplesDefinition = defineQuestionDefinition({
   responseType: 'algebraic', responseLabel: 'Derivative', placeholder: 'Enter f′(x)',
   parameterGenerator({ random }) { return { a: random.int(1, 4) }; },
   promptRenderer({ a }) { return `Use first principles to differentiate f(x)=${a === 1 ? '' : a}x². Enter the final derivative.`; },
-  mathRenderer({ a }) { return `f′(x)=lim h→0 [${a}(x+h)²−${a}x²]/h`; },
+  mathRenderer({ a }) { return `f′(x)=lim_(h→0) [${a}(x+h)²−${a}x²]/h`; },
   answerChecker(response, { a }) { const s = norm(response); return [norm(`${2*a}x`), norm(`${2*a}*x`)].includes(s) ? { tone: 'correct', title: 'Correct', message: 'The first-principles derivation gives the expected linear derivative.' } : { tone: 'incorrect', errorCategory: 'expansion-error', title: 'Check the middle algebra', message: 'Expand, cancel the common factor h while h≠0, then take the limit.' }; },
-  workedSolutionGenerator({ a }) { return steps([{ label: 'Substitute', expression: `lim h→0 [${a}(x+h)²−${a}x²]/h`, explanation: 'Use the definition.' }, { label: 'Expand', expression: `lim h→0 [${2*a}xh+${a}h²]/h`, explanation: 'The x² terms cancel.' }, { label: 'Cancel h', expression: `lim h→0 (${2*a}x+${a}h)`, explanation: 'h is non-zero during the approach.' }, { kind: 'result', label: 'Take the limit', expression: `f′(x)=${2*a}x`, explanation: 'The remaining h-term approaches zero.' }]); },
+  workedSolutionGenerator({ a }) { return steps([{ label: 'Substitute', expression: `lim_(h→0) [${a}(x+h)²−${a}x²]/h`, explanation: 'Use the definition.' }, { label: 'Expand', expression: `lim_(h→0) [${2*a}xh+${a}h²]/h`, explanation: 'The x² terms cancel.' }, { label: 'Cancel h', expression: `lim_(h→0) (${2*a}x+${a}h)`, explanation: 'h is non-zero during the approach.' }, { kind: 'result', label: 'Take the limit', expression: `f′(x)=${2*a}x`, explanation: 'The remaining h-term approaches zero.' }]); },
   hintSequenceGenerator() { return [{ id: 'expand', text: 'Expand (x+h)² before cancelling anything.' }, { id: 'factor', text: 'After simplifying, factor h from the numerator.' }, { id: 'limit', text: 'Only after cancellation should you let h approach 0.' }]; }
 });
 
@@ -85,9 +85,9 @@ export const x3FirstPrinciplesDefinition = defineQuestionDefinition({
     'substitutes-zero-too-early': { kind: 'recognition', supportNeed: 'understand', supportMicroSkillId: skill('limit-intuition'), studentMessage: 'Keep h non-zero until the common factor has been cancelled.' }
   }, defaultDiagnostic: { kind: 'execution', supportNeed: 'ao1', supportMicroSkillId: skill('derive-x3') },
   responseType: 'algebraic', responseLabel: 'Derivative', placeholder: 'Enter f′(x)', parameterGenerator() { return {}; },
-  promptRenderer() { return 'Use first principles to differentiate f(x)=x³. Enter the final derivative.'; }, mathRenderer() { return `f′(x)=lim h→0 [((x+h)³−x³)/h]`; },
+  promptRenderer() { return 'Use first principles to differentiate f(x)=x³. Enter the final derivative.'; }, mathRenderer() { return `f′(x)=lim_(h→0) [((x+h)³−x³)/h]`; },
   answerChecker(response) { return [norm('3x^2'), norm('3x²')].includes(norm(response)) ? { tone: 'correct', title: 'Correct', message: 'You have established the cubic derivative from the definition.' } : { tone: 'incorrect', errorCategory: 'expansion-error', title: 'Check the cubic expansion', message: 'Expand (x+h)³ fully, simplify, factor h, cancel, then take the limit.' }; },
-  workedSolutionGenerator() { return steps([{ label: 'Expand', expression: 'lim h→0 [3x²h+3xh²+h³]/h', explanation: 'The x³ terms cancel.' }, { label: 'Cancel h', expression: 'lim h→0 (3x²+3xh+h²)', explanation: 'Every numerator term contains h.' }, { kind: 'result', label: 'Take the limit', expression: 'f′(x)=3x²', explanation: 'Terms containing h approach zero.' }]); },
+  workedSolutionGenerator() { return steps([{ label: 'Expand', expression: 'lim_(h→0) [3x²h+3xh²+h³]/h', explanation: 'The x³ terms cancel.' }, { label: 'Cancel h', expression: 'lim_(h→0) (3x²+3xh+h²)', explanation: 'Every numerator term contains h.' }, { kind: 'result', label: 'Take the limit', expression: 'f′(x)=3x²', explanation: 'Terms containing h approach zero.' }]); },
   hintSequenceGenerator() { return [{ id: 'expand', text: '(x+h)³=x³+3x²h+3xh²+h³.' }, { id: 'factor', text: 'Factor h from all remaining numerator terms before cancelling.' }]; }
 });
 
@@ -125,7 +125,7 @@ export const diagnoseDerivationDefinition = defineQuestionDefinition({
     'limit-misread': { kind: 'recognition', supportNeed: 'understand', supportMicroSkillId: skill('limit-intuition'), studentMessage: 'Revisit why h is not set equal to zero before cancellation.' }
   }, defaultDiagnostic: { kind: 'execution', supportNeed: 'ao1', supportMicroSkillId: skill('derive-x2') },
   responseType: 'short-reasoning', responseLabel: 'Identify and correct the error', placeholder: 'Name the error and explain the correction.', parameterGenerator() { return {}; },
-  promptRenderer() { return 'A student writes: [(x+h)²−x²]/h = [2xh+h²]/h, then puts h=0 and says the derivative is 0/0. Explain the error.'; }, mathRenderer() { return 'lim h→0 [(2xh+h²)/h]'; },
+  promptRenderer() { return 'A student writes: [(x+h)²−x²]/h = [2xh+h²]/h, then puts h=0 and says the derivative is 0/0. Explain the error.'; }, mathRenderer() { return 'lim_(h→0) [(2xh+h²)/h]'; },
   answerChecker(response) { const s = String(response ?? '').toLowerCase(); const cancel = /cancel|factor/.test(s) && /h/.test(s); const before = /before|first|non.?zero|h≠0|not.*zero/.test(s); if (cancel && before) return { tone: 'correct', title: 'Correct diagnosis', message: 'The common factor h must be cancelled for nearby non-zero h before the limit is taken.' }; if (/0\/0|zero over zero|undefined/.test(s) && !cancel) return { tone: 'warning', errorCategory: 'limit-misread', title: 'Go one step further', message: 'You noticed 0/0, but explain why we simplify for non-zero h before taking the limit.' }; return { tone: 'warning', errorCategory: 'algebra-prerequisite', title: 'Focus on the common factor', message: 'Factor h from the numerator and explain when cancellation is valid.' }; },
   workedSolutionGenerator() { return steps([{ label: 'Factor h', expression: '(2xh+h²)/h = h(2x+h)/h', explanation: 'For the approaching values, h is non-zero.' }, { label: 'Cancel', expression: '= 2x+h', explanation: 'Now the quotient no longer has h in the denominator.' }, { kind: 'result', label: 'Take the limit', expression: '2x+h → 2x', explanation: 'Only now let h approach zero.' }]); },
   hintSequenceGenerator() { return [{ id: 'factor', text: 'What common factor appears in every numerator term?' }, { id: 'order', text: 'Cancellation happens for non-zero h values before the limiting step.' }]; }
