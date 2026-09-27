@@ -38,8 +38,8 @@ assert.match(chainSource,/chain rule produces the dy\/dx factor/i);
 
 const termSource=source.slice(termStart,rearrangeStart);
 assert.match(termSource,/Apply d\/dx to both sides/);
-assert.match(termSource,/<strong>d\/dx<\/strong> \[x² \+ xy \+ y²\]/);
-assert.match(termSource,/<strong>d\/dx<\/strong> \[7\]/);
+assert.match(termSource,/<span data-math-render>d\/dx \[x² \+ xy \+ y²\]<\/span>/);
+assert.match(termSource,/<span data-math-render>d\/dx \[7\]<\/span>/);
 assert.match(termSource,/term buttons stay locked until d\/dx has been applied to both equal expressions/i);
 assert.match(termSource,/b\.disabled=true/,'Individual term buttons must start locked.');
 assert.match(termSource,/operatorAction\.addEventListener\('click'/);
