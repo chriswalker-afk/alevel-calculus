@@ -102,10 +102,6 @@ export function createQuestionShell(root, {
     fields.inputLabel,
     fields.reasoningLabel
   ]) element?.setAttribute?.("data-math-prose", "");
-  for (const row of root.querySelectorAll?.("[data-question-shell-option]") ?? []) {
-    row.querySelector?.("[data-question-shell-choice-label]")?.setAttribute?.("data-math-prose", "");
-  }
-
   const solutionRenderer = createWorkedSolutionRenderer(fields.solutionSteps);
   function handleVisualResponseChange(response) {
     const question = currentQuestion();
