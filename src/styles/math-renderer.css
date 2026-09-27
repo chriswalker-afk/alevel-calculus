@@ -139,6 +139,47 @@ sub.math-script {
   font-size: 1.62em;
 }
 
+.math-evaluation {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.math-evaluation__body {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.math-evaluation__limits {
+  display: inline-grid;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  min-width: 1.05em;
+  margin-left: 0.05em;
+  font-size: 0.56em;
+  line-height: 0.92;
+}
+
+.math-evaluation__upper,
+.math-evaluation__lower {
+  display: block;
+  min-width: 100%;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.math-evaluation__upper {
+  align-self: end;
+  transform: translateY(-0.08em);
+}
+
+.math-evaluation__lower {
+  align-self: start;
+  transform: translateY(0.08em);
+}
+
 .question-shell__math.math-typeset,
 .equation-step__expression.math-typeset,
 .memory-learn-item__notation.math-typeset,
