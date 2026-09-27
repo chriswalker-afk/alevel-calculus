@@ -1,4 +1,4 @@
-import { renderMathElement } from './math-renderer.js';
+import { renderMathElement } from './math-renderer.js?v=understand1';
 const freeze=Object.freeze;
 export const STRUCTURE_ROLES=freeze({first:'First / u',second:'Second / v',outer:'Outside',inner:'Inside'});
 function el(d,t,c='',x=''){const n=d.createElement(t);if(c)n.className=c;if(x!==undefined&&x!=='')n.textContent=x;return n;}
