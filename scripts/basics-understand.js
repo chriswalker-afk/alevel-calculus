@@ -236,7 +236,7 @@ export class BasicsUnderstandExperience {
     [['x3','x³'],['4x2','4x²'],['5x-7','5x − 7'],['2x4+3x','2x⁴ + 3x']].forEach(([value,label]) => { const option=el(this.document,'option','',label); option.value=value; select.append(option); });
     select.setAttribute('aria-label', 'Expression to differentiate');
     const inputBox = el(this.document, 'div', 'basics-understand__machine-box');
-    const operator = el(this.document, 'div', 'basics-understand__machine-operator', 'd/dx');
+    const operator = el(this.document, 'div', 'basics-understand__machine-operator', 'd/dx'); operator.setAttribute('data-math-render','');
     const arrow = el(this.document, 'div', 'basics-understand__machine-arrow', '→');
     const output = el(this.document, 'div', 'basics-understand__machine-box basics-understand__machine-box--output');
     output.setAttribute('role', 'status');
@@ -263,9 +263,9 @@ export class BasicsUnderstandExperience {
     const list = el(this.document, 'div', 'basics-understand__pattern-list');
     powerExamples.forEach(({ input, output }) => {
       const row = el(this.document, 'div', 'basics-understand__pattern-row');
-      row.append(el(this.document, 'span', 'basics-understand__pattern-input', `d/dx [ ${input} ]`), el(this.document, 'span', 'basics-understand__machine-arrow', '→'), el(this.document, 'span', 'basics-understand__pattern-output', output)); list.append(row);
+      row.append(el(this.document, 'span', 'basics-understand__pattern-input basics-understand__math', `d/dx [ ${input} ]`), el(this.document, 'span', 'basics-understand__machine-arrow', '→'), el(this.document, 'span', 'basics-understand__pattern-output', output)); list.append(row);
     });
-    const rule = el(this.document, 'div', 'basics-understand__rule-reveal');
+    const rule = el(this.document, 'div', 'basics-understand__rule-reveal basics-understand__math');
     const reveal = button(this.document, 'Reveal the general rule', () => { rule.hidden = false; reveal.disabled = true; }, 'basics-understand__button basics-understand__button--primary');
     rule.hidden = true; rule.textContent = 'd/dx (a xⁿ) = a n xⁿ⁻¹  — multiply by the old power, then reduce the power by 1.';
     body.append(list, reveal, rule);
@@ -276,7 +276,7 @@ export class BasicsUnderstandExperience {
     const expression = el(this.document, 'div', 'basics-understand__term-expression', 'y = 3x⁴ − 2x² + 5x − 7');
     const row = el(this.document, 'div', 'basics-understand__term-row');
     ['3x⁴ → 12x³', '−2x² → −4x', '+5x → +5', '−7 → 0'].forEach((text) => row.append(el(this.document, 'div', 'basics-understand__term-card', text)));
-    const result = el(this.document, 'div', 'basics-understand__term-result', 'dy/dx = 12x³ − 4x + 5');
+    const result = el(this.document, 'div', 'basics-understand__term-result basics-understand__math', 'dy/dx = 12x³ − 4x + 5');
     body.append(expression, row, result, el(this.document, 'p', 'basics-understand__takeaway', 'For sums and differences, differentiate each term separately, then put the differentiated terms back together.'));
   }
 }
