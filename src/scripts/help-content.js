@@ -797,7 +797,8 @@ export function getSupportTargetForMicroSkill(microSkillId, need) {
     const canonical = getCanonicalIntegrationMethodMapHelpTarget(methodTag);
     if (canonical) return Object.freeze({...canonical,microSkillId});
   }
-  return supportByMicroSkill[microSkillId]?.[need] ?? lateCourseSupportByMicroSkill[microSkillId]?.[need] ?? null;
+  const target=supportByMicroSkill[microSkillId]?.[need] ?? lateCourseSupportByMicroSkill[microSkillId]?.[need] ?? null;
+  return target?Object.freeze({...target,microSkillId}):null;
 }
 
 export function getIntegrationMethodDecisionHelpTarget(methodTag) {
