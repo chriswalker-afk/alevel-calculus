@@ -748,13 +748,13 @@ const supportByMicroSkill = Object.freeze({
 });
 
 export function getHelpTargets(topicId) {
-  const group = lateCourseHelpByTopic[topicId] ?? helpByTopic[topicId];
+  const group = helpByTopic[topicId] ?? lateCourseHelpByTopic[topicId];
   if (!group) return [];
   return helpTargetOrder.map((need) => group[need]).filter(Boolean);
 }
 
 export function getHelpTarget(topicId, need) {
-  return lateCourseHelpByTopic[topicId]?.[need] ?? helpByTopic[topicId]?.[need] ?? null;
+  return helpByTopic[topicId]?.[need] ?? lateCourseHelpByTopic[topicId]?.[need] ?? null;
 }
 
 export function getSupportTargetForMicroSkill(microSkillId, need) {
