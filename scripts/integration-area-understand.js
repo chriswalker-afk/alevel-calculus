@@ -1,15 +1,16 @@
 import { createAreaExplorer, formatAreaNumber } from './area-explorer.js';
 import { DiagramPrimitives } from './diagram-primitives.js?v=diagramfix3';
-import { INTEGRATION_AREA_POSITIVE_FUNCTIONS, removalIdentityState, betweenCurvesAreaState, adjacentIntervalState, reversedIntervalState } from './integration-area-model.js?v=auditstep1';
+import { INTEGRATION_AREA_POSITIVE_FUNCTIONS, removalIdentityState, betweenCurvesAreaState, adjacentIntervalState, reversedIntervalState } from './integration-area-model.js?v=auditstep8';
 
 const IDS=new Set(['lower-limit-zero','remove-unwanted-region','endpoint-difference','between-positive-curves','visual-properties'].map(s=>`activity:y12:integration:area:understand:${s}`));
 const el=(d,n,c='',t='')=>{const x=d.createElement(n);if(c)x.className=c;if(t)x.textContent=t;return x;};
 const number=(v)=>formatAreaNumber(v,3);
 function sampleDefinition(definition,from=0,to=2,samples=180){return Array.from({length:samples+1},(_,i)=>{const x=from+(i/samples)*(to-from);return{x,y:definition.evaluate(x)};});}
 function sampleBetween(upper,lower,from,to,samples=120){const top=[],bottom=[];for(let i=0;i<=samples;i++){const x=from+(i/samples)*(to-from);top.push({x,y:upper.evaluate(x)});}for(let i=samples;i>=0;i--){const x=from+(i/samples)*(to-from);bottom.push({x,y:lower.evaluate(x)});}return [...top,...bottom];}
+function sampleUnderCurve(definition,from,to,samples=120){return [...sampleDefinition(definition,from,to,samples),{x:to,y:0},{x:from,y:0}];}
 
 export class IntegrationAreaUnderstandExperience{
- constructor(host){if(!host)throw new Error('IntegrationAreaUnderstandExperience requires a DOM host.');this.host=host;this.document=host.ownerDocument||globalThis.document;this.explorer=null;this.betweenDiagram=null;this.cleanup=[];}
+ constructor(host,{navigateToActivity=null}={}){if(!host)throw new Error('IntegrationAreaUnderstandExperience requires a DOM host.');this.host=host;this.document=host.ownerDocument||globalThis.document;this.navigateToActivity=typeof navigateToActivity==='function'?navigateToActivity:null;this.explorer=null;this.betweenDiagram=null;this.cleanup=[];}
  supports(id){return IDS.has(id);}
  destroy(){for(const f of this.cleanup.splice(0))f();this.explorer?.destroy();this.explorer=null;this.betweenDiagram?.destroy();this.betweenDiagram=null;this.host.replaceChildren();this.host.classList.remove('integration-area-understand');}
  render(id){if(!this.supports(id))return false;this.destroy();this.host.classList.add('integration-area-understand');this[`render_${id.split(':').at(-1).replaceAll('-','_')}`]();return true;}
@@ -22,8 +23,61 @@ export class IntegrationAreaUnderstandExperience{
  }
  render_endpoint_difference(){const b=this.#panel('The picture and F(b) − F(a) say the same thing','3 · Connect the visual to endpoint evaluation');b.append(el(this.document,'p','integration-area-understand__lead','Move a and b. The graph shows the remaining interval; the live equation rewrites that same removal using accumulated endpoint values.'));const host=el(this.document,'div','integration-area-understand__explorer');const algebra=el(this.document,'div','integration-area-understand__algebra');b.append(host,algebra);const explorer=this.#createExplorer(host,{initialLower:1,initialUpper:3,showFunctionSelector:true,title:'From a to b',onChange:()=>update()});const update=()=>{const {lower:a,upper:bound}=explorer.getAreaState();const state=removalIdentityState(explorer.definition,a,bound);algebra.innerHTML=`<div><strong>Accumulation to b</strong><span class="integration-area-understand__math">∫₀ᵇ f(x)dx = F(b) − F(0) = ${number(state.toB)}</span></div><div><strong>Accumulation to a</strong><span class="integration-area-understand__math">∫₀ᵃ f(x)dx = F(a) − F(0) = ${number(state.toA)}</span></div><div class="integration-area-understand__algebra-result"><strong>Remove the first from the second</strong><span class="integration-area-understand__math">(F(b)−F(0)) − (F(a)−F(0)) = F(b) − F(a) = ${number(state.difference)}</span></div>`;};update();b.append(el(this.document,'div','integration-area-understand__takeaway','This is why endpoint evaluation gives F(b) − F(a): it removes the unwanted initial accumulation.'));
  }
- render_between_positive_curves(){const b=this.#panel('Area between two curves = top area − bottom area','4 · Same interval, subtract');b.append(el(this.document,'p','integration-area-understand__lead','Now keep two positive curves on the same interval. The required region is what is under the top curve but not under the bottom curve, so subtract the two accumulated areas.'));const top=INTEGRATION_AREA_POSITIVE_FUNCTIONS.find(x=>x.id==='integration-area-linear');const bottom=INTEGRATION_AREA_POSITIVE_FUNCTIONS.find(x=>x.id==='integration-area-quadratic');const control=el(this.document,'label','integration-area-understand__between-control');const heading=el(this.document,'span','integration-area-understand__between-control-heading');const label=el(this.document,'strong','','Upper limit b');const output=el(this.document,'output','integration-area-understand__between-output','2');heading.append(label,output);const slider=el(this.document,'input','integration-area-understand__between-slider');slider.type='range';slider.min='0';slider.max='2';slider.step='0.05';slider.value='2';slider.setAttribute('aria-label','Upper limit b for the area between the two curves');control.append(heading,slider);const graph=el(this.document,'div','integration-area-understand__between-graph');const readout=el(this.document,'div','integration-area-understand__between-readout');readout.setAttribute('data-math-render','');b.append(control,graph,readout);const draw=()=>{const bound=Number(slider.value);output.textContent=number(bound);const state=betweenCurvesAreaState(top,bottom,0,bound);this.betweenDiagram?.destroy();graph.replaceChildren();this.betweenDiagram=new DiagramPrimitives(graph,{xDomain:[0,2],yDomain:[0,3.5],ariaLabel:'Two positive curves with the region between them shaded',minHeight:340,aspectRatio:'16 / 9'});const d=this.betweenDiagram;d.grid({xStep:.5,yStep:1});d.axes({ticks:true,tickStep:.5});if(bound>0)d.shadedRegion(sampleBetween(top,bottom,0,bound),{tone:'region',opacity:.22});d.polyline(sampleDefinition(top,0,2),{tone:'curve'});d.polyline(sampleDefinition(bottom,0,2),{tone:'accent'});d.line({x1:bound,y1:0,x2:bound,y2:3.5,tone:'warning',dashed:true});d.label({x:1.5,y:2.75,text:'A(x) = x + 1',tone:'curve'});d.label({x:1.3,y:1.85,text:'B(x) = 1 + ½x²',tone:'accent'});d.label({x:Math.min(bound,1.9),y:.2,text:`b=${number(bound)}`,tone:'warning'});readout.innerHTML=`<div><span>Area under top A</span><strong>∫₀ᵇ A(x)dx = ${number(state.upperArea)}</strong></div><div><span>Area under bottom B</span><strong>∫₀ᵇ B(x)dx = ${number(state.lowerArea)}</strong></div><div class="integration-area-understand__between-result"><span>Area between the curves</span><strong>∫₀ᵇ [A(x) − B(x)]dx = ${number(state.difference)}</strong></div><p>Here A(x) ≥ B(x) for 0 ≤ x ≤ 2, so “top minus bottom” works without splitting.</p>`;};const listener=()=>draw();slider.addEventListener('input',listener);this.cleanup.push(()=>slider.removeEventListener('input',listener));draw();b.append(el(this.document,'div','integration-area-understand__takeaway','Year 12 idea: same limits, then top minus bottom. In Year 13 you will revisit areas where curves cross, the region must be split, or a more advanced integration method is needed.')); }
+ render_between_positive_curves(){
+  const b=this.#panel('Build the area between two curves from two familiar areas','4 · Top area − bottom area');
+  b.append(el(this.document,'p','integration-area-understand__lead','The line A(x)=x+1 and the curve B(x)=1+½x² meet at x=0 and x=2. Between those simple limits A is always the top curve. Build the required region geometrically before writing the integral.'));
+  const top=INTEGRATION_AREA_POSITIVE_FUNCTIONS.find(x=>x.id==='integration-area-linear');
+  const bottom=INTEGRATION_AREA_POSITIVE_FUNCTIONS.find(x=>x.id==='integration-area-quadratic');
+  const state=betweenCurvesAreaState(top,bottom,0,2);
+  const controls=el(this.document,'div','integration-area-understand__button-row integration-area-understand__between-stage-controls');
+  controls.setAttribute('aria-label','Highlight the component areas and the resulting region');
+  const graph=el(this.document,'div','integration-area-understand__between-graph');
+  const status=el(this.document,'p','integration-area-understand__between-status');
+  status.setAttribute('role','status');
+  status.setAttribute('aria-live','polite');
+  const readout=el(this.document,'div','integration-area-understand__between-readout');
+  readout.setAttribute('data-math-render','');
+  readout.innerHTML=`<div><span>1 · Area under top curve</span><strong>∫₀² A(x)dx = ${number(state.upperArea)}</strong></div><div><span>2 · Area under bottom curve</span><strong>∫₀² B(x)dx = ${number(state.lowerArea)}</strong></div><div class="integration-area-understand__between-result"><span>3 · Required area</span><strong>top − bottom = ${number(state.difference)}</strong></div><p class="integration-area-understand__between-equation"><strong>Required area = area under top curve − area under bottom curve</strong><span>∫₀² A(x)dx − ∫₀² B(x)dx = ∫₀² [A(x) − B(x)]dx = ${number(state.difference)}</span></p>`;
+  b.append(controls,graph,status,readout);
+
+  const draw=(view)=>{
+    this.betweenDiagram?.destroy();
+    graph.replaceChildren();
+    this.betweenDiagram=new DiagramPrimitives(graph,{xDomain:[-.15,2.15],yDomain:[0,3.5],ariaLabel:'The line A of x equals x plus 1 and the curve B of x equals 1 plus one half x squared, intersecting at x equals 0 and x equals 2',minHeight:340,aspectRatio:'16 / 9'});
+    const d=this.betweenDiagram;
+    d.grid({xStep:.5,yStep:1});
+    d.axes({ticks:true,tickStep:.5});
+    if(view==='top')d.shadedRegion(sampleUnderCurve(top,0,2),{tone:'curve',opacity:.15});
+    if(view==='bottom')d.shadedRegion(sampleUnderCurve(bottom,0,2),{tone:'accent',opacity:.16});
+    if(view==='result')d.shadedRegion(sampleBetween(top,bottom,0,2),{tone:'region',opacity:.28});
+    d.polyline(sampleDefinition(top,0,2),{tone:'curve'});
+    d.polyline(sampleDefinition(bottom,0,2),{tone:'accent'});
+    d.line({x1:2,y1:0,x2:2,y2:3.35,tone:'warning',dashed:true});
+    d.point({x:0,y:1,radius:6,tone:'point',label:'x=0'});
+    d.point({x:2,y:3,radius:6,tone:'point',label:'x=2'});
+    d.label({x:1.5,y:2.75,text:'A(x) = x + 1',tone:'curve'});
+    d.label({x:1.25,y:1.72,text:'B(x) = 1 + ½x²',tone:'accent'});
+    status.textContent=view==='top'?'Step 1: highlight the whole area under the top curve A(x) from x=0 to x=2.':view==='bottom'?'Step 2: highlight the area under the bottom curve B(x) over exactly the same limits.':'Step 3: subtract the bottom area from the top area. The green strip is the required area between the curves.';
+  };
+
+  const buttons=[];
+  const activate=(view,button)=>{for(const candidate of buttons){const on=candidate===button;candidate.classList.toggle('is-active',on);candidate.setAttribute('aria-pressed',String(on));}draw(view);};
+  const showTop=this.#button('1 · Show area under top A(x)',btn=>activate('top',btn));
+  const showBottom=this.#button('2 · Show area under bottom B(x)',btn=>activate('bottom',btn));
+  const showResult=this.#button('3 · Show required region',btn=>activate('result',btn));
+  buttons.push(showTop,showBottom,showResult);
+  for(const button of buttons){button.setAttribute('aria-pressed','false');controls.append(button);}
+  showTop.click();
+
+  const forward=el(this.document,'div','integration-area-understand__forward');
+  const forwardCopy=el(this.document,'div','integration-area-understand__forward-copy');
+  forwardCopy.append(el(this.document,'strong','','Later: full Year 13 Areas'),el(this.document,'span','','Year 13 revisits this construction when curves cross or the integral needs a more advanced method. Region construction still comes first; method selection comes afterwards.'));
+  const forwardButton=this.#button('Go to Year 13 Areas',()=>this.navigateToActivity?.({topicId:'topic:y13:integration:areas',mode:'understand',activityId:'activity:y13:integration:areas:understand:construction-visual'}));
+  forwardButton.classList.add('integration-area-understand__button--forward');
+  forward.append(forwardCopy,forwardButton);
+  b.append(forward,el(this.document,'div','integration-area-understand__takeaway','Year 12 method: identify the same limits, decide which curve is on top, then subtract bottom from top. This page stops there deliberately.'));
+ }
  render_visual_properties(){const b=this.#panel('The basic properties become visible','5 · Identical, adjacent and reversed limits');b.append(el(this.document,'p','integration-area-understand__lead','Use one positive curve and switch between three interval pictures. The graph and numerical relationship should tell the same story.'));const controls=el(this.document,'div','integration-area-understand__button-row');const host=el(this.document,'div','integration-area-understand__explorer');const explanation=el(this.document,'div','integration-area-understand__property-readout');b.append(controls,host,explanation);const explorer=this.#createExplorer(host,{showFunctionSelector:false,initialLower:0,initialUpper:3,title:'Visual properties'});const buttons=[];const activate=(button)=>buttons.forEach(x=>{x.classList.toggle('is-active',x===button);x.setAttribute('aria-pressed',String(x===button));});const same=this.#button('Identical limits',btn=>{activate(btn);explorer.setSplitPoints([]);explorer.setLimits(2,2,'step46-same');explanation.innerHTML='<strong>Identical limits</strong><span class="integration-area-understand__math">There is no interval width to shade, so ∫₂² f(x)dx = 0.</span>';});const adjacent=this.#button('Adjacent intervals',btn=>{activate(btn);explorer.setLimits(0,3,'step46-adjacent');explorer.setSplitPoints([1]);const s=adjacentIntervalState(explorer.definition,0,1,3);explanation.innerHTML=`<strong>Adjacent intervals</strong><span>The guide at x=1 divides one region into two touching pieces.</span><span>${number(s.whole)} = ${number(s.left)} + ${number(s.right)}</span>`;});const reversed=this.#button('Reversed limits',btn=>{activate(btn);explorer.setSplitPoints([]);explorer.setLimits(3,1,'step46-reversed');const s=reversedIntervalState(explorer.definition,1,3);explanation.innerHTML=`<strong>Reversed limits</strong><span>The same geometric strip is traversed in the opposite limit order.</span><span class="integration-area-understand__math">∫₃¹ f(x)dx = ${number(s.reversed)} = −(${number(s.forward)})</span>`;});buttons.push(same,adjacent,reversed);buttons.forEach(x=>{x.setAttribute('aria-pressed','false');controls.append(x);});adjacent.click();b.append(el(this.document,'div','integration-area-understand__takeaway','These are visual versions of the properties from the previous topic. Curves crossing the axis are deliberately left for the next topic.'));
  }
 }
-export function createIntegrationAreaUnderstandExperience(host){return new IntegrationAreaUnderstandExperience(host);}
+export function createIntegrationAreaUnderstandExperience(host,options){return new IntegrationAreaUnderstandExperience(host,options);}
