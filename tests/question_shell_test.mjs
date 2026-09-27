@@ -133,6 +133,8 @@ const first = ao1Set.questions[0];
 const { a, b, highPower, lowPower } = first.parameters;
 const term = (coefficient, power) => `${coefficient}${power === 0 ? '' : `x${power === 1 ? '' : `^${power}`}`}`;
 const expected = `${term(a * highPower, highPower - 1)}${b * lowPower < 0 ? '' : '+'}${term(b * lowPower, lowPower - 1)}`;
+const parenthesizedExpected = `${a * highPower}x^(${highPower - 1})+${b * lowPower}x^(${lowPower - 1})`;
+assert(first.check(parenthesizedExpected).tone === 'correct', 'Algebraic checking should accept toolbar-style parenthesized powers and +- notation');
 input.value = expected;
 input.trigger('input');
 shell.checkCurrent();
@@ -204,4 +206,20 @@ assert(root.hidden === true, 'QuestionShell can be hidden when the current activ
 shell.loadSet(ao1Set);
 assert(shell.getSnapshot().response === expected, 'Question state should survive hiding and restoring the same generated set');
 
-console.log('PASS shared QuestionShell consumes generated AO1/AO2 QuestionDefinition objects and preserves state');
+const freshSet = runner.generateSet({ ...ao1Definition, seed: 'question-shell-manual-fresh' });
+const freshFixture = buildQuestionShellFixture();
+let freshRequestCount = 0;
+const freshShell = createQuestionShell(freshFixture.root, {
+  onRequestFreshSet() {
+    freshRequestCount += 1;
+    return freshSet;
+  }
+});
+freshShell.loadSet(ao1Set);
+const originalFreshQuestionId = freshShell.getActiveQuestionId();
+freshFixture.root.querySelector('[data-question-shell-new]').trigger('click');
+assert(freshRequestCount === 1, 'New question must request a fresh generated set immediately');
+assert(freshShell.getActiveQuestionId() !== originalFreshQuestionId, 'New question must replace the current generated question without requiring an attempted answer');
+assert(freshShell.getSnapshot().checked === false && freshShell.getSnapshot().response === '', 'A manually generated new question must start clean');
+
+console.log('PASS shared QuestionShell consumes generated AO1/AO2 QuestionDefinition objects, validates flexible maths input, exposes New question, and preserves state');
