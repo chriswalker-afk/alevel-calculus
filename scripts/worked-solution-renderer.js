@@ -1,4 +1,4 @@
-import { buildEquationStepViewModel, renderEquationSteps } from "./equation-step-renderer.js";
+import { buildEquationStepViewModel, renderEquationSteps } from "./equation-step-renderer.js?v=ao1math1";
 
 export function inspectSolutionSteps(steps) {
   return buildEquationStepViewModel(steps);
