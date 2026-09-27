@@ -76,6 +76,7 @@ node tests/integration_intro_step44_test.mjs
 node tests/definite_indefinite_step45_test.mjs
 
 node tests/integration_area_step46_test.mjs
+node tests/original_prompt_audit_step8_test.mjs
 
 node tests/signed_area_step47_test.mjs
 
