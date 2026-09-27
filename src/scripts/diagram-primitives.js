@@ -183,8 +183,13 @@ export class DiagramPrimitives {
 
   fromClient(clientX, clientY) {
     const rect = this.svg.getBoundingClientRect();
-    const viewX = ((clientX - rect.left) / rect.width) * this.width;
-    const viewY = ((clientY - rect.top) / rect.height) * this.height;
+    const scale = Math.min(rect.width / this.width, rect.height / this.height) || 1;
+    const renderedWidth = this.width * scale;
+    const renderedHeight = this.height * scale;
+    const offsetX = (rect.width - renderedWidth) / 2;
+    const offsetY = (rect.height - renderedHeight) / 2;
+    const viewX = (clientX - rect.left - offsetX) / scale;
+    const viewY = (clientY - rect.top - offsetY) / scale;
     return {
       x: clamp(viewToDomain(viewX, this.xDomain, this.padding.left, this.width - this.padding.right), ...this.xDomain),
       y: clamp(viewToDomain(viewY, this.yDomain, this.height - this.padding.bottom, this.padding.top), ...this.yDomain)
