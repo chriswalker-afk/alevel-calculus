@@ -263,6 +263,16 @@ const topicObjectivesInlineEyebrow = new FakeElement('topicObjectivesInlineEyebr
 const topicObjectivesInlineHeading = new FakeElement('topicObjectivesInlineHeading');
 const topicObjectivesInlineList = new FakeElement('topicObjectivesInlineList');
 const topicObjectivesInlineFooter = new FakeElement('topicObjectivesInlineFooter');
+const topicPathway = new FakeElement('topicPathway');
+topicPathway.hidden = true;
+const topicPathwayHeading = new FakeElement('topicPathwayHeading');
+const topicPathwayNote = new FakeElement('topicPathwayNote');
+const topicPathwayRevisit = new FakeElement('topicPathwayRevisit');
+const topicPathwayModeButtons = ['memorise','ao1','ao2','ao3'].map((mode) => {
+  const button = new FakeElement(`topicPathwayMode-${mode}`);
+  button.dataset.topicPathwayMode = mode;
+  return button;
+});
 const wordBankDrawer = new FakeElement('wordBankDrawer');
 wordBankDrawer.setAttribute('aria-hidden', 'true');
 const wordBankTrigger = new FakeElement('wordBankTrigger');
@@ -404,6 +414,10 @@ const documentMap = new Map([
   ['[data-topic-objectives-inline-heading]', topicObjectivesInlineHeading],
   ['[data-topic-objectives-inline-list]', topicObjectivesInlineList],
   ['[data-topic-objectives-inline-footer]', topicObjectivesInlineFooter],
+  ['[data-topic-pathway]', topicPathway],
+  ['[data-topic-pathway-heading]', topicPathwayHeading],
+  ['[data-topic-pathway-note]', topicPathwayNote],
+  ['[data-topic-pathway-revisit]', topicPathwayRevisit],
   ['[data-word-bank-drawer]', wordBankDrawer],
   ['[data-word-bank-trigger]', wordBankTrigger],
   ['[data-word-bank-close]', wordBankClose],
@@ -455,6 +469,7 @@ globalThis.document = {
     if (selector === '[data-classwiz-model]') return classWizModelTabs;
     if (selector === '[data-help-target]') return helpTargetLinks;
     if (selector === '[data-word-bank-filter]') return wordBankFilters;
+    if (selector === '[data-topic-pathway-mode]') return topicPathwayModeButtons;
     return [];
   },
   addEventListener(type, handler) {
@@ -509,7 +524,7 @@ assert(scopeBadges[3].dataset.routeScope === 'full', 'Full A level scope should 
 assert(root.dataset.learningMode === 'understand', 'Understand should be the initial learning mode');
 assert(shell.dataset.learningMode === 'understand', 'Shell should expose the active learning mode');
 assert(shell.dataset.activityIndex === '0', 'Initial activity index should be 0');
-assert(title.textContent === 'What does gradient mean on a curve?', 'Initial Understand activity did not render');
+assert(title.textContent === 'Goals for Basics of differentiation', 'Understand should open on its dedicated Topic goals page');
 assert(stage.scrollTop === 0, 'Initial render should reset only the activity-stage scroll position');
 
 const preCalcClick = listeners.get('topicPreCalculus:click');
@@ -518,7 +533,7 @@ preCalcClick();
 assert(shell.dataset.topicId === 'topic:y12:foundations:pre-calculus', 'Pre-calculus selection should update shell topic identity');
 assert(currentTopicLabelElement.textContent === 'Pre-calculus', 'Pre-calculus selection should update workspace topic label');
 assert(currentTopicBreadcrumb.textContent === 'Foundations › Pre-calculus', 'Pre-calculus selection should update breadcrumb');
-assert(title.textContent === 'What does the hill feel like as the car moves?', 'Pre-calculus selection should render its first Understand activity');
+assert(title.textContent === 'Goals for Pre-calculus', 'Pre-calculus should also open on its dedicated Topic goals page');
 assert(modeTabs[0].disabled === false, 'Understand must remain enabled for Pre-calculus');
 assert(modeTabs.slice(1).every((tab) => tab.disabled === true), 'Unimplemented Pre-calculus modes must be disabled');
 assert(classWizTrigger.hidden === true, 'ClassWiz should be hidden for the conceptual Pre-calculus introduction');
@@ -527,7 +542,7 @@ const basicsClick = listeners.get('topicBasics:click');
 assert(typeof basicsClick === 'function', 'Basics navigation needs to remain selectable after Step 37');
 basicsClick();
 assert(shell.dataset.topicId === 'topic:y12:differentiation:basics', 'Switching back should restore Basics topic identity');
-assert(title.textContent === 'What does gradient mean on a curve?', 'Switching back should restore the frozen Basics Understand surface');
+assert(title.textContent === 'Goals for Basics of differentiation', 'Switching back should restore the Basics Topic goals page');
 assert(modeTabs.every((tab) => tab.disabled === false), 'All five frozen modes must be restored for Basics');
 assert(classWizTrigger.hidden === false, 'Basics ClassWiz support must remain available');
 assert(modeTabs[0].getAttribute('aria-selected') === 'true', 'Understand tab should initialize selected');
@@ -548,7 +563,7 @@ assert(shell.dataset.wordBankOpen === 'false', 'Word Bank drawer should initiali
 assert(wordBankDrawer.getAttribute('aria-hidden') === 'true', 'Closed Word Bank should be hidden from accessibility tree');
 assert(wordBankScrim.hidden === true, 'Word Bank scrim should initialize hidden');
 assert(wordBankCount.textContent === '2', 'Initial tagged vocabulary should be collected automatically');
-assert(topicObjectivesInline.hidden === false, 'Initial Topic goals should render on the first Understand activity');
+assert(topicObjectivesInline.hidden === false, 'Initial Topic goals should render on their own opening Understand page');
 assert(topicObjectivesInlineHeading.textContent === 'In this topic you will learn to…', 'Initial Topic goals should use the teaching-topic heading');
 assert(topicObjectivesInlineList.appended.length >= 3, 'Initial Topic goals should render several student-facing objectives');
 
@@ -628,8 +643,8 @@ assert(navigationScrim.hidden === true, 'Wide viewport sync should keep scrim hi
 shell.dataset.stabilityMarker = 'same-shell';
 topicNavigation.dataset.contextMarker = 'same-topic';
 listeners.get('next:click')();
-assert(shell.dataset.activityIndex === '1', 'Next should advance within Understand');
-assert(title.textContent === 'Can tangent gradients make a new graph?', 'Next should update the Understand activity fields');
+assert(shell.dataset.activityIndex === '1', 'Next from Topic goals should advance to the first mathematical Understand page');
+assert(title.textContent === 'What does gradient mean on a curve?', 'The first mathematical Understand activity should follow Topic goals');
 assert(shell.dataset.stabilityMarker === 'same-shell', 'Next should not replace the AppShell object');
 
 listeners.get('mode-ao2:click')();
@@ -650,8 +665,8 @@ assert(title.textContent === 'Say why the power rule changes both coefficient an
 
 listeners.get('mode-understand:click')();
 assert(root.dataset.learningMode === 'understand', 'Returning to Understand should restore its identity');
-assert(shell.dataset.activityIndex === '1', 'Returning to Understand should restore its previous activity index');
-assert(title.textContent === 'Can tangent gradients make a new graph?', 'Understand should restore its prior central activity');
+assert(shell.dataset.activityIndex === '1', 'Returning to Understand should restore its previous mathematical activity index');
+assert(title.textContent === 'What does gradient mean on a curve?', 'Understand should restore its prior mathematical activity');
 
 let prevented = false;
 listeners.get('mode-understand:keydown')({ key: 'ArrowRight', preventDefault() { prevented = true; } });
@@ -669,10 +684,22 @@ assert(root.dataset.learningMode === 'understand', 'Home should activate the fir
 assert(modeTabs[0].focused === true, 'Home should focus the first mode tab');
 
 listeners.get('previous:click')();
-assert(shell.dataset.activityIndex === '0', 'Previous from restored Understand activity 2 should return to activity 1');
+assert(shell.dataset.activityIndex === '0', 'Previous from the first mathematical Understand page should return to Topic goals');
+assert(previousButton.disabled === true, 'Previous should be disabled on the Topic goals page');
 listeners.get('previous:click')();
-assert(shell.dataset.activityIndex === '7', 'Previous from first Understand activity should wrap to the last');
-assert(footerPosition.textContent === '8 of 8', 'Footer activity position should remain synchronized');
+assert(shell.dataset.activityIndex === '0', 'Previous from Topic goals must not wrap to the end of Understand');
+assert(footerPosition.textContent === '1 of 10', 'Footer should include the two dedicated Understand bookend pages');
+
+for (let i = 0; i < 9; i += 1) listeners.get('next:click')();
+assert(shell.dataset.activityIndex === '9', 'Understand should finish on the dedicated pathway page');
+assert(title.textContent === 'Turn understanding into recall and practice', 'Final Understand page should explain the next learning sequence');
+assert(topicPathway.hidden === false, 'Final Understand page should reveal the pathway panel');
+assert(nextButton.disabled === true, 'Next should be disabled at the end of Understand');
+listeners.get('next:click')();
+assert(shell.dataset.activityIndex === '9', 'Next from the final Understand page must not wrap to Topic goals');
+listeners.get('topicPathwayRevisit:click')();
+assert(shell.dataset.activityIndex === '1', 'Revisit Understand should return to the first mathematical Understand page');
+assert(title.textContent === 'What does gradient mean on a curve?', 'Revisit Understand should skip the goals page and reopen teaching content');
 
 stage.dataset.answerDraft = '3x^2';
 stage.dataset.sliderValue = '0.63';
