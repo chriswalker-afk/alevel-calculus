@@ -40,6 +40,29 @@ export function calculateTrapeziumRule(definition, { lower = 0, upper = 1, n = 2
   return Object.freeze({ lower: a, upper: b, n: count, h, ordinates: Object.freeze(ordinates), trapezia: Object.freeze(trapezia), estimate, exactIntegral, absoluteError, percentageError });
 }
 
+export function buildTrapeziumComparison(definition, { lower = null, upper = null, counts = [1, 2, 4, 8, 16] } = {}) {
+  validateFunctionDefinition(definition);
+  const [xMin, xMax] = normalizeDomain(definition.xDomain, [0, 1]);
+  const a = lower == null ? xMin : lower;
+  const b = upper == null ? xMax : upper;
+  const normalizedCounts = [...new Set(counts.map((count) => normalizeTrapeziumCount(count)))].sort((left, right) => left - right);
+  let previousError = null;
+  return Object.freeze(normalizedCounts.map((n) => {
+    const state = calculateTrapeziumRule(definition, { lower: a, upper: b, n });
+    const errorShrank = previousError == null ? null : state.absoluteError < previousError - 1e-12;
+    previousError = state.absoluteError;
+    return Object.freeze({
+      n: state.n,
+      h: state.h,
+      estimate: state.estimate,
+      exactIntegral: state.exactIntegral,
+      absoluteError: state.absoluteError,
+      percentageError: state.percentageError,
+      errorShrank
+    });
+  }));
+}
+
 export function buildLongWayTerms(state) {
   return Object.freeze(state.trapezia.map((trap) => `½h(y${trap.left.index}+y${trap.right.index})`));
 }
