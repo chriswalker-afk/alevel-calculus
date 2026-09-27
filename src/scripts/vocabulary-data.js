@@ -4,7 +4,7 @@ export const vocabularyTerms = Object.freeze({
     label: "derivative",
     scopeId: "y12",
     definition: "The gradient function of a function; at a particular x-value it gives the gradient of the tangent to the curve.",
-    notation: "f'(x), dy/dx",
+    notation: "f′(x), dy/dx",
     relatedTopics: Object.freeze([
       "Basics of differentiation",
       "Tangents & normals",
@@ -17,7 +17,7 @@ export const vocabularyTerms = Object.freeze({
     label: "gradient function",
     scopeId: "y12",
     definition: "A function whose value at each x gives the gradient of the original curve at that x-value.",
-    notation: "f'(x)",
+    notation: "f′(x)",
     relatedTopics: Object.freeze([
       "Basics of differentiation",
       "Stationary points",
@@ -29,7 +29,7 @@ export const vocabularyTerms = Object.freeze({
     label: "tangent",
     scopeId: "y12",
     definition: "A straight line that has the same gradient as the curve at the point being considered.",
-    notation: "m_tangent = f'(a)",
+    notation: "m_tangent = f′(a)",
     relatedTopics: Object.freeze([
       "Basics of differentiation",
       "First principles",
@@ -39,7 +39,7 @@ export const vocabularyTerms = Object.freeze({
   "vocab:normal": Object.freeze({
     id: "vocab:normal", label: "normal", scopeId: "y12",
     definition: "A straight line perpendicular to the tangent at the point of contact on a curve.",
-    notation: "m_normal = -1/m_tangent (when m_tangent is non-zero)", relatedTopics: Object.freeze(["Tangents & normals"])
+    notation: "m_normal = −1/m_tangent (m_tangent ≠ 0)", relatedTopics: Object.freeze(["Tangents & normals"])
   }),
   "vocab:point-of-contact": Object.freeze({
     id: "vocab:point-of-contact", label: "point of contact", scopeId: "y12",
@@ -47,15 +47,15 @@ export const vocabularyTerms = Object.freeze({
   }),
   "vocab:perpendicular": Object.freeze({
     id: "vocab:perpendicular", label: "perpendicular", scopeId: "y12",
-    definition: "Meeting at a right angle; for two non-vertical perpendicular lines, the product of their gradients is -1.", notation: "m1 m2 = -1", relatedTopics: Object.freeze(["Tangents & normals"])
+    definition: "Meeting at a right angle; for two non-vertical perpendicular lines, the product of their gradients is -1.", notation: "m_1m_2 = −1", relatedTopics: Object.freeze(["Tangents & normals"])
   }),
   "vocab:negative-reciprocal": Object.freeze({
     id: "vocab:negative-reciprocal", label: "negative reciprocal", scopeId: "y12",
-    definition: "The reciprocal of a non-zero number with the sign changed; it gives the gradient of a perpendicular non-vertical line.", notation: "m -> -1/m", relatedTopics: Object.freeze(["Tangents & normals"])
+    definition: "The reciprocal of a non-zero number with the sign changed; it gives the gradient of a perpendicular non-vertical line.", notation: "m → −1/m", relatedTopics: Object.freeze(["Tangents & normals"])
   }),
   "vocab:horizontal-tangent": Object.freeze({
     id: "vocab:horizontal-tangent", label: "horizontal tangent", scopeId: "y12",
-    definition: "A tangent with gradient zero.", notation: "f'(a) = 0", relatedTopics: Object.freeze(["Tangents & normals", "Stationary points"])
+    definition: "A tangent with gradient zero.", notation: "f′(a) = 0", relatedTopics: Object.freeze(["Tangents & normals", "Stationary points"])
   }),
   "vocab:vertical-normal": Object.freeze({
     id: "vocab:vertical-normal", label: "vertical normal", scopeId: "y12",
@@ -63,7 +63,7 @@ export const vocabularyTerms = Object.freeze({
   }),
   "vocab:point-slope-form": Object.freeze({
     id: "vocab:point-slope-form", label: "point-slope form", scopeId: "y12",
-    definition: "A form of a straight-line equation using a known point and gradient.", notation: "y - y1 = m(x - x1)", relatedTopics: Object.freeze(["Tangents & normals"])
+    definition: "A form of a straight-line equation using a known point and gradient.", notation: "y − y_1 = m(x − x_1)", relatedTopics: Object.freeze(["Tangents & normals"])
   }),
   "vocab:coefficient": Object.freeze({
     id: "vocab:coefficient",
@@ -89,7 +89,7 @@ export const vocabularyTerms = Object.freeze({
     label: "differentiate",
     scopeId: "y12",
     definition: "To find the derivative of a function or expression.",
-    notation: "differentiate f(x) -> f′(x)",
+    notation: "differentiate f(x) → f′(x)",
     relatedTopics: Object.freeze(["Basics of differentiation", "Differentiation from first principles"])
   }),
   "vocab:gradient": Object.freeze({
@@ -161,7 +161,7 @@ export const vocabularyTerms = Object.freeze({
     label: "limit",
     scopeId: "y12",
     definition: "The value that an expression approaches as its input gets closer and closer to a specified value.",
-    notation: "lim as h → 0",
+    notation: "lim_(h→0)",
     relatedTopics: Object.freeze(["Differentiation from first principles"])
   }),
   "vocab:chord": Object.freeze({
@@ -185,7 +185,7 @@ export const vocabularyTerms = Object.freeze({
     label: "first principles",
     scopeId: "y12",
     definition: "The definition of a derivative obtained as the limit of chord gradients as the second point approaches the first.",
-    notation: "f′(x) = lim as h → 0 of [f(x+h)−f(x)]/h",
+    notation: "f′(x) = lim_(h→0) [f(x+h)−f(x)]/h",
     relatedTopics: Object.freeze(["Differentiation from first principles"])
   }),
   "vocab:approaches": Object.freeze({
@@ -265,7 +265,7 @@ export const vocabularyTerms = Object.freeze({
     label: "integrand",
     scopeId: "y12",
     definition: "The expression being integrated inside an integral.",
-    notation: "f(x) in integral f(x) dx",
+    notation: "f(x) in ∫ f(x) dx",
     relatedTopics: Object.freeze([
       "Introduction to integration",
       "Standard integrals",
@@ -289,7 +289,7 @@ export const vocabularyTerms = Object.freeze({
   "vocab:small-angle-approximation": Object.freeze({id:"vocab:small-angle-approximation",label:"small-angle approximation",scopeId:"y13-additional",definition:"A close approximation valid when an angle measured in radians is near zero, such as sin h being close to h and cos h being close to 1.",notation:"sin h ≈ h; cos h ≈ 1",relatedTopics:Object.freeze(["First-principles proofs for trig derivatives"])}),
   "vocab:trig-limit": Object.freeze({id:"vocab:trig-limit",label:"trigonometric small-angle limit",scopeId:"y13-additional",definition:"A limiting result near zero used in the first-principles proofs of the sine and cosine derivative rules.",notation:"lim sin h/h=1; lim (cos h−1)/h=0",relatedTopics:Object.freeze(["First-principles proofs for trig derivatives"])}),
   "vocab:angle-addition-formula": Object.freeze({id:"vocab:angle-addition-formula",label:"angle-addition formula",scopeId:"y13-additional",definition:"An identity for expanding a trigonometric function of a sum of angles, used to expand sin(x+h) or cos(x+h) in first-principles proofs.",notation:"sin(x+h), cos(x+h)",relatedTopics:Object.freeze(["First-principles proofs for trig derivatives"])}),
-  "vocab:first-principles-definition": Object.freeze({id:"vocab:first-principles-definition",label:"first-principles definition",scopeId:"y13-additional",definition:"The derivative defined as the limiting value of a difference quotient as the horizontal increment h approaches zero.",notation:"f′(x)=lim h→0 [f(x+h)−f(x)]/h",relatedTopics:Object.freeze(["First-principles proofs for trig derivatives"])}),
+  "vocab:first-principles-definition": Object.freeze({id:"vocab:first-principles-definition",label:"first-principles definition",scopeId:"y13-additional",definition:"The derivative defined as the limiting value of a difference quotient as the horizontal increment h approaches zero.",notation:"f′(x)=lim_(h→0) [f(x+h)−f(x)]/h",relatedTopics:Object.freeze(["First-principles proofs for trig derivatives"])}),
   "vocab:product-rule": Object.freeze({id:"vocab:product-rule",label:"product rule",scopeId:"y13-additional",definition:"A differentiation rule for a product of two functions; the derivative is formed by differentiating each factor in turn while leaving the other unchanged.",notation:"(uv)′=u′v+uv′",relatedTopics:Object.freeze(["Product, quotient and chain rule"])}),
   "vocab:quotient-rule": Object.freeze({id:"vocab:quotient-rule",label:"quotient rule",scopeId:"y13-additional",definition:"A differentiation rule for one function divided by another, with the order v u′ minus u v′ preserved in the numerator.",notation:"(u/v)′=(vu′−uv′)/v²",relatedTopics:Object.freeze(["Product, quotient and chain rule"])}),
   "vocab:chain-rule": Object.freeze({id:"vocab:chain-rule",label:"chain rule",scopeId:"y13-additional",definition:"A differentiation rule for a composite function: differentiate the outside with the inside left in place, then multiply by the derivative of the inside.",notation:"dy/dx=(dy/du)(du/dx)",relatedTopics:Object.freeze(["Product, quotient and chain rule"])}),
@@ -323,7 +323,7 @@ export const vocabularyTerms = Object.freeze({
   "vocab:rate-flow-diagram": Object.freeze({id:"vocab:rate-flow-diagram",label:"rate-flow diagram",scopeId:"y13-additional",definition:"A dependency diagram that orders changing quantities and labels the derivatives connecting adjacent variables before numerical substitution.",notation:"t → r → A",relatedTopics:Object.freeze(["Connected rates of change"])}),
   "vocab:rate-unit": Object.freeze({id:"vocab:rate-unit",label:"rate unit",scopeId:"y13-additional",definition:"A compound unit describing change in the numerator quantity per unit change in the denominator quantity.",notation:"cm² s⁻¹, cm³ s⁻¹",relatedTopics:Object.freeze(["Connected rates of change"])}),
   "vocab:standard-integral": Object.freeze({id:"vocab:standard-integral",label:"standard integral",scopeId:"y13-additional",definition:"A standard antiderivative result that should be recognised and recalled fluently before choosing more advanced integration methods.",notation:"integrand ↔ antiderivative",relatedTopics:Object.freeze(["Standard integrals to memorise"])}),
-  "vocab:fundamental-theorem": Object.freeze({id:"vocab:fundamental-theorem",label:"Fundamental Theorem of Calculus",scopeId:"y13-additional",definition:"The theorem linking antiderivatives to definite integrals: if F prime equals f, then the integral from a to b of f is F(b)-F(a).",notation:"∫_a^b f(x) dx = F(b) - F(a)",relatedTopics:Object.freeze(["Standard integrals to memorise","Definite and indefinite integration","Integration as area"])}),
+  "vocab:fundamental-theorem": Object.freeze({id:"vocab:fundamental-theorem",label:"Fundamental Theorem of Calculus",scopeId:"y13-additional",definition:"The theorem linking antiderivatives to definite integrals: if F prime equals f, then the integral from a to b of f is F(b)-F(a).",notation:"∫_a^b f(x) dx = F(b) − F(a)",relatedTopics:Object.freeze(["Standard integrals to memorise","Definite and indefinite integration","Integration as area"])}),
 
   "vocab:differential-equation": Object.freeze({id:"vocab:differential-equation",label:"differential equation",scopeId:"y13-additional",definition:"An equation involving an unknown function and one or more of its derivatives.",notation:"dy/dx = f(x,y)",relatedTopics:Object.freeze(["First-order differential equations"])}),
   "vocab:first-order": Object.freeze({id:"vocab:first-order",label:"first order",scopeId:"y13-additional",definition:"A differential equation whose highest derivative is a first derivative.",notation:"dy/dx present; no higher derivative",relatedTopics:Object.freeze(["First-order differential equations"])}),
