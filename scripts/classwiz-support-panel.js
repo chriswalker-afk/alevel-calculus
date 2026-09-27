@@ -1,4 +1,4 @@
-import { getClassWizModels, getClassWizSupportPack } from './classwiz-support-data.js?v=auditstep16';
+import { getClassWizModels, getClassWizSupportPack } from './classwiz-support-data.js?v=auditstep16final';
 
 function requireElement(root,selector){
   const element=root.querySelector(selector);
