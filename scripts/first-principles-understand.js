@@ -37,19 +37,19 @@ const X_CUBED = createPolynomialFunctionDefinition({
 const H_SEQUENCE = Object.freeze([1, 0.5, 0.1, 0.01]);
 
 const X2_STEPS = Object.freeze([
-  { id: 'x2-start', kind: 'working', label: 'Start with the definition', expression: "f′(x) = lim h→0 [(f(x+h) − f(x))/h]", explanation: 'For f(x)=x², first find f(x+h).' },
-  { id: 'x2-substitute', kind: 'working', label: 'Substitute f(x)=x²', expression: "f′(x) = lim h→0 [((x+h)² − x²)/h]", explanation: 'The two function values are the heights of Q and P.' },
-  { id: 'x2-expand', kind: 'working', label: 'Expand', expression: "= lim h→0 [(x² + 2xh + h² − x²)/h]", explanation: 'Expand before trying to cancel anything.' },
-  { id: 'x2-simplify', kind: 'working', label: 'Simplify the numerator', expression: '= lim h→0 [(2xh + h²)/h]', explanation: 'Both remaining terms contain a factor h.' },
-  { id: 'x2-cancel', kind: 'reasoning', label: 'Cancel h while h ≠ 0', expression: '= lim h→0 (2x + h)', explanation: 'During the approach h is non-zero, so the common factor can be cancelled.' },
+  { id: 'x2-start', kind: 'working', label: 'Start with the definition', expression: "f′(x) = lim_(h→0) [(f(x+h) − f(x))/h]", explanation: 'For f(x)=x², first find f(x+h).' },
+  { id: 'x2-substitute', kind: 'working', label: 'Substitute f(x)=x²', expression: "f′(x) = lim_(h→0) [((x+h)² − x²)/h]", explanation: 'The two function values are the heights of Q and P.' },
+  { id: 'x2-expand', kind: 'working', label: 'Expand', expression: "= lim_(h→0) [(x² + 2xh + h² − x²)/h]", explanation: 'Expand before trying to cancel anything.' },
+  { id: 'x2-simplify', kind: 'working', label: 'Simplify the numerator', expression: '= lim_(h→0) [(2xh + h²)/h]', explanation: 'Both remaining terms contain a factor h.' },
+  { id: 'x2-cancel', kind: 'reasoning', label: 'Cancel h while h ≠ 0', expression: '= lim_(h→0) (2x + h)', explanation: 'During the approach h is non-zero, so the common factor can be cancelled.' },
   { id: 'x2-limit', kind: 'result', label: 'Now take the limit', expression: "f′(x) = 2x", explanation: 'As h approaches 0, 2x+h approaches 2x. This matches the power rule.' }
 ]);
 
 const X3_STEPS = Object.freeze([
-  { id: 'x3-start', kind: 'working', label: 'Start with the definition', expression: "f′(x) = lim h→0 [((x+h)³ − x³)/h]", explanation: 'Substitute f(x)=x³ into the same difference quotient.' },
-  { id: 'x3-expand', kind: 'working', label: 'Expand (x+h)³', expression: '= lim h→0 [(x³ + 3x²h + 3xh² + h³ − x³)/h]', explanation: 'The x³ terms cancel.' },
-  { id: 'x3-simplify', kind: 'working', label: 'Simplify', expression: '= lim h→0 [(3x²h + 3xh² + h³)/h]', explanation: 'Every term in the numerator contains h.' },
-  { id: 'x3-cancel', kind: 'reasoning', label: 'Cancel h while h ≠ 0', expression: '= lim h→0 (3x² + 3xh + h²)', explanation: 'The difference quotient is now ready for the limiting step.' },
+  { id: 'x3-start', kind: 'working', label: 'Start with the definition', expression: "f′(x) = lim_(h→0) [((x+h)³ − x³)/h]", explanation: 'Substitute f(x)=x³ into the same difference quotient.' },
+  { id: 'x3-expand', kind: 'working', label: 'Expand (x+h)³', expression: '= lim_(h→0) [(x³ + 3x²h + 3xh² + h³ − x³)/h]', explanation: 'The x³ terms cancel.' },
+  { id: 'x3-simplify', kind: 'working', label: 'Simplify', expression: '= lim_(h→0) [(3x²h + 3xh² + h³)/h]', explanation: 'Every term in the numerator contains h.' },
+  { id: 'x3-cancel', kind: 'reasoning', label: 'Cancel h while h ≠ 0', expression: '= lim_(h→0) (3x² + 3xh + h²)', explanation: 'The difference quotient is now ready for the limiting step.' },
   { id: 'x3-limit', kind: 'result', label: 'Now take the limit', expression: "f′(x) = 3x²", explanation: 'The h terms approach zero, leaving 3x²: again the familiar power-rule result.' }
 ]);
 
@@ -297,7 +297,7 @@ export class FirstPrinciplesUnderstandExperience {
 
   render_formal_definition() {
     const body = this.#panel('Turn the picture into the definition', '6 · First principles');
-    const formula = el(this.document, 'div', 'first-principles-understand__formal-formula', "f′(x) = limₕ→₀  [ f(x+h) − f(x) ] / h");
+    const formula = el(this.document, 'div', 'first-principles-understand__formal-formula', "f′(x) = lim_(h→0) [f(x+h) − f(x)]/h");
     body.append(formula);
     const explorer = this.#mountExplorer(body, { functions: [X_SQUARED], showFunctionSelector: false, initialH: 0.5, informationMode: 'full' });
     void explorer;
