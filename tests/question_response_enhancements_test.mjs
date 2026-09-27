@@ -11,6 +11,7 @@ import { listQuestionDefinitions } from "../src/scripts/question-catalogue.js";
 import { createGeneratorRunner } from "../src/scripts/generator-runner.js";
 
 assert.equal(formatMathInputForDisplay("sqrt(x)+pi+x^2"), "√(x)+π+x^2");
+assert.equal(formatMathInputForDisplay("-30x^(4)+-9x^(2)"), "−30x^4−9x^2");
 assert.ok(mathEntryToolbarLabels.includes("dy/dx"));
 assert.ok(mathEntryToolbarLabels.includes("d/dx"));
 assert.deepEqual(selfReviewFocusIds, ["method", "working", "explanation", "interpretation", "units"]);
