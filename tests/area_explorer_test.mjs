@@ -60,7 +60,7 @@ const source = fs.readFileSync(path.join(root, "src/scripts/area-explorer.js"), 
 const css = fs.readFileSync(path.join(root, "src/styles/area-explorer.css"), "utf8");
 const demo = fs.readFileSync(path.join(root, "src/area-explorer-demo.html"), "utf8");
 
-assert.match(source, /from "\.\/diagram-primitives\.js"/, "AreaExplorer must compose DiagramPrimitives.");
+assert.match(source, /from "\.\/diagram-primitives\.js(?:\?[^"]*)?"/, "AreaExplorer must compose DiagramPrimitives.");
 assert.match(source, /from "\.\/linked-function-gradient-explorer\.js"/, "AreaExplorer should reuse the established function-definition contract.");
 assert.doesNotMatch(source, /createElementNS|<svg|canvas/i, "AreaExplorer must not create a parallel SVG/canvas system.");
 assert.match(source, /shadedRegion\(/, "Signed regions must reuse the shared shading primitive.");
