@@ -40,16 +40,29 @@ const css=readFileSync(new URL("../src/styles/app-shell.css",import.meta.url),"u
 for(const entry of configs){
   assert.ok(appShell.includes(entry.topicId),"Runtime is missing "+entry.topicId+".");
 }
-assert.match(appShell,/syncInlineTopicObjectives/);
-assert.match(appShell,/isFirstUnderstand/);
-assert.match(appShell,/isLastUnderstand/);
+assert.match(appShell,/understandJourneyActivity/);
+assert.match(appShell,/withUnderstandJourney/);
+assert.match(appShell,/syncUnderstandJourneyPages/);
+assert.match(appShell,/syncActivityNavigation/);
+assert.match(appShell,/firstUnderstandContentIndex/);
 assert.match(appShell,/openTopicGoals/);
 assert.match(html,/data-topic-goals-trigger/);
 assert.match(html,/data-topic-objectives-inline/);
+assert.match(html,/data-topic-pathway/);
+assert.match(html,/data-topic-pathway-mode="memorise"/);
+assert.match(html,/data-topic-pathway-mode="ao1"/);
+assert.match(html,/data-topic-pathway-mode="ao2"/);
+assert.match(html,/data-topic-pathway-mode="ao3"/);
 assert.match(html,/data-topic-goals-dialog/);
 assert.match(css,/topic-objectives-card--inline/);
+assert.match(css,/topic-pathway-card/);
+assert.match(css,/data-understand-journey-page="goals"/);
 assert.match(css,/grid-column:\s*1\s*\/\s*-1/);
 assert.match(css,/topic-goals-dialog/);
 assert.match(css,/@media \(max-width: 680px\)/);
 
-console.log("PASS topic objectives: all 33 topics have student-facing goals, review/mastery wording, intro/recap rendering and reusable access.");
+assert.match(appShell,/activity:y12:differentiation:basics:understand/);
+assert.match(appShell,/topic-goals/);
+assert.match(appShell,/next-steps/);
+assert.match(appShell,/nextButton\.disabled = linearUnderstand && atEnd/);
+console.log("PASS topic objectives: Understand uses dedicated goals and pathway pages with linear, non-wrapping navigation.");
