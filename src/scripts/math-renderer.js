@@ -17,6 +17,7 @@ export const mathRenderSelector = [
   "[data-question-shell-math]",
   "[data-question-shell-choice-label]",
   "[data-math-render]",
+  "[data-math-prose]",
   ".equation-step__expression",
   ".memory-learn-item__notation",
   ".memory-flashcard__content",
