@@ -122,7 +122,7 @@ export const SHARED_CLASSWIZ_USE_CASES=freeze({
     helpsWith:'Seeing numerical evidence that sin h / h approaches 1 as h approaches 0.',
     example:'In radians, compare sin(x)/x at x=0.1, 0.01 and 0.001.',
     radiansRequired:true,radiansReminder:'RADIAN mode is essential for this small-angle limit evidence.',
-    doesNotReplace:'The table supplies numerical evidence only. It does not establish the limit or replace the first-principles proof.',
+    doesNotReplace:'The table supplies numerical evidence only. Do not use it to replace the limit argument or the first-principles proof.',
     models:tableSteps()
   }),
   polynomialRoots:useCase({
@@ -151,7 +151,7 @@ const supportPacksArray=[
   pack('topic:y13:differentiation:standard-functions','ClassWiz derivative checks',[U.derivativeCheck]),
   pack('topic:y13:differentiation:trig-first-principles','ClassWiz small-angle evidence',[U.smallAngleTable]),
   pack('topic:y13:differentiation:product-quotient-chain','ClassWiz rule checks',[U.derivativeCheck]),
-  pack('topic:y13:differentiation:parametric-differentiation','ClassWiz parametric checks',[U.pairedTable,U.derivativeCheck],{defaultUseCaseId:'paired-table'}),
+  pack('topic:y13:differentiation:parametric-differentiation','ClassWiz parametric checks',[U.pairedTable,U.derivativeCheck],{defaultUseCaseId:'paired-table',introduction:'Use TABLE for paired-coordinate exploration and numerical d/dx only as checks. These calculator checks do not replace parametric algebra, exact ranges or the chain-rule derivation.'}),
   pack('topic:y13:differentiation:trig-identities-inverse','ClassWiz trig derivative checks',[U.derivativeCheck]),
   pack('topic:y13:differentiation:concavity-inflection','ClassWiz concavity checks',[U.polynomialRoots,U.functionTable],{defaultUseCaseId:'polynomial-roots'}),
   pack('topic:y13:integration:standard-integrals','ClassWiz integral checks',[U.integralCheck]),
