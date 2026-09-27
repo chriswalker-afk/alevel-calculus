@@ -86,6 +86,59 @@ sub.math-script {
   vertical-align: baseline;
 }
 
+.math-integral {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: -0.14em;
+  margin-inline: 0.08em 0.12em;
+  white-space: nowrap;
+}
+
+.math-integral__symbol {
+  display: inline-block;
+  font-size: 1.45em;
+  line-height: 0.86;
+  font-weight: var(--weight-regular);
+}
+
+.math-integral--limited {
+  align-items: center;
+  margin-right: 0.16em;
+}
+
+.math-integral__limits {
+  display: inline-grid;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  min-width: 1.1em;
+  margin-left: 0.03em;
+  font-size: 0.56em;
+  line-height: 0.92;
+}
+
+.math-integral__upper,
+.math-integral__lower {
+  display: block;
+  min-width: 100%;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.math-integral__upper {
+  align-self: end;
+  transform: translateY(-0.08em);
+}
+
+.math-integral__lower {
+  align-self: start;
+  transform: translateY(0.08em);
+}
+
+.math-typeset--display .math-integral__symbol {
+  font-size: 1.62em;
+}
+
 .question-shell__math.math-typeset,
 .equation-step__expression.math-typeset,
 .memory-learn-item__notation.math-typeset,
