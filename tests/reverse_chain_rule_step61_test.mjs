@@ -55,7 +55,7 @@ const coefficient=getQuestionSetDefinitionForActivity('activity:y13:integration:
 assert.equal(coefficient.diagnosticRules.coefficient.kind,'execution','coefficient mistakes should remain execution evidence');
 
 assert.equal(getSupportTargetForMicroSkill('skill:y13:integration:reverse-chain-rule:recognition-classification','ao1').activityId,'activity:y13:integration:reverse-chain-rule:ao1:classify-only');
-assert.equal(getSupportTargetForMicroSkill('skill:y13:integration:reverse-chain-rule:f-prime-over-f','understand').activityId,'activity:y13:integration:reverse-chain-rule:understand:f-prime-over-f');
+assert.equal(getSupportTargetForMicroSkill('skill:y13:integration:reverse-chain-rule:f-prime-over-f','understand').activityId,'activity:y13:integration:reverse-chain-rule:understand:recognition-first','Canonical integration-method Help should route f′/f recognition through the shared recognition-first decision surface.');
 assert.equal(getSupportTargetForMicroSkill('skill:y13:integration:reverse-chain-rule:trig-recognition','ao1').activityId,'activity:y13:integration:reverse-chain-rule:ao1:trig-recognition');
 
 const understand=await fs.readFile(new URL('../src/scripts/reverse-chain-rule-understand.js',import.meta.url),'utf8');
