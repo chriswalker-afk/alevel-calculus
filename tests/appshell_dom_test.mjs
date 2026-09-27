@@ -562,7 +562,7 @@ assert(helpTargetLinks[1].dataset.helpTargetId === 'activity:y12:differentiation
 assert(shell.dataset.wordBankOpen === 'false', 'Word Bank drawer should initialize closed');
 assert(wordBankDrawer.getAttribute('aria-hidden') === 'true', 'Closed Word Bank should be hidden from accessibility tree');
 assert(wordBankScrim.hidden === true, 'Word Bank scrim should initialize hidden');
-assert(wordBankCount.textContent === '2', 'Initial tagged vocabulary should be collected automatically');
+assert(wordBankCount.textContent === '0', 'Topic goals should not falsely mark vocabulary as encountered before the maths begins');
 assert(topicObjectivesInline.hidden === false, 'Initial Topic goals should render on their own opening Understand page');
 assert(topicObjectivesInlineHeading.textContent === 'In this topic you will learn to…', 'Initial Topic goals should use the teaching-topic heading');
 assert(topicObjectivesInlineList.appended.length >= 3, 'Initial Topic goals should render several student-facing objectives');
@@ -645,6 +645,7 @@ topicNavigation.dataset.contextMarker = 'same-topic';
 listeners.get('next:click')();
 assert(shell.dataset.activityIndex === '1', 'Next from Topic goals should advance to the first mathematical Understand page');
 assert(title.textContent === 'What does gradient mean on a curve?', 'The first mathematical Understand activity should follow Topic goals');
+assert(wordBankCount.textContent === '2', 'Vocabulary should be encountered when the first mathematical Understand page is visited');
 assert(shell.dataset.stabilityMarker === 'same-shell', 'Next should not replace the AppShell object');
 
 listeners.get('mode-ao2:click')();
