@@ -1,4 +1,4 @@
-import { learningModeOrder, learningModes } from "./sample-activities.js?v=auditstep3";
+import { learningModeOrder, learningModes } from "./sample-activities.js?v=auditstep4";
 import { getCourseScope } from "./scope-metadata.js";
 import { getTopicProgress, progressModeOrder } from "./progress-model.js";
 import { getHelpTarget, getHelpTargets } from "./help-content.js";
@@ -15,8 +15,8 @@ import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner
 import { createQuestionPracticeSession } from "./question-practice-session.js";
 import { createMemoryLab } from "./memory-lab.js";
 import { installMathRendering } from "./math-renderer.js?v=ao1math4";
-import { getMemoryItemsForTopic } from "./memory-content.js";
-import { getMemoryGamePackForTopic } from "./memory-game-content.js";
+import { getMemoryItemsForTopic } from "./memory-content.js?v=auditstep4";
+import { getMemoryGamePackForTopic } from "./memory-game-content.js?v=auditstep4";
 import { getMemoryReviewPackForTopic } from "./memory-review-content.js";
 import { createClassWizSupportPanel } from "./classwiz-support-panel.js";
 import { createBasicsUnderstandExperience } from "./basics-understand.js?v=auditstep3";

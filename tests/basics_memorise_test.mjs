@@ -16,12 +16,20 @@ const requiredFacts = [
   "memory-item:y12:differentiation:basics:constant",
   "memory-item:y12:differentiation:basics:x",
   "memory-item:y12:differentiation:basics:linear",
+  "memory-item:y12:differentiation:basics:a-over-x",
+  "memory-item:y12:differentiation:basics:a-over-x-power",
+  "memory-item:y12:differentiation:basics:a-root-x",
+  "memory-item:y12:differentiation:basics:a-over-root-x",
   "memory-item:y12:differentiation:basics:negative-powers",
   "memory-item:y12:differentiation:basics:fractional-powers",
   "memory-item:y12:differentiation:basics:term-by-term"
 ];
 for (const id of requiredFacts) assert(factIds.has(id), `Missing planned Memorise fact ${id}`);
 assert.equal(basicsDifferentiationFactItems.find((item) => item.id.endsWith(":x")).flashcard.back, "1", "x must be memorised as a distinct special case");
+assert.equal(basicsDifferentiationFactItems.find((item)=>item.id.endsWith(":a-over-x")).flashcard.back,"−a/x²","a/x must be directly retrievable, not only derivable after rewriting.");
+assert.equal(basicsDifferentiationFactItems.find((item)=>item.id.endsWith(":a-over-x-power")).learn.notation,"d/dx (a/xⁿ) = −an/xⁿ⁺¹","Reciprocal powers must have an explicit remembered derivative pattern.");
+assert.equal(basicsDifferentiationFactItems.find((item)=>item.id.endsWith(":a-root-x")).flashcard.back,"a/(2√x)","Square-root derivatives must be directly retrievable.");
+assert.equal(basicsDifferentiationFactItems.find((item)=>item.id.endsWith(":a-over-root-x")).flashcard.back,"−a/(2x³ᐟ²)","Reciprocal-root derivatives must be directly retrievable.");
 
 const deck = buildFlashcardDeck(basicsDifferentiationMemoryItems);
 for (const item of basicsDifferentiationFactItems) {

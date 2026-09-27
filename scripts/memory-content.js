@@ -61,6 +61,34 @@ export const basicsDifferentiationFactItems = Object.freeze([
     match: { left: "d/dx (ax)", right: "a" }, prerequisiteTags: [], vocabularyTags: ["vocab:coefficient"]
   }),
   defineMemoryItem({
+    id: "memory-item:y12:differentiation:basics:a-over-x",
+    courseScope: "y12", topicId, microSkillId: skill("rewrite-powers"), kind: "rule",
+    learn: { label: "a divided by x", statement: "A reciprocal linear term differentiates to a negative inverse-square term.", notation: "d/dx (a/x) = −a/x²" },
+    flashcard: { front: "d/dx (a/x)", back: "−a/x²", reverse: true, cue: "Recall this common reciprocal special case" },
+    match: { left: "d/dx (a/x)", right: "−a/x²" }, prerequisiteTags: ["indices"], vocabularyTags: ["vocab:power-index"]
+  }),
+  defineMemoryItem({
+    id: "memory-item:y12:differentiation:basics:a-over-x-power",
+    courseScope: "y12", topicId, microSkillId: skill("rewrite-powers"), kind: "rule",
+    learn: { label: "a divided by xⁿ", statement: "For a positive whole-number n, rewrite ax⁻ⁿ and use the power rule.", notation: "d/dx (a/xⁿ) = −an/xⁿ⁺¹" },
+    flashcard: { front: "d/dx (a/xⁿ)", back: "−an/xⁿ⁺¹", reverse: true, cue: "Recall the reciprocal-power pattern" },
+    match: { left: "d/dx (a/xⁿ)", right: "−an/xⁿ⁺¹" }, prerequisiteTags: ["indices"], vocabularyTags: ["vocab:power-index"]
+  }),
+  defineMemoryItem({
+    id: "memory-item:y12:differentiation:basics:a-root-x",
+    courseScope: "y12", topicId, microSkillId: skill("rewrite-powers"), kind: "rule",
+    learn: { label: "a√x", statement: "A square-root term can be recalled directly, while still being understood as ax¹ᐟ².", notation: "d/dx (a√x) = a/(2√x)" },
+    flashcard: { front: "d/dx (a√x)", back: "a/(2√x)", reverse: true, cue: "Recall this common root special case" },
+    match: { left: "d/dx (a√x)", right: "a/(2√x)" }, prerequisiteTags: ["indices"], vocabularyTags: ["vocab:power-index"]
+  }),
+  defineMemoryItem({
+    id: "memory-item:y12:differentiation:basics:a-over-root-x",
+    courseScope: "y12", topicId, microSkillId: skill("rewrite-powers"), kind: "rule",
+    learn: { label: "a divided by √x", statement: "A reciprocal square-root term can be recalled directly, while still being understood as ax⁻¹ᐟ².", notation: "d/dx (a/√x) = −a/(2x³ᐟ²)" },
+    flashcard: { front: "d/dx (a/√x)", back: "−a/(2x³ᐟ²)", reverse: true, cue: "Recall this common reciprocal-root special case" },
+    match: { left: "d/dx (a/√x)", right: "−a/(2x³ᐟ²)" }, prerequisiteTags: ["indices"], vocabularyTags: ["vocab:power-index"]
+  }),
+  defineMemoryItem({
     id: "memory-item:y12:differentiation:basics:negative-powers",
     courseScope: "y12", topicId, microSkillId: skill("rewrite-powers"), kind: "rewrite",
     learn: { label: "Reciprocals", statement: "Rewrite reciprocals with negative powers before using the power rule.", notation: "1/xⁿ = x⁻ⁿ" },

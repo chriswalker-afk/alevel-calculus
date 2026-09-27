@@ -136,12 +136,12 @@ export const learningModes = Object.freeze({
         memoryLabNavTarget: false,
         kicker: "Memorise · Memory Lab",
         overline: "Special cases",
-        title: "Constants, x and ax",
-        body: "Retrieve the three small cases that should become automatic.",
-        calloutLabel: "Remember",
-        callout: "A constant differentiates to 0, x differentiates to 1, and ax differentiates to a.",
-        formula: "c → 0   ·   x → 1   ·   ax → a",
-        caption: "These are stored as separate MemoryItems so diagnostics can target them precisely."
+        title: "Special differentiation cases",
+        body: "Retrieve the small derivatives that should become automatic: constants, x, ax, reciprocal powers and common square-root forms.",
+        calloutLabel: "Know the result and the reason",
+        callout: "Recall these directly for speed, but keep the rewrite route underneath them: reciprocals are negative powers and roots are fractional powers.",
+        formula: "c→0 · x→1 · ax→a · a/x→−a/x² · a√x→a/(2√x)",
+        caption: "Direct-recall cards include a/x, a/xⁿ, a√x and a/√x; the separate Rewrite Powers activity still explains how the power rule produces them."
       }),
       Object.freeze({
         activityId: "activity:y12:differentiation:basics:memorise:rewrite-powers",

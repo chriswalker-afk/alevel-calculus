@@ -58,13 +58,13 @@ export const basicsDifferentiationGamePack = deepFreeze({
     label: "Impostor",
     prompt: "One derivative is incorrect. Which is the impostor?",
     options: [
-      { id: "x5", label: "d/dx (x⁵) = 5x⁴" },
-      { id: "four-x", label: "d/dx (4x) = 4" },
-      { id: "constant", label: "d/dx (7) = 0" },
-      { id: "wrong-x3", label: "d/dx (x³) = 3x³" }
+      { id: "a-over-x", label: "d/dx (a/x) = −a/x²" },
+      { id: "root", label: "d/dx (√x) = 1/(2√x)" },
+      { id: "linear", label: "d/dx (4x) = 4" },
+      { id: "wrong-reciprocal", label: "d/dx (3/x²) = −6/x²" }
     ],
-    answerId: "wrong-x3",
-    successMessage: "Correct. The power should reduce by 1, so d/dx (x³) = 3x²."
+    answerId: "wrong-reciprocal",
+    successMessage: "Correct. 3/x² = 3x⁻², so its derivative is −6x⁻³ = −6/x³."
   }
 });
 
