@@ -49,6 +49,21 @@ assert.ok(scriptedFraction);
 assert.equal(scriptedFraction.numerator, "1");
 assert.equal(scriptedFraction.denominator, "m_tangent");
 
+const rootedDenominator = tokeniseMathExpression("1/√(1−x²)");
+assert.equal(rootedDenominator[0].type, "fraction");
+assert.equal(rootedDenominator[0].numerator, "1");
+assert.equal(rootedDenominator[0].denominator, "√(1−x²)");
+
+const poweredGroup = tokeniseMathExpression("(3x²+4)^6/6");
+assert.equal(poweredGroup[0].type, "fraction");
+assert.equal(poweredGroup[0].numerator, "(3x²+4)^6");
+assert.equal(poweredGroup[0].denominator, "6");
+
+const functionQuotient = tokeniseMathExpression("sin(x²+1)/(x+3)");
+assert.equal(functionQuotient[0].type, "fraction");
+assert.equal(functionQuotient[0].numerator, "sin(x²+1)");
+assert.equal(functionQuotient[0].denominator, "x+3");
+
 console.log("Math renderer tokenisation regression passed.");
 
 
