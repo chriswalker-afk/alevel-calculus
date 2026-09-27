@@ -149,6 +149,7 @@ assert.match(app,/classwiz-support-panel\.js\?v=auditstep16final/);
 assert.match(app,/classwiz-support-data\.js\?v=auditstep16final/);
 assert.match(app,/currentTopicId = topicId;[\s\S]*?syncCurrentTopicChrome\(\);[\s\S]*?syncHelpTargets\(\);/,'Changing topic must update the topic ID before rebuilding Help links.');
 assert.match(app,/function syncCurrentTopicChrome\(\)[\s\S]*?classWizSupportPanel\.setTopic\(currentTopicId\)/,'Changing topic must rebind the calculator panel to the current topic pack.');
+assert.match(app,/withUnderstandJourney\(Object\.freeze\(\{\.\.\.runtime,classWiz:hasClassWizSupport\(topicId\)\}\)\)/,'Runtime ClassWiz metadata must be derived from the audit registry rather than stale hand-set flags.');
 
 for(const [source,published] of [
  ['src/scripts/help-content.js','scripts/help-content.js'],
