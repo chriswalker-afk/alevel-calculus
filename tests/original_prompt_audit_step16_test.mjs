@@ -68,6 +68,7 @@ for(const topic of lateTopics.slice(0,-1)){
   assert.deepEqual(getHelpTargets(topic.topicId).map((target)=>target.need),['understand','memorise','ao1'],topic.topicId+' should expose the standard three Help routes');
 }
 assert.deepEqual(getHelpTargets(fullCalculusMasteryTopic.topicId).map((target)=>target.need),['ao1'],'Full 9MA0 mastery has no Understand or Memorise mode and must expose AO1 only.');
+assert.equal(getHelpTargets(fullCalculusMasteryTopic.topicId)[0].activityId,'activity:full:review:full-calculus-mastery:ao1:select-complete-check','Generic Full Mastery practice Help should route to broad execute-and-check AO1 practice.');
 
 const masteryAudit=lateCourseHelpAudit.find((entry)=>entry.topicId===fullCalculusMasteryTopic.topicId);
 assert(masteryAudit);
