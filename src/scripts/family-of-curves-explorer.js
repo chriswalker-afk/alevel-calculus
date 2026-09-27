@@ -1,4 +1,4 @@
-import { DiagramPrimitives, clamp, normalizeDomain } from "./diagram-primitives.js";
+import { DiagramPrimitives, clamp, normalizeDomain } from "./diagram-primitives.js?v=diagramfix3";
 import {
   createPolynomialFunctionDefinition,
   validateFunctionDefinition
