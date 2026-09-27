@@ -4,7 +4,7 @@ import { partialFractionsIntegrationTopic } from "./topic-content/partial-fracti
 import { year13AreasTopic } from "./topic-content/year13-areas.js";
 import { parametricAreaTopic } from "./topic-content/parametric-area.js";
 import { limitOfSumTopic } from "./topic-content/limit-of-sum.js";
-import { numericalIntegrationTopic } from "./topic-content/numerical-integration.js";
+import { numericalIntegrationTopic } from "./topic-content/numerical-integration.js?v=supportfix2";
 import { differentialEquationsTopic } from "./topic-content/differential-equations.js";
 import { calculusModellingTopic } from "./topic-content/calculus-modelling.js";
 import { fullCalculusMasteryTopic } from "./topic-content/full-calculus-mastery.js";
