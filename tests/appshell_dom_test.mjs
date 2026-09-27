@@ -735,7 +735,9 @@ assert(classWizClose.focused === true, 'ClassWiz support should move focus to it
 assert(classWizPanel.children.get('[data-classwiz-radians]').hidden === false, 'Trig derivative sample should show the RADIAN reminder');
 listeners.get('classWizModel-ex:click')();
 assert(classWizPanel.children.get('[data-classwiz-model-name]').textContent === 'fx-991EX', 'ClassWiz model toggle should show fx-991EX instructions');
-listeners.get('classWizUseCase-integral-check:click')();
+const integralUseCaseButton = classWizUseCaseTabList.appended.find((button) => button.dataset.classwizUseCase === 'integral-check');
+assert(integralUseCaseButton, 'ClassWiz use-case tabs should be regenerated for the active topic');
+listeners.get(`${integralUseCaseButton.name}:click`)();
 assert(classWizPanel.children.get('[data-classwiz-radians]').hidden === true, 'Non-trig integral sample should not show a RADIAN warning');
 documentListeners.get('keydown')({ key: 'Escape', preventDefault() {} });
 assert(shell.dataset.classwizOpen === 'false', 'Escape should close ClassWiz support');
