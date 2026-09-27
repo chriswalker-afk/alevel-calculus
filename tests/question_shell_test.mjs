@@ -115,7 +115,8 @@ assert(promptField.getAttribute('data-math-prose') === '', 'Question prompts sho
 assert(feedbackMessageField.getAttribute('data-math-prose') === '', 'Feedback messages should use prose-safe maths rendering');
 assert(hintListField.getAttribute('data-math-prose') === '', 'Hint text should use prose-safe maths rendering');
 const questionShellSource = await import('node:fs').then(({ readFileSync }) => readFileSync(new URL('../src/scripts/question-shell.js', import.meta.url), 'utf8'));
-assert(questionShellSource.includes('shouldUseAo2ProseOption'), 'AO2 explanatory choices should have prose-aware maths rendering');
+assert(questionShellSource.includes('shouldUseReasoningProseOption'), 'AO2/AO3 explanatory choices should have prose-aware maths rendering');
+assert(questionShellSource.includes('["ao2", "ao3"]'), 'Reasoning prose choices should cover both AO2 and AO3');
 assert(questionShellSource.includes('createReasoningMathPreview'), 'QuestionShell should install the AO2 formatted reasoning preview');
 assert(root.hidden === false, 'Loading a generated question set should reveal the shared shell');
 assert(root.dataset.questionResponseType === 'algebraic', 'First generated sample should use the algebraic response surface');
