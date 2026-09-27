@@ -6,7 +6,7 @@
 
 .area-explorer__controls {
   display: grid;
-  grid-template-columns: minmax(220px, 0.85fr) minmax(340px, 1.6fr) auto;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: var(--space-3, .75rem);
   align-items: end;
 }
@@ -194,7 +194,7 @@
 
 .area-explorer__readout {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
   gap: .65rem;
 }
 
