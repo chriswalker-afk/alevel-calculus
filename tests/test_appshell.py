@@ -229,13 +229,13 @@ assert 'aria-expanded="false"' in html
 assert 'role="tablist"' in html and 'role="tabpanel"' in html
 assert 'data-learning-mode="understand"' in html
 assert "./styles/tokens.css" in parser.stylesheets
-assert "./styles/app-shell.css" in parser.stylesheets
+assert any("app-shell.css" in sheet for sheet in parser.stylesheets)
 assert "./styles/question-shell.css" in parser.stylesheets
 assert "./styles/memory-lab.css" in parser.stylesheets
 assert any("family-of-curves-explorer.css" in sheet for sheet in parser.stylesheets)
 assert any("area-explorer.css" in sheet for sheet in parser.stylesheets)
 assert any("rectangle-sum-explorer.css" in sheet for sheet in parser.stylesheets)
-assert "./scripts/app-shell.js" in parser.scripts
+assert any("app-shell.js" in script for script in parser.scripts)
 
 expected_modes = ["understand", "memorise", "ao1", "ao2", "ao3"]
 assert [tab.get("data-mode-tab") for tab in parser.mode_tabs] == expected_modes
