@@ -11,6 +11,42 @@ const ABS_GROUP_PATTERN = `\\|[^|\\n]{1,100}\\|`;
 const FRACTION_ATOM_PATTERN = `(?:${PAREN_GROUP_PATTERN}|${SQUARE_GROUP_PATTERN}|${ABS_GROUP_PATTERN}|${SIMPLE_MATH_ATOM_PATTERN})`;
 const FRACTION_PATTERN = new RegExp(`(?<![A-Za-z])(?:${DERIVATIVE_PATTERN}|${FRACTION_ATOM_PATTERN}\\s*\\/\\s*${FRACTION_ATOM_PATTERN})(?![A-Za-z])`, "g");
 const SCRIPT_PATTERN = /([_^])(\([^)]{1,60}\)|-?\d+|[A-Za-z]+)/g;
+const SUPERSCRIPT_MAP = Object.freeze({
+  "⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9",
+  "ⁿ":"n","⁺":"+","⁻":"-"
+});
+const SUPERSCRIPT_FRACTION_PATTERN = /([⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ⁺⁻]+)[ᐟ⁄]([⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ⁺⁻]+)/g;
+const COMPLEX_SUPERSCRIPT_PATTERN = /[⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ⁺⁻]*[ⁿ⁺⁻][⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ⁺⁻]*/g;
+
+function decodeSuperscript(value) {
+  return [...String(value ?? "")].map((character) => SUPERSCRIPT_MAP[character] ?? character).join("");
+}
+
+export function normaliseMathSource(source) {
+  let text = String(source ?? "");
+  text = text.replace(SUPERSCRIPT_FRACTION_PATTERN, (_, numerator, denominator) =>
+    `^(${decodeSuperscript(numerator)}/${decodeSuperscript(denominator)})`
+  );
+  text = text.replace(COMPLEX_SUPERSCRIPT_PATTERN, (value) => `^(${decodeSuperscript(value)})`);
+  return text;
+}
+
+function isInsideScriptGroup(text, index) {
+  const stack = [];
+  for (let cursor = 0; cursor < index; cursor += 1) {
+    const character = text[cursor];
+    if (character === "(") {
+      let previous = cursor - 1;
+      while (previous >= 0 && /\s/.test(text[previous])) previous -= 1;
+      const directScript = text[previous] === "^" || text[previous] === "_";
+      stack.push(directScript || Boolean(stack[stack.length - 1]));
+    } else if (character === ")") {
+      stack.pop();
+    }
+  }
+  return stack.some(Boolean);
+}
+
 
 export const mathRenderSelector = [
   "[data-activity-formula]",
@@ -93,12 +129,13 @@ function pushTextToken(tokens, value) {
 }
 
 export function tokeniseMathExpression(source) {
-  const text = String(source ?? "");
+  const text = normaliseMathSource(source);
   const tokens = [];
   let cursor = 0;
   FRACTION_PATTERN.lastIndex = 0;
   for (const match of text.matchAll(FRACTION_PATTERN)) {
     const index = match.index ?? 0;
+    if (isInsideScriptGroup(text, index)) continue;
     pushTextToken(tokens, text.slice(cursor, index));
     const raw = match[0];
     const slash = findTopLevelSlash(raw);
