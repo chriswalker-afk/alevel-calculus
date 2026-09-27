@@ -305,10 +305,10 @@ assert 'Need a reminder?' in html
 assert 'Topic goals' in html
 assert 'In this topic you will learn to…' in html
 assert 'data-topic-objectives-inline' in html and 'data-topic-goals-dialog' in html
-assert 'getTopicObjectiveConfig' in js and 'syncInlineTopicObjectives' in js
+assert 'getTopicObjectiveConfig' in js and 'syncUnderstandJourneyPages' in js and 'understandJourneyActivity' in js
 assert 'topicObjectiveCount' in topic_objectives_data and 'topicObjectiveCount = Object.keys(topicObjectiveConfigs).length' in topic_objectives_data
 assert topic_objectives_data.count('"topic:') == 33, "Every registered topic should have a student-facing objective set"
-assert '.topic-objectives-card--inline' in css and '.topic-goals-dialog' in css
+assert '.topic-objectives-card--inline' in css and '.topic-pathway-card' in css and '.topic-goals-dialog' in css
 
 
 assert 'data-help-target-skill' not in html, "Stable IDs belong in data/metadata, not visible student UI"
