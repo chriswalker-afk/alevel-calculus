@@ -78,6 +78,8 @@ const modePanel = new FakeElement('modePanel');
 const stage = new FakeElement('stage');
 const standardActivityContent = new FakeElement('standardActivityContent');
 const activityVisual = new FakeElement('activityVisual');
+const customUnderstandHost = new FakeElement('customUnderstandHost');
+customUnderstandHost.hidden = true;
 const questionShellElement = new FakeElement('questionShellElement');
 
 const memoryLabElement = new FakeElement('memoryLabElement');
@@ -388,6 +390,7 @@ const documentMap = new Map([
   ['[data-activity-stage]', stage],
   ['[data-standard-activity-content]', standardActivityContent],
   ['[data-activity-visual]', activityVisual],
+  ['[data-custom-understand-host]', customUnderstandHost],
   ['[data-question-shell]', questionShellElement],
   ['[data-memory-lab]', memoryLabElement],
   ['[data-previous-activity]', previousButton],
@@ -487,6 +490,7 @@ globalThis.document = {
   }
 };
 activityVisual.ownerDocument = globalThis.document;
+customUnderstandHost.ownerDocument = globalThis.document;
 
 const media = {
   matches: true,
@@ -645,6 +649,8 @@ topicNavigation.dataset.contextMarker = 'same-topic';
 listeners.get('next:click')();
 assert(shell.dataset.activityIndex === '1', 'Next from Topic goals should advance to the first mathematical Understand page');
 assert(title.textContent === 'What does gradient mean on a curve?', 'The first mathematical Understand activity should follow Topic goals');
+assert(customUnderstandHost.hidden === false, 'The first real Understand activity should mount into the dedicated visual host');
+assert(standardActivityContent.dataset.customUnderstandActive === 'true', 'AppShell should expose the shared custom-Understand layout state');
 assert(wordBankCount.textContent === '2', 'Vocabulary should be encountered when the first mathematical Understand page is visited');
 assert(shell.dataset.stabilityMarker === 'same-shell', 'Next should not replace the AppShell object');
 
