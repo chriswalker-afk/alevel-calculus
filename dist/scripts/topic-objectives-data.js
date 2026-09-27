@@ -27,6 +27,7 @@ const topicObjectiveConfigs = Object.freeze({
     objectives: [
       "interpret gradient as vertical change for each unit of horizontal change",
       "distinguish positive, negative, zero and undefined gradients from a graph",
+      "explain why gradient magnitude grows without bound near vertical while a vertical line itself has undefined gradient",
       "compare gradient magnitude using steepness without confusing gradient with height",
       "calculate a straight-line gradient using Δy/Δx",
       "explain why a curved graph needs a local idea of gradient"

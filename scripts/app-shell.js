@@ -20,8 +20,8 @@ import { getMemoryGamePackForTopic } from "./memory-game-content.js?v=notation1"
 import { getMemoryReviewPackForTopic } from "./memory-review-content.js";
 import { createClassWizSupportPanel } from "./classwiz-support-panel.js";
 import { createBasicsUnderstandExperience } from "./basics-understand.js?v=understand2";
-import { createPreCalculusUnderstandExperience } from "./pre-calculus-understand.js";
-import { preCalculusLearningModes } from "./pre-calculus-activities.js";
+import { createPreCalculusUnderstandExperience } from "./pre-calculus-understand.js?v=auditstep2";
+import { preCalculusLearningModes } from "./pre-calculus-activities.js?v=auditstep2";
 import { createFirstPrinciplesUnderstandExperience } from "./first-principles-understand.js?v=understand2";
 import { firstPrinciplesLearningModes } from "./first-principles-activities.js";
 import { createTangentsNormalsUnderstandExperience } from "./tangents-normals-understand.js?v=understand2";
@@ -84,7 +84,7 @@ import { calculusModellingLearningModes } from "./calculus-modelling-activities.
 import { fullCalculusMasteryLearningModes } from "./full-calculus-mastery-activities.js";
 import { fullCalculusMasteryModel } from "./full-calculus-mastery-model.js";
 import { getFullDifferentiationReviewMicroSkillLabel } from "./full-differentiation-review-model.js";
-import { getTopicObjectiveConfig } from "./topic-objectives-data.js?v=objectives1";
+import { getTopicObjectiveConfig } from "./topic-objectives-data.js?v=auditstep2";
 
 const root = document.documentElement;
 const shell = document.querySelector("[data-app-shell]");

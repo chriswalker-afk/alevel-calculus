@@ -39,6 +39,10 @@ assert(experience.includes('Drive across hill'), 'Hill intuition must provide an
 assert(experience.includes("prefers-reduced-motion: reduce"), 'Hill animation must respect reduced-motion preference');
 assert(experience.includes('gradient undefined') || experience.includes('gradient is undefined'), 'Vertical-line state must state undefined gradient');
 assert(experience.includes('Δx = 0'), 'Vertical-line reasoning must connect undefined gradient to Δx = 0');
+assert(experience.includes("min: -89") && experience.includes("max: 89"), 'Near-vertical exploration must approach vertical from both negative- and positive-gradient sides');
+assert(experience.includes('m → +∞') && experience.includes('m → −∞'), 'Near-vertical exploration must make both one-sided unbounded tendencies explicit');
+assert(experience.includes('gradient is unbounded') || experience.includes('gradient magnitude grows without bound') || experience.includes('|m| grows without bound'), 'Near-vertical exploration must explicitly describe unbounded gradient magnitude');
+assert(experience.includes('does not mean a vertical line has gradient “infinity”'), 'The page must distinguish a limiting infinity statement from the undefined gradient of a vertical line');
 assert(experience.includes('same gradient') || experience.includes('gradient remains'), 'Gradient-vs-height state must preserve gradient under vertical translation');
 
 const css = read('src/styles/pre-calculus-understand.css');

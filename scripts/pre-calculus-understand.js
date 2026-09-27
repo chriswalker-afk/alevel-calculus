@@ -234,24 +234,42 @@ export class PreCalculusUnderstandExperience {
   }
 
   render_vertical_limit() {
-    const body = this.#panel('Approach vertical without rescaling', '5 · Vertical-line limit idea');
+    const body = this.#panel('Near vertical: unbounded gradient, then undefined', '5 · Vertical-line limit idea');
     const controls = el(this.document, 'div', 'pre-calculus-understand__action-row');
     body.append(controls);
-    const status = this.#status(body, 'At 45°, gradient = 1.');
-    const { diagram } = this.#graph(body, { xDomain: [-4, 4], yDomain: [-4, 4], ariaLabel: 'A line rotating toward vertical' });
+    const status = this.#status(body, 'At 45°, gradient = 1. Move towards either near-vertical side.');
+    const { diagram } = this.#graph(body, { xDomain: [-4, 4], yDomain: [-4, 4], ariaLabel: 'A line rotating from steep negative through horizontal to steep positive, approaching vertical on both sides' });
     const line = diagram.line({ x1: -2.5, y1: -2.5, x2: 2.5, y2: 2.5, tone: 'curve' });
     const slider = diagram.slider({
-      label: 'Line angle', min: 0, max: 89, step: 1, value: 45,
+      label: 'Signed angle from horizontal', min: -89, max: 89, step: 1, value: 45,
       format: (angle) => `${angle}°`,
       onInput: (angle) => {
         const radians = angle * Math.PI / 180;
         const slope = Math.tan(radians);
         const dx = Math.min(2.8, 3.5 / Math.max(1, Math.abs(slope)));
         line.setCoordinates({ x1: -dx, y1: -dx * slope, x2: dx, y2: dx * slope });
-        status.textContent = angle >= 89 ? `At ${angle}°, gradient ≈ ${format(slope, 1)}. At 90°, Δx = 0 so gradient is undefined.` : `At ${angle}°, gradient ≈ ${format(slope, 2)}.`;
+        if (Math.abs(angle) >= 85) {
+          const side = slope > 0 ? 'positive-gradient' : 'negative-gradient';
+          const tendency = slope > 0 ? 'm → +∞' : 'm → −∞';
+          status.textContent = `Near vertical from the ${side} side: m ≈ ${format(slope, 1)}. As the line gets closer to vertical, ${tendency}; |m| grows without bound.`;
+        } else if (Math.abs(angle) < 0.5) {
+          status.textContent = 'Horizontal: m = 0.';
+        } else {
+          status.textContent = `At ${angle}°, gradient ≈ ${format(slope, 2)}. Moving closer to vertical makes |m| larger.`;
+        }
       }
     });
-    controls.append(slider.element, el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Exactly vertical: Δx = 0 → gradient undefined.'));
+    const presets = el(this.document, 'div', 'pre-calculus-understand__choice-row');
+    presets.append(
+      button(this.document, 'Near vertical: negative', () => slider.setValue(-89)),
+      button(this.document, 'Horizontal', () => slider.setValue(0)),
+      button(this.document, 'Near vertical: positive', () => slider.setValue(89))
+    );
+    controls.append(slider.element, presets);
+    body.append(
+      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Approaching vertical from one side gives m → +∞; from the other gives m → −∞. This means the gradient is unbounded — it does not mean a vertical line has gradient “infinity”.'),
+      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Exactly vertical: Δx = 0, so Δy / Δx would divide by zero. The gradient is undefined.')
+    );
   }
 
   render_delta_change() {
