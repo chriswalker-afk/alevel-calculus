@@ -130,6 +130,8 @@ node tests/interactive_visual_audit_step78_test.mjs
 
 node tests/responsive_accessibility_step79_test.mjs
 
+node tests/understand_visual_integrity_test.mjs
+
 node tests/persistence_state_recovery_step80_test.mjs
 
 node tests/code_reuse_performance_step81_test.mjs
