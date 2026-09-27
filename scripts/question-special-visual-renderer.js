@@ -11,10 +11,10 @@ export const specialInteractiveQuestionVisualKinds = Object.freeze([
 function createElement(documentRef, tag, className = "") {
   const element = documentRef.createElement(tag);
   if (className) element.className = className;
-  if (/question-graph-interaction__(instruction|status)|__cue$/.test(className)) {
+  if (/question-graph-interaction__(instruction|status|title)|question-graph-card__title|__cue$/.test(className)) {
     element.setAttribute("data-math-prose", "");
   }
-  if (/question-(interval-selector__segment-label|region-selector__label|parametric-selector__label|parametric-direction__label|trapezium-bound__label|expression-selector__(term|separator)|riemann-selector__choice|line-selector__choice)/.test(className)) {
+  if (/question-(interval-selector__segment-label|region-selector__label|parametric-selector__label|parametric-direction__label|trapezium-bound__label|trapezium-selector__choice|split-selector__choice|expression-selector__(term|separator)|riemann-selector__choice|line-selector__choice)/.test(className)) {
     element.setAttribute("data-math-render", "");
   }
   return element;
