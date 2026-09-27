@@ -399,8 +399,8 @@ export class ParametricCurveTracer {
     }
     this.readout.replaceChildren(...metrics.map(([label, value]) => {
       const card = createElement(this.document, "div", "parametric-tracer__metric");
-      const small = createElement(this.document, "span"); small.textContent = label;
-      const strong = createElement(this.document, "strong"); strong.textContent = value;
+      const small = createElement(this.document, "span"); small.textContent = label; small.setAttribute("data-math-render", "");
+      const strong = createElement(this.document, "strong"); strong.textContent = value; strong.setAttribute("data-math-render", "");
       card.append(small, strong); return card;
     }));
   }
