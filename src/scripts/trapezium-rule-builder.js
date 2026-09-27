@@ -1,4 +1,4 @@
-import { DiagramPrimitives, clamp, normalizeDomain } from "./diagram-primitives.js";
+import { DiagramPrimitives, clamp, normalizeDomain } from "./diagram-primitives.js?v=diagramfix3";
 import { integrateFunction } from "./area-explorer.js";
 import { createPolynomialFunctionDefinition, validateFunctionDefinition } from "./linked-function-gradient-explorer.js";
 
