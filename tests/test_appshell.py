@@ -174,6 +174,7 @@ required_attrs = {
     "data-question-shell-solution-steps",
     "data-question-shell-diagnostic",
     "data-question-shell-diagnostic-link",
+    "data-question-shell-new",
     "data-question-shell-next",
     "data-memory-lab",
     "data-memory-lab-view",
