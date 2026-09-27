@@ -12,6 +12,7 @@ body {
   font-family: var(--font-ui);
 }
 
+html,
 body {
   overflow: hidden;
 }
@@ -915,14 +916,22 @@ button {
     visibility 0s linear var(--motion-fast);
 }
 
-.vocabulary-term-wrap:hover .vocabulary-popover,
-.vocabulary-term-wrap:focus-within .vocabulary-popover,
 .vocabulary-term-wrap[data-popover-open="true"] .vocabulary-popover {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
   transition-delay: 0s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .vocabulary-term-wrap:hover .vocabulary-popover {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition-delay: 0s;
+  }
 }
 
 .vocabulary-popover__term {
