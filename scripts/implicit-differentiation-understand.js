@@ -70,8 +70,7 @@ export class ImplicitDifferentiationUnderstandExperience{
   operatorAction.type='button';
   const operatorEquation=el(this.document,'div','implicit-differentiation-understand__operator-equation');
   operatorEquation.hidden=true;
-  operatorEquation.setAttribute('data-math-render','');
-  operatorEquation.innerHTML='<span><strong>d/dx</strong> [x² + xy + y²]</span><span class="implicit-differentiation-understand__equals">=</span><span><strong>d/dx</strong> [7]</span>';
+  operatorEquation.innerHTML='<span data-math-render>d/dx [x² + xy + y²]</span><span class="implicit-differentiation-understand__equals">=</span><span data-math-render>d/dx [7]</span>';
   const operatorStatus=el(this.document,'p','implicit-differentiation-understand__operator-status','The term buttons stay locked until d/dx has been applied to both equal expressions.');
   operatorStatus.setAttribute('role','status');
   operatorStatus.setAttribute('aria-live','polite');
