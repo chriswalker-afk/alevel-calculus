@@ -1,4 +1,4 @@
-import { DiagramPrimitives } from "./diagram-primitives.js";
+import { DiagramPrimitives } from "./diagram-primitives.js?v=diagramfix3";
 
 const RATE_STATUSES = Object.freeze({
   known: Object.freeze({ label: "known", symbol: "●", tone: "accent" }),
