@@ -160,7 +160,7 @@ for(const [source,published] of [
 }
 
 for(const path of ['src/index.html','index.html','404.html']){
-  assert.match(read(path),/app-shell\.js\?v=questionfix1/,path+' must load the Step 16 runtime.');
+  assert.match(read(path),/app-shell\.js\?v=integrationmath1/,path+' must load the Step 16 runtime.');
 }
 
 console.log('PASS Original-prompt audit Step 16 late Help routing, complete calculator opportunity audit, shared ClassWiz checks and topic-synced panel');
