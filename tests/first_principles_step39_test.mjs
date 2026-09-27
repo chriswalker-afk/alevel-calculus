@@ -19,7 +19,7 @@ const topicId = 'topic:y12:differentiation:first-principles';
 const modes = ['understand','memorise','ao1','ao2','ao3'];
 
 assert(JSON.stringify(firstPrinciplesTopic.modes) === JSON.stringify(modes), 'Step 39 must activate the five canonical modes');
-const expectedCounts = { understand: 9, memorise: 5, ao1: 3, ao2: 2, ao3: 1 };
+const expectedCounts = { understand: 10, memorise: 5, ao1: 3, ao2: 2, ao3: 1 };
 for (const mode of modes) {
   const model = firstPrinciplesTopic.activities.filter((activity) => activity.mode === mode);
   const live = firstPrinciplesLearningModes[mode].activities;

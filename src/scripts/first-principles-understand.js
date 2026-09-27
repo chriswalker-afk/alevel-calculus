@@ -3,6 +3,7 @@ import { createPolynomialFunctionDefinition } from './linked-function-gradient-e
 import { renderEquationSteps } from './equation-step-renderer.js';
 
 const STEP38_IDS = new Set([
+  'activity:y12:differentiation:first-principles:understand:purpose',
   'activity:y12:differentiation:first-principles:understand:limit-intuition',
   'activity:y12:differentiation:first-principles:understand:simple-limits',
   'activity:y12:differentiation:first-principles:understand:two-points',
@@ -185,8 +186,26 @@ export class FirstPrinciplesUnderstandExperience {
     render();
   }
 
+  render_purpose() {
+    const body = this.#panel('Why are we learning first principles?', '1 · Purpose before technique');
+    body.append(el(this.document, 'p', 'first-principles-understand__insight', 'You already know differentiation rules such as the power rule. In this section we are going to learn how differentiation rules can be proved. Before we can prove them, we need a small amount of prerequisite understanding about limits and how a chord can approximate the gradient of a curve at a point.'));
+    const roadmap = el(this.document, 'div', 'first-principles-understand__compare');
+    [
+      ['Simple limits', 'Learn only the limit ideas needed for A level first-principles differentiation.'],
+      ['Chord approximation', 'Use two nearby points so a straight-line chord can approximate the gradient at one point on a curve.'],
+      ['h tends to 0', 'Move the nearby point towards the fixed point without setting h equal to 0 too early.'],
+      ['Formal definition', 'Only after the picture makes sense will we translate it into the first-principles definition.'],
+      ['Examples', 'Then use the definition to prove familiar derivatives such as x² and x³.']
+    ].forEach(([title, copy], index) => {
+      const card = el(this.document, 'article', `first-principles-understand__compare-card${index === 3 ? ' first-principles-understand__compare-card--accent' : ''}`);
+      card.append(el(this.document, 'strong', '', title), el(this.document, 'p', '', copy));
+      roadmap.append(card);
+    });
+    body.append(roadmap, el(this.document, 'div', 'first-principles-understand__takeaway', 'This is not a full course on limits. Every idea before the formal definition is included only because it gives the proof meaning.'));
+  }
+
   render_limit_intuition() {
-    const body = this.#panel('Get close to zero without using zero', '1 · Approaching a value');
+    const body = this.#panel('Get close to zero without using zero', '2 · Approaching a value');
     const sequence = el(this.document, 'div', 'first-principles-understand__sequence');
     const value = el(this.document, 'strong', 'first-principles-understand__limit-value', 'h = 1');
     const distance = el(this.document, 'span', 'first-principles-understand__distance', 'distance from 0 = 1');
@@ -214,7 +233,7 @@ export class FirstPrinciplesUnderstandExperience {
   }
 
   render_simple_limits() {
-    const body = this.#panel('See what the output approaches', '2 · Basic limit examples');
+    const body = this.#panel('See what the output approaches', '3 · Basic limit examples');
     const controls = el(this.document, 'div', 'first-principles-understand__action-row');
     const readout = el(this.document, 'div', 'first-principles-understand__limit-readout');
     const hLabel = el(this.document, 'strong', '', 'h = 1');
@@ -237,7 +256,7 @@ export class FirstPrinciplesUnderstandExperience {
   }
 
   render_two_points() {
-    const body = this.#panel('A location is not yet a gradient', '3 · Why two points?');
+    const body = this.#panel('A location is not yet a gradient', '4 · Why two points?');
     const cards = el(this.document, 'div', 'first-principles-understand__point-grid');
     const pCard = el(this.document, 'article', 'first-principles-understand__point-card');
     pCard.append(el(this.document, 'span', 'first-principles-understand__point-label', 'Fixed point P'), el(this.document, 'strong', '', 'P = (x, f(x))'), el(this.document, 'p', '', 'One point tells us where we are on the curve, but one point alone cannot define the gradient of a straight line.'));
@@ -250,7 +269,7 @@ export class FirstPrinciplesUnderstandExperience {
   }
 
   render_chord_approximation() {
-    const body = this.#panel('Drag Q and watch the geometry', '4 · Chord approximation');
+    const body = this.#panel('Drag Q and watch the geometry', '5 · Chord approximation');
     const insight = el(this.document, 'p', 'first-principles-understand__insight', 'Start with Q away from P. Then move it closer from either side.');
     body.append(insight);
     const explorer = this.#mountExplorer(body, {
@@ -266,7 +285,7 @@ export class FirstPrinciplesUnderstandExperience {
   }
 
   render_h_to_zero() {
-    const body = this.#panel('Shrink h in a deliberate sequence', '5 · h → 0');
+    const body = this.#panel('Shrink h in a deliberate sequence', '6 · h → 0');
     const controls = el(this.document, 'div', 'first-principles-understand__choice-row');
     const status = this.#status(body, 'Start with h = 1, then move through the sequence towards 0.');
     body.insertBefore(controls, status);
@@ -296,7 +315,7 @@ export class FirstPrinciplesUnderstandExperience {
   }
 
   render_formal_definition() {
-    const body = this.#panel('Turn the picture into the definition', '6 · First principles');
+    const body = this.#panel('Turn the picture into the definition', '7 · First principles');
     const formula = el(this.document, 'div', 'first-principles-understand__formal-formula', "f′(x) = lim_(h→0) [f(x+h) − f(x)]/h");
     body.append(formula);
     const explorer = this.#mountExplorer(body, { functions: [X_SQUARED], showFunctionSelector: false, initialH: 0.5, informationMode: 'full' });
@@ -315,17 +334,17 @@ export class FirstPrinciplesUnderstandExperience {
   }
 
   render_derive_x2() {
-    const body = this.#panel('First principles proves a rule you already use', '7 · Derive x²');
+    const body = this.#panel('First principles proves a rule you already use', '8 · Derive x²');
     this.#renderStepReveal(body, X2_STEPS, 'Complete: first principles gives f′(x) = 2x, exactly matching the power rule.');
   }
 
   render_derive_x3() {
-    const body = this.#panel('Same definition, one longer expansion', '8 · Derive x³');
+    const body = this.#panel('Same definition, one longer expansion', '9 · Derive x³');
     this.#renderStepReveal(body, X3_STEPS, 'Complete: first principles gives f′(x) = 3x², again matching the power rule.');
   }
 
   render_proof_vs_use() {
-    const body = this.#panel('Choose the right purpose', '9 · What have we proved?');
+    const body = this.#panel('Choose the right purpose', '10 · What have we proved?');
     const compare = el(this.document, 'div', 'first-principles-understand__compare');
     const use = el(this.document, 'article', 'first-principles-understand__compare-card');
     use.append(el(this.document, 'span', 'first-principles-understand__compare-label', 'Use a rule'), el(this.document, 'strong', '', 'Efficient calculation'), el(this.document, 'p', '', 'Example: differentiate x³ by applying the power rule to write 3x² immediately.'));

@@ -30,6 +30,7 @@ export const firstPrinciplesTopic = defineTopicMetadata({
   prerequisiteTags: ['straight-line-gradient', 'basic-algebra', 'function-notation'],
   vocabularyTags: firstPrinciplesVocabularyTags,
   journey: [
+    { id: 'purpose', title: 'Why first principles?', summary: 'Explain that first principles proves differentiation rules, and preview the small amount of limits/chord intuition needed before the formal definition.', microSkillIds: [skill('purpose')], vocabularyTags: ['vocab:first-principles'] },
     { id: 'limit-intuition', title: 'Approaching a value', summary: 'Read h → 0 as h getting closer and closer to zero rather than setting h equal to zero.', microSkillIds: [skill('limit-intuition')], vocabularyTags: ['vocab:limit'] },
     { id: 'simple-limits', title: 'Simple limits', summary: 'Use simple numerical expressions to see outputs approach a value as h approaches zero.', microSkillIds: [skill('simple-limits')], vocabularyTags: ['vocab:limit'] },
     { id: 'two-points', title: 'Why two points?', summary: 'Use P = (x, f(x)) and Q = (x+h, f(x+h)) so a chord gradient can be formed.', microSkillIds: [skill('two-points')], vocabularyTags: ['vocab:chord', 'vocab:secant'] },
@@ -41,6 +42,7 @@ export const firstPrinciplesTopic = defineTopicMetadata({
     { id: 'proof-vs-use', title: 'Using versus proving a rule', summary: 'Distinguish applying a known differentiation rule from proving why it works.', microSkillIds: [skill('proof-vs-use')], vocabularyTags: ['vocab:first-principles', 'vocab:derivative'] }
   ],
   microSkills: [
+    { microSkillId: skill('purpose'), slug: 'purpose', title: 'Explain why first principles is being learned and preview the visual-to-formal route', prerequisiteTags: ['power-rule'], vocabularyTags: ['vocab:first-principles'], supportTargets: { understand: activity('purpose') } },
     { microSkillId: skill('limit-intuition'), slug: 'limit-intuition', title: 'Interpret h → 0 as approaching zero', prerequisiteTags: ['number-sense'], vocabularyTags: ['vocab:limit'], supportTargets: { understand: activity('limit-intuition'), memorise: activity('key-facts','memorise'), ao1: activity('building-blocks','ao1') } },
     { microSkillId: skill('simple-limits'), slug: 'simple-limits', title: 'Interpret simple limits numerically', prerequisiteTags: ['substitution'], vocabularyTags: ['vocab:limit'], supportTargets: { understand: activity('simple-limits'), ao1: activity('building-blocks','ao1') } },
     { microSkillId: skill('two-points'), slug: 'two-points', title: 'Explain why two nearby points define a chord gradient', prerequisiteTags: ['function-notation', 'straight-line-gradient'], vocabularyTags: ['vocab:chord', 'vocab:secant'], supportTargets: { understand: activity('two-points'), memorise: activity('vocabulary-recall','memorise') } },
@@ -52,6 +54,7 @@ export const firstPrinciplesTopic = defineTopicMetadata({
     { microSkillId: skill('proof-vs-use'), slug: 'proof-vs-use', title: 'Distinguish proving a differentiation rule from applying it', prerequisiteTags: ['power-rule'], vocabularyTags: ['vocab:first-principles', 'vocab:derivative'], supportTargets: { understand: activity('proof-vs-use'), ao3: activity('select-and-apply','ao3') } }
   ],
   activities: [
+    { activityId: activity('purpose'), mode: 'understand', slug: 'purpose', title: 'Why are we learning first principles?', activityType: 'lesson', microSkillIds: [skill('purpose')], vocabularyTags: ['vocab:first-principles'], implementationStep: 38 },
     { activityId: activity('limit-intuition'), mode: 'understand', slug: 'limit-intuition', title: 'What does h → 0 mean?', activityType: 'interactive', microSkillIds: [skill('limit-intuition')], vocabularyTags: ['vocab:limit'], implementationStep: 38 },
     { activityId: activity('simple-limits'), mode: 'understand', slug: 'simple-limits', title: 'Watch simple limits settle', activityType: 'interactive', microSkillIds: [skill('simple-limits')], vocabularyTags: ['vocab:limit'], implementationStep: 38 },
     { activityId: activity('two-points'), mode: 'understand', slug: 'two-points', title: 'Why do we need a second point?', activityType: 'lesson', microSkillIds: [skill('two-points')], vocabularyTags: ['vocab:chord', 'vocab:secant'], implementationStep: 38 },
