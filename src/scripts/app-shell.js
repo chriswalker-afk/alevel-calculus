@@ -84,7 +84,7 @@ import { calculusModellingLearningModes } from "./calculus-modelling-activities.
 import { fullCalculusMasteryLearningModes } from "./full-calculus-mastery-activities.js";
 import { fullCalculusMasteryModel } from "./full-calculus-mastery-model.js";
 import { getFullDifferentiationReviewMicroSkillLabel } from "./full-differentiation-review-model.js";
-import { getTopicObjectiveConfig } from "./topic-objectives-data.js?v=auditstep2";
+import { getTopicObjectiveConfig } from "./topic-objectives-data.js?v=auditstep15";
 import { createIntegrationMethodMapSurface } from "./integration-method-map-surface.js?v=auditstep14";
 
 const root = document.documentElement;
