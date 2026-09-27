@@ -1,6 +1,6 @@
-import { createQuestionVisualRenderer } from "./question-visual-renderer.js";
-import { createSpecialQuestionVisualRenderer, isSpecialInteractiveQuestionVisual } from "./question-special-visual-renderer.js";
-import { createConceptQuestionVisualRenderer, isConceptInteractiveQuestionVisual } from "./question-concept-visual-renderer.js";
+import { createQuestionVisualRenderer } from "./question-visual-renderer.js?v=ao3math1";
+import { createSpecialQuestionVisualRenderer, isSpecialInteractiveQuestionVisual } from "./question-special-visual-renderer.js?v=ao3math1";
+import { createConceptQuestionVisualRenderer, isConceptInteractiveQuestionVisual } from "./question-concept-visual-renderer.js?v=ao3math1";
 import {
   getHintActionLabel,
   getHintProgressLabel,
@@ -8,7 +8,7 @@ import {
   nextHintRevealCount
 } from "./hint-sequence.js";
 import { createWorkedSolutionRenderer } from "./worked-solution-renderer.js?v=ao3math1";
-import { createMathEntryEnhancement, createSelfReviewPanel, deriveSelfReviewCriteria, isAo3SelfReviewQuestion } from "./question-response-enhancements.js";
+import { createMathEntryEnhancement, createReasoningMathPreview, createSelfReviewPanel, deriveSelfReviewCriteria, isAo3SelfReviewQuestion } from "./question-response-enhancements.js?v=ao3math1";
 
 export const questionResponseTypes = Object.freeze([
   "numeric",
