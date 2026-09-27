@@ -102,8 +102,9 @@ for (let index = 0; index < 80 && !unitCoefficientRateQuestion; index += 1) {
   if (question.parameters.a === 1) unitCoefficientRateQuestion = question;
 }
 assert.ok(unitCoefficientRateQuestion, 'Seed batch must expose a unit leading coefficient in the AO3 height model.');
-assert.doesNotMatch(unitCoefficientRateQuestion.math, /=\s*1t³/);
-assert.match(unitCoefficientRateQuestion.math, /=\s*t³/);
+assert.equal(unitCoefficientRateQuestion.math, '', 'Inline model questions should not duplicate the model in the separate display-maths card.');
+assert.doesNotMatch(unitCoefficientRateQuestion.prompt, /h\(t\)=1t³/);
+assert.match(unitCoefficientRateQuestion.prompt, /h\(t\)=t³/);
 
 // Undefined gradients / vertical tangents: never divide by zero or invent an infinite numeric gradient.
 const verticalNormal = runner.generate(getQuestionDefinition('question-template:y12:differentiation:tangents-normals:special-case'), { seed: 'step77:vertical-normal' });
