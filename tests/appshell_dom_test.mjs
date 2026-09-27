@@ -34,6 +34,12 @@ class FakeElement {
   }
   append(...nodes) { this.appended.push(...nodes); }
   prepend(...nodes) { this.appended.unshift(...nodes); }
+  insertBefore(node, referenceNode = null) {
+    const index = referenceNode ? this.appended.indexOf(referenceNode) : -1;
+    if (index >= 0) this.appended.splice(index, 0, node); else this.appended.push(node);
+    return node;
+  }
+  remove() { this.removed = true; }
   replaceChildren(...nodes) { this.appended = [...nodes]; }
   addEventListener(type, handler) {
     listeners.set(`${this.name}:${type}`, handler);
@@ -63,6 +69,7 @@ class FakeElement {
   }
 }
 
+const body = new FakeElement('body');
 const root = new FakeElement('root');
 root.dataset.learningMode = 'understand';
 root.dataset.courseScope = 'y12';
@@ -466,6 +473,7 @@ const documentMap = new Map([
 
 globalThis.document = {
   documentElement: root,
+  body,
   querySelector(selector) {
     return documentMap.get(selector) ?? null;
   },
