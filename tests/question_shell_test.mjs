@@ -66,6 +66,7 @@ function buildQuestionShellFixture() {
     '[data-question-shell-solution-panel]',
     '[data-question-shell-solution-steps]',
     '[data-question-shell-progress]',
+    '[data-question-shell-new]',
     '[data-question-shell-next]'
   ];
   for (const selector of selectors) root.children.set(selector, new FakeElement(selector));
