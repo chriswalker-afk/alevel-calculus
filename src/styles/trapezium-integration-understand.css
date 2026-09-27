@@ -3,3 +3,5 @@
 .trapezium-integration-understand__context-math{font-weight:750;letter-spacing:.01em}.trapezium-integration-understand__context-badge{justify-self:start;padding:.2rem .5rem;border-radius:999px;background:var(--surface-raised);border:1px solid var(--border-subtle);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}.trapezium-integration-understand__comparison tbody tr[data-current="true"]{outline:2px solid var(--accent-strong);outline-offset:-2px;background:var(--surface-subtle)}.trapezium-integration-understand__refinement-status{margin:0;padding:var(--space-3);border-left:4px solid var(--accent-strong);background:var(--surface-subtle);border-radius:var(--radius-md);font-weight:650}
 
 .trapezium-integration-understand__builder--comparison .trapezium-rule-builder__controls{display:none}
+
+.trapezium-integration-understand__comparison-wrap{width:100%;overflow-x:auto}.trapezium-integration-understand__comparison{min-width:700px}
