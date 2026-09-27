@@ -91,6 +91,7 @@ node tests/product_quotient_chain_step52_test.mjs
 node tests/product_quotient_chain_step53_test.mjs
 node tests/original_prompt_audit_step9_test.mjs
 node tests/original_prompt_audit_step10_test.mjs
+node tests/original_prompt_audit_step11_test.mjs
 
 node tests/parametric_differentiation_step54_test.mjs
 
