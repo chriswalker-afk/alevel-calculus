@@ -8,9 +8,11 @@ const SIMPLE_MATH_ATOM_PATTERN = `(?:\\d+(?:\\.\\d+)?${SCRIPT_SUFFIX_PATTERN}|(?
 const PAREN_GROUP_PATTERN = `\\((?:[^()\\n]|\\([^()\\n]{0,60}\\)){1,140}\\)${SCRIPT_SUFFIX_PATTERN}`;
 const SQUARE_GROUP_PATTERN = `\\[[^\\[\\]\\n]{1,140}\\]${SCRIPT_SUFFIX_PATTERN}`;
 const ABS_GROUP_PATTERN = `\\|[^|\\n]{1,100}\\|`;
-const FRACTION_ATOM_PATTERN = `(?:${PAREN_GROUP_PATTERN}|${SQUARE_GROUP_PATTERN}|${ABS_GROUP_PATTERN}|${SIMPLE_MATH_ATOM_PATTERN})`;
+const MONOMIAL_PATTERN = `(?:\\d+(?:\\.\\d+)?[A-Za-zπ]{1,3}|[A-Za-zπ]{2,3})${SCRIPT_SUFFIX_PATTERN}`;
+const FRACTION_ATOM_PATTERN = `(?:${PAREN_GROUP_PATTERN}|${SQUARE_GROUP_PATTERN}|${ABS_GROUP_PATTERN}|${MONOMIAL_PATTERN}|${SIMPLE_MATH_ATOM_PATTERN})`;
 const FRACTION_PATTERN = new RegExp(`(?<![A-Za-z])(?:${DERIVATIVE_PATTERN}|${FRACTION_ATOM_PATTERN}\\s*\\/\\s*${FRACTION_ATOM_PATTERN})(?![A-Za-z])`, "g");
 const SCRIPT_PATTERN = /([_^])(\([^)]{1,60}\)|-?\d+|[A-Za-z]+)/g;
+const INTEGRAL_PATTERN = /∫(?:_\(([^)]{1,80})\)|_([A-Za-z0-9π∞+−-]+))?(?:\^\(([^)]{1,80})\)|\^([A-Za-z0-9π∞+−-]+))?/g;
 const SUPERSCRIPT_MAP = Object.freeze({
   "⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9",
   "ⁿ":"n","⁺":"+","⁻":"-"
@@ -53,6 +55,7 @@ export const mathRenderSelector = [
   "[data-question-shell-math]",
   "[data-question-shell-choice-label]",
   "[data-math-render]",
+  "[data-math-display]",
   "[data-math-prose]",
   ".equation-step__expression",
   ".memory-learn-item__notation",
@@ -77,6 +80,7 @@ export const mathRenderSelector = [
 const displayMathSelector = [
   "[data-activity-formula]",
   "[data-question-shell-math]",
+  "[data-math-display]",
   ".equation-step__expression",
   ".memory-learn-item__notation",
   ".memory-flashcard__content",
@@ -151,7 +155,31 @@ export function tokeniseMathExpression(source) {
   return Object.freeze(tokens.map((token) => Object.freeze({ ...token })));
 }
 
-function appendScriptedText(parent, value, doc) {
+function createIntegralNode({ lower = "", upper = "" } = {}, doc) {
+  const integral = doc.createElement("span");
+  integral.className = lower || upper ? "math-integral math-integral--limited" : "math-integral";
+
+  const symbol = doc.createElement("span");
+  symbol.className = "math-integral__symbol";
+  symbol.textContent = "∫";
+  integral.append(symbol);
+
+  if (lower || upper) {
+    const limits = doc.createElement("span");
+    limits.className = "math-integral__limits";
+    const upperNode = doc.createElement("span");
+    upperNode.className = "math-integral__upper";
+    const lowerNode = doc.createElement("span");
+    lowerNode.className = "math-integral__lower";
+    if (upper) appendMathText(upperNode, upper, doc);
+    if (lower) appendMathText(lowerNode, lower, doc);
+    limits.append(upperNode, lowerNode);
+    integral.append(limits);
+  }
+  return integral;
+}
+
+function appendScriptsOnly(parent, value, doc) {
   const text = String(value ?? "");
   let cursor = 0;
   SCRIPT_PATTERN.lastIndex = 0;
@@ -165,6 +193,22 @@ function appendScriptedText(parent, value, doc) {
     cursor = index + match[0].length;
   }
   if (cursor < text.length) parent.append(doc.createTextNode(text.slice(cursor)));
+}
+
+function appendScriptedText(parent, value, doc) {
+  const text = String(value ?? "");
+  let cursor = 0;
+  INTEGRAL_PATTERN.lastIndex = 0;
+  for (const match of text.matchAll(INTEGRAL_PATTERN)) {
+    const index = match.index ?? 0;
+    if (index > cursor) appendScriptsOnly(parent, text.slice(cursor, index), doc);
+    parent.append(createIntegralNode({
+      lower: match[1] ?? match[2] ?? "",
+      upper: match[3] ?? match[4] ?? ""
+    }, doc));
+    cursor = index + match[0].length;
+  }
+  if (cursor < text.length) appendScriptsOnly(parent, text.slice(cursor), doc);
 }
 
 function appendMathText(parent, value, doc) {
