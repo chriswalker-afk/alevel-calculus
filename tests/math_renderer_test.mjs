@@ -31,6 +31,7 @@ assert.deepEqual(prose, [{ type: "text", value: "Differentiate with respect to x
 assert.equal(normaliseMathSource("xⁿ⁺¹"), "x^(n+1)");
 assert.equal(normaliseMathSource("x⁻ⁿ"), "x^(-n)");
 assert.equal(normaliseMathSource("x³ᐟ²"), "x^(3/2)");
+assert.equal(normaliseMathSource("∫₁³ 2t dt"), "∫_(1)^(3) 2t dt");
 
 const reciprocalPower = tokeniseMathExpression("1/xⁿ = x⁻ⁿ");
 assert.equal(reciprocalPower[0].type, "fraction");
@@ -102,6 +103,8 @@ assert.match(mathCss, /white-space:\s*nowrap/);
 assert.match(mathCss, /overflow-x:\s*auto/);
 assert.match(mathCss, /\[data-math-prose\]/);
 assert.match(mathCss, /\.math-integral__limits/);
+assert.match(mathCss, /\.math-integral--limited[\s\S]*display:\s*inline-grid/);
+assert.match(mathCss, /\.math-integral--limited \.math-integral__limits[\s\S]*display:\s*contents/);
 assert.match(mathCss, /\.math-evaluation__limits/);
 assert.match(readFileSync(new URL("../src/scripts/math-renderer.js", import.meta.url), "utf8"), /INTEGRAL_PATTERN/);
 assert.match(readFileSync(new URL("../src/scripts/math-renderer.js", import.meta.url), "utf8"), /EVALUATION_PATTERN/);
