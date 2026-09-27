@@ -1,4 +1,4 @@
-import { ParametricCurveTracer } from './parametric-curve-tracer.js';
+import { ParametricCurveTracer } from './parametric-curve-tracer.js?v=understand1';
 import { PARAMETRIC_AREA_CURVES, PARAMETRIC_AREA_CASES, calculateThinStripState } from './parametric-area-data.js';
 import { INTEGRATION_METHOD_TAGS, getIntegrationMethodLabel } from './trig-integration-data.js';
 const ids=new Set(['thin-strip','derive-formula','convert-limits','direction-and-sign','geometric-area','later-technique'].map(s=>`activity:y13:integration:parametric-area:understand:${s}`));
