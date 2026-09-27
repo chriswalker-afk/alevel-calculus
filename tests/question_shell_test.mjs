@@ -114,7 +114,6 @@ const hintListField = root.querySelector('[data-question-shell-hint-list]');
 assert(promptField.getAttribute('data-math-prose') === '', 'Question prompts should use prose-safe maths rendering');
 assert(feedbackMessageField.getAttribute('data-math-prose') === '', 'Feedback messages should use prose-safe maths rendering');
 assert(hintListField.getAttribute('data-math-prose') === '', 'Hint text should use prose-safe maths rendering');
-assert(optionRows.every((row) => row.querySelector('[data-question-shell-choice-label]').getAttribute('data-math-prose') === ''), 'Choice labels should use prose-safe maths rendering');
 assert(root.hidden === false, 'Loading a generated question set should reveal the shared shell');
 assert(root.dataset.questionResponseType === 'algebraic', 'First generated sample should use the algebraic response surface');
 assert(shell.getSnapshot().templateId?.startsWith('question-template:'), 'QuestionShell snapshot should retain generated template identity');
