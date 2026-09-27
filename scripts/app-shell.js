@@ -26,7 +26,7 @@ import { createFirstPrinciplesUnderstandExperience } from "./first-principles-un
 import { firstPrinciplesLearningModes } from "./first-principles-activities.js";
 import { createTangentsNormalsUnderstandExperience } from "./tangents-normals-understand.js?v=understand2";
 import { tangentsNormalsLearningModes } from "./tangents-normals-activities.js";
-import { createStationaryPointsUnderstandExperience } from "./stationary-points-understand.js?v=understand2";
+import { createStationaryPointsUnderstandExperience } from "./stationary-points-understand.js?v=auditstep1";
 import { stationaryPointsLearningModes } from "./stationary-points-activities.js";
 import { createIncreasingDecreasingUnderstandExperience } from "./increasing-decreasing-understand.js?v=understand2";
 import { increasingDecreasingLearningModes } from "./increasing-decreasing-activities.js";
@@ -34,8 +34,8 @@ import { createIntegrationIntroUnderstandExperience } from "./integration-intro-
 import { integrationIntroLearningModes } from "./integration-intro-activities.js";
 import { createDefiniteIndefiniteUnderstandExperience } from "./definite-indefinite-understand.js?v=understand2";
 import { definiteIndefiniteLearningModes } from "./definite-indefinite-activities.js";
-import { createIntegrationAreaUnderstandExperience } from "./integration-area-understand.js?v=understand2";
-import { integrationAreaLearningModes } from "./integration-area-activities.js";
+import { createIntegrationAreaUnderstandExperience } from "./integration-area-understand.js?v=auditstep1";
+import { integrationAreaLearningModes } from "./integration-area-activities.js?v=auditstep1";
 import { createSignedAreaUnderstandExperience } from "./signed-area-understand.js?v=understand2";
 import { signedAreaLearningModes } from "./signed-area-activities.js";
 import { year12ReviewLearningModes } from "./year12-review-activities.js";

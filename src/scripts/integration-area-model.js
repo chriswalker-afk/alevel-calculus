@@ -44,6 +44,18 @@ export function removalIdentityState(definition, a, b) {
   return Object.freeze({ a, b, toB, toA, difference, direct });
 }
 
+export function betweenCurvesAreaState(upperDefinition, lowerDefinition, a, b) {
+  const upperArea = integrateFunction(upperDefinition, a, b);
+  const lowerArea = integrateFunction(lowerDefinition, a, b);
+  return Object.freeze({
+    a,
+    b,
+    upperArea,
+    lowerArea,
+    difference: upperArea - lowerArea
+  });
+}
+
 export function adjacentIntervalState(definition, a, b, c) {
   const whole = integrateFunction(definition, a, c);
   const left = integrateFunction(definition, a, b);

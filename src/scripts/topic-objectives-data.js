@@ -100,6 +100,7 @@ const topicObjectiveConfigs = Object.freeze({
       "interpret a definite integral as area for a curve above the x-axis",
       "identify the correct interval and limits from a graph",
       "connect accumulated area with the endpoint difference F(b)−F(a)",
+      "interpret a simple area between two non-crossing positive curves as top minus bottom",
       "construct and evaluate an integral for a positive bounded region",
       "interpret area units appropriately"
     ]

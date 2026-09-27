@@ -54,6 +54,12 @@ assert.equal(getSupportTargetForMicroSkill('skill:y12:differentiation:stationary
 assert.equal(getSupportTargetForMicroSkill('skill:y12:differentiation:stationary-points:second-derivative-meaning','ao1')?.activityId,'activity:y12:differentiation:stationary-points:ao1:second-derivative-test');
 assert.equal(getSupportTargetForMicroSkill('skill:y12:differentiation:stationary-points:stationary-inflection','understand')?.activityId,'activity:y12:differentiation:stationary-points:understand:stationary-inflection');
 
+const understandSource=readFileSync(new URL('../src/scripts/stationary-points-understand.js',import.meta.url),'utf8');
+assert.match(understandSource,/Stationary','f′\(a\)=0'/,'The Understand page must define stationary explicitly.');
+assert.match(understandSource,/Turning point','f′ changes sign'/,'The Understand page must define a turn by a derivative sign change.');
+assert.match(understandSource,/Stationary point of inflection','f′\(a\)=0, but no turn'/,'A stationary inflection must be explicitly distinguished from a turning point.');
+assert.match(understandSource,/“turning point”, “local maximum” and “local minimum” are not/,'x³ at the origin must not be described as a turning point or local extremum.');
+
 const app=readFileSync(new URL('../src/scripts/app-shell.js',import.meta.url),'utf8');
 assert.match(app,/stationaryPointsMemoryLabHost/);
 const topicSlice=app.slice(app.indexOf('"topic:y12:differentiation:stationary-points"'),app.indexOf('"topic:y12:differentiation:stationary-points"')+500);

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { integrationAreaTopic } from '../src/scripts/topic-content/integration-area.js';
 import { integrationAreaLearningModes } from '../src/scripts/integration-area-activities.js';
-import { INTEGRATION_AREA_POSITIVE_FUNCTIONS, accumulatedFromZero, removalIdentityState, adjacentIntervalState, reversedIntervalState } from '../src/scripts/integration-area-model.js';
+import { INTEGRATION_AREA_POSITIVE_FUNCTIONS, accumulatedFromZero, removalIdentityState, betweenCurvesAreaState, adjacentIntervalState, reversedIntervalState } from '../src/scripts/integration-area-model.js';
 import { getMemoryItemsForTopic } from '../src/scripts/memory-content.js';
 import { getMemoryGamePackForTopic } from '../src/scripts/memory-game-content.js';
 import { getMemoryReviewPackForTopic } from '../src/scripts/memory-review-content.js';
@@ -24,6 +24,7 @@ assert.deepEqual(integrationAreaLearningModes.understand.activities.map(a=>a.act
  'activity:y12:integration:area:understand:lower-limit-zero',
  'activity:y12:integration:area:understand:remove-unwanted-region',
  'activity:y12:integration:area:understand:endpoint-difference',
+ 'activity:y12:integration:area:understand:between-positive-curves',
  'activity:y12:integration:area:understand:visual-properties'
 ]);
 for(const definition of INTEGRATION_AREA_POSITIVE_FUNCTIONS){
@@ -36,6 +37,11 @@ const removal=removalIdentityState(f,1,3);
 assert(Math.abs(removal.toB-7.5)<1e-6);
 assert(Math.abs(removal.toA-1.5)<1e-6);
 assert(Math.abs(removal.difference-removal.direct)<1e-6,'Removing 0→a must equal direct a→b area');
+const top=INTEGRATION_AREA_POSITIVE_FUNCTIONS.find(x=>x.id==='integration-area-linear');
+const bottom=INTEGRATION_AREA_POSITIVE_FUNCTIONS.find(x=>x.id==='integration-area-quadratic');
+const between=betweenCurvesAreaState(top,bottom,0,2);
+assert(Math.abs(between.difference-2/3)<1e-6,'Simple Year 12 top-minus-bottom example should have area 2/3');
+assert(between.upperArea>between.lowerArea,'The Year 12 introduction must keep the top curve above the bottom curve on the chosen interval');
 const adjacent=adjacentIntervalState(f,0,1,3);
 assert(Math.abs(adjacent.whole-adjacent.sum)<1e-6,'Adjacent interval areas must add');
 const reversed=reversedIntervalState(f,1,3);
@@ -59,6 +65,9 @@ assert.match(understand,/createAreaExplorer/,'Step 46 must reuse AreaExplorer');
 assert.match(understand,/lockedLowerLimit:\s*0/,'The first exploration must lock the lower limit at zero');
 assert.match(understand,/Remove 0 → a/,'The arbitrary lower limit must be introduced by removing the unwanted initial region');
 assert.match(understand,/F\(b\).*F\(a\)/s,'The visual subtraction must connect to F(b)-F(a)');
+assert.match(understand,/Area between two curves = top area − bottom area/,'Year 12 must include the simple top-minus-bottom introduction.');
+assert.match(understand,/A\(x\) − B\(x\)/,'The simple between-curves visual must connect subtraction of areas to one integrand.');
+assert.match(understand,/Year 13 you will revisit areas where curves cross/,'The Year 12 page must explicitly defer crossings and advanced method choice to Year 13.');
 assert.doesNotMatch(understand,/Riemann|limit of a sum/i,'Step 46 must not introduce integration as the limit of a sum');
 const areaSource=readFileSync(new URL('../src/scripts/area-explorer.js',import.meta.url),'utf8');
 assert.match(areaSource,/showAdvancedReadout = true/,'AreaExplorer defaults must preserve its existing advanced presentation');

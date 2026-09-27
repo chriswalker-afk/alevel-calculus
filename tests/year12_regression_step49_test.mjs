@@ -49,7 +49,7 @@ const entries = [
   { section: 12, topic: definiteIndefiniteTopic, runtime: definiteIndefiniteLearningModes, sequence: 80 },
   { section: 13, topic: integrationAreaTopic, runtime: integrationAreaLearningModes, sequence: 90 },
   { section: 14, topic: signedAreaTopic, runtime: signedAreaLearningModes, sequence: 100 },
-  // Plan section 15 is an explicit placement decision: general area between arbitrary curves is Year 13.
+  // Plan section 15 remains a Year 13 advanced treatment; Year 12 now contains only a simple top-minus-bottom introduction inside the existing Integration as Area topic.
   { section: 16, topic: year12ReviewTopic, runtime: year12ReviewLearningModes, sequence: 110 }
 ];
 
@@ -58,7 +58,8 @@ assert.deepEqual(entries.map(({ section }) => section), [5,6,7,8,9,10,11,12,13,1
 assert.deepEqual(entries.map(({ topic }) => topic.sequence), entries.map(({ sequence }) => sequence), 'Year 12 TopicMetadata sequence must preserve curriculum/navigation order.');
 assert.equal(new Set(entries.map(({ topic }) => topic.topicId)).size, entries.length, 'Year 12 topic IDs must be unique.');
 assert(entries.every(({ topic }) => topic.scopeId === 'y12' && topic.routeScope === 'y12'), 'Every Year 12 topic must stay inside the 8MA0 scope.');
-assert(!entries.some(({ topic }) => /between-curves/.test(topic.topicId)), 'Plan section 15 must not be implemented as a Year 12 arbitrary-area-between-curves topic.');
+assert(!entries.some(({ topic }) => /between-curves/.test(topic.topicId)), 'Do not create a duplicate standalone Year 12 between-curves topic.');
+assert(integrationAreaTopic.activities.some((activity)=>activity.activityId==='activity:y12:integration:area:understand:between-positive-curves'),'The existing Year 12 Integration as Area topic must include the scoped top-minus-bottom introduction.');
 
 // 2. TopicMetadata and the live activity surfaces must agree mode-by-mode.
 for (const { topic, runtime } of entries) {
