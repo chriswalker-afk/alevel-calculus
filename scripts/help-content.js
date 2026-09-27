@@ -439,12 +439,44 @@ const lateCourseHelpTopics = Object.freeze([
 const lateCourseTopLevelPreferences = Object.freeze({
   "topic:y13:integration:partial-fractions": Object.freeze({understand:"recognise-proper",memorise:"proper-check",ao1:"structure-choice"}),
   "topic:y13:integration:areas": Object.freeze({understand:"construction-visual",memorise:"construction-order",ao1:"routine-between-curves"}),
-  "topic:y13:integration:parametric-area": Object.freeze({understand:"thin-strip",memorise:"formula-order",ao1:"routine-parametric-area"}),
-  "topic:y13:integration:limit-of-sum": Object.freeze({understand:"rectangle-progression",memorise:"structure-recall",ao1:"recognise-evaluate"}),
+  "topic:y13:integration:parametric-area": Object.freeze({understand:"thin-strip",memorise:"formula",ao1:"formula-and-strip"}),
+  "topic:y13:integration:limit-of-sum": Object.freeze({understand:"rectangle-progression",memorise:"mapping",ao1:"recognise-evaluate"}),
   "topic:y13:integration:numerical-integration": Object.freeze({understand:"numerical-context",memorise:"rule",ao1:"estimate"}),
   "topic:y13:differential-equations:first-order": Object.freeze({understand:"translate-rate-statements",memorise:"separation-method",ao1:"solve-and-condition"}),
   "topic:y13:modelling:calculus": Object.freeze({understand:"framework",memorise:"framework-recall",ao1:"framework-practice"}),
   "topic:full:review:full-calculus-mastery": Object.freeze({ao1:"select-complete-check"})
+});
+
+const lateCourseMicroSkillPreferences = Object.freeze({
+  "topic:y13:integration:partial-fractions": Object.freeze({
+    "polynomial-division": Object.freeze({ao1:"structure-choice"}),
+    "coefficient-method": Object.freeze({memorise:"coefficient-finding",ao1:"distinct-integrate"}),
+    "reasoning": Object.freeze({memorise:"structures",ao1:"structure-choice"}),
+    "applications": Object.freeze({memorise:"mixed-review",ao1:"distinct-integrate"})
+  }),
+  "topic:y13:integration:areas": Object.freeze({
+    "geometry-vs-calculus": Object.freeze({memorise:"geometry-cue",ao1:"routine-between-curves"}),
+    "signed-vs-geometric": Object.freeze({memorise:"mixed-review",ao1:"routine-between-curves"})
+  }),
+  "topic:y13:integration:parametric-area": Object.freeze({
+    "later-technique": Object.freeze({ao1:"formula-and-strip"})
+  }),
+  "topic:y13:integration:limit-of-sum": Object.freeze({
+    "rectangles": Object.freeze({ao1:"recognise"}),
+    "evaluate": Object.freeze({memorise:"sequence"})
+  }),
+  "topic:y13:integration:numerical-integration": Object.freeze({
+    "estimate": Object.freeze({memorise:"table"}),
+    "context": Object.freeze({memorise:"mixed-review",ao1:"estimate"}),
+    "ordinate-table": Object.freeze({ao1:"estimate"})
+  }),
+  "topic:y13:modelling:calculus": Object.freeze({
+    "exact-numerical": Object.freeze({ao1:"specified-step"})
+  }),
+  "topic:full:review:full-calculus-mastery": Object.freeze({
+    "interpretation": Object.freeze({ao1:"select-complete-check"}),
+    "mastery": Object.freeze({ao1:"select-complete-check"})
+  })
 });
 
 const helpPromptByNeed = Object.freeze({
@@ -512,10 +544,12 @@ function buildLateCourseMicroSkillHelp(){
         const declaredId=micro.supportTargets?.[need]??null;
         const declared=declaredId?topic.activities.find((activity)=>activity.activityId===declaredId&&activity.mode===need):null;
         const direct=firstActivityForMicroSkill(topic,need,micro.microSkillId);
-        const prefs=lateCourseTopLevelPreferences[topic.topicId]??{};
-        const preferred=activityForModeAndSlug(topic,need,prefs[need]);
+        const topPrefs=lateCourseTopLevelPreferences[topic.topicId]??{};
+        const microPrefs=lateCourseMicroSkillPreferences[topic.topicId]?.[micro.slug]??{};
+        const microPreferred=activityForModeAndSlug(topic,need,microPrefs[need]);
+        const preferred=activityForModeAndSlug(topic,need,topPrefs[need]);
         const fallback=topic.activities.find((activity)=>activity.mode===need)??null;
-        const target=makeLateCourseTarget(topic,declared??direct??preferred??fallback,need,micro.microSkillId);
+        const target=makeLateCourseTarget(topic,declared??direct??microPreferred??preferred??fallback,need,micro.microSkillId);
         if(target)group[need]=target;
       }
       result[micro.microSkillId]=Object.freeze(group);
