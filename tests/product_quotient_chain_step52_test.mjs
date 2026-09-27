@@ -8,8 +8,17 @@ assert.equal(productQuotientChainTopic.scopeId,'y13-additional');
 assert.equal(productQuotientChainTopic.routeScope,'y13');
 assert.equal(productQuotientChainTopic.sequence,200);
 assert.ok(productQuotientChainTopic.modes.includes('understand'));
-assert.equal(productQuotientChainTopic.activities.filter(a=>a.mode==='understand').length,4);
-assert.equal(productQuotientChainLearningModes.understand.activities.length,4);
+assert.equal(productQuotientChainTopic.activities.filter(a=>a.mode==='understand').length,6);
+assert.equal(productQuotientChainLearningModes.understand.activities.length,6);
+const understandOrder=productQuotientChainLearningModes.understand.activities.map(a=>a.activityId);
+assert.deepEqual(understandOrder,[
+ 'activity:y13:differentiation:product-quotient-chain:understand:rule-orientation',
+ 'activity:y13:differentiation:product-quotient-chain:understand:classify-structure',
+ 'activity:y13:differentiation:product-quotient-chain:understand:function-machines',
+ 'activity:y13:differentiation:product-quotient-chain:understand:inside-outside-builder',
+ 'activity:y13:differentiation:product-quotient-chain:understand:rule-application',
+ 'activity:y13:differentiation:product-quotient-chain:understand:nested-mixtures'
+]);
 for(const tag of productQuotientChainTopic.vocabularyTags) assert.ok(getVocabularyTerm(tag),tag);
 for(const skill of productQuotientChainTopic.microSkills.filter(s=>s.supportTargets.understand)){const a=productQuotientChainTopic.activities.find(x=>x.activityId===skill.supportTargets.understand);assert.ok(a);assert.ok(a.microSkillIds.includes(skill.microSkillId));}
 assert.equal(STRUCTURE_ROLES.inner,'Inside');assert.equal(STRUCTURE_ROLES.outer,'Outside');
