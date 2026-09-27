@@ -85,6 +85,7 @@ import { fullCalculusMasteryLearningModes } from "./full-calculus-mastery-activi
 import { fullCalculusMasteryModel } from "./full-calculus-mastery-model.js";
 import { getFullDifferentiationReviewMicroSkillLabel } from "./full-differentiation-review-model.js";
 import { getTopicObjectiveConfig } from "./topic-objectives-data.js?v=auditstep2";
+import { createIntegrationMethodMapSurface } from "./integration-method-map-surface.js?v=auditstep14";
 
 const root = document.documentElement;
 const shell = document.querySelector("[data-app-shell]");
@@ -303,6 +304,21 @@ let currentTopicId = "topic:y12:differentiation:basics";
 let currentTopicLabel = "Basics of differentiation";
 const classWizSupportPanel = createClassWizSupportPanel({ element: classWizPanelElement, topicId: "topic:y12:differentiation:basics" });
 if (!classWizSupportPanel) throw new Error("No ClassWiz support pack exists for the Basics reference topic");
+function navigateToActivityTarget(target){
+  if(!target?.topicId||!target?.mode||!target?.activityId)return false;
+  if(target.topicId!==currentTopicId&&!selectTopic(target.topicId,{focusStage:false}))return false;
+  if(target.mode!==activeMode)selectMode(target.mode);
+  const targetIndex=currentLearningModes()[target.mode]?.activities?.findIndex(activity=>activity.activityId===target.activityId)??-1;
+  if(targetIndex<0)return false;
+  renderActivity(targetIndex);
+  stage.focus();
+  return true;
+}
+const integrationMethodMapSurface=createIntegrationMethodMapSurface({
+  documentRef:document,
+  triggerHost:stage.querySelector('.activity-stage__tools'),
+  onNavigate:navigateToActivityTarget
+});
 const basicsUnderstand = createBasicsUnderstandExperience(customUnderstandHost);
 const preCalculusUnderstand = createPreCalculusUnderstandExperience(customUnderstandHost);
 const firstPrinciplesUnderstand = createFirstPrinciplesUnderstandExperience(customUnderstandHost);
@@ -311,18 +327,7 @@ const stationaryPointsUnderstand = createStationaryPointsUnderstandExperience(cu
 const increasingDecreasingUnderstand = createIncreasingDecreasingUnderstandExperience(customUnderstandHost);
 const integrationIntroUnderstand = createIntegrationIntroUnderstandExperience(customUnderstandHost);
 const definiteIndefiniteUnderstand = createDefiniteIndefiniteUnderstandExperience(customUnderstandHost);
-const integrationAreaUnderstand = createIntegrationAreaUnderstandExperience(customUnderstandHost,{
-  navigateToActivity:(target)=>{
-    if(!target?.topicId||!target?.mode||!target?.activityId)return false;
-    if(target.topicId!==currentTopicId&&!selectTopic(target.topicId,{focusStage:false}))return false;
-    if(target.mode!==activeMode)selectMode(target.mode);
-    const targetIndex=currentLearningModes()[target.mode]?.activities?.findIndex(activity=>activity.activityId===target.activityId)??-1;
-    if(targetIndex<0)return false;
-    renderActivity(targetIndex);
-    stage.focus();
-    return true;
-  }
-});
+const integrationAreaUnderstand = createIntegrationAreaUnderstandExperience(customUnderstandHost,{navigateToActivity:navigateToActivityTarget});
 const signedAreaUnderstand = createSignedAreaUnderstandExperience(customUnderstandHost);
 const standardFunctionsUnderstand = createStandardFunctionsUnderstandExperience(customUnderstandHost);
 const trigFirstPrinciplesUnderstand = createTrigFirstPrinciplesUnderstandExperience(customUnderstandHost);
@@ -1480,6 +1485,7 @@ export function renderActivity(index) {
     : wrappedIndex(index, activities.length);
   activityIndexByTopicMode.set(topicModeKey(), activityIndex);
   const activity = activities[activityIndex];
+  integrationMethodMapSurface.setContext({topicId:currentTopicId,activityId:activity.activityId});
   const position = `${activityIndex + 1} of ${activities.length}`;
 
   fields.kicker.textContent = activity.kicker;
