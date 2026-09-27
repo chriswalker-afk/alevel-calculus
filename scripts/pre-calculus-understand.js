@@ -1,4 +1,4 @@
-import { DiagramPrimitives } from './diagram-primitives.js';
+import { DiagramPrimitives } from './diagram-primitives.js?v=diagramfix3';
 
 const STEP37_IDS = new Set([
   'activity:y12:foundations:pre-calculus:understand:hill-gradient',
