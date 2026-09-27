@@ -75,8 +75,8 @@ import { createParametricAreaUnderstandExperience } from "./parametric-area-unde
 import { parametricAreaLearningModes } from "./parametric-area-activities.js";
 import { createLimitOfSumUnderstandExperience } from "./limit-of-sum-understand.js";
 import { limitOfSumLearningModes } from "./limit-of-sum-activities.js";
-import { createNumericalIntegrationUnderstandExperience } from "./trapezium-integration-understand.js";
-import { numericalIntegrationLearningModes } from "./trapezium-integration-activities.js";
+import { createNumericalIntegrationUnderstandExperience } from "./trapezium-integration-understand.js?v=auditstep15";
+import { numericalIntegrationLearningModes } from "./trapezium-integration-activities.js?v=auditstep15";
 import { createDifferentialEquationsUnderstandExperience } from "./differential-equations-understand.js";
 import { differentialEquationsLearningModes } from "./differential-equations-activities.js";
 import { createCalculusModellingUnderstandExperience } from "./calculus-modelling-understand.js";
