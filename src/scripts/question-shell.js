@@ -7,7 +7,7 @@ import {
   getVisibleHints,
   nextHintRevealCount
 } from "./hint-sequence.js";
-import { createWorkedSolutionRenderer } from "./worked-solution-renderer.js?v=ao1math3";
+import { createWorkedSolutionRenderer } from "./worked-solution-renderer.js?v=ao1math4";
 import { createMathEntryEnhancement, createSelfReviewPanel, deriveSelfReviewCriteria, isAo3SelfReviewQuestion } from "./question-response-enhancements.js";
 
 export const questionResponseTypes = Object.freeze([
