@@ -231,7 +231,7 @@ assert 'data-learning-mode="understand"' in html
 assert "./styles/tokens.css" in parser.stylesheets
 assert any("app-shell.css" in sheet for sheet in parser.stylesheets)
 assert "./styles/question-shell.css" in parser.stylesheets
-assert "./styles/memory-lab.css" in parser.stylesheets
+assert any("memory-lab.css" in sheet for sheet in parser.stylesheets)
 assert any("family-of-curves-explorer.css" in sheet for sheet in parser.stylesheets)
 assert any("area-explorer.css" in sheet for sheet in parser.stylesheets)
 assert any("rectangle-sum-explorer.css" in sheet for sheet in parser.stylesheets)
