@@ -63,7 +63,7 @@ assert.match(diagramJs, /event\.key === "ArrowRight"/);
 assert.match(diagramJs, /event\.key === "ArrowDown"/);
 assert.match(diagramJs, /event\.key === "ArrowUp"/);
 assert.match(memoryJs, /\["ArrowLeft", "ArrowRight", "Home", "End"\]/);
-assert.match(classwizJs, /\['ArrowLeft', 'ArrowRight', 'Home', 'End'\]/);
+assert.match(classwizJs, /\['ArrowLeft',\s*'ArrowRight',\s*'Home',\s*'End'\]/);
 
 // Drawers move focus in and return it; background becomes inert.
 assert.match(shellJs, /setHelpBackgroundInert\(true\)/);
