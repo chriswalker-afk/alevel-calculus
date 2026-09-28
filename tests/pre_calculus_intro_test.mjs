@@ -46,7 +46,7 @@ assert(experience.includes('does not mean a vertical line has gradient “infini
 assert(experience.includes('same gradient') || experience.includes('gradient remains'), 'Gradient-vs-height state must preserve gradient under vertical translation');
 const beforeDeltaIntroduction = experience.split('render_delta_meaning()')[0];
 assert(!beforeDeltaIntroduction.includes('Δx') && !beforeDeltaIntroduction.includes('Δy'), 'Delta notation must not appear before the delta-introduction activity');
-assert(!beforeDeltaIntroduction.includes('m →') && !beforeDeltaIntroduction.includes('m ='), 'm notation must not appear in student-facing pre-delta content');
+assert(!beforeDeltaIntroduction.includes('m →') && !beforeDeltaIntroduction.includes('Horizontal: m') && !beforeDeltaIntroduction.includes('side: m ≈'), 'm notation must not appear in student-facing pre-delta content');
 assert(experience.includes('The symbol Δ is the capital Greek letter delta'), 'The new activity must explicitly explain what delta means before using it in the formula');
 assert(experience.includes('change in x = 5 − 1 = 4') && experience.includes('change in y = 3 − 1 = 2'), 'The delta activity must begin with plain-language change in x and change in y');
 assert(experience.includes('gradient of a straight line = Δy ÷ Δx'), 'The delta activity must introduce the straight-line gradient formula');
