@@ -573,9 +573,9 @@ assert(shell.dataset.activityIndex === '0', 'Initial activity index should be 0'
 assert(title.textContent === 'Goals for Basics of differentiation', 'Understand should open on its dedicated Topic goals page');
 assert(customUnderstandHost.hidden === true, 'Topic goals should keep the dedicated custom visual host hidden');
 assert(stage.scrollTop === 0, 'Initial render should reset only the activity-stage scroll position');
-assert(stage.dataset.workspaceToolsCollapsed === 'false', 'Understand should open with Workspace tools expanded.');
-assert(workspaceToolsContent.hidden === false, 'Understand should keep utility buttons visible by default.');
-assert(workspaceToolsToggle.getAttribute('aria-expanded') === 'true', 'Workspace tools toggle should report expanded in Understand.');
+assert(stage.dataset.workspaceToolsCollapsed === 'true', 'Understand should open with the header Tools popover closed.');
+assert(workspaceToolsContent.hidden === true, 'Closed Tools must not consume workspace height.');
+assert(workspaceToolsToggle.getAttribute('aria-expanded') === 'false', 'Workspace Tools should report collapsed until requested.');
 
 const preCalcClick = listeners.get('topicPreCalculus:click');
 assert(typeof preCalcClick === 'function', 'Implemented Pre-calculus navigation needs a click handler');
