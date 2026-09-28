@@ -64,7 +64,11 @@ assert(css.includes(':focus-visible'), 'Step 37 controls must preserve visible k
 assert(css.includes('transform:scaleX(-1)'), 'The hill car must face right to match the left-to-right journey');
 assert(css.includes('pre-calculus-understand__journey-note'), 'The hill journey must provide a visible teaching sub-window at automatic pauses');
 assert(/@media\s*\(max-width:680px\)/.test(css), 'Step 37 must include the frozen phone breakpoint');
-assert(css.includes('overflow:auto'), 'Step 37 must use internal scrolling rather than document-level overflow');
+assert(css.includes('overflow:auto'), 'Step 37 must retain a narrow-screen internal scrolling fallback');
+assert(css.includes('.pre-calculus-understand__panel-body { min-height:0; display:grid; gap:var(--space-2); align-content:start; overflow:hidden;'), 'Desktop Pre-calculus panels must not rely on vertical scrolling');
+assert(experience.includes("aspectRatio = '2.35 / 1'"), 'Ordinary Pre-calculus diagrams must use the wide, shallow single-screen aspect ratio');
+assert(css.includes('.pre-calculus-understand__summary-grid'), 'Dense explanations must support compact side-by-side summaries');
+assert(css.includes('data-pre-calculus-activity="vertical_limit"'), 'The near-vertical activity must receive its compact control treatment');
 assert(css.includes('.pre-calculus-understand--delta-intro .pre-calculus-understand__panel-body { overflow:hidden;'), 'Delta introduction must avoid vertical scrolling at desktop widths');
 
 const shell = read('src/scripts/app-shell.js');
