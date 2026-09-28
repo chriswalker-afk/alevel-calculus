@@ -256,13 +256,17 @@ export class BasicsUnderstandExperience {
 
   render_gradient_function() {
     const body = this.#panel('Build f′(x) from tangent gradients', '2 · Gradient function');
-    const instruction = el(this.document, 'p', 'basics-understand__instruction', 'Each marked point on the lower graph has height = tangent gradient on the upper graph. Add samples first; reveal the complete curve only after you have a prediction.');
-    body.append(instruction);
-    const controls = el(this.document, 'div', 'basics-understand__action-row');
-    const sampleStatus = el(this.document, 'span', 'basics-understand__status', '0 gradient points plotted');
-    sampleStatus.setAttribute('role', 'status');
-    sampleStatus.setAttribute('aria-live', 'polite');
-    body.append(controls);
+    let xReadout = null;
+    let functionReadout = null;
+    let sampleStatus = null;
+    let derivativeExpression = null;
+    let revealButton = null;
+
+    const syncReadout = ({ x, values }) => {
+      if (xReadout) xReadout.textContent = `x = ${format(x)}`;
+      if (functionReadout) functionReadout.textContent = `f(x) = ${format(values.function)}`;
+    };
+
     const explorer = this.#mountExplorer(body, {
       functions: [POLYNOMIAL_FUNCTIONS.find((item) => item.id === 'quadratic-bowl')],
       revealDerivative: false,
@@ -270,22 +274,68 @@ export class BasicsUnderstandExperience {
       derivativeSamples: [],
       derivativePanelVisible: true,
       showDerivativeControls: false,
-      showDerivativeReadout: false
+      showDerivativeReadout: false,
+      onChange: syncReadout
     });
+
+    const functionCard = body.querySelector('[data-graph-kind="function"]');
+    const derivativeCard = body.querySelector('[data-graph-kind="derivative"]');
+    const functionHeading = functionCard?.querySelector('.linked-gradient-explorer__card-heading');
+    const derivativeHeading = derivativeCard?.querySelector('.linked-gradient-explorer__card-heading');
+    derivativeExpression = derivativeCard?.querySelector('.linked-gradient-explorer__expression') ?? null;
+    if (derivativeExpression) derivativeExpression.hidden = true;
+
     const sampleXs = [];
     const addSample = () => {
       const x = explorer.getState().x;
       if (!sampleXs.some((value) => Math.abs(value - x) < 0.08)) sampleXs.push(x);
       explorer.setDerivativeSamples(sampleXs);
-      sampleStatus.textContent = `${sampleXs.length} gradient point${sampleXs.length === 1 ? '' : 's'} plotted`;
+      if (sampleStatus) sampleStatus.textContent = `${sampleXs.length} gradient point${sampleXs.length === 1 ? '' : 's'} plotted`;
     };
-    controls.append(
-      button(this.document, 'Plot this gradient point', addSample),
-      button(this.document, 'Reveal complete f′(x)', () => explorer.setDerivativeVisible(true), 'basics-understand__button basics-understand__button--primary'),
-      sampleStatus
-    );
-    const takeaway = el(this.document, 'div', 'basics-understand__takeaway', 'Key idea: the height of f′(x) is the gradient of f(x), not the height of f(x).');
-    body.append(takeaway);
+
+    const toggleDerivative = () => {
+      const nextVisible = !explorer.getState().derivativeVisible;
+      explorer.setDerivativeVisible(nextVisible);
+      if (derivativeExpression) derivativeExpression.hidden = !nextVisible;
+      if (revealButton) {
+        revealButton.textContent = nextVisible ? 'Hide complete f′(x)' : 'Reveal complete f′(x)';
+        revealButton.setAttribute('aria-pressed', nextVisible ? 'true' : 'false');
+      }
+    };
+
+    if (functionHeading) {
+      const tools = el(this.document, 'div', 'basics-understand__graph-card-tools basics-understand__graph-card-tools--function');
+      const plotButton = button(this.document, 'Plot this gradient point', addSample, 'basics-understand__button basics-understand__graph-action');
+      const values = el(this.document, 'div', 'basics-understand__graph-values');
+      xReadout = el(this.document, 'span', 'basics-understand__graph-value', 'x = —');
+      functionReadout = el(this.document, 'span', 'basics-understand__graph-value', 'f(x) = —');
+      xReadout.setAttribute('data-math-render', '');
+      functionReadout.setAttribute('data-math-render', '');
+      values.append(xReadout, functionReadout);
+      tools.append(plotButton, values);
+      functionHeading.append(tools);
+    }
+
+    if (derivativeHeading) {
+      const tools = el(this.document, 'div', 'basics-understand__graph-card-tools basics-understand__graph-card-tools--derivative');
+      revealButton = button(this.document, 'Reveal complete f′(x)', toggleDerivative, 'basics-understand__button basics-understand__button--primary basics-understand__graph-action');
+      revealButton.setAttribute('aria-pressed', 'false');
+      sampleStatus = el(this.document, 'span', 'basics-understand__status basics-understand__graph-status', '0 gradient points plotted');
+      sampleStatus.setAttribute('role', 'status');
+      sampleStatus.setAttribute('aria-live', 'polite');
+      tools.append(revealButton, sampleStatus);
+      derivativeHeading.append(tools);
+    }
+
+    const state = explorer.getState();
+    const definition = explorer.definition;
+    syncReadout({
+      ...state,
+      values: {
+        function: definition.evaluate(state.x),
+        derivative: definition.derivative(state.x)
+      }
+    });
   }
 
   render_polynomial_explorer() {

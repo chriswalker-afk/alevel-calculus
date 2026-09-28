@@ -42,5 +42,10 @@ assert(source.includes('Newton and Leibniz developed calculus independently'),'D
 assert(source.includes("vocab:d-dx-operator") && source.includes("renderVocabulary"),'Operator notation must be wired into the shared Word Bank renderer.');
 assert(source.includes("vocab:f-prime-notation") && source.includes("vocab:dy-dx-notation"),'All three derivative notation families should connect to canonical vocabulary terms.');
 assert(cssSource.includes('basics-understand__notation-story'),'The notation history anecdote needs a compact single-screen presentation.');
+assert(source.includes("basics-understand__graph-card-tools--function") && source.includes("Plot this gradient point"),'Gradient-function plotting control must live inside the function graph card.');
+assert(source.includes("basics-understand__graph-card-tools--derivative") && source.includes("Reveal complete f′(x)"),'Derivative reveal control must live inside the derivative graph card.');
+assert(source.includes("derivativeExpression.hidden = true"),'The derivative rule must stay hidden until the student reveals the complete derivative.');
+assert(source.includes("xReadout") && source.includes("functionReadout"),'The live x and f(x) values must be relocated into the function graph card.');
+assert(cssSource.includes('gradient_function') && cssSource.includes('.linked-gradient-explorer__controls { display:none; }'),'Activity 3 must remove the redundant top explorer toolbar for a single-screen layout.');
 
 console.log('PASS Basics Understand eight-state reference journey and linked polynomial contract');
