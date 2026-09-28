@@ -66,6 +66,7 @@ export class PreCalculusUnderstandExperience {
     for (const cleanup of this.cleanup.splice(0)) cleanup();
     this.host.replaceChildren();
     this.host.classList.remove('pre-calculus-understand', 'pre-calculus-understand--delta-intro');
+    delete this.host.dataset.preCalculusActivity;
   }
 
   render(activityId) {
@@ -73,6 +74,7 @@ export class PreCalculusUnderstandExperience {
     this.destroy();
     this.host.classList.add('pre-calculus-understand');
     const slug = activityId.split(':').at(-1).replaceAll('-', '_');
+    this.host.dataset.preCalculusActivity = slug;
     const renderer = this[`render_${slug}`];
     if (typeof renderer !== 'function') throw new Error(`No Pre-calculus renderer for ${activityId}`);
     renderer.call(this);
@@ -89,10 +91,10 @@ export class PreCalculusUnderstandExperience {
     return body;
   }
 
-  #graph(body, { xDomain = [-5, 5], yDomain = [-4, 4], ariaLabel = 'Gradient diagram' } = {}) {
+  #graph(body, { xDomain = [-5, 5], yDomain = [-4, 4], ariaLabel = 'Gradient diagram', minHeight = 200, aspectRatio = '2.35 / 1' } = {}) {
     const graphHost = el(this.document, 'div', 'pre-calculus-understand__graph-host');
     body.append(graphHost);
-    this.diagram = new DiagramPrimitives(graphHost, { xDomain, yDomain, ariaLabel, minHeight: 300 });
+    this.diagram = new DiagramPrimitives(graphHost, { xDomain, yDomain, ariaLabel, minHeight, aspectRatio });
     this.diagram.grid({ xStep: 1, yStep: 1 });
     this.diagram.axes({ tickStep: 1 });
     return { graphHost, diagram: this.diagram };
@@ -430,10 +432,12 @@ export class PreCalculusUnderstandExperience {
       button(this.document, 'Near vertical: positive', () => slider.setValue(89))
     );
     controls.append(slider.element, presets);
-    body.append(
-      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Approaching vertical from the positive-gradient side makes the gradient increase without bound; from the negative-gradient side it becomes more and more negative. This does not mean a vertical line has gradient “infinity”.'),
-      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Exactly vertical, there is vertical change but no horizontal change. Finding a gradient would require dividing by zero, so the gradient is undefined.')
+    const summary = el(this.document, 'div', 'pre-calculus-understand__summary-grid');
+    summary.append(
+      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Near vertical: the gradient magnitude grows without bound. This does not mean a vertical line has gradient “infinity”.'),
+      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Exactly vertical: there is no horizontal change, so finding a gradient would require division by zero. The gradient is undefined.')
     );
+    body.append(summary);
   }
 
   render_delta_meaning() {
@@ -544,7 +548,7 @@ export class PreCalculusUnderstandExperience {
       }
     });
     controls.append(slider.element);
-    body.append(el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Move Q and apply the formula again. The values of Δx and Δy change, but Δy ÷ Δx stays equal to 0.5. This shows that the formula works and that a straight line has the same gradient at all points.'));
+    body.append(el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Move Q: Δx and Δy change, but Δy ÷ Δx stays 0.5. The straight line has the same gradient everywhere.'));
     void line;
   }
 
