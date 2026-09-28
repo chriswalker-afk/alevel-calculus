@@ -645,21 +645,83 @@ export class BasicsUnderstandExperience {
   }
 
   render_term_by_term() {
-    const body = this.#panel('A sum differentiates one term at a time', '7 · Term by term');
-    const expression = el(this.document, 'div', 'basics-understand__term-expression', 'y = 3x⁴ − 2x² + 5x − 7');
-    const row = el(this.document, 'div', 'basics-understand__term-row');
-    [
-      'd/dx ( 3x⁴ ) = 12x³',
-      'd/dx ( −2x² ) = −4x',
-      'd/dx ( 5x ) = 5',
-      'd/dx ( −7 ) = 0'
-    ].forEach((text) => {
-      const card = el(this.document, 'div', 'basics-understand__term-card', text);
-      card.setAttribute('data-math-display', '');
-      row.append(card);
+    const body = this.#panel('Trace each term to its derivative', '7 · Term by term');
+    const map = el(this.document, 'div', 'basics-understand__term-map');
+    const topLabel = el(this.document, 'div', 'basics-understand__term-map-label basics-understand__term-map-label--top', 'y =');
+    topLabel.setAttribute('data-math-display', '');
+    const bottomLabel = el(this.document, 'div', 'basics-understand__term-map-label basics-understand__term-map-label--bottom', 'dy/dx =');
+    bottomLabel.setAttribute('data-math-display', '');
+    map.append(topLabel, bottomLabel);
+
+    const pairs = [
+      { source: '3x⁴', derivative: '12x³', spoken: '3 x to the fourth differentiates to 12 x cubed' },
+      { source: '− 2x²', derivative: '− 4x', spoken: 'negative 2 x squared differentiates to negative 4 x' },
+      { source: '+ 5x', derivative: '+ 5', spoken: 'positive 5 x differentiates to positive 5' },
+      { source: '− 7', derivative: '0', spoken: 'negative 7 differentiates to 0' }
+    ];
+
+    const nodes = [];
+    let lockedIndex = null;
+    let hoverIndex = null;
+
+    const updateActivePair = () => {
+      const activeIndex = hoverIndex ?? lockedIndex;
+      nodes.forEach(({ source, connector, derivative }, index) => {
+        const active = index === activeIndex;
+        source.classList.toggle('is-active', active);
+        connector.classList.toggle('is-active', active);
+        derivative.classList.toggle('is-active', active);
+        source.setAttribute('aria-pressed', lockedIndex === index ? 'true' : 'false');
+        derivative.setAttribute('aria-pressed', lockedIndex === index ? 'true' : 'false');
+      });
+      map.dataset.activePair = activeIndex === null ? '' : String(activeIndex);
+    };
+
+    pairs.forEach((pair, index) => {
+      const source = el(this.document, 'button', 'basics-understand__term-token basics-understand__term-token--source', pair.source);
+      source.type = 'button';
+      source.setAttribute('data-math-display', '');
+      source.setAttribute('aria-label', `${pair.source}; ${pair.spoken}. Hover, focus or press to trace this term.`);
+      source.style.gridColumn = String(index + 2);
+      source.style.gridRow = '1';
+
+      const connector = el(this.document, 'div', 'basics-understand__term-connector');
+      connector.setAttribute('aria-hidden', 'true');
+      connector.style.gridColumn = String(index + 2);
+      connector.style.gridRow = '2';
+      connector.append(el(this.document, 'span', 'basics-understand__term-connector-line'), el(this.document, 'span', 'basics-understand__term-connector-arrow', '↓'));
+
+      const derivative = el(this.document, 'button', 'basics-understand__term-token basics-understand__term-token--derivative', pair.derivative);
+      derivative.type = 'button';
+      derivative.setAttribute('data-math-display', '');
+      derivative.setAttribute('aria-label', `${pair.derivative}; derivative of ${pair.source}. Hover, focus or press to trace this term.`);
+      derivative.style.gridColumn = String(index + 2);
+      derivative.style.gridRow = '3';
+
+      const enter = () => { hoverIndex = index; updateActivePair(); };
+      const leave = () => { hoverIndex = null; updateActivePair(); };
+      const toggleLock = () => {
+        lockedIndex = lockedIndex === index ? null : index;
+        hoverIndex = null;
+        updateActivePair();
+      };
+
+      [source, derivative].forEach((node) => {
+        node.addEventListener('pointerenter', enter);
+        node.addEventListener('pointerleave', leave);
+        node.addEventListener('focus', enter);
+        node.addEventListener('blur', leave);
+        node.addEventListener('click', toggleLock);
+      });
+
+      map.append(source, connector, derivative);
+      nodes.push({ source, connector, derivative });
     });
-    const result = el(this.document, 'div', 'basics-understand__term-result basics-understand__math', 'dy/dx = 12x³ − 4x + 5');
-    body.append(expression, row, result, el(this.document, 'p', 'basics-understand__takeaway', 'For sums and differences, differentiate each term separately, then put the differentiated terms back together.'));
+
+    const instruction = el(this.document, 'p', 'basics-understand__term-map-instruction', 'Hover or focus a term to trace it vertically. Click or tap a term to keep that pair highlighted.');
+    const principle = el(this.document, 'div', 'basics-understand__term-principle', 'Differentiate each term separately. Addition and subtraction stay in the same positions.');
+    body.append(map, instruction, principle);
+    updateActivePair();
   }
 }
 

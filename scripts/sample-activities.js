@@ -98,9 +98,9 @@ export const learningModes = Object.freeze({
         microSkillId: "skill:y12:differentiation:basics:term-by-term",
         kicker: "Understand", overline: "Term-by-term differentiation",
         title: "A polynomial differentiates one term at a time",
-        body: "Apply the differentiation rule separately to every term in a sum or difference, including constants, then combine the derivative terms again.",
-        calloutLabel: "Structure", callout: "Addition and subtraction let us differentiate each term independently.",
-        formula: "d/dx [u ± v] = du/dx ± dv/dx", caption: "Follow each term through the operator before recombining the result.", basicsUnderstand: true
+        body: "Trace each term in the polynomial vertically to the term it produces in the derivative. Hover, focus or tap a term to see the pairing clearly.",
+        calloutLabel: "Structure", callout: "Each term is differentiated independently. The addition and subtraction structure stays in place.",
+        formula: "d/dx [u ± v] = du/dx ± dv/dx", caption: "The vertical mapping shows which derivative term comes from which original term.", basicsUnderstand: true
       })
     ])
   }),

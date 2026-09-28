@@ -57,7 +57,12 @@ assert(source.includes("basics-understand__pattern-equals") && source.includes("
 assert(source.includes("basics-understand__power-rule-bubble") && source.includes("GENERAL RULE"),'The revealed power rule must have its own prominent labelled bubble.');
 assert(source.includes("basics-understand__rule-coefficient") && source.includes("basics-understand__rule-power") && source.includes("basics-understand__rule-variable"),'The general rule must visually distinguish coefficient, power and variable roles.');
 assert(source.includes('The old power multiplies the coefficient, then the power decreases by 1.'),'The key power-rule notice must appear beneath the revealed rule.');
-assert(source.includes('d/dx ( 3x⁴ ) = 12x³'),'Term-by-term examples must use mathematically valid derivative equalities rather than bare transformation arrows.');
+assert(source.includes('basics-understand__term-map'),'Term-by-term differentiation must use a vertically aligned interactive term map.');
+assert(source.includes("classList.toggle('is-active', active)"),'Hover, focus and selection must highlight each source/derivative pair together.');
+assert(source.includes("node.addEventListener('pointerenter', enter)") && source.includes("node.addEventListener('focus', enter)"),'Term mapping must support both hover and keyboard focus.');
+assert(source.includes("node.addEventListener('click', toggleLock)"),'Term mapping must provide a tap/click alternative that locks a highlighted pair.');
+assert(source.includes("basics-understand__term-connector-arrow") && source.includes("'↓'"),'Each polynomial term must connect vertically to its derivative with a downward arrow.');
+assert(cssSource.includes('.basics-understand__term-map') && cssSource.includes('.basics-understand__term-connector.is-active'),'Interactive term mapping needs aligned grid and highlighted connector styling.');
 assert(cssSource.includes('.basics-understand__pattern-card') && cssSource.includes('.basics-understand__pattern-answer'),'Power-rule examples need a deliberate card-and-answer visual hierarchy.');
 assert(cssSource.includes('.basics-understand__rule-coefficient') && cssSource.includes('.basics-understand__rule-power') && cssSource.includes('.basics-understand__rule-variable'),'The power-rule roles need distinct colour styling.');
 assert(cssSource.includes('.basics-understand__power-rule-notice'),'The revealed rule needs a prominent explanatory notice underneath.');
