@@ -1868,28 +1868,6 @@ button {
   }
 }
 
-@media (max-height: 660px) and (min-width: 681px) {
-  .workspace-header {
-    padding-top: var(--space-2);
-    padding-bottom: var(--space-2);
-  }
-
-  .activity-frame {
-    padding-top: var(--space-2);
-    padding-bottom: var(--space-2);
-  }
-
-  .activity-stage {
-    padding-top: var(--space-3);
-    padding-bottom: var(--space-3);
-  }
-
-  .math-placeholder {
-    min-height: 240px;
-    height: 34vh;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .topic-navigation,
   .help-drawer,
@@ -3067,72 +3045,6 @@ html[data-learning-mode="ao3"] .activity-position {
 }
 
 /* Short desktop / landscape viewports: reclaim vertical space without browser or CSS zoom. */
-@media (max-height: 700px) and (min-width: 681px) {
-  .app-shell__topbar {
-    min-height: 52px;
-    padding-top: var(--space-2);
-    padding-bottom: var(--space-2);
-  }
-
-  .app-shell__body {
-    gap: var(--space-2);
-    padding: var(--space-2);
-  }
-
-  .topic-navigation {
-    padding: var(--space-3);
-  }
-
-  .topic-navigation__heading {
-    margin-bottom: var(--space-3);
-  }
-
-  .workspace-header {
-    gap: var(--space-3);
-    padding: var(--space-2) var(--space-4);
-  }
-
-  .workspace-header h1 {
-    font-size: var(--text-md);
-  }
-
-  .mode-tab__sublabel {
-    display: none;
-  }
-
-  .activity-frame {
-    padding: var(--space-2);
-  }
-
-  .activity-stage {
-    gap: var(--space-2);
-    padding: var(--space-3);
-  }
-
-  .activity-copy h2 {
-    margin-bottom: var(--space-3);
-    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
-  }
-
-  .activity-copy > p:not(.activity-overline) {
-    font-size: var(--text-base);
-    line-height: var(--leading-normal);
-  }
-
-  .math-placeholder {
-    min-height: 220px;
-    height: min(38vh, 340px);
-  }
-
-  .math-placeholder__formula {
-    font-size: clamp(1.8rem, 4vw, 3rem);
-  }
-
-  .activity-controls {
-    min-height: 60px;
-    padding: var(--space-2) var(--space-4);
-  }
-}
 
 /* Workspace chrome: the mode tabs already identify the active mode, so do not repeat
    the mode name or activity count inside the activity stage. */
@@ -3142,5 +3054,106 @@ html[data-learning-mode="ao3"] .activity-position {
 
 .activity-stage__header[data-workspace-tools-bar] {
   justify-content: flex-end;
+}
+
+/* Adaptive viewport density.
+   The browser viewport, not the physical monitor resolution, decides how much chrome
+   the interface can afford. Touch targets and body text keep their accessible minimums. */
+html[data-ui-density="compact"] {
+  --space-4: 0.875rem;
+  --space-5: 1.125rem;
+  --space-6: 1.5rem;
+  --space-7: 2.25rem;
+  --space-8: 3rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.1875rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.875rem;
+}
+
+html[data-ui-density="tight"] {
+  --space-3: 0.625rem;
+  --space-4: 0.75rem;
+  --space-5: 1rem;
+  --space-6: 1.25rem;
+  --space-7: 1.75rem;
+  --space-8: 2.5rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.625rem;
+}
+
+html[data-ui-density="compact"] .app-shell__topbar { min-height: 56px; }
+html[data-ui-density="tight"] .app-shell__topbar { min-height: 52px; }
+
+html[data-ui-density="compact"] .mode-tab__sublabel,
+html[data-ui-density="tight"] .mode-tab__sublabel { display: none; }
+
+html[data-ui-density="compact"] .activity-stage__tools,
+html[data-ui-density="tight"] .activity-stage__tools { gap: var(--space-2); }
+
+html[data-ui-density="compact"] .math-placeholder {
+  min-height: 260px;
+  height: min(40vh, 380px);
+}
+html[data-ui-density="tight"] .math-placeholder {
+  min-height: 210px;
+  height: min(36vh, 320px);
+}
+
+html[data-ui-density="compact"] .activity-controls { min-height: 64px; }
+html[data-ui-density="tight"] .activity-controls {
+  min-height: 56px;
+  padding-top: var(--space-1);
+  padding-bottom: var(--space-1);
+}
+
+html[data-ui-density="compact"] .question-shell__math { min-height: 108px; }
+html[data-ui-density="tight"] .question-shell__math {
+  min-height: 84px;
+  padding: var(--space-2);
+  font-size: clamp(1.45rem, 3vw, 2.2rem);
+}
+html[data-ui-density="tight"] .question-shell__body {
+  gap: var(--space-2);
+  padding: var(--space-2);
+}
+html[data-ui-density="tight"] .question-shell__prompt {
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+html[data-ui-density="tight"] .question-shell__response { gap: var(--space-2); }
+html[data-ui-density="tight"] .question-response-textarea { min-height: 96px; }
+
+html[data-ui-density="compact"] .memory-flashcard { min-height: 230px; }
+html[data-ui-density="tight"] .memory-flashcard { min-height: 200px; }
+html[data-ui-density="compact"] .memory-diagram-recall__canvas { min-height: 250px; }
+html[data-ui-density="tight"] .memory-diagram-recall__canvas { min-height: 210px; }
+html[data-ui-density="tight"] .memory-panel-heading { margin-bottom: var(--space-3); }
+
+@media (min-width: 681px) {
+  html[data-ui-density="tight"] .workspace-header h1 { display: none; }
+  html[data-ui-density="tight"] .workspace-header {
+    padding-top: var(--space-2);
+    padding-bottom: var(--space-2);
+  }
+}
+
+@media (min-width: 901px) {
+  html[data-ui-density="tight"] .topbar__status { display: none; }
+  html[data-ui-density="tight"] .app-shell__topbar {
+    grid-template-areas: "brand context";
+    grid-template-columns: minmax(160px, 0.75fr) minmax(320px, 2fr);
+  }
+}
+
+@media (min-width: 1101px) {
+  html[data-ui-density="compact"] .app-shell__body {
+    grid-template-columns: 224px minmax(0, 1fr);
+  }
+  html[data-ui-density="tight"] .app-shell__body {
+    grid-template-columns: 208px minmax(0, 1fr);
+  }
 }
 
