@@ -12,8 +12,8 @@ import { buildWordBankEntries, filterWordBankEntries } from "./word-bank-model.j
 import { createQuestionShell } from "./question-shell.js?v=integralfix2";
 import { getQuestionPracticeDefinitionForActivity } from "./question-catalogue.js?v=integralfix1";
 import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner.js?v=questionfix1";
-import { createQuestionPracticeSession } from "./question-practice-session.js?v=generatorpass1";
-import { createMemoryLab } from "./memory-lab.js?v=hotfix3";
+import { createQuestionPracticeSession } from "./question-practice-session.js";
+import { createMemoryLab } from "./memory-lab.js";
 import { installMathRendering } from "./math-renderer.js?v=integrationmath1";
 import { getMemoryItemsForTopic } from "./memory-content.js?v=integrationmath1";
 import { getMemoryGamePackForTopic } from "./memory-game-content.js?v=auditstep5";
@@ -25,25 +25,25 @@ import { createPreCalculusUnderstandExperience } from "./pre-calculus-understand
 import { preCalculusLearningModes } from "./pre-calculus-activities.js?v=auditstep2";
 import { createFirstPrinciplesUnderstandExperience } from "./first-principles-understand.js?v=auditstep6";
 import { firstPrinciplesLearningModes } from "./first-principles-activities.js?v=auditstep6";
-import { createTangentsNormalsUnderstandExperience } from "./tangents-normals-understand.js?v=understand2";
+import { createTangentsNormalsUnderstandExperience } from "./tangents-normals-understand.js";
 import { tangentsNormalsLearningModes } from "./tangents-normals-activities.js";
 import { createStationaryPointsUnderstandExperience } from "./stationary-points-understand.js?v=auditstep1";
 import { stationaryPointsLearningModes } from "./stationary-points-activities.js";
-import { createIncreasingDecreasingUnderstandExperience } from "./increasing-decreasing-understand.js?v=understand2";
+import { createIncreasingDecreasingUnderstandExperience } from "./increasing-decreasing-understand.js";
 import { increasingDecreasingLearningModes } from "./increasing-decreasing-activities.js?v=auditstep7";
 import { createIntegrationIntroUnderstandExperience } from "./integration-intro-understand.js?v=integrationmath1";
 import { integrationIntroLearningModes } from "./integration-intro-activities.js?v=integrationmath1";
-import { createDefiniteIndefiniteUnderstandExperience } from "./definite-indefinite-understand.js?v=understand2";
+import { createDefiniteIndefiniteUnderstandExperience } from "./definite-indefinite-understand.js?v=integrationmath1";
 import { definiteIndefiniteLearningModes } from "./definite-indefinite-activities.js?v=integrationmath1";
 import { createIntegrationAreaUnderstandExperience } from "./integration-area-understand.js?v=integrationmath1";
 import { integrationAreaLearningModes } from "./integration-area-activities.js?v=integrationmath1";
-import { createSignedAreaUnderstandExperience } from "./signed-area-understand.js?v=understand2";
+import { createSignedAreaUnderstandExperience } from "./signed-area-understand.js";
 import { signedAreaLearningModes } from "./signed-area-activities.js";
 import { year12ReviewLearningModes } from "./year12-review-activities.js";
 import { getYear12ReviewMicroSkillLabel } from "./year12-review-model.js";
-import { createStandardFunctionsUnderstandExperience } from "./standard-functions-understand.js?v=understand2";
+import { createStandardFunctionsUnderstandExperience } from "./standard-functions-understand.js";
 import { standardFunctionsLearningModes } from "./standard-functions-activities.js";
-import { createTrigFirstPrinciplesUnderstandExperience } from "./trig-first-principles-understand.js?v=diagramfix3";
+import { createTrigFirstPrinciplesUnderstandExperience } from "./trig-first-principles-understand.js";
 import { trigFirstPrinciplesLearningModes } from "./trig-first-principles-activities.js";
 import { createProductQuotientChainUnderstandExperience } from "./product-quotient-chain-understand.js?v=auditstep10";
 import { productQuotientChainLearningModes } from "./product-quotient-chain-activities.js?v=auditstep10";
@@ -51,34 +51,34 @@ import { createParametricDifferentiationUnderstandExperience } from "./parametri
 import { parametricDifferentiationLearningModes } from "./parametric-differentiation-activities.js?v=auditstep11";
 import { createImplicitDifferentiationUnderstandExperience } from "./implicit-differentiation-understand.js?v=auditstep12";
 import { implicitDifferentiationLearningModes } from "./implicit-differentiation-activities.js?v=auditstep12";
-import { createTrigIdentitiesInverseUnderstandExperience } from "./trig-identities-inverse-understand.js?v=understand2";
+import { createTrigIdentitiesInverseUnderstandExperience } from "./trig-identities-inverse-understand.js";
 import { trigIdentitiesInverseLearningModes } from "./trig-identities-inverse-activities.js";
 import { createConcavityInflectionUnderstandExperience } from "./concavity-inflection-understand.js?v=auditstep13";
 import { concavityInflectionLearningModes } from "./concavity-inflection-activities.js?v=auditstep13";
-import { createConnectedRatesUnderstandExperience } from "./connected-rates-understand.js?v=understand2";
+import { createConnectedRatesUnderstandExperience } from "./connected-rates-understand.js";
 import { connectedRatesLearningModes } from "./connected-rates-activities.js";
 import { fullDifferentiationReviewLearningModes } from "./full-differentiation-review-activities.js";
-import { createStandardIntegralsUnderstandExperience } from "./standard-integrals-understand.js?v=understand2";
+import { createStandardIntegralsUnderstandExperience } from "./standard-integrals-understand.js?v=integrationmath1";
 import { standardIntegralsLearningModes } from "./standard-integrals-activities.js?v=integrationmath1";
-import { createReverseChainRuleUnderstandExperience } from "./reverse-chain-rule-understand.js?v=understand2";
+import { createReverseChainRuleUnderstandExperience } from "./reverse-chain-rule-understand.js";
 import { reverseChainRuleLearningModes } from "./reverse-chain-rule-activities.js";
-import { createTrigIdentityIntegrationUnderstandExperience } from "./trig-identity-integration-understand.js?v=understand2";
+import { createTrigIdentityIntegrationUnderstandExperience } from "./trig-identity-integration-understand.js";
 import { trigIdentityIntegrationLearningModes } from "./trig-identity-integration-activities.js";
-import { createSubstitutionUnderstandExperience } from "./substitution-understand.js?v=understand2";
+import { createSubstitutionUnderstandExperience } from "./substitution-understand.js";
 import { substitutionLearningModes } from "./substitution-activities.js";
-import { createIntegrationByPartsUnderstandExperience } from "./integration-by-parts-understand.js?v=understand2";
+import { createIntegrationByPartsUnderstandExperience } from "./integration-by-parts-understand.js";
 import { integrationByPartsLearningModes } from "./integration-by-parts-activities.js";
-import { createPartialFractionsUnderstandExperience } from "./partial-fractions-understand.js?v=understand2";
+import { createPartialFractionsUnderstandExperience } from "./partial-fractions-understand.js";
 import { partialFractionsLearningModes } from "./partial-fractions-activities.js";
 import { createYear13AreasUnderstandExperience } from "./year13-areas-understand.js";
 import { year13AreasLearningModes } from "./year13-areas-activities.js";
-import { createParametricAreaUnderstandExperience } from "./parametric-area-understand.js?v=understand2";
+import { createParametricAreaUnderstandExperience } from "./parametric-area-understand.js";
 import { parametricAreaLearningModes } from "./parametric-area-activities.js";
-import { createLimitOfSumUnderstandExperience } from "./limit-of-sum-understand.js?v=understand2";
+import { createLimitOfSumUnderstandExperience } from "./limit-of-sum-understand.js";
 import { limitOfSumLearningModes } from "./limit-of-sum-activities.js";
 import { createNumericalIntegrationUnderstandExperience } from "./trapezium-integration-understand.js?v=auditstep15";
 import { numericalIntegrationLearningModes } from "./trapezium-integration-activities.js?v=supportfix2";
-import { createDifferentialEquationsUnderstandExperience } from "./differential-equations-understand.js?v=understand2";
+import { createDifferentialEquationsUnderstandExperience } from "./differential-equations-understand.js";
 import { differentialEquationsLearningModes } from "./differential-equations-activities.js";
 import { createCalculusModellingUnderstandExperience } from "./calculus-modelling-understand.js";
 import { calculusModellingLearningModes } from "./calculus-modelling-activities.js";
@@ -646,7 +646,24 @@ const historyRouteController = createHistoryRouteController({
 function isLandingPath(pathname) {
   if (typeof pathname !== "string") return false;
   const clean = pathname.split("?")[0].split("#")[0].replace(/\/+$/, "") || "/";
-  return clean === "/" || clean === "/alevel-calculus";
+  return clean === "/"
+    || clean === "/index.html"
+    || clean === "/alevel-calculus"
+    || clean === "/alevel-calculus/index.html";
+}
+
+function landingHistoryPath() {
+  const href = brandHomeLink?.getAttribute?.("href") ?? "";
+  if (href.startsWith("/alevel-calculus")) return "/alevel-calculus/";
+  return "/";
+}
+
+function navigateToLanding({ focus = true, replace = false } = {}) {
+  if (!showLanding({ focus })) return false;
+  const route = landingHistoryPath();
+  const method = replace ? "replaceState" : "pushState";
+  browserHistory[method]?.({ calculusView: "landing" }, "", route);
+  return true;
 }
 
 function topbarScopeBadge() {
@@ -1026,11 +1043,7 @@ function syncScopeBadges() {
 }
 
 function syncTopicProgress() {
-  for (const button of landingTopicButtons) {
-  button.addEventListener?.("click", () => openLandingTopic(button.dataset.landingEnterTopic));
-}
-
-for (const item of topicProgressItems) {
+  for (const item of topicProgressItems) {
     const topicId = item.dataset.topicId;
     const progress = getTopicProgress(topicId, progressStore);
     const marker = item.querySelector("[data-topic-state-marker]");
@@ -1684,6 +1697,20 @@ function moveModeFocus(fromTab, key) {
   }
 }
 
+for (const button of landingTopicButtons) {
+  button.addEventListener?.("click", () => openLandingTopic(button.dataset.landingEnterTopic));
+}
+
+brandHomeLink?.addEventListener?.("click", (event) => {
+  event.preventDefault?.();
+  if (shell.dataset.view === "landing" && isLandingPath(browserLocation.pathname)) {
+    landingPage.scrollTop = 0;
+    landingHeading?.focus?.({ preventScroll: true });
+    return;
+  }
+  navigateToLanding({ focus: true });
+});
+
 for (const item of topicProgressItems) {
   item.addEventListener?.("click", () => {
     if (topicRuntime[item.dataset.topicId]) selectTopic(item.dataset.topicId);
@@ -1885,8 +1912,11 @@ syncWordBankCount();
 syncDataManagementSummary();
 syncNavigationForViewport();
 
-if (initialLandingRequested && landingPage && appBody) {
+if ((initialLandingRequested || !initialBrowserRoute) && landingPage && appBody) {
   showLanding();
+  if (!initialLandingRequested) {
+    browserHistory.replaceState?.({ calculusView: "landing" }, "", landingHistoryPath());
+  }
 } else {
   showWorkspace();
   syncCurrentTopicChrome();
