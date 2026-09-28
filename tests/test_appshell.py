@@ -519,3 +519,10 @@ for required_memorise_id in [
 
 print("PASS static AppShell, shared QuestionShell, staged hints, structured worked solutions and persistence checks")
 assert '.workspace-tools__identity {\n  display: none;' in css, "Workspace should not repeat the active mode and activity count above the content"
+assert 'viewport-density.js?v=density1' in js, "App shell should use the shared viewport-density classifier"
+assert 'syncViewportDensity()' in js and 'window.visualViewport?.addEventListener?.("resize", syncViewportDensity' in js, "Density should update when the usable viewport changes"
+assert 'root.dataset.uiDensity === "tight"' in js, "Tight viewports should collapse non-essential workspace tools by default"
+assert 'data-ui-density="standard"' in html, "HTML should have a stable pre-JavaScript density fallback"
+assert 'html[data-ui-density="compact"]' in css and 'html[data-ui-density="tight"]' in css, "App shell CSS should expose adaptive density tiers"
+assert '@media (max-height: 700px)' not in css, "The old one-off short-height patch should be replaced by adaptive density"
+
