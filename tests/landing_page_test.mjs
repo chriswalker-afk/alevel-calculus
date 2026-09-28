@@ -36,7 +36,7 @@ assert.match(app, /function showLanding/);
 assert.match(app, /function showWorkspace/);
 assert.match(app, /function openLandingTopic/);
 assert.match(app, /initialLandingRequested/);
-assert.match(app, /if \(initialLandingRequested && landingPage && appBody\)/);
+assert.match(app, /if \(\(initialLandingRequested \|\| !initialBrowserRoute\) && landingPage && appBody\)/);
 assert.match(app, /if \(isLandingPath\(browserLocation\.pathname\)\)/);
 assert.match(app, /data-landing-enter-topic/);
 assert.match(app, /brandHomeLink\?\.addEventListener\?\.\("click"/, "Calculus logo must switch to the landing view in-app rather than relying on a reload.");
