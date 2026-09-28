@@ -228,7 +228,7 @@ export class PreCalculusUnderstandExperience {
 
   render_gradient_sign() {
     const body = this.#panel('Read each graph from left to right', '2 · Sign of gradient');
-    const status = this.#status(body, 'Select a line to inspect its sign.');
+    const status = this.#status(body, 'Select a word or a line to inspect its sign.');
     const controls = el(this.document, 'div', 'pre-calculus-understand__choice-row');
     body.append(controls);
     const { diagram } = this.#graph(body, { yDomain: [-4, 4], ariaLabel: 'Straight lines with positive, zero and negative gradients' });
@@ -238,14 +238,48 @@ export class PreCalculusUnderstandExperience {
       { id: 'negative', label: 'Falling', slope: -0.7, intercept: 0.5, text: 'Falling left to right → negative gradient.' }
     ];
     const lines = new Map();
+    const choices = new Map();
+
+    const select = (id, { focusChoice = false } = {}) => {
+      const option = options.find((candidate) => candidate.id === id);
+      if (!option) return;
+      status.textContent = option.text;
+
+      for (const [candidateId, choice] of choices) {
+        const selected = candidateId === id;
+        choice.setAttribute('aria-pressed', selected ? 'true' : 'false');
+        if (selected && focusChoice) choice.focus?.();
+      }
+      for (const [candidateId, line] of lines) {
+        const selected = candidateId === id;
+        line.element.classList.toggle('pre-calculus-understand__sign-line--selected', selected);
+        line.element.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      }
+    };
+
     for (const option of options) {
       const [a, b] = linePoints(option);
-      lines.set(option.id, diagram.line({ x1: a.x, y1: a.y, x2: b.x, y2: b.y, tone: option.id === 'zero' ? 'secondary' : 'curve' }));
-      const choice = button(this.document, option.label, () => {
-        status.textContent = option.text;
-        for (const candidate of controls.querySelectorAll?.('button') ?? []) candidate.setAttribute('aria-pressed', candidate === choice ? 'true' : 'false');
+      const line = diagram.line({
+        x1: a.x, y1: a.y, x2: b.x, y2: b.y,
+        tone: option.id === 'zero' ? 'secondary' : 'curve',
+        className: 'pre-calculus-understand__sign-line'
       });
+      line.element.setAttribute('tabindex', '0');
+      line.element.setAttribute('role', 'button');
+      line.element.setAttribute('aria-label', `${option.label} line`);
+      line.element.setAttribute('aria-pressed', 'false');
+      line.element.addEventListener('click', () => select(option.id, { focusChoice: true }));
+      line.element.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          select(option.id, { focusChoice: true });
+        }
+      });
+      lines.set(option.id, line);
+
+      const choice = button(this.document, option.label, () => select(option.id));
       choice.setAttribute('aria-pressed', 'false');
+      choices.set(option.id, choice);
       controls.append(choice);
     }
   }
