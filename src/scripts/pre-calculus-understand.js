@@ -302,6 +302,12 @@ export class PreCalculusUnderstandExperience {
       }
     });
     controls.append(slider.element);
+    body.append(el(
+      this.document,
+      'div',
+      'pre-calculus-understand__takeaway',
+      'Think of gradient like this: for every 1 unit you travel horizontally to the right, how many units do you travel vertically? A positive gradient means you move up; a negative gradient means you move down; gradient 0 means there is no vertical change.'
+    ));
   }
 
   render_gradient_vs_height() {
