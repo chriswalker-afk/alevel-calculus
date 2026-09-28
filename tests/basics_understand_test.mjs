@@ -52,6 +52,15 @@ assert(source.includes("operator, selectWrap, equals, output"),'The d/dx activit
 assert(!source.includes("const inputBox = el(this.document, 'div', 'basics-understand__machine-box')"),'The old duplicated input box must be removed from the d/dx activity.');
 assert(!source.includes("const arrow = el(this.document, 'div', 'basics-understand__machine-arrow', '→')"),'The old machine arrow must not be used in the d/dx activity.');
 assert(cssSource.includes('.basics-understand__operator-select') && cssSource.includes('.basics-understand__operator-result'),'The rebuilt operator equation needs dedicated inline selection and result styling.');
+assert(source.includes('We will explore how this rule works in a moment.'),'The d/dx operator activity must explicitly bridge forward to the power-rule explanation.');
+assert(source.includes("basics-understand__pattern-equals") && source.includes("el(this.document, 'span', 'basics-understand__pattern-equals', '=')"),'Power-rule examples must use equality symbols rather than transformation arrows.');
+assert(source.includes("basics-understand__power-rule-bubble") && source.includes("GENERAL RULE"),'The revealed power rule must have its own prominent labelled bubble.');
+assert(source.includes("basics-understand__rule-coefficient") && source.includes("basics-understand__rule-power") && source.includes("basics-understand__rule-variable"),'The general rule must visually distinguish coefficient, power and variable roles.');
+assert(source.includes('The old power multiplies the coefficient, then the power decreases by 1.'),'The key power-rule notice must appear beneath the revealed rule.');
+assert(source.includes('d/dx ( 3x⁴ ) = 12x³'),'Term-by-term examples must use mathematically valid derivative equalities rather than bare transformation arrows.');
+assert(cssSource.includes('.basics-understand__pattern-card') && cssSource.includes('.basics-understand__pattern-answer'),'Power-rule examples need a deliberate card-and-answer visual hierarchy.');
+assert(cssSource.includes('.basics-understand__rule-coefficient') && cssSource.includes('.basics-understand__rule-power') && cssSource.includes('.basics-understand__rule-variable'),'The power-rule roles need distinct colour styling.');
+assert(cssSource.includes('.basics-understand__power-rule-notice'),'The revealed rule needs a prominent explanatory notice underneath.');
 
 assert(!understand.some((activity) => activity.activityId.endsWith(':calculus-backstory')),'The duplicated calculus-backstory activity must stay removed now that its content lives on derivative notation.');
 console.log('PASS Basics Understand seven-state audited journey and linked polynomial contract');

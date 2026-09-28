@@ -81,7 +81,7 @@ export const learningModes = Object.freeze({
           Object.freeze({ termId: "vocab:derivative" }),
           " on the right updates immediately."
         ]),
-        calloutLabel: "Read left to right", callout: "d/dx acts on the expression immediately beside it. Change that expression and the derivative changes.",
+        calloutLabel: "For now", callout: "Focus on what d/dx is doing. We will explore how this rule works in a moment.",
         formula: "d/dx [ expression ] = derivative", caption: "The selected expression is the object being differentiated.", basicsUnderstand: true
       }),
       Object.freeze({
@@ -90,7 +90,7 @@ export const learningModes = Object.freeze({
         kicker: "Understand", overline: "Power-rule pattern",
         title: "What pattern connects each power to its derivative?",
         body: "Compare several differentiated powers before revealing the general rule. Focus on what happens to the coefficient and the power each time.",
-        calloutLabel: "Notice", callout: "The old power multiplies the coefficient, then the power decreases by 1.",
+        calloutLabel: "Before revealing", callout: "Use the examples to predict what happens to the coefficient and the power. Then reveal the rule to check your pattern.",
         formula: "d/dx (axⁿ) = anxⁿ⁻¹", caption: "Generalise only after the repeated pattern is visible.", basicsUnderstand: true
       }),
       Object.freeze({

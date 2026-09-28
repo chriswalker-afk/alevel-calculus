@@ -547,29 +547,117 @@ export class BasicsUnderstandExperience {
     update();
 
     equation.append(operator, selectWrap, equals, output);
-    const hint = el(this.document, 'p', 'basics-understand__operator-hint', 'Change only the expression. The d/dx instruction stays fixed; the derivative on the right changes immediately.');
+    const hint = el(this.document, 'p', 'basics-understand__operator-hint', 'Change only the expression. The d/dx instruction stays fixed; the derivative on the right changes immediately. We will explore how this rule works in a moment.');
     workspace.append(equation, hint);
     body.append(workspace);
   }
 
   render_power_rule_pattern() {
-    const body = this.#panel('Notice what changes each time', '6 · See the power-rule pattern');
+    const body = this.#panel('Spot the pattern, then reveal the rule', '6 · See the power-rule pattern');
     const list = el(this.document, 'div', 'basics-understand__pattern-list');
-    powerExamples.forEach(({ input, output }) => {
-      const row = el(this.document, 'div', 'basics-understand__pattern-row');
-      row.append(el(this.document, 'span', 'basics-understand__pattern-input basics-understand__math', `d/dx [ ${input} ]`), el(this.document, 'span', 'basics-understand__machine-arrow', '→'), el(this.document, 'span', 'basics-understand__pattern-output', output)); list.append(row);
+
+    powerExamples.forEach(({ input, output }, index) => {
+      const card = el(this.document, 'article', 'basics-understand__pattern-card');
+      const label = el(this.document, 'span', 'basics-understand__pattern-label', `EXAMPLE ${index + 1}`);
+      const equation = el(this.document, 'div', 'basics-understand__pattern-equation');
+
+      const left = el(this.document, 'span', 'basics-understand__pattern-expression', `d/dx ( ${input} )`);
+      left.setAttribute('data-math-display', '');
+      const equals = el(this.document, 'span', 'basics-understand__pattern-equals', '=');
+      const right = el(this.document, 'span', 'basics-understand__pattern-answer', output);
+      right.setAttribute('data-math-display', '');
+
+      equation.append(left, equals, right);
+      card.append(label, equation);
+      list.append(card);
     });
-    const rule = el(this.document, 'div', 'basics-understand__rule-reveal basics-understand__math');
-    const reveal = button(this.document, 'Reveal the general rule', () => { rule.hidden = false; reveal.disabled = true; }, 'basics-understand__button basics-understand__button--primary');
-    rule.hidden = true; rule.textContent = 'd/dx (a xⁿ) = a n xⁿ⁻¹  — multiply by the old power, then reduce the power by 1.';
-    body.append(list, reveal, rule);
+
+    const revealArea = el(this.document, 'div', 'basics-understand__power-rule-reveal-area');
+    revealArea.hidden = true;
+    revealArea.setAttribute('role', 'status');
+    revealArea.setAttribute('aria-live', 'polite');
+
+    const ruleBubble = el(this.document, 'article', 'basics-understand__power-rule-bubble');
+    const ruleHeading = el(this.document, 'strong', 'basics-understand__power-rule-heading', 'GENERAL RULE');
+    const formula = el(this.document, 'div', 'basics-understand__power-rule-formula');
+    formula.setAttribute('aria-label', 'd by d x of a x to the n equals a n x to the n minus 1');
+
+    const operator = el(this.document, 'span', 'basics-understand__rule-neutral', 'd/dx');
+    operator.setAttribute('data-math-render', '');
+    const openParen = el(this.document, 'span', 'basics-understand__rule-neutral', '(');
+    const coefficientLeft = el(this.document, 'span', 'basics-understand__rule-coefficient', 'a');
+    const variableLeft = el(this.document, 'span', 'basics-understand__rule-variable', 'x');
+    const powerLeft = el(this.document, 'sup', 'basics-understand__rule-power', 'n');
+    const closeAndEquals = el(this.document, 'span', 'basics-understand__rule-neutral', ') = ');
+    const coefficientRight = el(this.document, 'span', 'basics-understand__rule-coefficient', 'a');
+    const powerMultiplier = el(this.document, 'span', 'basics-understand__rule-power', 'n');
+    const variableRight = el(this.document, 'span', 'basics-understand__rule-variable', 'x');
+    const powerRight = el(this.document, 'sup', 'basics-understand__rule-power', 'n−1');
+
+    formula.append(
+      operator,
+      openParen,
+      coefficientLeft,
+      variableLeft,
+      powerLeft,
+      closeAndEquals,
+      coefficientRight,
+      powerMultiplier,
+      variableRight,
+      powerRight
+    );
+
+    const legend = el(this.document, 'div', 'basics-understand__power-rule-legend');
+    [
+      ['basics-understand__rule-key--coefficient', 'a', 'coefficient'],
+      ['basics-understand__rule-key--power', 'n', 'old power'],
+      ['basics-understand__rule-key--variable', 'x', 'variable']
+    ].forEach(([className, symbol, meaning]) => {
+      const key = el(this.document, 'span', `basics-understand__rule-key ${className}`);
+      key.append(
+        el(this.document, 'strong', '', symbol),
+        el(this.document, 'span', '', ` = ${meaning}`)
+      );
+      legend.append(key);
+    });
+    ruleBubble.append(ruleHeading, formula, legend);
+
+    const notice = el(this.document, 'div', 'basics-understand__power-rule-notice');
+    notice.append(
+      el(this.document, 'strong', '', 'The old power multiplies the coefficient, then the power decreases by 1.'),
+      el(this.document, 'span', '', 'First multiply a by n. Then replace the power n with n − 1.')
+    );
+
+    const reveal = button(
+      this.document,
+      'Reveal the general rule',
+      () => {
+        revealArea.hidden = false;
+        reveal.disabled = true;
+        reveal.setAttribute('aria-expanded', 'true');
+      },
+      'basics-understand__button basics-understand__button--primary basics-understand__power-rule-reveal'
+    );
+    reveal.setAttribute('aria-expanded', 'false');
+
+    revealArea.append(ruleBubble, notice);
+    body.append(list, reveal, revealArea);
   }
 
   render_term_by_term() {
     const body = this.#panel('A sum differentiates one term at a time', '7 · Term by term');
     const expression = el(this.document, 'div', 'basics-understand__term-expression', 'y = 3x⁴ − 2x² + 5x − 7');
     const row = el(this.document, 'div', 'basics-understand__term-row');
-    ['3x⁴ → 12x³', '−2x² → −4x', '+5x → +5', '−7 → 0'].forEach((text) => row.append(el(this.document, 'div', 'basics-understand__term-card', text)));
+    [
+      'd/dx ( 3x⁴ ) = 12x³',
+      'd/dx ( −2x² ) = −4x',
+      'd/dx ( 5x ) = 5',
+      'd/dx ( −7 ) = 0'
+    ].forEach((text) => {
+      const card = el(this.document, 'div', 'basics-understand__term-card', text);
+      card.setAttribute('data-math-display', '');
+      row.append(card);
+    });
     const result = el(this.document, 'div', 'basics-understand__term-result basics-understand__math', 'dy/dx = 12x³ − 4x + 5');
     body.append(expression, row, result, el(this.document, 'p', 'basics-understand__takeaway', 'For sums and differences, differentiate each term separately, then put the differentiated terms back together.'));
   }
