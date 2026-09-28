@@ -91,6 +91,12 @@ import { createIntegrationMethodMapSurface } from "./integration-method-map-surf
 const root = document.documentElement;
 const shell = document.querySelector("[data-app-shell]");
 const topbar = document.querySelector("[data-shell-topbar]");
+const appBody = document.querySelector(".app-shell__body");
+const landingPage = document.querySelector("[data-landing-page]");
+const landingHeading = document.querySelector("[data-landing-heading]");
+const landingTopicButtons = Array.from(document.querySelectorAll("[data-landing-enter-topic]"));
+const brandHomeLink = document.querySelector("[data-brand-home]");
+const topbarStatusLabel = document.querySelector("[data-topbar-status-label]");
 const topicNavigation = document.querySelector("[data-topic-navigation]");
 const topicNavigationToggle = document.querySelector("[data-topic-navigation-toggle]");
 const topicNavigationClose = document.querySelector("[data-topic-navigation-close]");
@@ -637,6 +643,60 @@ const historyRouteController = createHistoryRouteController({
   applyRoute: applyResolvedBrowserRoute
 });
 
+function isLandingPath(pathname) {
+  if (typeof pathname !== "string") return false;
+  const clean = pathname.split("?")[0].split("#")[0].replace(/\/+$/, "") || "/";
+  return clean === "/" || clean === "/alevel-calculus";
+}
+
+function topbarScopeBadge() {
+  return scopeBadges.find((badge) => !badge.classList.contains("scope-badge--compact") && badge.closest?.("[data-shell-topbar]")) ?? null;
+}
+
+function showLanding({ focus = false } = {}) {
+  if (!landingPage || !appBody) return false;
+  closeTopicNavigation({ restoreFocus: false });
+  appBody.hidden = true;
+  landingPage.hidden = false;
+  shell.dataset.view = "landing";
+  currentTopicBreadcrumb.textContent = "How to use the site";
+  const badge = topbarScopeBadge();
+  if (badge) badge.hidden = true;
+  if (topbarStatusLabel) topbarStatusLabel.textContent = "8MA0 · 9MA0 pathway";
+  landingPage.scrollTop = 0;
+  if (focus) landingHeading?.focus?.({ preventScroll: true });
+  return true;
+}
+
+function showWorkspace() {
+  if (landingPage) landingPage.hidden = true;
+  if (appBody) appBody.hidden = false;
+  shell.dataset.view = "workspace";
+  return true;
+}
+
+function openLandingTopic(topicId) {
+  const runtime = topicRuntime[topicId];
+  if (!runtime) return false;
+  showWorkspace();
+
+  if (topicId !== currentTopicId) {
+    selectTopic(topicId, { focusStage: false });
+  } else {
+    mountMemoryLabForTopic(currentTopicId);
+    activeMode = runtime.availableModes.includes("understand") ? "understand" : (runtime.availableModes[0] ?? "understand");
+    root.dataset.learningMode = activeMode;
+    syncCurrentTopicChrome();
+    syncModeTabs();
+    syncHelpTargets();
+    syncTopicProgress();
+    renderActivity(activityIndexByTopicMode.get(topicModeKey()) ?? 0);
+  }
+
+  stage.focus?.({ preventScroll: true });
+  return true;
+}
+
 function currentActivityRoute() {
   const activity = currentActivities()[activityIndex];
   return activityRouteFromId(activity?.activityId);
@@ -966,7 +1026,11 @@ function syncScopeBadges() {
 }
 
 function syncTopicProgress() {
-  for (const item of topicProgressItems) {
+  for (const button of landingTopicButtons) {
+  button.addEventListener?.("click", () => openLandingTopic(button.dataset.landingEnterTopic));
+}
+
+for (const item of topicProgressItems) {
     const topicId = item.dataset.topicId;
     const progress = getTopicProgress(topicId, progressStore);
     const marker = item.querySelector("[data-topic-state-marker]");
@@ -1336,8 +1400,12 @@ function syncCurrentTopicChrome() {
   shell.dataset.topicId = currentTopicId;
   const currentScopeId = runtime.scopeId ?? (currentTopicId.startsWith("topic:y13:") ? "y13-additional" : "y12");
   root.dataset.courseScope = currentScopeId;
-  const topScopeBadge = scopeBadges.find((badge) => !badge.classList.contains("scope-badge--compact") && badge.closest?.("[data-shell-topbar]"));
-  if (topScopeBadge) topScopeBadge.dataset.courseScope = currentScopeId;
+  const topScopeBadge = topbarScopeBadge();
+  if (topScopeBadge) {
+    topScopeBadge.hidden = false;
+    topScopeBadge.dataset.courseScope = currentScopeId;
+  }
+  if (topbarStatusLabel) topbarStatusLabel.textContent = "Course pathway";
   syncScopeBadges();
   const classWizAvailable = hasClassWizSupport(currentTopicId);
   classWizTrigger.hidden = !classWizAvailable;
@@ -1785,10 +1853,17 @@ if (typeof compactNavigationMedia.addEventListener === "function") {
 }
 
 window.addEventListener?.("popstate", () => {
+  if (isLandingPath(browserLocation.pathname)) {
+    showLanding({ focus: true });
+    return;
+  }
+  showWorkspace();
   historyRouteController.restore(browserLocation.pathname, { focusStage: true });
 });
 
-const initialBrowserRoute = historyRouteController.resolve(browserLocation.pathname ?? "/");
+const initialPathname = browserLocation.pathname;
+const initialLandingRequested = typeof initialPathname === "string" && isLandingPath(initialPathname);
+const initialBrowserRoute = historyRouteController.resolve(initialPathname ?? "/");
 if (initialBrowserRoute) {
   currentTopicId = initialBrowserRoute.topicId;
   activeMode = initialBrowserRoute.mode;
@@ -1809,8 +1884,15 @@ wordBankScrim.hidden = true;
 syncWordBankCount();
 syncDataManagementSummary();
 syncNavigationForViewport();
-syncCurrentTopicChrome();
-syncModeTabs();
-renderActivity(activityIndexByTopicMode.get(topicModeKey()) ?? 0);
-historyRouteController.replace(currentActivityRoute());
+
+if (initialLandingRequested && landingPage && appBody) {
+  showLanding();
+} else {
+  showWorkspace();
+  syncCurrentTopicChrome();
+  syncModeTabs();
+  renderActivity(activityIndexByTopicMode.get(topicModeKey()) ?? 0);
+  historyRouteController.replace(currentActivityRoute());
+}
+
 browserRouteReady = true;
