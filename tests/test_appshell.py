@@ -518,3 +518,4 @@ for required_memorise_id in [
     assert required_memorise_id in activity_ids, f"Missing canonical Step 34 activity {required_memorise_id}"
 
 print("PASS static AppShell, shared QuestionShell, staged hints, structured worked solutions and persistence checks")
+assert '.workspace-tools__identity {\n  display: none;' in css, "Workspace should not repeat the active mode and activity count above the content"

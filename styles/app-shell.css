@@ -3134,3 +3134,13 @@ html[data-learning-mode="ao3"] .activity-position {
   }
 }
 
+/* Workspace chrome: the mode tabs already identify the active mode, so do not repeat
+   the mode name or activity count inside the activity stage. */
+.workspace-tools__identity {
+  display: none;
+}
+
+.activity-stage__header[data-workspace-tools-bar] {
+  justify-content: flex-end;
+}
+
