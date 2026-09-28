@@ -119,14 +119,17 @@ export class PreCalculusUnderstandExperience {
     const controls = el(this.document, 'div', 'pre-calculus-understand__action-row');
     body.append(controls);
     const status = this.#status(body, 'Start at the left and notice whether the car is climbing or descending.');
-    const { diagram } = this.#graph(body, { yDomain: [-2.5, 2.5], ariaLabel: 'A car moving left to right along a hill' });
+    const { graphHost, diagram } = this.#graph(body, { yDomain: [-2.5, 2.5], ariaLabel: 'A car moving left to right along a hill' });
     const xs = Array.from({ length: 161 }, (_, i) => -4.5 + i * 9 / 160);
     diagram.polyline(xs.map((x) => ({ x, y: hillY(x) })), { tone: 'curve' });
-    const car = diagram.point({ x: -4.2, y: hillY(-4.2), radius: 12, tone: 'interactive', label: 'car' });
+    const car = diagram.point({ x: -4.2, y: hillY(-4.2), radius: 18, tone: 'interactive', label: 'car' });
+    car.element?.classList?.add('pre-calculus-understand__car');
+    car.element?.setAttribute?.('aria-label', 'car');
     const direction = diagram.arrow({ x1: -4.4, y1: -2.1, x2: -2.8, y2: -2.1, tone: 'accent', label: 'read left → right' });
     void direction;
+
     const slider = diagram.slider({
-      label: 'Car position', min: -4.2, max: 4.2, step: 0.05, value: -4.2,
+      label: 'Car position — move right only', min: -4.2, max: 4.2, step: 0.05, value: -4.2,
       format: (x) => `x = ${format(x, 1)}`,
       onInput: (x) => {
         car.setPosition(x, hillY(x));
@@ -135,36 +138,92 @@ export class PreCalculusUnderstandExperience {
         status.textContent = message;
       }
     });
+    let furthest = -4.2;
+    let internalSliderUpdate = false;
+    const nativeSetValue = slider.setValue.bind(slider);
+    const setSliderValue = (next) => {
+      internalSliderUpdate = true;
+      nativeSetValue(next);
+      furthest = Number(next);
+      internalSliderUpdate = false;
+    };
+    const enforceForwardOnly = () => {
+      const next = Number(slider.input.value);
+      if (!internalSliderUpdate && next < furthest - 1e-9) {
+        slider.input.value = String(furthest);
+        slider.output.textContent = `x = ${format(furthest, 1)}`;
+        return;
+      }
+      furthest = Math.max(furthest, next);
+    };
+    slider.input.addEventListener('input', enforceForwardOnly);
+    slider.input.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowDown' || event.key === 'Home' || event.key === 'PageDown') {
+        event.preventDefault();
+      }
+    });
     controls.append(slider.element);
+
     const play = button(this.document, 'Drive across hill', () => {
-      if (this.animationRunning) { this.#stopAnimation(); play.textContent = 'Drive across hill'; return; }
+      if (this.animationRunning) {
+        this.#stopAnimation();
+        play.textContent = 'Continue drive';
+        return;
+      }
+      if (furthest >= 4.15) return;
       this.animationRunning = true;
       play.textContent = 'Pause car';
-      let x = Number(slider.input.value);
-      if (x >= 4.15) x = -4.2;
+      let x = furthest;
       let last = 0;
+      let pausedUntil = 0;
+      let lastType = Math.abs(hillGradient(x)) < 0.08 ? 'zero' : hillGradient(x) > 0 ? 'positive' : 'negative';
       const raf = globalThis.requestAnimationFrame ?? ((fn) => globalThis.setTimeout(() => fn(Date.now()), 16));
       const frame = (time) => {
         if (!this.animationRunning) return;
+        if (pausedUntil && time < pausedUntil) {
+          this.animationHandle = raf(frame);
+          return;
+        }
         if (!last) last = time;
         const elapsed = Math.min(60, time - last);
         last = time;
         x += elapsed * 0.00115;
         if (x >= 4.2) {
           x = 4.2;
-          slider.setValue(x);
+          setSliderValue(x);
           this.#stopAnimation();
-          play.textContent = 'Drive again';
+          play.hidden = true;
+          reset.hidden = false;
+          reset.focus?.();
           return;
         }
-        slider.setValue(x);
+        setSliderValue(x);
+        const m = hillGradient(x);
+        const nextType = Math.abs(m) < 0.08 ? 'zero' : m > 0 ? 'positive' : 'negative';
+        if (nextType !== lastType) {
+          lastType = nextType;
+          pausedUntil = time + 500;
+        }
         this.animationHandle = raf(frame);
       };
       this.animationHandle = raf(frame);
     }, 'pre-calculus-understand__button pre-calculus-understand__button--primary');
-    controls.append(play);
+
+    const reset = button(this.document, 'Reset', () => {
+      this.#stopAnimation();
+      setSliderValue(-4.2);
+      status.textContent = 'Start at the left and notice whether the car is climbing or descending.';
+      play.textContent = 'Drive across hill';
+      play.hidden = false;
+      reset.hidden = true;
+      play.focus?.();
+    });
+    reset.hidden = true;
+    controls.append(play, reset);
+
     const motion = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
     if (motion?.matches) play.textContent = 'Move car automatically';
+    graphHost.dataset.carDirection = 'right';
   }
 
   render_gradient_sign() {
