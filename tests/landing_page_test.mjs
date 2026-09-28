@@ -31,7 +31,7 @@ for (const path of ["index.html", "404.html"]) {
 
 const app = read("src/scripts/app-shell.js");
 assert.match(app, /function isLandingPath\(pathname\)/);
-assert.match(app, /clean === "\/" \|\| clean === "\/alevel-calculus"/);
+assert.match(app, /clean === "\/"[\s\S]*clean === "\/alevel-calculus"/);
 assert.match(app, /function showLanding/);
 assert.match(app, /function showWorkspace/);
 assert.match(app, /function openLandingTopic/);
@@ -39,6 +39,11 @@ assert.match(app, /initialLandingRequested/);
 assert.match(app, /if \(initialLandingRequested && landingPage && appBody\)/);
 assert.match(app, /if \(isLandingPath\(browserLocation\.pathname\)\)/);
 assert.match(app, /data-landing-enter-topic/);
+assert.match(app, /brandHomeLink\?\.addEventListener\?\.\("click"/, "Calculus logo must switch to the landing view in-app rather than relying on a reload.");
+assert.match(app, /navigateToLanding\(\{ focus: true \}\)/);
+assert.match(app, /initialLandingRequested \|\| !initialBrowserRoute/, "Unknown or index-style root paths should fall back to the landing page.");
+const progressSync = app.slice(app.indexOf("function syncTopicProgress()"), app.indexOf("function setBackgroundInert"));
+assert.doesNotMatch(progressSync, /landingTopicButtons[\s\S]*addEventListener/, "Landing entry listeners must be bound once, not every time progress refreshes.");
 
 const sourceCss = read("src/styles/landing-page.css");
 const publishedCss = read("styles/landing-page.css");
