@@ -1,3 +1,10 @@
+.app-shell[data-view="landing"] {
+  --mode-accent: #243B5A;
+  --mode-accent-text: #FFFFFF;
+  --mode-soft: #E9EEF5;
+  --mode-soft-text: #243B5A;
+}
+
 .landing-page[hidden] {
   display: none;
 }
