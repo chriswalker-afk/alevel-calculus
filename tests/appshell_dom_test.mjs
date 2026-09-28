@@ -84,6 +84,7 @@ const learningWorkspace = new FakeElement('learningWorkspace');
 const modePanel = new FakeElement('modePanel');
 const stage = new FakeElement('stage');
 const standardActivityContent = new FakeElement('standardActivityContent');
+standardActivityContent.children.set('.activity-copy', new FakeElement('activityCopy'));
 const activityVisual = new FakeElement('activityVisual');
 const customUnderstandHost = new FakeElement('customUnderstandHost');
 customUnderstandHost.hidden = true;
