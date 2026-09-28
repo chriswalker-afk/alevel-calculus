@@ -65,7 +65,7 @@ export class PreCalculusUnderstandExperience {
     this.diagram = null;
     for (const cleanup of this.cleanup.splice(0)) cleanup();
     this.host.replaceChildren();
-    this.host.classList.remove('pre-calculus-understand');
+    this.host.classList.remove('pre-calculus-understand', 'pre-calculus-understand--delta-intro');
   }
 
   render(activityId) {
@@ -373,40 +373,73 @@ export class PreCalculusUnderstandExperience {
   }
 
   render_delta_meaning() {
-    const body = this.#panel('From “change in” to Δ', '6 · Introduce the straight-line formula');
+    this.host.classList.add('pre-calculus-understand--delta-intro');
+    const body = this.#panel('From “change in” to a formula', '7 · Gradient from two points');
 
-    body.append(
-      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'So far we have described gradient using words: vertical change for each unit of horizontal change. Now we can introduce the notation used for this idea.')
-    );
+    const layout = el(this.document, 'div', 'pre-calculus-understand__delta-layout');
+    const visual = el(this.document, 'div', 'pre-calculus-understand__delta-visual');
+    const steps = el(this.document, 'div', 'pre-calculus-understand__delta-steps');
+    body.append(layout);
+    layout.append(visual, steps);
 
-    const { diagram } = this.#graph(body, { xDomain: [0, 7], yDomain: [0, 6], ariaLabel: 'A straight line showing horizontal and vertical changes between two points' });
+    const graphHost = el(this.document, 'div', 'pre-calculus-understand__delta-graph');
+    visual.append(graphHost);
+    this.diagram = new DiagramPrimitives(graphHost, {
+      xDomain: [0, 6],
+      yDomain: [0, 4],
+      ariaLabel: 'Two points on a straight line with horizontal and vertical changes marked',
+      minHeight: 230
+    });
+    this.diagram.grid({ xStep: 1, yStep: 1 });
+    this.diagram.axes({ tickStep: 1 });
+
     const p = { x: 1, y: 1 };
     const q = { x: 5, y: 3 };
-    diagram.line({ x1: 0.4, y1: 0.7, x2: 6.6, y2: 3.8, tone: 'curve' });
-    diagram.point({ ...p, label: 'P (1, 1)' });
-    diagram.point({ ...q, label: 'Q (5, 3)', tone: 'interactive' });
-    diagram.line({ x1: p.x, y1: p.y, x2: q.x, y2: p.y, tone: 'accent', dashed: true });
-    diagram.line({ x1: q.x, y1: p.y, x2: q.x, y2: q.y, tone: 'tangent', dashed: true });
-    diagram.label({ x: 3, y: 1, text: 'change in x = 5 − 1 = 4', dy: 24, tone: 'accent' });
-    diagram.label({ x: 5, y: 2, text: 'change in y = 3 − 1 = 2', dx: 18, anchor: 'start', tone: 'tangent' });
+    this.diagram.line({ x1: 0.35, y1: 0.675, x2: 5.65, y2: 3.325, tone: 'curve' });
+    this.diagram.point({ ...p });
+    this.diagram.point({ ...q, tone: 'interactive' });
+    this.diagram.label({ x: p.x, y: p.y, text: 'P (1, 1)', dx: -12, dy: 22, anchor: 'end', tone: 'default' });
+    this.diagram.label({ x: q.x, y: q.y, text: 'Q (5, 3)', dx: 12, dy: -14, anchor: 'start', tone: 'default' });
+    this.diagram.line({ x1: p.x, y1: p.y, x2: q.x, y2: p.y, tone: 'accent', dashed: true });
+    this.diagram.line({ x1: q.x, y1: p.y, x2: q.x, y2: q.y, tone: 'tangent', dashed: true });
+    this.diagram.label({ x: 3, y: 1, text: 'change in x = 4', dy: 24, tone: 'accent' });
+    this.diagram.label({ x: 5, y: 2, text: 'change in y = 2', dx: 18, anchor: 'start', tone: 'tangent' });
 
-    body.append(
-      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'The symbol Δ is the capital Greek letter delta. In mathematics it is often used to mean “change in”. Therefore Δx means “change in x” and Δy means “change in y”.')
+    const makeStep = (number, title) => {
+      const card = el(this.document, 'section', 'pre-calculus-understand__delta-step');
+      const heading = el(this.document, 'div', 'pre-calculus-understand__delta-step-heading');
+      heading.append(
+        el(this.document, 'span', 'pre-calculus-understand__delta-step-number', String(number)),
+        el(this.document, 'strong', '', title)
+      );
+      card.append(heading);
+      steps.append(card);
+      return card;
+    };
+
+    const step1 = makeStep(1, 'Start with words');
+    step1.append(
+      el(this.document, 'p', '', 'From P to Q, the horizontal change is 4 and the vertical change is 2.')
     );
 
-    const formula = el(this.document, 'div', 'pre-calculus-understand__formula-card');
-    formula.append(
-      el(this.document, 'div', 'pre-calculus-understand__formula-words', 'For a first point (x₁, y₁) and a second point (x₂, y₂):'),
-      el(this.document, 'div', 'pre-calculus-understand__formula-example', 'Δx = x₂ − x₁     and     Δy = y₂ − y₁'),
-      el(this.document, 'div', 'pre-calculus-understand__formula-main', 'gradient of a straight line = Δy ÷ Δx'),
-      el(this.document, 'div', 'pre-calculus-understand__formula-words', 'so gradient = (y₂ − y₁) ÷ (x₂ − x₁)'),
-      el(this.document, 'div', 'pre-calculus-understand__formula-example', 'For P and Q above: gradient = 2 ÷ 4 = 0.5')
+    const step2 = makeStep(2, 'Introduce the symbol Δ');
+    step2.append(
+      el(this.document, 'p', '', 'Δ is the Greek letter delta. Here it means “change in”.')
     );
-    body.append(formula);
+    const deltaPair = el(this.document, 'div', 'pre-calculus-understand__delta-math-pair');
+    const dx = el(this.document, 'div', 'pre-calculus-understand__delta-math', 'Δx = x_2 - x_1');
+    const dy = el(this.document, 'div', 'pre-calculus-understand__delta-math', 'Δy = y_2 - y_1');
+    dx.setAttribute('data-math-display', '');
+    dy.setAttribute('data-math-display', '');
+    deltaPair.append(dx, dy);
+    step2.append(deltaPair);
 
-    body.append(
-      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'The formula is just a shorter, formal way to express the idea you already know: vertical change divided by horizontal change.')
-    );
+    const step3 = makeStep(3, 'Gradient of a straight line');
+    const formula = el(this.document, 'div', 'pre-calculus-understand__delta-formula', 'gradient = Δy/Δx = (y_2 - y_1)/(x_2 - x_1)');
+    formula.setAttribute('data-math-display', '');
+    const example = el(this.document, 'div', 'pre-calculus-understand__delta-example', 'gradient = 2/4 = 0.5');
+    example.setAttribute('data-math-display', '');
+    step3.append(formula, example);
   }
 
   render_delta_change() {
