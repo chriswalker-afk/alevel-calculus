@@ -220,7 +220,7 @@ export class DiagramPrimitives {
     return layer;
   }
 
-  axes({ xLabel = "x", yLabel = "y", ticks = true, tickStep = 1 } = {}) {
+  axes({ xLabel = "x", yLabel = "y", ticks = true, tickStep = 1, xTickStep = tickStep, yTickStep = tickStep } = {}) {
     const layer = this.layers.get("axes");
     const [xMin, xMax] = this.xDomain;
     const [yMin, yMax] = this.yDomain;
@@ -233,15 +233,17 @@ export class DiagramPrimitives {
       x1: yAxisX, x2: yAxisX, y1: this.y(yMin), y2: this.y(yMax), class: "diagram-primitives__axis"
     }));
 
-    if (ticks && tickStep > 0) {
-      for (let x = Math.ceil(xMin / tickStep) * tickStep; x <= xMax; x += tickStep) {
+    if (ticks && xTickStep > 0) {
+      for (let x = Math.ceil(xMin / xTickStep) * xTickStep; x <= xMax; x += xTickStep) {
         if (Math.abs(x) < 1e-9) continue;
         layer.append(svgElement(this.document, "line", { x1: this.x(x), x2: this.x(x), y1: xAxisY - 5, y2: xAxisY + 5, class: "diagram-primitives__tick" }));
         const label = svgElement(this.document, "text", { x: this.x(x), y: xAxisY + 25, class: "diagram-primitives__tick-label", "text-anchor": "middle" });
         label.textContent = Number(x.toFixed(6));
         layer.append(label);
       }
-      for (let y = Math.ceil(yMin / tickStep) * tickStep; y <= yMax; y += tickStep) {
+    }
+    if (ticks && yTickStep > 0) {
+      for (let y = Math.ceil(yMin / yTickStep) * yTickStep; y <= yMax; y += yTickStep) {
         if (Math.abs(y) < 1e-9) continue;
         layer.append(svgElement(this.document, "line", { x1: yAxisX - 5, x2: yAxisX + 5, y1: this.y(y), y2: this.y(y), class: "diagram-primitives__tick" }));
         const label = svgElement(this.document, "text", { x: yAxisX - 12, y: this.y(y) + 5, class: "diagram-primitives__tick-label", "text-anchor": "end" });

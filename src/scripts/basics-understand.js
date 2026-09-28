@@ -5,7 +5,7 @@ import {
   derivativeCoefficients,
   parsePolynomialExpression,
   polynomialToText
-} from './linked-function-gradient-explorer.js?v=auditstep3';
+} from './linked-function-gradient-explorer.js?v=auditstep4';
 
 const STEP33_IDS = new Set([
   'activity:y12:differentiation:basics:understand:curve-tangent-gradient',

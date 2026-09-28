@@ -1,4 +1,4 @@
-import { DiagramPrimitives, clamp, normalizeDomain } from "./diagram-primitives.js?v=diagramfix3";
+import { DiagramPrimitives, clamp, normalizeDomain } from "./diagram-primitives.js?v=diagramfix4";
 
 function finiteNumber(value, fallback = 0) {
   const number = Number(value);
@@ -197,6 +197,17 @@ export const POLYNOMIAL_FUNCTIONS = Object.freeze([
   })
 ]);
 
+export function niceYAxisTickStep(domain, targetTicks = 8) {
+  const [min, max] = normalizeDomain(domain, [-10, 10]);
+  const span = Math.abs(max - min);
+  if (!Number.isFinite(span) || span <= 0) return 1;
+  const raw = span / Math.max(2, Number(targetTicks) || 8);
+  const magnitude = 10 ** Math.floor(Math.log10(raw));
+  const normalized = raw / magnitude;
+  const nice = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10;
+  return nice * magnitude;
+}
+
 function sampleFunction(evaluator, xDomain, samples = 180) {
   const [xMin, xMax] = normalizeDomain(xDomain, [-4, 4]);
   return Array.from({ length: samples + 1 }, (_, index) => {
@@ -393,7 +404,7 @@ export class LinkedFunctionGradientExplorer {
       aspectRatio: "4 / 3"
     });
     this.diagrams.set(kind, diagram);
-    return { card, diagram, expressionNode };
+    return { card, diagram, expressionNode, yDomain };
   }
 
   #renderFunction() {
@@ -411,9 +422,10 @@ export class LinkedFunctionGradientExplorer {
       secondCard = this.#createGraphCard("secondDerivative", "Second derivative f″(x)", `f″(x) = ${definition.expressions?.secondDerivative || "second derivative"}`, definition.yDomains?.secondDerivative || [-10, 10]);
     }
 
-    for (const { diagram } of [functionCard, derivativeCard, secondCard].filter(Boolean)) {
-      diagram.grid({ xStep: 1, yStep: 2 });
-      diagram.axes({ tickStep: 1 });
+    for (const { diagram, yDomain } of [functionCard, derivativeCard, secondCard].filter(Boolean)) {
+      const yStep = niceYAxisTickStep(yDomain);
+      diagram.grid({ xStep: 1, yStep });
+      diagram.axes({ xTickStep: 1, yTickStep: yStep });
     }
 
     this.controllers.functionCurve = functionCard.diagram.polyline(sampleFunction(definition.evaluate, definition.xDomain), { tone: "curve" });

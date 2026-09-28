@@ -1,6 +1,6 @@
 import { learningModes } from '../src/scripts/sample-activities.js';
 import { basicsDifferentiationTopic } from '../src/scripts/topic-content/basics-differentiation.js';
-import { createPolynomialFunctionDefinition, parsePolynomialExpression } from '../src/scripts/linked-function-gradient-explorer.js';
+import { createPolynomialFunctionDefinition, niceYAxisTickStep, parsePolynomialExpression } from '../src/scripts/linked-function-gradient-explorer.js';
 import fs from 'node:fs';
 
 function assert(condition, message) { if (!condition) throw new Error(message); }
@@ -17,6 +17,8 @@ const typed=parsePolynomialExpression('3x^4 - 2x + 7');
 const typedDefinition=createPolynomialFunctionDefinition({id:'typed-check',label:typed.canonicalText,coefficients:typed.coefficients});
 assert(typedDefinition.evaluate(2)===51,'Typed polynomial coefficients must feed the shared function evaluator correctly.');
 assert(typedDefinition.derivative(2)===94,'Typed polynomial coefficients must feed the shared derivative evaluator correctly.');
+assert(niceYAxisTickStep([-38,38])===10,'Large polynomial y-ranges should use sparse readable y-axis labels.');
+assert(niceYAxisTickStep([-8,8])===2,'Ordinary y-ranges should retain useful axis detail.');
 
 const source=fs.readFileSync(new URL('../src/scripts/basics-understand.js',import.meta.url),'utf8');
 assert(source.includes('Type a polynomial'),'Basics polynomial explorer must expose a typed expression field.');
