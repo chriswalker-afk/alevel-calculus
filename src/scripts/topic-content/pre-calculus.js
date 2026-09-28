@@ -64,7 +64,7 @@ export const preCalculusTopic = defineTopicMetadata({
     },
     {
       id: 'delta-change',
-      title: 'Show that the formula works',
+      title: 'Does the formula give the same gradient everywhere?',
       summary: 'Use the newly introduced straight-line gradient formula at different pairs of points to show that it gives the same gradient everywhere on one straight line.',
       microSkillIds: [skill('delta-y-over-delta-x')],
       vocabularyTags: ['vocab:gradient']
