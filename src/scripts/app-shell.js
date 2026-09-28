@@ -646,7 +646,24 @@ const historyRouteController = createHistoryRouteController({
 function isLandingPath(pathname) {
   if (typeof pathname !== "string") return false;
   const clean = pathname.split("?")[0].split("#")[0].replace(/\/+$/, "") || "/";
-  return clean === "/" || clean === "/alevel-calculus";
+  return clean === "/"
+    || clean === "/index.html"
+    || clean === "/alevel-calculus"
+    || clean === "/alevel-calculus/index.html";
+}
+
+function landingHistoryPath() {
+  const href = brandHomeLink?.getAttribute?.("href") ?? "";
+  if (href.startsWith("/alevel-calculus")) return "/alevel-calculus/";
+  return "/";
+}
+
+function navigateToLanding({ focus = true, replace = false } = {}) {
+  if (!showLanding({ focus })) return false;
+  const route = landingHistoryPath();
+  const method = replace ? "replaceState" : "pushState";
+  browserHistory[method]?.({ calculusView: "landing" }, "", route);
+  return true;
 }
 
 function topbarScopeBadge() {
@@ -1026,11 +1043,7 @@ function syncScopeBadges() {
 }
 
 function syncTopicProgress() {
-  for (const button of landingTopicButtons) {
-  button.addEventListener?.("click", () => openLandingTopic(button.dataset.landingEnterTopic));
-}
-
-for (const item of topicProgressItems) {
+  for (const item of topicProgressItems) {
     const topicId = item.dataset.topicId;
     const progress = getTopicProgress(topicId, progressStore);
     const marker = item.querySelector("[data-topic-state-marker]");
@@ -1684,6 +1697,20 @@ function moveModeFocus(fromTab, key) {
   }
 }
 
+for (const button of landingTopicButtons) {
+  button.addEventListener?.("click", () => openLandingTopic(button.dataset.landingEnterTopic));
+}
+
+brandHomeLink?.addEventListener?.("click", (event) => {
+  event.preventDefault?.();
+  if (shell.dataset.view === "landing" && isLandingPath(browserLocation.pathname)) {
+    landingPage.scrollTop = 0;
+    landingHeading?.focus?.({ preventScroll: true });
+    return;
+  }
+  navigateToLanding({ focus: true });
+});
+
 for (const item of topicProgressItems) {
   item.addEventListener?.("click", () => {
     if (topicRuntime[item.dataset.topicId]) selectTopic(item.dataset.topicId);
@@ -1885,8 +1912,11 @@ syncWordBankCount();
 syncDataManagementSummary();
 syncNavigationForViewport();
 
-if (initialLandingRequested && landingPage && appBody) {
+if ((initialLandingRequested || !initialBrowserRoute) && landingPage && appBody) {
   showLanding();
+  if (!initialLandingRequested) {
+    browserHistory.replaceState?.({ calculusView: "landing" }, "", landingHistoryPath());
+  }
 } else {
   showWorkspace();
   syncCurrentTopicChrome();
