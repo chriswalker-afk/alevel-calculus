@@ -18,6 +18,10 @@
 .pre-calculus-understand__status,.pre-calculus-understand__takeaway { margin:0; padding:var(--space-3); border-radius:var(--radius-md); background:var(--mode-soft); color:var(--mode-soft-text); line-height:var(--leading-normal); }
 .pre-calculus-understand__question { min-height:92px; display:grid; place-items:center; gap:var(--space-2); padding:var(--space-4); border:2px solid var(--mode-accent); border-radius:var(--radius-lg); background:var(--mode-soft); color:var(--mode-soft-text); text-align:center; font-size:clamp(1.05rem,2.2vw,1.45rem); }
 .pre-calculus-understand__question strong { font-size:1.05em; }
+.pre-calculus-understand__formula-card { display:grid; gap:var(--space-1); padding:var(--space-4); border:2px solid var(--mode-accent); border-radius:var(--radius-lg); background:var(--surface-base); text-align:center; }
+.pre-calculus-understand__formula-main { font-size:clamp(1.35rem,2.6vw,1.9rem); font-weight:var(--weight-bold); color:var(--text-primary); }
+.pre-calculus-understand__formula-words { color:var(--text-secondary); font-weight:var(--weight-semibold); }
+.pre-calculus-understand__formula-example { color:var(--mode-soft-text); font-weight:var(--weight-bold); }
 
 .activity-stage__content[data-pre-calculus-understand-active="true"] { grid-template-columns:minmax(210px,.52fr) minmax(0,1.48fr); gap:var(--space-5); align-items:stretch; }
 .activity-stage__content[data-pre-calculus-understand-active="true"] .activity-copy h2 { font-size:clamp(1.4rem,2.2vw,2rem); margin-bottom:var(--space-2); }
