@@ -30,7 +30,6 @@ assert(JSON.stringify(journeyOrder) === JSON.stringify([
   "gradient-function",
   "polynomial-explorer",
   "notation-and-operator",
-  "calculus-backstory",
   "power-rule",
   "term-by-term"
 ]), "Basics journey must preserve the planned conceptual sequence");

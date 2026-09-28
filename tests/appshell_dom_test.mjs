@@ -710,16 +710,16 @@ assert(shell.dataset.activityIndex === '0', 'Previous from the first mathematica
 assert(previousButton.disabled === true, 'Previous should be disabled on the Topic goals page');
 listeners.get('previous:click')();
 assert(shell.dataset.activityIndex === '0', 'Previous from Topic goals must not wrap to the end of Understand');
-assert(footerPosition.textContent === '1 of 10', 'Footer should include the two dedicated Understand bookend pages');
+assert(footerPosition.textContent === '1 of 9', 'Footer should include the two dedicated Understand bookend pages');
 
-for (let i = 0; i < 9; i += 1) listeners.get('next:click')();
-assert(shell.dataset.activityIndex === '9', 'Understand should finish on the dedicated pathway page');
+for (let i = 0; i < 8; i += 1) listeners.get('next:click')();
+assert(shell.dataset.activityIndex === '8', 'Understand should finish on the dedicated pathway page');
 assert(title.textContent === 'Turn understanding into recall and practice', 'Final Understand page should explain the next learning sequence');
 assert(topicPathway.hidden === false, 'Final Understand page should reveal the pathway panel');
 assert(customUnderstandHost.hidden === true, 'The final pathway page should hide the custom visual host');
 assert(nextButton.disabled === true, 'Next should be disabled at the end of Understand');
 listeners.get('next:click')();
-assert(shell.dataset.activityIndex === '9', 'Next from the final Understand page must not wrap to Topic goals');
+assert(shell.dataset.activityIndex === '8', 'Next from the final Understand page must not wrap to Topic goals');
 listeners.get('topicPathwayRevisit:click')();
 assert(shell.dataset.activityIndex === '1', 'Revisit Understand should return to the first mathematical Understand page');
 assert(title.textContent === 'What does gradient mean on a curve?', 'Revisit Understand should skip the goals page and reopen teaching content');

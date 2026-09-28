@@ -13,7 +13,6 @@ const STEP33_IDS = new Set([
   'activity:y12:differentiation:basics:understand:polynomial-explorer',
   'activity:y12:differentiation:basics:understand:derivative-notation',
   'activity:y12:differentiation:basics:understand:differentiation-machine',
-  'activity:y12:differentiation:basics:understand:calculus-backstory',
   'activity:y12:differentiation:basics:understand:power-rule-pattern',
   'activity:y12:differentiation:basics:understand:term-by-term'
 ]);
@@ -553,19 +552,8 @@ export class BasicsUnderstandExperience {
     body.append(workspace);
   }
 
-  render_calculus_backstory() {
-    const body = this.#panel('Why do we have several notations?', '6 · Calculus has a backstory');
-    const timeline = el(this.document, 'div', 'basics-understand__timeline');
-    [
-      ['Newton', 'Fluxions and dot notation', 'Thought about quantities changing with time; his dot notation survives strongly in mechanics.'],
-      ['Leibniz', 'dx, dy and dy/dx', 'Created notation that makes “with respect to x” and rates of change highly visible.'],
-      ['Lagrange', 'f′(x)', 'Prime notation gives a compact name to the derivative function.']
-    ].forEach(([name, notation, copy]) => { const item=el(this.document,'article','basics-understand__timeline-item'); item.append(el(this.document,'strong','',name),el(this.document,'span','basics-understand__timeline-notation',notation),el(this.document,'p','',copy)); timeline.append(item); });
-    body.append(timeline, el(this.document, 'p', 'basics-understand__history-note', 'Newton and Leibniz developed calculus independently. A bitter priority dispute followed, including plagiarism accusations and a Royal Society investigation closely connected to Newton. The mathematics survived; so did more than one useful notation.'));
-  }
-
   render_power_rule_pattern() {
-    const body = this.#panel('Notice what changes each time', '7 · See the power-rule pattern');
+    const body = this.#panel('Notice what changes each time', '6 · See the power-rule pattern');
     const list = el(this.document, 'div', 'basics-understand__pattern-list');
     powerExamples.forEach(({ input, output }) => {
       const row = el(this.document, 'div', 'basics-understand__pattern-row');
@@ -578,7 +566,7 @@ export class BasicsUnderstandExperience {
   }
 
   render_term_by_term() {
-    const body = this.#panel('A sum differentiates one term at a time', '8 · Term by term');
+    const body = this.#panel('A sum differentiates one term at a time', '7 · Term by term');
     const expression = el(this.document, 'div', 'basics-understand__term-expression', 'y = 3x⁴ − 2x² + 5x − 7');
     const row = el(this.document, 'div', 'basics-understand__term-row');
     ['3x⁴ → 12x³', '−2x² → −4x', '+5x → +5', '−7 → 0'].forEach((text) => row.append(el(this.document, 'div', 'basics-understand__term-card', text)));

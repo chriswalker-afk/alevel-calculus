@@ -5,7 +5,7 @@ import fs from 'node:fs';
 
 function assert(condition, message) { if (!condition) throw new Error(message); }
 const understand = learningModes.understand.activities;
-assert(understand.length === 8, 'Step 33 should expose exactly eight Understand activities.');
+assert(understand.length === 7, 'The audited Basics journey should expose seven mathematical Understand activities after removing the redundant backstory page.');
 const expected = basicsDifferentiationTopic.activities.filter((activity) => activity.mode === 'understand' && activity.implementationStep === 33).map((activity) => activity.activityId);
 assert(JSON.stringify(understand.map((activity) => activity.activityId)) === JSON.stringify(expected), 'Understand order must match Step 32 canonical metadata.');
 assert(understand.every((activity) => activity.basicsUnderstand === true), 'Every Step 33 Understand activity should opt into the shared custom experience.');
@@ -53,4 +53,5 @@ assert(!source.includes("const inputBox = el(this.document, 'div', 'basics-under
 assert(!source.includes("const arrow = el(this.document, 'div', 'basics-understand__machine-arrow', '→')"),'The old machine arrow must not be used in the d/dx activity.');
 assert(cssSource.includes('.basics-understand__operator-select') && cssSource.includes('.basics-understand__operator-result'),'The rebuilt operator equation needs dedicated inline selection and result styling.');
 
-console.log('PASS Basics Understand eight-state reference journey and linked polynomial contract');
+assert(!understand.some((activity) => activity.activityId.endsWith(':calculus-backstory')),'The duplicated calculus-backstory activity must stay removed now that its content lives on derivative notation.');
+console.log('PASS Basics Understand seven-state audited journey and linked polynomial contract');

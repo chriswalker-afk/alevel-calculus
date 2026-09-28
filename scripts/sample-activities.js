@@ -85,15 +85,6 @@ export const learningModes = Object.freeze({
         formula: "d/dx [ expression ] = derivative", caption: "The selected expression is the object being differentiated.", basicsUnderstand: true
       }),
       Object.freeze({
-        activityId: "activity:y12:differentiation:basics:understand:calculus-backstory",
-        microSkillId: "skill:y12:differentiation:basics:derivative-notation",
-        kicker: "Understand", overline: "Calculus has a backstory",
-        title: "Why are there several derivative notations?",
-        body: "Newton, Leibniz and Lagrange developed or popularised different ways to express change. Their notations emphasise different ideas and still coexist today.",
-        calloutLabel: "History, briefly", callout: "Newton and Leibniz developed calculus independently; their priority dispute became famously bitter.",
-        formula: "ẏ   dy/dx   f′(x)", caption: "Different historical viewpoints left us several useful notations.", basicsUnderstand: true
-      }),
-      Object.freeze({
         activityId: "activity:y12:differentiation:basics:understand:power-rule-pattern",
         microSkillId: "skill:y12:differentiation:basics:power-rule",
         kicker: "Understand", overline: "Power-rule pattern",

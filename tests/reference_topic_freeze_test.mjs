@@ -16,7 +16,7 @@ function assert(condition, message) {
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (relative) => fs.readFileSync(path.join(root, relative), 'utf8');
 const canonicalModes = ['understand', 'memorise', 'ao1', 'ao2', 'ao3'];
-const plannedCounts = { understand: 8, memorise: 6, ao1: 4, ao2: 4, ao3: 1 };
+const plannedCounts = { understand: 7, memorise: 6, ao1: 4, ao2: 4, ao3: 1 };
 
 // 1. Reference-topic identity and all five frozen mode surfaces.
 assert(basicsDifferentiationTopic.topicId === 'topic:y12:differentiation:basics', 'Reference topic identity must stay stable');
@@ -111,6 +111,6 @@ assert(visualJs.includes('DiagramPrimitives'), 'Question visuals must continue t
 
 // 8. Step 36 accessibility refinements: discrete dynamic updates are announced without making dragging noisy.
 assert(understandJs.includes("sampleStatus.setAttribute('aria-live', 'polite')"), 'Gradient-point count should announce discrete updates');
-assert(understandJs.includes("output.setAttribute('aria-live', 'polite')"), 'd/dx machine result should announce selection changes');
+assert(understandJs.includes("output.setAttribute('aria-live', 'polite')"), 'd/dx operator result should announce selection changes');
 
 console.log('PASS Step 36 reference-topic regression/design-freeze contract across all five modes');

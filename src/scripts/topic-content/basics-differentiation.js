@@ -68,13 +68,6 @@ export const basicsDifferentiationTopic = defineTopicMetadata({
       vocabularyTags: ["vocab:derivative", "vocab:differentiate", "vocab:f-prime-notation", "vocab:dy-dx-notation", "vocab:d-dx-operator"]
     },
     {
-      id: "calculus-backstory",
-      title: "Calculus has a backstory",
-      summary: "Briefly connect Leibniz, Newton and Lagrange to the notation students now use, without turning the topic into a history course.",
-      microSkillIds: [skill("derivative-notation")],
-      vocabularyTags: ["vocab:f-prime-notation", "vocab:dy-dx-notation"]
-    },
-    {
       id: "power-rule",
       title: "Power rule",
       summary: "Generalise the pattern d/dx(ax^n)=anx^(n-1), including constants, x and ax.",
@@ -219,7 +212,6 @@ export const basicsDifferentiationTopic = defineTopicMetadata({
     { activityId: activity("understand", "polynomial-explorer"), mode: "understand", slug: "polynomial-explorer", title: "Polynomial explorer", activityType: "interactive", microSkillIds: [skill("gradient-function"), skill("function-derivative-match")], vocabularyTags: ["vocab:function", "vocab:derivative", "vocab:tangent"], implementationStep: 33 },
     { activityId: activity("understand", "derivative-notation"), mode: "understand", slug: "derivative-notation", title: "Derivative notation", activityType: "lesson", microSkillIds: [skill("derivative-notation"), skill("differentiation-operator")], vocabularyTags: ["vocab:derivative", "vocab:f-prime-notation", "vocab:dy-dx-notation", "vocab:d-dx-operator"], implementationStep: 33 },
     { activityId: activity("understand", "differentiation-machine"), mode: "understand", slug: "differentiation-machine", title: "The d/dx operator", activityType: "interactive", microSkillIds: [skill("differentiation-operator")], vocabularyTags: ["vocab:d-dx-operator", "vocab:differentiate", "vocab:derivative"], implementationStep: 33 },
-    { activityId: activity("understand", "calculus-backstory"), mode: "understand", slug: "calculus-backstory", title: "Calculus has a backstory", activityType: "lesson", microSkillIds: [skill("derivative-notation")], vocabularyTags: ["vocab:f-prime-notation", "vocab:dy-dx-notation"], implementationStep: 33 },
     { activityId: activity("understand", "power-rule-pattern"), mode: "understand", slug: "power-rule-pattern", title: "See the power-rule pattern", activityType: "lesson", microSkillIds: [skill("power-rule"), skill("constant-and-linear")], vocabularyTags: ["vocab:coefficient", "vocab:power-index"], implementationStep: 33 },
     { activityId: activity("understand", "term-by-term"), mode: "understand", slug: "term-by-term", title: "Differentiate term by term", activityType: "lesson", microSkillIds: [skill("term-by-term")], vocabularyTags: ["vocab:differentiate"], implementationStep: 33 },
 

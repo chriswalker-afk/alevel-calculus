@@ -7,7 +7,7 @@
 .basics-understand__panel-header h3 { margin: 0; font-size: var(--text-lg); }
 .basics-understand__eyebrow { color: var(--mode-soft-text); font-size: var(--text-xs); font-weight: var(--weight-bold); letter-spacing: .04em; text-transform: uppercase; }
 .basics-understand__panel-body { min-height: 0; display: grid; gap: var(--space-3); align-content: start; overflow: auto; padding-right: 2px; }
-.basics-understand__prompt,.basics-understand__instruction,.basics-understand__takeaway,.basics-understand__insight,.basics-understand__history-note { margin:0; padding: var(--space-3); border-radius: var(--radius-md); background: var(--mode-soft); color: var(--mode-soft-text); line-height: var(--leading-normal); }
+.basics-understand__prompt,.basics-understand__instruction,.basics-understand__takeaway,.basics-understand__insight { margin:0; padding: var(--space-3); border-radius: var(--radius-md); background: var(--mode-soft); color: var(--mode-soft-text); line-height: var(--leading-normal); }
 .basics-understand__graph-host { min-height: 0; }
 .basics-understand__action-row { display:flex; flex-wrap:wrap; gap:var(--space-2); align-items:center; }
 .basics-understand__button { min-height: var(--touch-target-min); padding: 0 var(--space-3); border:1px solid var(--border-default); border-radius:var(--radius-md); background:var(--surface-base); color:var(--text-primary); font:inherit; font-weight:var(--weight-semibold); cursor:pointer; }
@@ -70,10 +70,6 @@
 .basics-understand__operator-result { min-width:0; padding:0 var(--space-4); border:1px solid var(--mode-accent); border-radius:var(--radius-lg); background:var(--mode-soft); font-weight:var(--weight-semibold); }
 .basics-understand__operator-hint { max-width:760px; margin:0 auto; color:var(--text-secondary); font-size:var(--text-sm); line-height:var(--leading-normal); text-align:center; }
 .basics-understand__machine-arrow { color:var(--mode-soft-text); font-size:1.55rem; font-weight:var(--weight-bold); text-align:center; }
-.basics-understand__timeline { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-3); }
-.basics-understand__timeline-item { display:grid; gap:var(--space-2); padding:var(--space-4); border-left:4px solid var(--mode-accent); border-radius:0 var(--radius-md) var(--radius-md) 0; background:var(--surface-subtle); }
-.basics-understand__timeline-item p { margin:0; color:var(--text-secondary); line-height:var(--leading-normal); }
-.basics-understand__timeline-notation { color:var(--mode-soft-text); font-family:var(--font-math); font-size:1.15rem; }
 .basics-understand__pattern-list { display:grid; gap:var(--space-2); }
 .basics-understand__pattern-row { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:var(--space-3); padding:var(--space-2) var(--space-4); border:1px solid var(--border-default); border-radius:var(--radius-md); }
 .basics-understand__pattern-input,.basics-understand__pattern-output { font-family:var(--font-math); font-size:clamp(1.15rem,3vw,1.55rem); }
@@ -92,8 +88,8 @@
 
 @media (max-width: 900px) {
   .activity-stage__content[data-basics-understand-active="true"] { grid-template-columns:minmax(190px,.48fr) minmax(0,1.52fr); gap:var(--space-4); }
-  .basics-understand__notation-grid,.basics-understand__timeline { grid-template-columns:1fr; }
-  .basics-understand__notation-card,.basics-understand__timeline-item { padding:var(--space-3); }
+  .basics-understand__notation-grid { grid-template-columns:1fr; }
+  .basics-understand__notation-card { padding:var(--space-3); }
   .basics-understand__term-row { grid-template-columns:repeat(2,1fr); }
 }
 @media (max-width:680px) {
@@ -124,8 +120,7 @@
   .basics-understand__prompt,
   .basics-understand__instruction,
   .basics-understand__takeaway,
-  .basics-understand__insight,
-  .basics-understand__history-note {
+  .basics-understand__insight {
     padding: var(--space-2) var(--space-3);
     font-size: var(--text-sm);
     line-height: var(--leading-snug);
@@ -201,12 +196,10 @@
   .basics-understand__coefficient-details:not([open]) .basics-understand__coefficient-editor { display: none; }
 
   .basics-understand[data-basics-activity="derivative_notation"] .basics-understand__panel-body { grid-template-rows:auto auto auto; align-content:start; }
-  .basics-understand[data-basics-activity="calculus_backstory"] .basics-understand__panel-body,
   .basics-understand[data-basics-activity="differentiation_machine"] .basics-understand__panel-body,
   .basics-understand[data-basics-activity="term_by_term"] .basics-understand__panel-body { align-content: center; }
 
-  .basics-understand__notation-card,
-  .basics-understand__timeline-item { padding: var(--space-3); }
+  .basics-understand__notation-card { padding: var(--space-3); }
   .basics-understand[data-basics-activity="derivative_notation"] .basics-understand__notation-card p { font-size:var(--text-sm); line-height:var(--leading-snug); }
   .basics-understand[data-basics-activity="derivative_notation"] .basics-understand__equivalence { padding:var(--space-2) var(--space-3); font-size:clamp(1rem,1.8vw,1.35rem); }
   .basics-understand__notation-formula { font-size: clamp(1.45rem, 3vw, 2.25rem); }
