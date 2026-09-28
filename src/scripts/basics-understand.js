@@ -100,6 +100,7 @@ export class BasicsUnderstandExperience {
     for (const cleanup of this.cleanup.splice(0)) cleanup();
     this.host.replaceChildren();
     this.host.classList.remove('basics-understand');
+    delete this.host.dataset.basicsActivity;
   }
 
   render(activityId) {
@@ -110,7 +111,8 @@ export class BasicsUnderstandExperience {
     this.host.replaceChildren();
     this.state.activityId = activityId;
     const slug = activityId.split(':').at(-1);
-    const renderer = this[`render_${slug.replaceAll('-', '_')}`];
+    this.host.dataset.basicsActivity = slug.replaceAll('-', '_');
+    const renderer = this[`render_${this.host.dataset.basicsActivity}`];
     if (typeof renderer !== 'function') throw new Error(`No Understand renderer for ${activityId}`);
     renderer.call(this);
     this.onStateChange({ activityId });
@@ -218,12 +220,16 @@ export class BasicsUnderstandExperience {
     entry.append(entryLabel, apply, help, status);
     body.append(entry);
 
+    const coefficientDetails = el(this.document, 'details', 'basics-understand__coefficient-details');
+    const coefficientSummary = el(this.document, 'summary', 'basics-understand__coefficient-summary', 'Or edit the coefficients');
+    coefficientSummary.setAttribute('aria-label', 'Open coefficient editor');
+    const coefficientEditor = el(this.document, 'div', 'basics-understand__coefficient-editor');
     const fallbackLabel = el(this.document, 'div', 'basics-understand__coefficient-heading');
     fallbackLabel.append(
-      el(this.document, 'strong', '', 'Or edit the coefficients'),
-      el(this.document, 'span', '', 'These controls update the same polynomial.')
+      el(this.document, 'strong', '', 'Coefficient editor'),
+      el(this.document, 'span', '', 'Optional: these controls update the same polynomial.')
     );
-    body.append(fallbackLabel);
+    coefficientEditor.append(fallbackLabel);
 
     const controls = el(this.document, 'div', 'basics-understand__coefficients');
     const coefficients = [0, -3, 0, 1, 0, 0, 0];
@@ -242,7 +248,9 @@ export class BasicsUnderstandExperience {
       controls.append(wrapper);
       inputs.push(input);
     });
-    body.append(controls);
+    coefficientEditor.append(controls);
+    coefficientDetails.append(coefficientSummary, coefficientEditor);
+    body.append(coefficientDetails);
 
     const graphHost = el(this.document, 'div', 'basics-understand__graph-host');
     body.append(graphHost);

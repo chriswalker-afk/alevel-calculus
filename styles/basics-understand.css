@@ -75,3 +75,115 @@
   .basics-understand__machine-box--output { grid-column:3; }
   .basics-understand__machine-box:not(.basics-understand__machine-box--output) { grid-column:1/-1; }
 }
+
+
+/* Manual audit 2026-09-28: restore the original single-screen Understand vision.
+   Desktop/laptop activities fit the available workspace; narrow screens may scroll. */
+@media (min-width: 681px) {
+  .basics-understand__panel { gap: var(--space-2); }
+  .basics-understand__panel-header h3 { font-size: clamp(1rem, 1.45vw, var(--text-lg)); line-height: var(--leading-tight); }
+  .basics-understand__panel-body { position: relative; min-height: 0; height: 100%; overflow: hidden; gap: var(--space-2); align-content: stretch; }
+
+  .basics-understand__prompt,
+  .basics-understand__instruction,
+  .basics-understand__takeaway,
+  .basics-understand__insight,
+  .basics-understand__history-note {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
+  }
+
+  .basics-understand__graph-host { min-height: 0; height: 100%; overflow: hidden; }
+  .basics-understand__graph-host > .linked-gradient-explorer { min-height: 0; height: 100%; grid-template-rows: auto minmax(0, 1fr); gap: var(--space-2); }
+  .basics-understand .linked-gradient-explorer__controls { gap: var(--space-2); padding: var(--space-2); }
+  .basics-understand .linked-gradient-explorer__select,
+  .basics-understand .linked-gradient-explorer__reveal-button { min-height: var(--touch-target-min); }
+  .basics-understand .linked-gradient-explorer__graphs { min-height: 0; height: 100%; gap: var(--space-2); align-items: stretch; }
+  .basics-understand .linked-gradient-explorer__card { min-height: 0; height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); }
+  .basics-understand .linked-gradient-explorer__card-heading { min-height: 0; padding: var(--space-2) var(--space-3); }
+  .basics-understand .linked-gradient-explorer__expression { margin-top: 2px; font-size: var(--text-xs); }
+  .basics-understand .linked-gradient-explorer__diagram { min-height: 0; height: 100%; }
+  .basics-understand .linked-gradient-explorer__diagram > .diagram-primitives { min-height: 176px; height: 100%; aspect-ratio: auto; }
+
+  .activity-stage__content[data-basics-understand-active="true"] { grid-template-columns: minmax(190px, .46fr) minmax(0, 1.54fr); gap: var(--space-4); }
+  .activity-stage__content[data-basics-understand-active="true"] .activity-copy { min-width: 0; }
+  .activity-stage__content[data-basics-understand-active="true"] .activity-copy h2 { font-size: clamp(1.25rem, 1.8vw, 1.7rem); line-height: 1.08; margin: var(--space-1) 0 var(--space-2); }
+  .activity-stage__content[data-basics-understand-active="true"] .activity-copy > p:not(.activity-overline) { font-size: var(--text-sm); line-height: var(--leading-normal); }
+  .activity-stage__content[data-basics-understand-active="true"] .activity-callout { margin-top: var(--space-2); padding: var(--space-2) var(--space-3); }
+  .activity-stage__content[data-basics-understand-active="true"] .activity-callout p { margin-top: var(--space-1); font-size: var(--text-sm); line-height: var(--leading-snug); }
+
+  .basics-understand[data-basics-activity="curve_tangent_gradient"] .basics-understand__panel-body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .basics-understand[data-basics-activity="curve_tangent_gradient"] .basics-understand__graph-host { grid-column: 1 / -1; }
+
+  .basics-understand[data-basics-activity="gradient_function"] .basics-understand__panel-body { grid-template-rows: auto auto minmax(0, 1fr) auto; }
+
+  .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__panel-body {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-items: start;
+  }
+  .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__polynomial-entry {
+    min-width: 0; padding: var(--space-2); gap: var(--space-1) var(--space-2);
+  }
+  .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__polynomial-help {
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__graph-host { grid-column: 1 / -1; min-height: 0; }
+
+  .basics-understand__coefficient-details { position: relative; min-width: 190px; z-index: 6; }
+  .basics-understand__coefficient-summary {
+    min-height: var(--touch-target-min); display: flex; align-items: center; justify-content: center;
+    padding: 0 var(--space-3); border: 1px solid var(--border-default); border-radius: var(--radius-md);
+    background: var(--surface-base); color: var(--text-primary); font-weight: var(--weight-semibold);
+    cursor: pointer; list-style-position: inside;
+  }
+  .basics-understand__coefficient-summary:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+  .basics-understand__coefficient-editor {
+    position: absolute; top: calc(100% + var(--space-2)); right: 0; width: min(620px, 78vw);
+    display: grid; gap: var(--space-2); padding: var(--space-3); border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg); background: var(--surface-base); box-shadow: 0 12px 32px rgba(23, 32, 51, .16);
+  }
+  .basics-understand__coefficient-details:not([open]) .basics-understand__coefficient-editor { display: none; }
+
+  .basics-understand[data-basics-activity="derivative_notation"] .basics-understand__panel-body,
+  .basics-understand[data-basics-activity="calculus_backstory"] .basics-understand__panel-body,
+  .basics-understand[data-basics-activity="differentiation_machine"] .basics-understand__panel-body,
+  .basics-understand[data-basics-activity="term_by_term"] .basics-understand__panel-body { align-content: center; }
+
+  .basics-understand__notation-card,
+  .basics-understand__timeline-item { padding: var(--space-3); }
+  .basics-understand__notation-formula { font-size: clamp(1.45rem, 3vw, 2.25rem); }
+  .basics-understand__machine-box { min-height: 72px; }
+
+  .basics-understand[data-basics-activity="power_rule_pattern"] .basics-understand__panel-body {
+    grid-template-rows: minmax(0, 1fr) auto auto; align-items: stretch;
+  }
+  .basics-understand__pattern-list { grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: center; }
+  .basics-understand__pattern-row { min-width: 0; padding: var(--space-2) var(--space-3); }
+  .basics-understand__pattern-input,
+  .basics-understand__pattern-output { font-size: clamp(1rem, 1.8vw, 1.3rem); }
+
+  .basics-understand__term-expression { font-size: clamp(1.25rem, 2.2vw, 1.75rem); }
+  .basics-understand__equivalence,
+  .basics-understand__rule-reveal,
+  .basics-understand__term-result { padding: var(--space-3); font-size: clamp(1.05rem, 2vw, 1.5rem); }
+}
+
+@media (max-width: 680px) {
+  .basics-understand__panel-body { overflow: auto; }
+  .basics-understand__coefficient-details { position: static; }
+  .basics-understand__coefficient-summary {
+    min-height: var(--touch-target-min); display: flex; align-items: center; padding: 0 var(--space-3);
+    border: 1px solid var(--border-default); border-radius: var(--radius-md); background: var(--surface-base);
+    font-weight: var(--weight-semibold); cursor: pointer;
+  }
+  .basics-understand__coefficient-editor {
+    display: grid; gap: var(--space-2); margin-top: var(--space-2); padding: var(--space-3);
+    border: 1px solid var(--border-default); border-radius: var(--radius-lg); background: var(--surface-subtle);
+  }
+  .basics-understand__coefficient-details:not([open]) .basics-understand__coefficient-editor { display: none; }
+}

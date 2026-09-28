@@ -84,7 +84,9 @@ for (const css of [appCss, understandCss, memoryCss, questionCss]) {
   assert(/@media\s*\(max-width:\s*680px\)/.test(css), 'Every primary reference-topic presentation layer needs a phone breakpoint');
 }
 assert(appCss.includes('overflow: hidden;') && /overflow:\s*auto;/.test(appCss), 'AppShell must keep document overflow contained and provide internal scrolling');
-assert(understandCss.includes('overflow: auto;') && memoryCss.includes('overflow: auto;') && questionCss.includes('overflow: auto;'), 'Understand, Memorise and QuestionShell need deliberate internal scrolling');
+assert(/@media\\s*\\(min-width:\\s*681px\\)[\\s\\S]*?\\.basics-understand__panel-body\\s*\\{[\\s\\S]*?overflow:\\s*hidden;/.test(understandCss), 'Basics Understand should keep desktop activity bodies on one screen without internal vertical scrolling');
+assert(/@media\\s*\\(max-width:\\s*680px\\)[\\s\\S]*?\\.basics-understand__panel-body\\s*\\{[\\s\\S]*?overflow:\\s*auto;/.test(understandCss), 'Basics Understand should restore scrolling on narrow screens when content genuinely cannot fit');
+assert(memoryCss.includes('overflow: auto;') && questionCss.includes('overflow: auto;'), 'Memorise and QuestionShell retain deliberate internal scrolling where their task structure requires it');
 assert(understandCss.includes('var(--touch-target-min)'), 'Basics-specific controls must use the shared touch-target token');
 assert(appCss.includes('topic-navigation-toggle') && appCss.includes('min-height: var(--touch-target-min);'), 'Narrow-screen Topics control must keep the shared touch-target minimum');
 assert(understandCss.includes(':focus-visible') && questionCss.includes(':focus-visible') && memoryCss.includes(':focus-visible'), 'All primary reference-topic interaction layers need visible focus treatment');

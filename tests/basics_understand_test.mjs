@@ -24,6 +24,8 @@ assert(source.includes('parsePolynomialExpression'),'Typed entry must use the sh
 assert(source.includes('maxDegree: 6'),'Typed entry must retain the reasonable-degree guard.');
 assert(source.includes('aria-invalid'),'Invalid typed expressions must be reported accessibly.');
 assert(source.includes('Or edit the coefficients'),'Coefficient controls must remain as a synchronized fallback.');
+assert(source.includes("dataset.basicsActivity"),'Basics Understand must expose the current activity to the responsive single-screen layout.');
+assert(source.includes('basics-understand__coefficient-details'),'The polynomial coefficient fallback should be collapsed by default so the graph remains the primary desktop workspace.');
 assert(source.includes("'x⁶'"),'Coefficient fallback must remain synchronized through the maximum supported degree.');
 
 console.log('PASS Basics Understand eight-state reference journey and linked polynomial contract');
