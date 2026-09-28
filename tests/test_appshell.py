@@ -397,7 +397,7 @@ assert 'data-question-shell-progress' not in html, "Question progress should app
 assert 'data-workspace-tools-toggle' in html and 'data-workspace-tools-content' in html, "Workspace tools should expose a shared collapse control"
 assert 'workspaceToolsCollapsedByMode' in js and 'syncWorkspaceTools' in js, "Workspace tool state should persist while moving through a mode"
 assert 'mode === "ao1" || mode === "ao2" || mode === "ao3"' in js, "AO modes should default to collapsed Workspace tools"
-assert 'data-workspace-tools-collapsed' in js, "The activity stage should expose collapsed Workspace tools state for layout CSS"
+assert 'stage.dataset.workspaceToolsCollapsed' in js, "The activity stage should expose collapsed Workspace tools state for layout CSS"
 assert 'questionShellSampleSet' not in activities, "Step 15 sample-set pointer must not survive as a competing question schema"
 assert 'defineQuestionDefinition' in question_definition and 'getQuestionDefinitionMetadata' in question_definition
 assert 'templateId' in question_definition and 'courseScope' in question_definition and 'assessmentObjective' in question_definition
