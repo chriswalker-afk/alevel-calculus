@@ -40,3 +40,31 @@
   .pre-calculus-understand { min-height:390px; }
   .pre-calculus-understand__panel-header { align-items:flex-start; flex-direction:column-reverse; gap:var(--space-1); }
 }
+
+
+.pre-calculus-understand--delta-intro .pre-calculus-understand__panel-body { overflow:hidden; align-content:stretch; }
+.pre-calculus-understand__delta-layout { min-height:0; height:100%; display:grid; grid-template-columns:minmax(0,1.05fr) minmax(260px,.95fr); gap:var(--space-3); align-items:stretch; }
+.pre-calculus-understand__delta-visual { min-width:0; min-height:0; display:flex; }
+.pre-calculus-understand__delta-graph { min-width:0; min-height:230px; width:100%; height:100%; }
+.pre-calculus-understand__delta-steps { min-width:0; min-height:0; display:grid; grid-template-rows:auto auto 1fr; gap:var(--space-2); align-content:stretch; }
+.pre-calculus-understand__delta-step { min-width:0; padding:var(--space-2) var(--space-3); border:1px solid var(--border-default); border-radius:var(--radius-md); background:var(--surface-base); display:grid; gap:var(--space-1); align-content:center; }
+.pre-calculus-understand__delta-step p { margin:0; line-height:var(--leading-snug); font-size:var(--text-sm); color:var(--text-secondary); }
+.pre-calculus-understand__delta-step-heading { display:flex; align-items:center; gap:var(--space-2); color:var(--text-primary); }
+.pre-calculus-understand__delta-step-number { width:1.7rem; height:1.7rem; border-radius:50%; display:grid; place-items:center; flex:0 0 auto; background:var(--mode-soft); color:var(--mode-soft-text); font-weight:var(--weight-bold); }
+.pre-calculus-understand__delta-math-pair { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-2); }
+.pre-calculus-understand__delta-math,
+.pre-calculus-understand__delta-example { min-width:0; text-align:center; font-weight:var(--weight-semibold); }
+.pre-calculus-understand__delta-formula { min-width:0; text-align:center; font-size:clamp(1rem,1.6vw,1.3rem); font-weight:var(--weight-bold); color:var(--text-primary); }
+.pre-calculus-understand__delta-example { padding-top:var(--space-1); color:var(--mode-soft-text); }
+.pre-calculus-understand--delta-intro .math-typeset--display { margin:.05rem 0; }
+
+@media (max-width:900px) {
+  .pre-calculus-understand__delta-layout { grid-template-columns:minmax(0,1fr) minmax(240px,.9fr); gap:var(--space-2); }
+  .pre-calculus-understand__delta-step { padding:var(--space-2); }
+}
+@media (max-width:680px) {
+  .pre-calculus-understand--delta-intro .pre-calculus-understand__panel-body { overflow:auto; }
+  .pre-calculus-understand__delta-layout { height:auto; grid-template-columns:1fr; }
+  .pre-calculus-understand__delta-graph { min-height:260px; height:260px; }
+  .pre-calculus-understand__delta-steps { grid-template-rows:auto; }
+}
