@@ -123,10 +123,13 @@ for (const { topic } of entries) {
 }
 
 // 7. The review checkpoint is the explicit boundary into additional 9MA0 content.
-const reviewIndex = html.indexOf('topic:y12:review:calculus-mastery');
-const boundaryIndex = html.indexOf('8MA0 boundary before additional Year 13 calculus');
-const year13Index = html.indexOf('Additional Year 13');
-assert(reviewIndex >= 0 && boundaryIndex > reviewIndex && year13Index > boundaryIndex, 'Year 12 Review must remain before the explicit 8MA0 -> additional 9MA0 boundary.');
+const navStart = html.indexOf('<nav');
+const navEnd = html.indexOf('</nav>', navStart);
+const navigationHtml = navStart >= 0 && navEnd > navStart ? html.slice(navStart, navEnd) : html;
+const reviewIndex = navigationHtml.indexOf('topic:y12:review:calculus-mastery');
+const boundaryIndex = navigationHtml.indexOf('8MA0 boundary before additional Year 13 calculus');
+const year13Index = navigationHtml.indexOf('Additional Year 13');
+assert(reviewIndex >= 0 && boundaryIndex > reviewIndex && year13Index > boundaryIndex, 'Year 12 Review must remain before the explicit 8MA0 -> additional 9MA0 boundary in the course navigation.');
 
 // 8. Responsive gate: one fixed AppShell, internal scrolling and a phone/tablet collapse for every topic-specific Year 12 visual layer.
 const appCss = read('src/styles/app-shell.css');
