@@ -396,7 +396,7 @@ assert 'html[data-learning-mode="ao1"] .activity-controls' in css, "AO footer su
 assert 'data-question-shell-progress' not in html, "Question progress should appear once in the AO question shell"
 assert 'data-workspace-tools-toggle' in html and 'data-workspace-tools-content' in html, "Workspace tools should expose a shared collapse control"
 assert 'workspaceToolsCollapsedByMode' in js and 'syncWorkspaceTools' in js, "Workspace tool state should persist while moving through a mode"
-assert 'mode === "ao1" || mode === "ao2" || mode === "ao3"' in js, "AO modes should default to collapsed Workspace tools"
+assert 'function defaultWorkspaceToolsCollapsed()' in js and 'return true;' in js, "Workspace tools should default closed because the popover overlays rather than consumes activity height"
 assert 'stage.dataset.workspaceToolsCollapsed' in js, "The activity stage should expose collapsed Workspace tools state for layout CSS"
 assert 'questionShellSampleSet' not in activities, "Step 15 sample-set pointer must not survive as a competing question schema"
 assert 'defineQuestionDefinition' in question_definition and 'getQuestionDefinitionMetadata' in question_definition
@@ -518,11 +518,17 @@ for required_memorise_id in [
     assert required_memorise_id in activity_ids, f"Missing canonical Step 34 activity {required_memorise_id}"
 
 print("PASS static AppShell, shared QuestionShell, staged hints, structured worked solutions and persistence checks")
-assert '.workspace-tools__identity {\n  display: none;' in css, "Workspace should not repeat the active mode and activity count above the content"
+assert 'workspace-tools-popover' in html and 'Vertical space recovery pass:' in css, "Workspace tools should live in an overlay popover inside the compact header"
 assert 'viewport-density.js?v=density1' in js, "App shell should use the shared viewport-density classifier"
 assert 'syncViewportDensity()' in js and 'window.visualViewport?.addEventListener?.("resize", syncViewportDensity' in js, "Density should update when the usable viewport changes"
-assert 'root.dataset.uiDensity === "tight"' in js, "Tight viewports should collapse non-essential workspace tools by default"
+assert 'defaultWorkspaceToolsCollapsed()' in js, "Workspace tools should remain closed by default at every viewport density"
 assert 'data-ui-density="standard"' in html, "HTML should have a stable pre-JavaScript density fallback"
 assert 'html[data-ui-density="compact"]' in css and 'html[data-ui-density="tight"]' in css, "App shell CSS should expose adaptive density tiers"
 assert '@media (max-height: 700px)' not in css, "The old one-off short-height patch should be replaced by adaptive density"
+assert '<h1>Learning workspace</h1>' not in html, "Learning workspace heading should be removed to reclaim vertical space"
+assert '<h1 class="workspace-topic-title" data-current-topic-label>' in html, "The topic name should be the compact workspace heading"
+assert html.index('data-workspace-tools-bar') < html.index('data-mode-panel'), "Tools belong in the workspace header, not in an activity row"
+assert 'triggerHost: workspaceToolsContent' in js, "Header tools must remain the host for topic-specific utility surfaces"
+assert '.mode-tab__sublabel {\n  display: none !important;' in css, "Mode tabs should be permanently single-line"
+assert '.activity-controls__summary {\n  display: none;' in css, "The footer should not spend height repeating activity position"
 
