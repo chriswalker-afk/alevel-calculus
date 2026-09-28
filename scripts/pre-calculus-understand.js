@@ -312,7 +312,7 @@ export class PreCalculusUnderstandExperience {
     const { diagram } = this.#graph(body, { yDomain: [-5, 5], ariaLabel: 'Parallel lines at different vertical positions' });
     const slope = 0.75;
     const line = diagram.line({ x1: -3.5, y1: -3.5 * slope, x2: 3.5, y2: 3.5 * slope, tone: 'curve' });
-    const shadow = diagram.line({ x1: -3.5, y1: -3.5 * slope - 2, x2: 3.5, y2: 3.5 * slope - 2, tone: 'secondary', dashed: true });
+    const shadow = diagram.line({ x1: -3.5, y1: -3.5 * slope, x2: 3.5, y2: 3.5 * slope, tone: 'secondary', dashed: true });
     const slider = diagram.slider({
       label: 'Vertical shift', min: -2.5, max: 2.5, step: 0.25, value: 0,
       format: (c) => `shift = ${format(c, 2)}`,
@@ -322,7 +322,7 @@ export class PreCalculusUnderstandExperience {
       }
     });
     controls.append(slider.element);
-    status.textContent = 'Solid and dashed lines sit at different heights but have the same gradient 0.75.';
+    status.textContent = 'Both lines start with shift 0 and gradient 0.75. Move the solid line vertically to compare height with gradient.';
     void shadow;
   }
 
