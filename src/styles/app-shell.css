@@ -3044,8 +3044,6 @@ html[data-learning-mode="ao3"] .activity-position {
   }
 }
 
-/* Short desktop / landscape viewports: reclaim vertical space without browser or CSS zoom. */
-
 /* Workspace chrome: the mode tabs already identify the active mode, so do not repeat
    the mode name or activity count inside the activity stage. */
 .workspace-tools__identity {
