@@ -83,12 +83,13 @@ function buildPolynomialDefinition(coefficients) {
 }
 
 export class BasicsUnderstandExperience {
-  constructor(host, { onStateChange = () => {}, sidebarHost = null } = {}) {
+  constructor(host, { onStateChange = () => {}, sidebarHost = null, renderVocabulary = null } = {}) {
     if (!host) throw new Error('BasicsUnderstandExperience requires a DOM host.');
     this.host = host;
     this.document = host.ownerDocument || globalThis.document;
     this.onStateChange = onStateChange;
     this.sidebarHost = sidebarHost;
+    this.renderVocabulary = typeof renderVocabulary === 'function' ? renderVocabulary : null;
     this.sidebarPanel = null;
     this.explorer = null;
     this.cleanup = [];
@@ -140,6 +141,15 @@ export class BasicsUnderstandExperience {
     this.sidebarHost.append(panel);
     this.sidebarPanel = panel;
     return panel;
+  }
+
+  #richText(container, segments) {
+    if (this.renderVocabulary) {
+      this.renderVocabulary(container, segments);
+      return container;
+    }
+    container.textContent = segments.map((segment) => typeof segment === 'string' ? segment : segment.text ?? segment.termId ?? '').join('');
+    return container;
   }
 
   #panel(title, eyebrow) {
@@ -396,16 +406,57 @@ export class BasicsUnderstandExperience {
     const body = this.#panel('Same derivative, different emphasis', '4 · Derivative notation');
     const grid = el(this.document, 'div', 'basics-understand__notation-grid');
     const cards = [
-      ['f′(x)', 'Function notation', 'Names the new function that gives the gradient of f at each x-value.'],
-      ['dy/dx', 'Rate notation', 'Emphasises how y changes with respect to x. It represents the derivative itself.'],
-      ['d/dx ( · )', 'Operator notation', 'An instruction: differentiate the expression inside the brackets with respect to x.']
+      {
+        formula: 'f′(x)',
+        title: 'Function notation',
+        copy: ['The ', { termId: 'vocab:f-prime-notation' }, ' names the derivative function: its value at each x is the gradient of f there.']
+      },
+      {
+        formula: 'dy/dx',
+        title: 'Rate notation',
+        copy: [{ termId: 'vocab:dy-dx-notation' }, ' emphasises how y changes with respect to x. It represents the derivative itself.']
+      },
+      {
+        formula: 'd/dx ( · )',
+        title: 'Operator notation',
+        copy: ['The ', { termId: 'vocab:d-dx-operator' }, ' is an instruction: differentiate the whole expression that follows with respect to x.']
+      }
     ];
-    cards.forEach(([formula, title, copy]) => {
+    cards.forEach(({ formula, title, copy }) => {
       const card = el(this.document, 'article', 'basics-understand__notation-card');
-      card.append(el(this.document, 'div', 'basics-understand__notation-formula', formula), el(this.document, 'strong', '', title), el(this.document, 'p', '', copy));
+      const formulaNode = el(this.document, 'div', 'basics-understand__notation-formula', formula);
+      formulaNode.setAttribute('data-math-display', '');
+      const copyNode = el(this.document, 'p');
+      this.#richText(copyNode, copy);
+      card.append(formulaNode, el(this.document, 'strong', '', title), copyNode);
       grid.append(card);
     });
-    body.append(grid, el(this.document, 'div', 'basics-understand__equivalence', 'd/dx [ f(x) ] = f′(x)   and   d/dx (y) = dy/dx'));
+
+    const equivalence = el(this.document, 'div', 'basics-understand__equivalence');
+    const leftMath = el(this.document, 'span', 'basics-understand__equivalence-math', 'd/dx [ f(x) ] = f′(x)');
+    const join = el(this.document, 'span', 'basics-understand__equivalence-join', 'and');
+    const rightMath = el(this.document, 'span', 'basics-understand__equivalence-math', 'd/dx ( y ) = dy/dx');
+    leftMath.setAttribute('data-math-display', '');
+    rightMath.setAttribute('data-math-display', '');
+    equivalence.append(leftMath, join, rightMath);
+
+    const story = el(this.document, 'aside', 'basics-understand__notation-story');
+    const storyHeading = el(this.document, 'strong', 'basics-understand__notation-story-title', 'Why are there several notations?');
+    const storyCopy = el(this.document, 'p');
+    const leibnizMath = el(this.document, 'span', 'basics-understand__inline-math', 'dy/dx');
+    leibnizMath.setAttribute('data-math-render', '');
+    const lagrangeMath = el(this.document, 'span', 'basics-understand__inline-math', 'f′(x)');
+    lagrangeMath.setAttribute('data-math-render', '');
+    storyCopy.replaceChildren(
+      this.document.createTextNode('Newton and Leibniz developed calculus independently. Newton pictured quantities changing with time and used dot notation; Leibniz wrote '),
+      leibnizMath,
+      this.document.createTextNode(' to make “with respect to x” visible. Their later priority dispute became famously bitter. Lagrange later popularised '),
+      lagrangeMath,
+      this.document.createTextNode('. Different viewpoints left us several useful notations rather than one “correct” notation.')
+    );
+    story.append(storyHeading, storyCopy);
+
+    body.append(grid, equivalence, story);
   }
 
   render_differentiation_machine() {

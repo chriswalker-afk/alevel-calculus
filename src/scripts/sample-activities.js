@@ -58,6 +58,13 @@ export const learningModes = Object.freeze({
         kicker: "Understand", overline: "Derivative notation",
         title: "Three notations, two different jobs",
         body: "Compare f′(x), dy/dx and d/dx. The first two name or represent a derivative; d/dx is an instruction that acts on an expression.",
+        bodySegments: Object.freeze([
+          "Compare f′(x), dy/dx and d/dx. The first two represent a ",
+          Object.freeze({ termId: "vocab:derivative" }),
+          "; the ",
+          Object.freeze({ termId: "vocab:d-dx-operator" }),
+          " is an instruction that acts on an expression."
+        ]),
         calloutLabel: "Distinguish", callout: "dy/dx is a derivative. d/dx is the operator meaning ‘differentiate with respect to x’.",
         formula: "d/dx [f(x)] = f′(x)", caption: "Read the notation by asking whether it names a result or gives an instruction.", basicsUnderstand: true
       }),

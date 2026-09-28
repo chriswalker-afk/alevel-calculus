@@ -1,4 +1,4 @@
-import { learningModeOrder, learningModes } from "./sample-activities.js?v=auditstep4";
+import { learningModeOrder, learningModes } from "./sample-activities.js?v=auditstep5";
 import { getCourseScope } from "./scope-metadata.js";
 import { getTopicProgress, progressModeOrder } from "./progress-model.js";
 import { getHelpTarget, getHelpTargets } from "./help-content.js?v=helpfix3";
@@ -20,7 +20,7 @@ import { getMemoryGamePackForTopic } from "./memory-game-content.js?v=auditstep5
 import { getMemoryReviewPackForTopic } from "./memory-review-content.js";
 import { createClassWizSupportPanel } from "./classwiz-support-panel.js?v=auditstep16final";
 import { hasClassWizSupport } from "./classwiz-support-data.js?v=auditstep16final";
-import { createBasicsUnderstandExperience } from "./basics-understand.js?v=auditstep6";
+import { createBasicsUnderstandExperience } from "./basics-understand.js?v=auditstep7";
 import { createPreCalculusUnderstandExperience } from "./pre-calculus-understand.js?v=auditstep2";
 import { preCalculusLearningModes } from "./pre-calculus-activities.js?v=auditstep2";
 import { createFirstPrinciplesUnderstandExperience } from "./first-principles-understand.js?v=auditstep6";
@@ -328,7 +328,18 @@ const integrationMethodMapSurface=createIntegrationMethodMapSurface({
   triggerHost:stage.querySelector('.activity-stage__tools'),
   onNavigate:navigateToActivityTarget
 });
-const basicsUnderstand = createBasicsUnderstandExperience(customUnderstandHost, { sidebarHost: activityCopy });
+const basicsUnderstand = createBasicsUnderstandExperience(customUnderstandHost, {
+  sidebarHost: activityCopy,
+  renderVocabulary(container, segments) {
+    const activity = currentActivities()[activityIndex];
+    return renderVocabularyRichText(container, segments, {
+      store: vocabularyStore,
+      context: currentActivityContext(activity),
+      onOpenWordBank: (termId, returnFocus) => openWordBank(termId, returnFocus),
+      onEncountered: syncWordBankCount
+    });
+  }
+});
 const preCalculusUnderstand = createPreCalculusUnderstandExperience(customUnderstandHost);
 const firstPrinciplesUnderstand = createFirstPrinciplesUnderstandExperience(customUnderstandHost);
 const tangentsNormalsUnderstand = createTangentsNormalsUnderstandExperience(customUnderstandHost);

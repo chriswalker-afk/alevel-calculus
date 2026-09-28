@@ -37,5 +37,10 @@ assert(source.includes('sidebarHost'),'Basics Understand must support moving tan
 assert(shellSource.includes('sidebarHost: activityCopy'),'AppShell must provide the left activity-copy column to Basics Understand.');
 assert(cssSource.includes('.basics-understand__gradient-popin') && cssSource.includes('position:absolute'),'The gradient pop-in must overlay the graph rather than consume a separate row.');
 assert(cssSource.includes('curve_tangent_gradient') && cssSource.includes('.linked-gradient-explorer__controls { display:none; }'),'The tangent activity should remove the redundant explorer toolbar from the graph area.');
+assert(source.includes("data-math-display"),'Derivative-notation equivalences must opt into the shared mathematics renderer.');
+assert(source.includes('Newton and Leibniz developed calculus independently'),'Derivative notation should include the planned Newton–Leibniz historical explanation.');
+assert(source.includes("vocab:d-dx-operator") && source.includes("renderVocabulary"),'Operator notation must be wired into the shared Word Bank renderer.');
+assert(source.includes("vocab:f-prime-notation") && source.includes("vocab:dy-dx-notation"),'All three derivative notation families should connect to canonical vocabulary terms.');
+assert(cssSource.includes('basics-understand__notation-story'),'The notation history anecdote needs a compact single-screen presentation.');
 
 console.log('PASS Basics Understand eight-state reference journey and linked polynomial contract');
