@@ -392,7 +392,12 @@ assert 'progressStore.recordAttempt' in js, "QuestionShell attempts should repor
 assert 'questionShell.loadSet' in js and 'questionShell.hide' in js
 assert 'fields.position.hidden = assessmentMode' in js, "AO modes should suppress the redundant activity-position counter"
 assert 'activityControls.hidden = assessmentMode' in js, "AO modes should suppress the page-level activity footer"
+assert 'html[data-learning-mode="ao1"] .activity-controls' in css, "AO footer suppression must also be structural in CSS"
 assert 'data-question-shell-progress' not in html, "Question progress should appear once in the AO question shell"
+assert 'data-workspace-tools-toggle' in html and 'data-workspace-tools-content' in html, "Workspace tools should expose a shared collapse control"
+assert 'workspaceToolsCollapsedByMode' in js and 'syncWorkspaceTools' in js, "Workspace tool state should persist while moving through a mode"
+assert 'mode === "ao1" || mode === "ao2" || mode === "ao3"' in js, "AO modes should default to collapsed Workspace tools"
+assert 'data-workspace-tools-collapsed' in js, "The activity stage should expose collapsed Workspace tools state for layout CSS"
 assert 'questionShellSampleSet' not in activities, "Step 15 sample-set pointer must not survive as a competing question schema"
 assert 'defineQuestionDefinition' in question_definition and 'getQuestionDefinitionMetadata' in question_definition
 assert 'templateId' in question_definition and 'courseScope' in question_definition and 'assessmentObjective' in question_definition
@@ -503,7 +508,7 @@ assert 'progressStore.markVisited' in js, "Activity visits should pass through s
 assert 'localStateStore.subscribe' in js and 'localStateStore.importData' in js and 'localStateStore.reset' in js
 assert 'createVocabularyStore({ localStateStore })' in app_state, "VocabularyStore must now use the shared versioned state layer"
 activity_ids = re.findall(r'activityId:\s*["\']([^"\']+)["\']', activities)
-assert len(activity_ids) >= 25, "Step 34 should preserve prior activities and add the three missing canonical Memorise activities"
+assert len(activity_ids) >= 24, "The Basics reference topic should preserve its current canonical activities after removing the redundant backstory page"
 assert len(activity_ids) == len(set(activity_ids)), "Every current activity must have a unique stable ID for persistence"
 for required_memorise_id in [
     "activity:y12:differentiation:basics:memorise:special-cases",

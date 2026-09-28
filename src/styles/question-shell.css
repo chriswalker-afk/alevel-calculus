@@ -1705,3 +1705,35 @@
   line-height: var(--leading-relaxed);
 }
 
+
+
+/* Manual audit correction 2026-09-28: guarantee the compact AO workspace rules win. */
+.question-math-entry__keys--extra[hidden] {
+  display: none !important;
+}
+
+.question-shell__footer {
+  min-height: 48px;
+}
+
+@media (min-width: 681px) {
+  .question-shell[data-question-response-type="algebraic"] .question-shell__body {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.08fr) minmax(330px, 0.92fr) !important;
+    align-items: stretch;
+    min-height: 0;
+  }
+
+  .question-shell[data-question-response-type="algebraic"] .question-shell__prompt,
+  .question-shell[data-question-response-type="algebraic"] .question-shell__response {
+    min-height: 0;
+  }
+
+  .question-shell[data-question-response-type="algebraic"] .question-math-entry__toolbar-wrap {
+    align-content: start;
+  }
+
+  .question-shell[data-question-response-type="algebraic"] .question-math-entry__keys--primary {
+    flex-wrap: wrap;
+  }
+}

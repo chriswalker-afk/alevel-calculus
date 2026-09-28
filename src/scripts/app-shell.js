@@ -9,7 +9,7 @@ import { APP_STATE_SCHEMA_VERSION } from "./local-state-store.js";
 import { activityRouteFromId, createHistoryRouteController } from "./navigation-route.js";
 import { renderVocabularyRichText } from "./vocabulary-term.js?v=memorymath1";
 import { buildWordBankEntries, filterWordBankEntries } from "./word-bank-model.js?v=memorymath1";
-import { createQuestionShell } from "./question-shell.js?v=aolayout1";
+import { createQuestionShell } from "./question-shell.js?v=aolayout2";
 import { getQuestionPracticeDefinitionForActivity } from "./question-catalogue.js?v=integralfix1";
 import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner.js?v=questionfix1";
 import { createQuestionPracticeSession } from "./question-practice-session.js";
@@ -130,6 +130,11 @@ const memoryLabElement = document.querySelector("[data-memory-lab]");
 const previousButton = document.querySelector("[data-previous-activity]");
 const nextButton = document.querySelector("[data-next-activity]");
 const activityControls = document.querySelector("[data-activity-controls]");
+const workspaceToolsBar = document.querySelector("[data-workspace-tools-bar]");
+const workspaceToolsContent = document.querySelector("[data-workspace-tools-content]");
+const workspaceToolsToggle = document.querySelector("[data-workspace-tools-toggle]");
+const workspaceToolsToggleLabel = document.querySelector("[data-workspace-tools-toggle-label]");
+const workspaceToolsToggleIcon = document.querySelector("[data-workspace-tools-toggle-icon]");
 const footerPosition = document.querySelector("[data-footer-position]");
 const classWizPanelElement = document.querySelector("[data-classwiz-panel]");
 const classWizTrigger = document.querySelector("[data-classwiz-trigger]");
@@ -213,6 +218,12 @@ const required = [
   memoryLabElement,
   previousButton,
   nextButton,
+  activityControls,
+  workspaceToolsBar,
+  workspaceToolsContent,
+  workspaceToolsToggle,
+  workspaceToolsToggleLabel,
+  workspaceToolsToggleIcon,
   footerPosition,
   classWizPanelElement,
   classWizTrigger,
@@ -300,6 +311,9 @@ const fields = Object.freeze({
 let activeMode = learningModeOrder.includes(root.dataset.learningMode)
   ? root.dataset.learningMode
   : "understand";
+const workspaceToolsCollapsedByMode = new Map(
+  learningModeOrder.map((mode) => [mode, mode === "ao1" || mode === "ao2" || mode === "ao3"])
+);
 let activityIndex = 0;
 let navigationOpen = false;
 let classWizOpen = false;
@@ -312,6 +326,25 @@ let pendingImport = null;
 let dataDialogReturnFocus = null;
 let currentTopicId = "topic:y12:differentiation:basics";
 let currentTopicLabel = "Basics of differentiation";
+
+function syncWorkspaceTools() {
+  const collapsed = Boolean(workspaceToolsCollapsedByMode.get(activeMode));
+  stage.dataset.workspaceToolsCollapsed = collapsed ? "true" : "false";
+  workspaceToolsBar.dataset.collapsed = collapsed ? "true" : "false";
+  workspaceToolsContent.hidden = collapsed;
+  workspaceToolsToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
+  workspaceToolsToggleLabel.textContent = collapsed ? "Tools" : "Hide tools";
+  workspaceToolsToggleIcon.textContent = collapsed ? "⌄" : "⌃";
+  workspaceToolsToggle.setAttribute(
+    "aria-label",
+    collapsed ? "Show workspace tools" : "Hide workspace tools"
+  );
+}
+
+function setWorkspaceToolsCollapsed(collapsed) {
+  workspaceToolsCollapsedByMode.set(activeMode, Boolean(collapsed));
+  syncWorkspaceTools();
+}
 const classWizSupportPanel = createClassWizSupportPanel({ element: classWizPanelElement, topicId: "topic:y12:differentiation:basics" });
 if (!classWizSupportPanel) throw new Error("No ClassWiz support pack exists for the Basics reference topic");
 function navigateToActivityTarget(target){
@@ -1644,6 +1677,7 @@ export function renderActivity(index) {
   const position = `${activityIndex + 1} of ${activities.length}`;
 
   const assessmentMode = activeMode === "ao1" || activeMode === "ao2" || activeMode === "ao3";
+  syncWorkspaceTools();
   fields.kicker.textContent = activity.kicker;
   fields.position.textContent = position;
   fields.position.hidden = assessmentMode;
@@ -1792,6 +1826,10 @@ for (const item of topicProgressItems) {
     if (topicRuntime[item.dataset.topicId]) selectTopic(item.dataset.topicId);
   });
 }
+
+workspaceToolsToggle.addEventListener("click", () => {
+  setWorkspaceToolsCollapsed(workspaceToolsToggle.getAttribute("aria-expanded") === "true");
+});
 
 for (const tab of modeTabs) {
   tab.addEventListener("click", () => selectMode(tab.dataset.modeTab));

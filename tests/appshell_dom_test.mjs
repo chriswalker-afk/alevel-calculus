@@ -230,6 +230,13 @@ questionShellElement.collections.set('[data-question-shell-option]', questionOpt
 questionShellElement.hidden = true;
 const previousButton = new FakeElement('previous');
 const nextButton = new FakeElement('next');
+const activityControls = new FakeElement('activityControls');
+const workspaceToolsBar = new FakeElement('workspaceToolsBar');
+const workspaceToolsContent = new FakeElement('workspaceToolsContent');
+const workspaceToolsToggle = new FakeElement('workspaceToolsToggle');
+workspaceToolsToggle.setAttribute('aria-expanded', 'true');
+const workspaceToolsToggleLabel = new FakeElement('workspaceToolsToggleLabel');
+const workspaceToolsToggleIcon = new FakeElement('workspaceToolsToggleIcon');
 const footerPosition = new FakeElement('footerPosition');
 const classWizPanel = new FakeElement('classWizPanel');
 classWizPanel.setAttribute('aria-hidden', 'true');
@@ -400,7 +407,7 @@ const fieldSelectors = [
   '[data-activity-caption]'
 ];
 for (const selector of fieldSelectors) stage.children.set(selector, new FakeElement(selector));
-stage.children.set('.activity-stage__tools', new FakeElement('activityStageTools'));
+stage.children.set('.activity-stage__tools', workspaceToolsContent);
 
 const documentMap = new Map([
   ['[data-app-shell]', shell],
@@ -419,6 +426,12 @@ const documentMap = new Map([
   ['[data-memory-lab]', memoryLabElement],
   ['[data-previous-activity]', previousButton],
   ['[data-next-activity]', nextButton],
+  ['[data-activity-controls]', activityControls],
+  ['[data-workspace-tools-bar]', workspaceToolsBar],
+  ['[data-workspace-tools-content]', workspaceToolsContent],
+  ['[data-workspace-tools-toggle]', workspaceToolsToggle],
+  ['[data-workspace-tools-toggle-label]', workspaceToolsToggleLabel],
+  ['[data-workspace-tools-toggle-icon]', workspaceToolsToggleIcon],
   ['[data-footer-position]', footerPosition],
   ['[data-classwiz-panel]', classWizPanel],
   ['[data-classwiz-trigger]', classWizTrigger],
@@ -556,6 +569,9 @@ assert(shell.dataset.activityIndex === '0', 'Initial activity index should be 0'
 assert(title.textContent === 'Goals for Basics of differentiation', 'Understand should open on its dedicated Topic goals page');
 assert(customUnderstandHost.hidden === true, 'Topic goals should keep the dedicated custom visual host hidden');
 assert(stage.scrollTop === 0, 'Initial render should reset only the activity-stage scroll position');
+assert(stage.dataset.workspaceToolsCollapsed === 'false', 'Understand should open with Workspace tools expanded.');
+assert(workspaceToolsContent.hidden === false, 'Understand should keep utility buttons visible by default.');
+assert(workspaceToolsToggle.getAttribute('aria-expanded') === 'true', 'Workspace tools toggle should report expanded in Understand.');
 
 const preCalcClick = listeners.get('topicPreCalculus:click');
 assert(typeof preCalcClick === 'function', 'Implemented Pre-calculus navigation needs a click handler');
@@ -578,6 +594,15 @@ assert(classWizTrigger.hidden === false, 'Basics ClassWiz support must remain av
 assert(modeTabs[0].getAttribute('aria-selected') === 'true', 'Understand tab should initialize selected');
 assert(modeTabs[1].getAttribute('tabindex') === '-1', 'Inactive tabs should leave the tab order');
 assert(modePanel.getAttribute('aria-labelledby') === 'mode-tab-understand', 'Mode panel should be labelled by the active tab');
+const ao1TabClick = listeners.get('mode-ao1:click');
+assert(typeof ao1TabClick === 'function', 'AO1 mode needs a click handler.');
+ao1TabClick();
+assert(stage.dataset.workspaceToolsCollapsed === 'true', 'AO1 should default to a collapsed Workspace tools strip.');
+assert(workspaceToolsContent.hidden === true, 'AO1 should hide utility buttons until Tools is expanded.');
+assert(activityControls.hidden === true, 'AO1 should hide the page-level Activity footer.');
+listeners.get('workspaceToolsToggle:click')?.();
+assert(stage.dataset.workspaceToolsCollapsed === 'false' && workspaceToolsContent.hidden === false, 'Workspace tools toggle should expand AO tools on demand.');
+listeners.get('mode-understand:click')?.();
 assert(shell.dataset.navigationOpen === 'false', 'Compact navigation should initialize closed');
 assert(topicNavigation.getAttribute('aria-hidden') === 'true', 'Closed compact navigation should be hidden from accessibility tree');
 assert(navigationScrim.hidden === true, 'Navigation scrim should initialize hidden');

@@ -6,9 +6,9 @@
   <meta name="description" content="Interactive calculus learning site for Pearson Edexcel 8MA0 / 9MA0.">
   <title>Calculus | Learning workspace</title>
   <link rel="stylesheet" href="/alevel-calculus/styles/tokens.css">
-  <link rel="stylesheet" href="/alevel-calculus/styles/app-shell.css?v=interactionfix1">
+  <link rel="stylesheet" href="/alevel-calculus/styles/app-shell.css?v=workspacetools1">
   <link rel="stylesheet" href="/alevel-calculus/styles/landing-page.css?v=landing3">
-  <link rel="stylesheet" href="/alevel-calculus/styles/question-shell.css?v=aolayout1">
+  <link rel="stylesheet" href="/alevel-calculus/styles/question-shell.css?v=aolayout2">
   <link rel="stylesheet" href="/alevel-calculus/styles/math-renderer.css?v=memorymath2">
   <link rel="stylesheet" href="/alevel-calculus/styles/memory-lab.css?v=mathnotation1">
   <link rel="stylesheet" href="/alevel-calculus/styles/diagram-primitives.css?v=diagramfix3">
@@ -873,9 +873,12 @@
 
         <section class="activity-frame" id="learning-mode-panel" role="tabpanel" aria-labelledby="mode-tab-understand" aria-live="polite" aria-atomic="false" data-mode-panel>
           <div class="activity-stage" data-activity-stage>
-            <div class="activity-stage__header">
-              <span class="activity-chip" data-activity-kicker>Understand</span>
-              <div class="activity-stage__tools">
+            <div class="activity-stage__header" data-workspace-tools-bar>
+              <div class="workspace-tools__identity">
+                <span class="activity-chip" data-activity-kicker>Understand</span>
+                <span class="activity-position" data-activity-position>1 of 3</span>
+              </div>
+              <div class="activity-stage__tools" id="workspace-tools-content" data-workspace-tools-content>
                 <button
                   class="classwiz-support-button"
                   type="button"
@@ -919,8 +922,17 @@
                   <span class="activity-help-button__icon" aria-hidden="true">?</span>
                   <span>Need a reminder?</span>
                 </button>
-                <span class="activity-position" data-activity-position>1 of 3</span>
               </div>
+              <button
+                class="workspace-tools-toggle"
+                type="button"
+                aria-controls="workspace-tools-content"
+                aria-expanded="true"
+                data-workspace-tools-toggle
+              >
+                <span data-workspace-tools-toggle-label>Hide tools</span>
+                <span class="workspace-tools-toggle__icon" aria-hidden="true" data-workspace-tools-toggle-icon>⌃</span>
+              </button>
             </div>
             <div class="activity-stage__content" data-standard-activity-content>
               <section class="topic-objectives-card topic-objectives-card--inline" data-topic-objectives-inline hidden>
@@ -1824,6 +1836,6 @@
   </dialog>
 
   <noscript>This site needs JavaScript to switch learning modes and activities and to open the topic, help and Word Bank drawers.</noscript>
-  <script type="module" src="/alevel-calculus/scripts/app-shell.js?v=landing16"></script>
+  <script type="module" src="/alevel-calculus/scripts/app-shell.js?v=landing17"></script>
 </body>
 </html>
