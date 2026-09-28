@@ -87,6 +87,7 @@ import { fullCalculusMasteryModel } from "./full-calculus-mastery-model.js";
 import { getFullDifferentiationReviewMicroSkillLabel } from "./full-differentiation-review-model.js";
 import { getTopicObjectiveConfig } from "./topic-objectives-data.js?v=auditstep15";
 import { createIntegrationMethodMapSurface } from "./integration-method-map-surface.js?v=auditstep14";
+import { applyViewportDensity, readViewportMetrics } from "./viewport-density.js?v=density1";
 
 const root = document.documentElement;
 const shell = document.querySelector("[data-app-shell]");
@@ -311,9 +312,14 @@ const fields = Object.freeze({
 let activeMode = learningModeOrder.includes(root.dataset.learningMode)
   ? root.dataset.learningMode
   : "understand";
+function defaultWorkspaceToolsCollapsed(mode) {
+  return mode === "ao1" || mode === "ao2" || mode === "ao3" || root.dataset.uiDensity === "tight";
+}
+
 const workspaceToolsCollapsedByMode = new Map(
-  learningModeOrder.map((mode) => [mode, mode === "ao1" || mode === "ao2" || mode === "ao3"])
+  learningModeOrder.map((mode) => [mode, defaultWorkspaceToolsCollapsed(mode)])
 );
+const workspaceToolsPreferenceLocked = new Set();
 let activityIndex = 0;
 let navigationOpen = false;
 let classWizOpen = false;
@@ -341,8 +347,9 @@ function syncWorkspaceTools() {
   );
 }
 
-function setWorkspaceToolsCollapsed(collapsed) {
+function setWorkspaceToolsCollapsed(collapsed, { remember = false } = {}) {
   workspaceToolsCollapsedByMode.set(activeMode, Boolean(collapsed));
+  if (remember) workspaceToolsPreferenceLocked.add(activeMode);
   syncWorkspaceTools();
 }
 const classWizSupportPanel = createClassWizSupportPanel({ element: classWizPanelElement, topicId: "topic:y12:differentiation:basics" });
@@ -1506,6 +1513,17 @@ function syncNavigationForViewport() {
   closeTopicNavigation({ restoreFocus: false });
 }
 
+function syncViewportDensity() {
+  const density = applyViewportDensity(root, readViewportMetrics(window, root));
+  for (const mode of learningModeOrder) {
+    if (!workspaceToolsPreferenceLocked.has(mode)) {
+      workspaceToolsCollapsedByMode.set(mode, defaultWorkspaceToolsCollapsed(mode));
+    }
+  }
+  syncWorkspaceTools();
+  return density;
+}
+
 function syncCurrentTopicChrome() {
   const runtime = currentTopicRuntime();
   currentTopicLabel = runtime.label;
@@ -1828,7 +1846,7 @@ for (const item of topicProgressItems) {
 }
 
 workspaceToolsToggle.addEventListener("click", () => {
-  setWorkspaceToolsCollapsed(workspaceToolsToggle.getAttribute("aria-expanded") === "true");
+  setWorkspaceToolsCollapsed(workspaceToolsToggle.getAttribute("aria-expanded") === "true", { remember: true });
 });
 
 for (const tab of modeTabs) {
@@ -1988,6 +2006,10 @@ if (typeof compactNavigationMedia.addEventListener === "function") {
   compactNavigationMedia.addListener(syncNavigationForViewport);
 }
 
+window.addEventListener?.("resize", syncViewportDensity, { passive: true });
+window.visualViewport?.addEventListener?.("resize", syncViewportDensity, { passive: true });
+window.addEventListener?.("orientationchange", syncViewportDensity);
+
 window.addEventListener?.("popstate", () => {
   if (isLandingPath(browserLocation.pathname)) {
     showLanding({ focus: true });
@@ -2008,6 +2030,7 @@ if (initialBrowserRoute) {
   root.dataset.learningMode = activeMode;
 }
 
+syncViewportDensity();
 syncScopeBadges();
 syncTopicProgress();
 syncHelpTargets();
