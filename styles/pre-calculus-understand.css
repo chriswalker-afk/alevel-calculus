@@ -4,8 +4,10 @@
 .pre-calculus-understand__panel-header h3 { margin:0; font-size:var(--text-lg); }
 .pre-calculus-understand__eyebrow { color:var(--mode-soft-text); font-size:var(--text-xs); font-weight:var(--weight-bold); letter-spacing:.04em; text-transform:uppercase; }
 .pre-calculus-understand__panel-body { min-height:0; display:grid; gap:var(--space-3); align-content:start; overflow:auto; padding-right:2px; }
-.pre-calculus-understand__graph-host { min-height:300px; }
-.pre-calculus-understand__car { font-size:30px; dominant-baseline:middle; pointer-events:none; }
+.pre-calculus-understand__graph-host { min-height:300px; position:relative; }
+.pre-calculus-understand__car { font-size:30px; dominant-baseline:middle; pointer-events:none; transform-box:fill-box; transform-origin:center; transform:scaleX(-1); }
+.pre-calculus-understand__journey-note { position:absolute; z-index:4; top:var(--space-3); right:var(--space-3); width:min(330px,calc(100% - 2 * var(--space-3))); padding:var(--space-3); border:2px solid var(--mode-accent); border-radius:var(--radius-lg); background:var(--surface-base); color:var(--text-primary); font-weight:var(--weight-semibold); line-height:var(--leading-normal); box-shadow:0 8px 24px rgba(0,0,0,.12); }
+.pre-calculus-understand__journey-note[hidden] { display:none; }
 .pre-calculus-understand__sign-line { cursor:pointer; transition:stroke-width .16s ease, opacity .16s ease, filter .16s ease; }
 .pre-calculus-understand__sign-line:hover,.pre-calculus-understand__sign-line:focus-visible { stroke-width:5; }
 .pre-calculus-understand__sign-line:focus-visible { outline:none; filter:drop-shadow(0 0 3px var(--focus-ring)); }
