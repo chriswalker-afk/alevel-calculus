@@ -294,7 +294,7 @@ export class PreCalculusUnderstandExperience {
     const line = diagram.line({ x1: -4, y1: -2, x2: 4, y2: 2, tone: 'curve' });
     const slider = diagram.slider({
       label: 'Gradient', min: -2.5, max: 2.5, step: 0.1, value: 0.5,
-      format: (m) => `m = ${format(m, 1)}`,
+      format: (m) => `gradient = ${format(m, 1)}`,
       onInput: (m) => {
         line.setCoordinates({ x1: -2, y1: -2 * m, x2: 2, y2: 2 * m });
         if (Math.abs(m) < 0.05) status.textContent = 'Gradient = 0: horizontal.';
@@ -350,12 +350,12 @@ export class PreCalculusUnderstandExperience {
         line.setCoordinates({ x1: -dx, y1: -dx * slope, x2: dx, y2: dx * slope });
         if (Math.abs(angle) >= 85) {
           const side = slope > 0 ? 'positive-gradient' : 'negative-gradient';
-          const tendency = slope > 0 ? 'm → +∞' : 'm → −∞';
-          status.textContent = `Near vertical from the ${side} side: m ≈ ${format(slope, 1)}. As the line gets closer to vertical, ${tendency}; |m| grows without bound.`;
+          const direction = slope > 0 ? 'larger and larger' : 'more and more negative';
+          status.textContent = `Near vertical from the ${side} side: gradient ≈ ${format(slope, 1)}. As the line gets closer to vertical, the gradient becomes ${direction}; its magnitude grows without bound.`;
         } else if (Math.abs(angle) < 0.5) {
-          status.textContent = 'Horizontal: m = 0.';
+          status.textContent = 'Horizontal: gradient = 0.';
         } else {
-          status.textContent = `At ${angle}°, gradient ≈ ${format(slope, 2)}. Moving closer to vertical makes |m| larger.`;
+          status.textContent = `At ${angle}°, gradient ≈ ${format(slope, 2)}. Moving closer to vertical makes the gradient magnitude larger.`;
         }
       }
     });
@@ -367,45 +367,53 @@ export class PreCalculusUnderstandExperience {
     );
     controls.append(slider.element, presets);
     body.append(
-      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Approaching vertical from one side gives m → +∞; from the other gives m → −∞. This means the gradient is unbounded — it does not mean a vertical line has gradient “infinity”.'),
-      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Exactly vertical: Δx = 0, so Δy / Δx would divide by zero. The gradient is undefined.')
+      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Approaching vertical from the positive-gradient side makes the gradient increase without bound; from the negative-gradient side it becomes more and more negative. This does not mean a vertical line has gradient “infinity”.'),
+      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Exactly vertical, there is vertical change but no horizontal change. Finding a gradient would require dividing by zero, so the gradient is undefined.')
     );
   }
 
   render_delta_meaning() {
-    const body = this.#panel('What does Δ mean?', '6 · From an idea to a formula');
+    const body = this.#panel('From “change in” to Δ', '6 · Introduce the straight-line formula');
+
     body.append(
-      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'The symbol Δ (capital Greek delta) means “change in”. So Δx means the change in x, and Δy means the change in y.')
+      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'So far we have described gradient using words: vertical change for each unit of horizontal change. Now we can introduce the notation used for this idea.')
     );
 
     const { diagram } = this.#graph(body, { xDomain: [0, 7], yDomain: [0, 6], ariaLabel: 'A straight line showing horizontal and vertical changes between two points' });
     const p = { x: 1, y: 1 };
     const q = { x: 5, y: 3 };
     diagram.line({ x1: 0.4, y1: 0.7, x2: 6.6, y2: 3.8, tone: 'curve' });
-    diagram.point({ ...p, label: 'P' });
-    diagram.point({ ...q, label: 'Q', tone: 'interactive' });
+    diagram.point({ ...p, label: 'P (1, 1)' });
+    diagram.point({ ...q, label: 'Q (5, 3)', tone: 'interactive' });
     diagram.line({ x1: p.x, y1: p.y, x2: q.x, y2: p.y, tone: 'accent', dashed: true });
     diagram.line({ x1: q.x, y1: p.y, x2: q.x, y2: q.y, tone: 'tangent', dashed: true });
-    diagram.label({ x: 3, y: 1, text: 'Δx = change in x = 4', dy: 24, tone: 'accent' });
-    diagram.label({ x: 5, y: 2, text: 'Δy = change in y = 2', dx: 18, anchor: 'start', tone: 'tangent' });
+    diagram.label({ x: 3, y: 1, text: 'change in x = 5 − 1 = 4', dy: 24, tone: 'accent' });
+    diagram.label({ x: 5, y: 2, text: 'change in y = 3 − 1 = 2', dx: 18, anchor: 'start', tone: 'tangent' });
+
+    body.append(
+      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'The symbol Δ is the capital Greek letter delta. In mathematics it is often used to mean “change in”. Therefore Δx means “change in x” and Δy means “change in y”.')
+    );
 
     const formula = el(this.document, 'div', 'pre-calculus-understand__formula-card');
     formula.append(
-      el(this.document, 'div', 'pre-calculus-understand__formula-main', 'gradient = Δy ÷ Δx'),
-      el(this.document, 'div', 'pre-calculus-understand__formula-words', 'vertical change ÷ horizontal change'),
-      el(this.document, 'div', 'pre-calculus-understand__formula-example', 'Here: gradient = 2 ÷ 4 = 0.5')
+      el(this.document, 'div', 'pre-calculus-understand__formula-words', 'For a first point (x₁, y₁) and a second point (x₂, y₂):'),
+      el(this.document, 'div', 'pre-calculus-understand__formula-example', 'Δx = x₂ − x₁     and     Δy = y₂ − y₁'),
+      el(this.document, 'div', 'pre-calculus-understand__formula-main', 'gradient of a straight line = Δy ÷ Δx'),
+      el(this.document, 'div', 'pre-calculus-understand__formula-words', 'so gradient = (y₂ − y₁) ÷ (x₂ − x₁)'),
+      el(this.document, 'div', 'pre-calculus-understand__formula-example', 'For P and Q above: gradient = 2 ÷ 4 = 0.5')
     );
     body.append(formula);
+
     body.append(
-      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'This is the formal version of the idea from earlier: how much vertical change there is for each unit of horizontal change.')
+      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'The formula is just a shorter, formal way to express the idea you already know: vertical change divided by horizontal change.')
     );
   }
 
   render_delta_change() {
-    const body = this.#panel('Test the formula at different points', '7 · Same line, same gradient');
+    const body = this.#panel('Show that the formula works', '7 · Same straight line, same gradient');
     const controls = el(this.document, 'div', 'pre-calculus-understand__action-row');
     body.append(controls);
-    const status = this.#status(body, 'Start with P and Q: Δx = 4 and Δy = 2, so gradient = Δy ÷ Δx = 0.5.');
+    const status = this.#status(body, 'Use the formula from the previous activity: Δx = 4 and Δy = 2, so the gradient is 0.5.');
     const { diagram } = this.#graph(body, { xDomain: [-1, 7], yDomain: [-1, 6], ariaLabel: 'A straight line with horizontal and vertical change triangle' });
     const p = { x: 1, y: 1 };
     const q = { x: 5, y: 3 };
@@ -430,7 +438,7 @@ export class PreCalculusUnderstandExperience {
       }
     });
     controls.append(slider.element);
-    body.append(el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Move Q to test the formula. The horizontal and vertical changes alter, but their ratio stays constant: a straight line has the same gradient at every point.'));
+    body.append(el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Move Q and apply the formula again. The values of Δx and Δy change, but Δy ÷ Δx stays equal to 0.5. This shows that the formula works and that a straight line has the same gradient at all points.'));
     void line;
   }
 
