@@ -443,7 +443,7 @@ export class PreCalculusUnderstandExperience {
   }
 
   render_delta_change() {
-    const body = this.#panel('Show that the formula works', '7 · Same straight line, same gradient');
+    const body = this.#panel('Show that the formula works', '8 · Same straight line, same gradient');
     const controls = el(this.document, 'div', 'pre-calculus-understand__action-row');
     body.append(controls);
     const status = this.#status(body, 'Use the formula from the previous activity: Δx = 4 and Δy = 2, so the gradient is 0.5.');
@@ -476,7 +476,7 @@ export class PreCalculusUnderstandExperience {
   }
 
   render_curve_question() {
-    const body = this.#panel('Straight line: one gradient. Curve: now what?', '8 · Transition to differentiation');
+    const body = this.#panel('Straight line: one gradient. Curve: now what?', '9 · Transition to differentiation');
     const { diagram } = this.#graph(body, { yDomain: [-4, 4], ariaLabel: 'A straight line compared with a curved graph' });
     diagram.line({ x1: -4, y1: -2.4, x2: 4, y2: 2.4, tone: 'secondary', dashed: true });
     const xs = Array.from({ length: 161 }, (_, i) => -4 + i * 8 / 160);
