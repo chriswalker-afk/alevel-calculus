@@ -8,8 +8,8 @@ import {
   nextHintRevealCount
 } from "./hint-sequence.js";
 import { createWorkedSolutionRenderer } from "./worked-solution-renderer.js?v=ao3math1";
-import { createMathEntryEnhancement, createReasoningMathPreview, createSelfReviewPanel, deriveSelfReviewCriteria, isAo3SelfReviewQuestion } from "./question-response-enhancements.js?v=questionfix1";
-import { renderMathElement } from "./math-renderer.js?v=integrationmath1";
+import { createMathEntryEnhancement, createReasoningMathPreview, createSelfReviewPanel, deriveSelfReviewCriteria, isAo3SelfReviewQuestion } from "./question-response-enhancements.js?v=memorymath1";
+import { renderMathElement } from "./math-renderer.js?v=memorymath1";
 
 export const questionResponseTypes = Object.freeze([
   "numeric",

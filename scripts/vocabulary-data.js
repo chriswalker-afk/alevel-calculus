@@ -63,7 +63,7 @@ export const vocabularyTerms = Object.freeze({
   }),
   "vocab:point-slope-form": Object.freeze({
     id: "vocab:point-slope-form", label: "point-slope form", scopeId: "y12",
-    definition: "A form of a straight-line equation using a known point and gradient.", notation: "y − y_1 = m(x − x_1)", relatedTopics: Object.freeze(["Tangents & normals"])
+    definition: "A form of a straight-line equation using a known point and gradient, where m denotes the gradient.", notation: "y − y_1 = m(x − x_1)", relatedTopics: Object.freeze(["Tangents & normals"])
   }),
   "vocab:coefficient": Object.freeze({
     id: "vocab:coefficient",
@@ -96,7 +96,7 @@ export const vocabularyTerms = Object.freeze({
     id: "vocab:gradient",
     label: "gradient",
     scopeId: "y12",
-    definition: "A measure of steepness and direction; for a curve at a point it is the gradient of the tangent there.",
+    definition: "A measure of steepness and direction. The letter m is commonly used to represent gradient; for a curve at a point, use the gradient of the tangent at that point.",
     notation: "m = Δy/Δx",
     relatedTopics: Object.freeze(["Pre-Calculus introduction", "Basics of differentiation", "Tangents & normals"])
   }),

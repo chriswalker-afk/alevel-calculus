@@ -1,4 +1,4 @@
-import { getVocabularyTerm } from "./vocabulary-data.js";
+import { getVocabularyTerm } from "./vocabulary-data.js?v=memorymath1";
 
 let popoverSequence = 0;
 let outsideDismissBound = false;

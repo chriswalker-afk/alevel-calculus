@@ -31,6 +31,8 @@ assert.equal(basicsDifferentiationFactItems.find((item)=>item.id.endsWith(":a-ov
 assert.equal(basicsDifferentiationFactItems.find((item)=>item.id.endsWith(":a-root-x")).flashcard.back,"a/(2√x)","Square-root derivatives must be directly retrievable.");
 assert.equal(basicsDifferentiationFactItems.find((item)=>item.id.endsWith(":a-over-root-x")).flashcard.back,"−a/(2x³ᐟ²)","Reciprocal-root derivatives must be directly retrievable.");
 
+assert.match(getVocabularyTerm("vocab:gradient")?.definition ?? "", /letter m is commonly used to represent gradient/i, "Gradient vocabulary must explicitly define m before Memory Lab uses it.");
+
 const deck = buildFlashcardDeck(basicsDifferentiationMemoryItems);
 for (const item of basicsDifferentiationFactItems) {
   assert(deck.some((card) => card.itemId === item.id), `${item.id} must be retrievable as a flashcard`);

@@ -1,4 +1,4 @@
-import { getVocabularyTerm } from "./vocabulary-data.js";
+import { getVocabularyTerm } from "./vocabulary-data.js?v=memorymath1";
 
 export const wordBankFilters = Object.freeze([
   Object.freeze({ id: "all", label: "All" }),

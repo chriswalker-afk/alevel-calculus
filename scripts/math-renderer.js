@@ -4,6 +4,9 @@ const FUNCTION_PATTERN = "(?:sin|cos|tan|sec|cosec|cot|ln|log|exp)";
 const SCRIPT_SUFFIX_PATTERN = "(?:[_^](?:\\([^)]{1,60}\\)|-?\\d+|[A-Za-z]+))*";
 const FUNCTION_CALL_PATTERN = `${FUNCTION_PATTERN}\\([^()\\n]{1,80}\\)${SCRIPT_SUFFIX_PATTERN}`;
 const ROOT_PATTERN = `√(?:\\([^()\\n]{1,100}\\)|[A-Za-zπ\\d]+(?:[${SUPERSCRIPT_CHARACTERS}]+)?)${SCRIPT_SUFFIX_PATTERN}`;
+const ROOT_RENDER_PATTERN = /√(?:\(([^()\n]{1,160})\)|([A-Za-zπ\d]+(?:[⁰¹²³⁴⁵⁶⁷⁸⁹]+)?))/g;
+const OPEN_DELIMITERS = Object.freeze({ "(": ")", "[": "]" });
+const CLOSE_DELIMITERS = Object.freeze(new Set(Object.values(OPEN_DELIMITERS)));
 const SIMPLE_MATH_ATOM_PATTERN = `(?:\\d+(?:\\.\\d+)?${SCRIPT_SUFFIX_PATTERN}|(?:Δ[A-Za-z]|[A-Za-zπ])(?:[′']{1,2})?(?:[${SUPERSCRIPT_CHARACTERS}]+)?${SCRIPT_SUFFIX_PATTERN}|${FUNCTION_CALL_PATTERN}|${FUNCTION_PATTERN}[${SUPERSCRIPT_CHARACTERS}]*\\s*[A-Za-zπ](?:[${SUPERSCRIPT_CHARACTERS}]+)?${SCRIPT_SUFFIX_PATTERN}|[A-Za-zπ](?:[′']{1,2})?\\([^()\\n]{1,50}\\)${SCRIPT_SUFFIX_PATTERN}|${ROOT_PATTERN}|\\?)`;
 const PAREN_GROUP_PATTERN = `\\((?:[^()\\n]|\\([^()\\n]{0,60}\\)){1,140}\\)${SCRIPT_SUFFIX_PATTERN}`;
 const SQUARE_GROUP_PATTERN = `\\[[^\\[\\]\\n]{1,140}\\]${SCRIPT_SUFFIX_PATTERN}`;
@@ -205,20 +208,121 @@ function createIntegralNode({ lower = "", upper = "" } = {}, doc) {
   return integral;
 }
 
-function appendScriptsOnly(parent, value, doc) {
+function appendDelimiterAwareText(parent, value, doc) {
+  const text = String(value ?? "");
+  let buffer = "";
+  const flush = () => {
+    if (!buffer) return;
+    parent.append(doc.createTextNode(buffer));
+    buffer = "";
+  };
+  for (const character of text) {
+    if (OPEN_DELIMITERS[character] || CLOSE_DELIMITERS.has(character)) {
+      flush();
+      const delimiter = doc.createElement("span");
+      delimiter.className = "math-delimiter";
+      delimiter.dataset.mathDelimiter = character;
+      delimiter.textContent = character;
+      parent.append(delimiter);
+    } else {
+      buffer += character;
+    }
+  }
+  flush();
+}
+
+function delimiterValue(node) {
+  if (node?.nodeType !== 1 || !node.classList?.contains("math-delimiter")) return "";
+  return node.dataset.mathDelimiter ?? node.textContent ?? "";
+}
+
+function wrapDelimitedGroups(container, doc) {
+  if (!container?.childNodes) return;
+  let safety = 0;
+  while (safety < 40) {
+    safety += 1;
+    const children = Array.from(container.childNodes);
+    const stack = [];
+    let pair = null;
+
+    for (const node of children) {
+      const value = delimiterValue(node);
+      if (OPEN_DELIMITERS[value]) {
+        stack.push({ node, expected: OPEN_DELIMITERS[value] });
+        continue;
+      }
+      if (!CLOSE_DELIMITERS.has(value)) continue;
+      for (let index = stack.length - 1; index >= 0; index -= 1) {
+        if (stack[index].expected !== value) continue;
+        pair = { open: stack[index].node, close: node };
+        break;
+      }
+      if (pair) break;
+    }
+
+    if (!pair) break;
+
+    const group = doc.createElement("span");
+    group.className = "math-delimited-group";
+    const body = doc.createElement("span");
+    body.className = "math-delimited-group__body";
+
+    container.insertBefore(group, pair.open);
+    group.append(pair.open, body);
+    while (group.nextSibling && group.nextSibling !== pair.close) body.append(group.nextSibling);
+    group.append(pair.close);
+
+    if (body.querySelector?.(".math-fraction, .math-root, .math-integral, .math-evaluation")) {
+      group.classList.add("math-delimited-group--tall");
+    }
+  }
+}
+
+function createRootNode(radicandSource, doc) {
+  const root = doc.createElement("span");
+  root.className = "math-root";
+  const symbol = doc.createElement("span");
+  symbol.className = "math-root__symbol";
+  symbol.textContent = "√";
+  symbol.setAttribute("aria-hidden", "true");
+  const radicand = doc.createElement("span");
+  radicand.className = "math-root__radicand";
+  appendMathText(radicand, radicandSource, doc);
+  wrapDelimitedGroups(radicand, doc);
+  if (radicand.querySelector?.(".math-fraction, .math-integral, .math-evaluation")) root.classList.add("math-root--tall");
+  root.append(symbol, radicand);
+  return root;
+}
+
+function appendScriptTokens(parent, value, doc) {
   const text = String(value ?? "");
   let cursor = 0;
   SCRIPT_PATTERN.lastIndex = 0;
   for (const match of text.matchAll(SCRIPT_PATTERN)) {
     const index = match.index ?? 0;
-    if (index > cursor) parent.append(doc.createTextNode(text.slice(cursor, index)));
+    if (index > cursor) appendDelimiterAwareText(parent, text.slice(cursor, index), doc);
     const script = doc.createElement(match[1] === "^" ? "sup" : "sub");
     script.className = "math-script";
-    appendMathText(script, trimOuterParentheses(match[2]), doc);
+    const scriptSource = trimOuterParentheses(match[2]);
+    if (scriptSource.includes("/")) script.classList.add("math-script--fraction");
+    appendMathText(script, scriptSource, doc);
     parent.append(script);
     cursor = index + match[0].length;
   }
-  if (cursor < text.length) parent.append(doc.createTextNode(text.slice(cursor)));
+  if (cursor < text.length) appendDelimiterAwareText(parent, text.slice(cursor), doc);
+}
+
+function appendScriptsOnly(parent, value, doc) {
+  const text = String(value ?? "");
+  let cursor = 0;
+  ROOT_RENDER_PATTERN.lastIndex = 0;
+  for (const match of text.matchAll(ROOT_RENDER_PATTERN)) {
+    const index = match.index ?? 0;
+    if (index > cursor) appendScriptTokens(parent, text.slice(cursor, index), doc);
+    parent.append(createRootNode(match[1] ?? match[2] ?? "", doc));
+    cursor = index + match[0].length;
+  }
+  if (cursor < text.length) appendScriptTokens(parent, text.slice(cursor), doc);
 }
 
 function createEvaluationNode({ expression = "", lower = "", upper = "" } = {}, doc) {
@@ -291,9 +395,11 @@ function createFractionNode(token, doc) {
   const numerator = doc.createElement("span");
   numerator.className = "math-fraction__numerator";
   appendMathText(numerator, token.numerator, doc);
+  wrapDelimitedGroups(numerator, doc);
   const denominator = doc.createElement("span");
   denominator.className = "math-fraction__denominator";
   appendMathText(denominator, token.denominator, doc);
+  wrapDelimitedGroups(denominator, doc);
   fraction.append(numerator, denominator);
   return fraction;
 }
@@ -321,6 +427,7 @@ export function renderMathElement(element, { source = null } = {}) {
   wrapper.setAttribute("data-math-rendered-content", "");
 
   appendMathText(wrapper, raw, doc);
+  wrapDelimitedGroups(wrapper, doc);
 
   element.classList.add("math-typeset");
   if (typeof element.matches === "function" && element.matches(displayMathSelector)) element.classList.add("math-typeset--display");

@@ -41,7 +41,7 @@
 
 .math-typeset--display > .math-typeset__content {
   margin-inline: auto;
-  padding: 0.12em 0.08em;
+  padding: 0.3em 0.08em 0.28em;
 }
 
 .math-fraction {
@@ -75,6 +75,85 @@
   position: relative;
   font-size: 0.68em;
   line-height: 0;
+}
+
+.math-delimited-group {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.math-delimited-group__body {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.math-delimiter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline: 0.02em;
+  font-family: "STIX Two Math", "Cambria Math", var(--font-math);
+  line-height: 1;
+  transform-origin: center;
+}
+
+.math-delimited-group--tall > .math-delimiter {
+  font-size: 1.62em;
+  transform: scaleY(1.12);
+}
+
+.math-root {
+  display: inline-flex;
+  align-items: flex-start;
+  margin-inline: 0.03em;
+  vertical-align: -0.08em;
+  white-space: nowrap;
+}
+
+.math-root__symbol {
+  display: inline-block;
+  margin-right: -0.06em;
+  font-family: "STIX Two Math", "Cambria Math", var(--font-math);
+  font-size: 1.18em;
+  line-height: 1;
+  transform: translateY(0.04em) scaleY(1.08);
+  transform-origin: right bottom;
+}
+
+.math-root__radicand {
+  min-height: 0.92em;
+  display: inline-flex;
+  align-items: baseline;
+  padding: 0.04em 0.08em 0 0.06em;
+  border-top: 0.065em solid currentColor;
+  line-height: 1.05;
+}
+
+.math-root--tall .math-root__symbol {
+  font-size: 1.5em;
+  transform: translateY(0.02em) scaleY(1.18);
+}
+
+.math-script--fraction .math-fraction {
+  margin-inline: 0.01em;
+  vertical-align: 0;
+  font-size: 0.92em;
+}
+
+.math-script--fraction .math-fraction__numerator,
+.math-script--fraction .math-fraction__denominator {
+  min-width: 0.78em;
+  padding-inline: 0.03em;
+}
+
+.math-script--fraction .math-fraction__numerator {
+  padding-bottom: 0.04em;
+}
+
+.math-script--fraction .math-fraction__denominator {
+  padding-top: 0.04em;
 }
 
 sup.math-script {

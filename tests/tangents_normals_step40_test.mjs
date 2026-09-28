@@ -65,3 +65,6 @@ assert(shell.includes('tangentsNormalsLearningModes'));
 assert(shell.includes('tangentsNormalsUnderstand'));
 assert(shell.includes('tangentsNormalsMemoryLabHost'));
 console.log('PASS Step 40 Tangents and Normals all-mode, shared-visual, memory, assessment and special-case contracts');
+
+const memorySource = readFileSync(new URL('../src/scripts/memory-content.js',import.meta.url),'utf8');
+assert.match(memorySource,/Using m to denote gradient/,'Memory Lab must define m explicitly before using it for tangent and normal gradients.');
