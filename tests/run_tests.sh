@@ -2,6 +2,7 @@
 set -eu
 python3 tests/test_appshell.py
 node tests/appshell_dom_test.mjs
+node tests/landing_page_test.mjs
 node tests/local_state_store_test.mjs
 node tests/progress_store_test.mjs
 node tests/progress_model_test.mjs
