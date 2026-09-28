@@ -60,6 +60,6 @@ const sourceAppCss = read("src/styles/app-shell.css");
 const publishedAppCss = read("styles/app-shell.css");
 assert.equal(sourceAppCss, publishedAppCss, "Source and published app-shell styles must stay mirrored.");
 assert.match(sourceAppCss, /\.app-shell \[hidden\][\s\S]*display:\s*none !important;/, "Hidden workspace/landing states must override component display rules.");
-assert.match(sourceAppCss, /html\\[data-ui-density="tight"\\]/, "Short viewports should use the shared adaptive-density system rather than a one-off height patch.");
+assert.match(sourceAppCss, /html\[data-ui-density="tight"\]/, "Short viewports should use the shared adaptive-density system rather than a one-off height patch.");
 
 console.log("PASS landing page course guide, AO explanations, entry points and root/home behaviour");
