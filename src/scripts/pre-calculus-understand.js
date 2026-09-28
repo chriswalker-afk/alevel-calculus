@@ -122,8 +122,8 @@ export class PreCalculusUnderstandExperience {
     const { graphHost, diagram } = this.#graph(body, { yDomain: [-2.5, 2.5], ariaLabel: 'A car moving left to right along a hill' });
     const xs = Array.from({ length: 161 }, (_, i) => -4.5 + i * 9 / 160);
     diagram.polyline(xs.map((x) => ({ x, y: hillY(x) })), { tone: 'curve' });
-    const car = diagram.point({ x: -4.2, y: hillY(-4.2), radius: 18, tone: 'interactive', label: 'car' });
-    car.element?.classList?.add('pre-calculus-understand__car');
+    const car = diagram.label({ x: -4.2, y: hillY(-4.2), text: '🚗', dx: 0, dy: -10, tone: 'interactive', className: 'pre-calculus-understand__car', keepInView: false });
+    car.element?.setAttribute?.('role', 'img');
     car.element?.setAttribute?.('aria-label', 'car');
     const direction = diagram.arrow({ x1: -4.4, y1: -2.1, x2: -2.8, y2: -2.1, tone: 'accent', label: 'read left → right' });
     void direction;
@@ -132,7 +132,7 @@ export class PreCalculusUnderstandExperience {
       label: 'Car position — move right only', min: -4.2, max: 4.2, step: 0.05, value: -4.2,
       format: (x) => `x = ${format(x, 1)}`,
       onInput: (x) => {
-        car.setPosition(x, hillY(x));
+        car.set({ x, y: hillY(x) });
         const m = hillGradient(x);
         const message = Math.abs(m) < 0.08 ? 'Almost horizontal: height is barely changing.' : m > 0 ? 'Climbing: y increases as x increases → positive gradient.' : 'Descending: y decreases as x increases → negative gradient.';
         status.textContent = message;
