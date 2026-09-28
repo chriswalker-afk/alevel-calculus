@@ -522,6 +522,9 @@ globalThis.document = {
     element.ownerDocument = this;
     return element;
   },
+  createTextNode(value) {
+    return { nodeType: 3, textContent: String(value ?? "") };
+  },
   createElementNS(namespace, tag) {
     const element = new FakeElement(`created-svg-${tag}-${allElements.length}`);
     element.ownerDocument = this;
