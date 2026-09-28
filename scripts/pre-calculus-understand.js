@@ -434,7 +434,7 @@ export class PreCalculusUnderstandExperience {
     controls.append(slider.element, presets);
     const summary = el(this.document, 'div', 'pre-calculus-understand__summary-grid');
     summary.append(
-      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Near vertical: from the positive-gradient side the gradient increases without bound; from the negative-gradient side it becomes more and more negative. A vertical line itself does not have gradient “infinity”.'),
+      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Near vertical: from the positive-gradient side the gradient increases without bound; from the negative-gradient side it becomes more and more negative. This does not mean a vertical line has gradient “infinity”.'),
       el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Exactly vertical: there is vertical change but no horizontal change, so finding a gradient would require division by zero. The gradient is undefined.')
     );
     body.append(summary);
