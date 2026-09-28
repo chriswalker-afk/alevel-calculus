@@ -312,8 +312,8 @@ const fields = Object.freeze({
 let activeMode = learningModeOrder.includes(root.dataset.learningMode)
   ? root.dataset.learningMode
   : "understand";
-function defaultWorkspaceToolsCollapsed(mode) {
-  return mode === "ao1" || mode === "ao2" || mode === "ao3" || root.dataset.uiDensity === "tight";
+function defaultWorkspaceToolsCollapsed() {
+  return true;
 }
 
 const workspaceToolsCollapsedByMode = new Map(
@@ -366,7 +366,7 @@ function navigateToActivityTarget(target){
 }
 const integrationMethodMapSurface=createIntegrationMethodMapSurface({
   documentRef:document,
-  triggerHost:stage.querySelector('.activity-stage__tools'),
+  triggerHost: workspaceToolsContent,
   onNavigate:navigateToActivityTarget
 });
 const basicsUnderstand = createBasicsUnderstandExperience(customUnderstandHost, {
@@ -1858,11 +1858,17 @@ for (const tab of modeTabs) {
   });
 }
 
-classWizTrigger.addEventListener("click", openClassWizSupport);
+classWizTrigger.addEventListener("click", () => {
+  setWorkspaceToolsCollapsed(true);
+  openClassWizSupport();
+});
 classWizClose.addEventListener("click", () => closeClassWizSupport());
 classWizScrim.addEventListener("click", () => closeClassWizSupport());
 
-topicGoalsTrigger.addEventListener("click", openTopicGoals);
+topicGoalsTrigger.addEventListener("click", () => {
+  setWorkspaceToolsCollapsed(true);
+  openTopicGoals();
+});
 topicGoalsClose.addEventListener("click", closeTopicGoals);
 topicGoalsDialog.addEventListener("close", () => {
   topicGoalsTrigger.setAttribute("aria-expanded", "false");
@@ -1881,7 +1887,10 @@ topicPathwayRevisit.addEventListener("click", () => {
   stage.focus();
 });
 
-helpDrawerTrigger.addEventListener("click", openHelpDrawer);
+helpDrawerTrigger.addEventListener("click", () => {
+  setWorkspaceToolsCollapsed(true);
+  openHelpDrawer();
+});
 helpDrawerClose.addEventListener("click", () => closeHelpDrawer());
 helpDrawerScrim.addEventListener("click", () => closeHelpDrawer());
 for (const link of helpTargetLinks) {
@@ -1891,7 +1900,10 @@ for (const link of helpTargetLinks) {
   });
 }
 
-wordBankTrigger.addEventListener("click", () => openWordBank(null, wordBankTrigger));
+wordBankTrigger.addEventListener("click", () => {
+  setWorkspaceToolsCollapsed(true);
+  openWordBank(null, wordBankTrigger);
+});
 wordBankClose.addEventListener("click", () => closeWordBank());
 wordBankScrim.addEventListener("click", () => closeWordBank());
 wordBankSearch.addEventListener("input", renderWordBank);
@@ -1997,6 +2009,12 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && navigationOpen) {
     event.preventDefault();
     closeTopicNavigation();
+    return;
+  }
+  if (event.key === "Escape" && workspaceToolsToggle.getAttribute("aria-expanded") === "true") {
+    event.preventDefault();
+    setWorkspaceToolsCollapsed(true);
+    workspaceToolsToggle.focus({ preventScroll: true });
   }
 });
 
