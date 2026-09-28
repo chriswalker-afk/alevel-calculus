@@ -991,6 +991,154 @@
 }
 
 
+/* Manual audit 2026-09-28: compact single-screen AO practice workspace. */
+.question-shell__topline {
+  padding: var(--space-2) var(--space-3);
+}
+
+.question-shell__topline-actions {
+  gap: var(--space-2);
+}
+
+.question-shell__footer {
+  justify-content: flex-end;
+  padding: var(--space-2) var(--space-3);
+}
+
+.question-shell__button--next {
+  min-height: 40px;
+}
+
+.question-math-entry {
+  gap: var(--space-1);
+}
+
+.question-math-entry__preview-wrap,
+.question-math-entry__toolbar-wrap {
+  gap: 4px;
+}
+
+.question-math-entry__preview {
+  min-height: 48px;
+  padding: var(--space-1) var(--space-2);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+}
+
+.question-math-entry__toolbar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.question-math-entry__toolbar {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.question-math-entry__keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.question-math-entry__keys--extra {
+  padding-top: var(--space-1);
+  border-top: 1px solid var(--divider-default);
+}
+
+.question-math-entry__keys--extra[hidden] {
+  display: none;
+}
+
+.question-math-entry__more {
+  min-height: 30px;
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--surface-subtle);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+
+.question-math-entry__more:hover,
+.question-math-entry__more:focus-visible {
+  background: var(--mode-soft);
+  color: var(--mode-soft-text);
+}
+
+.question-math-entry__key {
+  min-height: 34px;
+  min-width: 40px;
+  padding: 0 var(--space-2);
+}
+
+.question-math-entry__hint {
+  line-height: var(--leading-snug);
+}
+
+@media (min-width: 681px) {
+  .question-shell[data-question-response-type="algebraic"] .question-shell__body {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    gap: var(--space-3);
+    padding: var(--space-3);
+    overflow: hidden;
+  }
+
+  .question-shell[data-question-response-type="algebraic"] .question-shell__prompt {
+    min-height: 0;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  .question-shell[data-question-response-type="algebraic"] .question-shell__math {
+    min-height: 104px;
+    padding: var(--space-3);
+    font-size: clamp(1.45rem, 3vw, 2.35rem);
+  }
+
+  .question-shell[data-question-response-type="algebraic"] .question-shell__response {
+    min-height: 0;
+    gap: var(--space-2);
+    padding-right: 2px;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  .question-shell[data-question-response-type="algebraic"] .question-response-input {
+    min-height: 46px;
+  }
+
+  .question-shell[data-question-response-type="algebraic"] .question-shell__actions {
+    gap: var(--space-1);
+  }
+
+  .question-shell[data-question-response-type="algebraic"] .question-shell__button--check {
+    padding-inline: var(--space-4);
+  }
+}
+
+@media (max-width: 680px) {
+  .question-shell[data-question-response-type="algebraic"] .question-shell__body {
+    overflow: auto;
+  }
+
+  .question-math-entry__keys {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .question-math-entry__key {
+    flex: 0 0 auto;
+  }
+}
+
 /* Interactive assessment pass: large, accessible visual targets for calculus reasoning. */
 .question-graph-interaction {
   display: grid;

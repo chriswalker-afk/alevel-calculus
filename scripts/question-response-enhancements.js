@@ -2,21 +2,58 @@ import { renderMathElement } from "./math-renderer.js?v=memorymath2";
 import { formatStudentMathForDisplay } from "./student-math-input.js?v=questionfix1";
 
 const mathToolbar = Object.freeze([
-  Object.freeze({ label: "x²", insert: "^2", cursorBack: 0, ariaLabel: "Insert squared power" }),
-  Object.freeze({ label: "xⁿ", insert: "^()", cursorBack: 1, ariaLabel: "Insert a power" }),
-  Object.freeze({ label: "√", insert: "sqrt()", cursorBack: 1, ariaLabel: "Insert square root" }),
-  Object.freeze({ label: "a/b", insert: "()/()", cursorBack: 4, ariaLabel: "Insert a fraction" }),
-  Object.freeze({ label: "( )", insert: "()", cursorBack: 1, ariaLabel: "Insert brackets" }),
-  Object.freeze({ label: "π", insert: "pi", cursorBack: 0, ariaLabel: "Insert pi" }),
-  Object.freeze({ label: "eˣ", insert: "e^()", cursorBack: 1, ariaLabel: "Insert e to a power" }),
-  Object.freeze({ label: "ln", insert: "ln()", cursorBack: 1, ariaLabel: "Insert natural logarithm" }),
-  Object.freeze({ label: "sin", insert: "sin()", cursorBack: 1, ariaLabel: "Insert sine" }),
-  Object.freeze({ label: "cos", insert: "cos()", cursorBack: 1, ariaLabel: "Insert cosine" }),
-  Object.freeze({ label: "tan", insert: "tan()", cursorBack: 1, ariaLabel: "Insert tangent" }),
-  Object.freeze({ label: "dy/dx", insert: "dy/dx", cursorBack: 0, ariaLabel: "Insert d y by d x" }),
-  Object.freeze({ label: "d/dx", insert: "d/dx", cursorBack: 0, ariaLabel: "Insert differentiation operator d by d x" }),
-  Object.freeze({ label: "+ C", insert: " + C", cursorBack: 0, ariaLabel: "Insert constant of integration plus C" })
+  Object.freeze({ id: "square", label: "x²", insert: "^2", cursorBack: 0, ariaLabel: "Insert squared power" }),
+  Object.freeze({ id: "power", label: "xⁿ", insert: "^()", cursorBack: 1, ariaLabel: "Insert a power" }),
+  Object.freeze({ id: "root", label: "√", insert: "sqrt()", cursorBack: 1, ariaLabel: "Insert square root" }),
+  Object.freeze({ id: "fraction", label: "a/b", insert: "()/()", cursorBack: 4, ariaLabel: "Insert a fraction" }),
+  Object.freeze({ id: "brackets", label: "( )", insert: "()", cursorBack: 1, ariaLabel: "Insert brackets" }),
+  Object.freeze({ id: "pi", label: "π", insert: "pi", cursorBack: 0, ariaLabel: "Insert pi" }),
+  Object.freeze({ id: "exponential", label: "eˣ", insert: "e^()", cursorBack: 1, ariaLabel: "Insert e to a power" }),
+  Object.freeze({ id: "logarithm", label: "ln", insert: "ln()", cursorBack: 1, ariaLabel: "Insert natural logarithm" }),
+  Object.freeze({ id: "sin", label: "sin", insert: "sin()", cursorBack: 1, ariaLabel: "Insert sine" }),
+  Object.freeze({ id: "cos", label: "cos", insert: "cos()", cursorBack: 1, ariaLabel: "Insert cosine" }),
+  Object.freeze({ id: "tan", label: "tan", insert: "tan()", cursorBack: 1, ariaLabel: "Insert tangent" }),
+  Object.freeze({ id: "dy-dx", label: "dy/dx", insert: "dy/dx", cursorBack: 0, ariaLabel: "Insert d y by d x" }),
+  Object.freeze({ id: "d-dx", label: "d/dx", insert: "d/dx", cursorBack: 0, ariaLabel: "Insert differentiation operator d by d x" }),
+  Object.freeze({ id: "constant", label: "+ C", insert: " + C", cursorBack: 0, ariaLabel: "Insert constant of integration plus C" })
 ]);
+
+const defaultMathToolbarIds = Object.freeze(["square", "power", "root", "fraction", "brackets"]);
+
+export function contextualMathToolbarIds(question = {}) {
+  const metadata = question?.metadata ?? {};
+  const topicId = String(metadata.topicId ?? "").toLowerCase();
+  const searchable = [
+    question?.prompt,
+    question?.math,
+    metadata?.microSkillId,
+    ...(metadata?.methodTags ?? []),
+    ...(metadata?.prerequisiteTags ?? []),
+    ...(metadata?.vocabularyTags ?? [])
+  ].map((value) => String(value ?? "").toLowerCase()).join(" ");
+
+  const ids = new Set(defaultMathToolbarIds);
+  const differentiationContext = topicId.includes("differentiation") || /differentiat|derivative|gradient|d\/dx|dy\/dx/.test(searchable);
+  const integrationContext = topicId.includes("integration") || /integrat|antiderivative|primitive/.test(searchable);
+  const trigContext = /trig|sin|cos|tan/.test(searchable);
+  const logContext = /logarithm|\bln\b/.test(searchable);
+  const exponentialContext = /exponential|e\^|eˣ/.test(searchable);
+
+  if (differentiationContext) {
+    ids.add("dy-dx");
+    ids.add("d-dx");
+  }
+  if (integrationContext) ids.add("constant");
+  if (trigContext) {
+    ids.add("sin");
+    ids.add("cos");
+    ids.add("tan");
+    ids.add("pi");
+  }
+  if (logContext) ids.add("logarithm");
+  if (exponentialContext) ids.add("exponential");
+  return Object.freeze([...ids]);
+}
 
 const reflectionFocusOptions = Object.freeze([
   Object.freeze({ id: "method", label: "Method" }),
@@ -122,28 +159,58 @@ export function createMathEntryEnhancement({ inputGroup, input } = {}) {
 
   const toolbarWrap = doc.createElement("div");
   toolbarWrap.className = "question-math-entry__toolbar-wrap";
+
+  const toolbarHeader = doc.createElement("div");
+  toolbarHeader.className = "question-math-entry__toolbar-header";
   const toolbarLabel = doc.createElement("span");
   toolbarLabel.className = "question-math-entry__toolbar-label";
   toolbarLabel.textContent = "Maths keys";
+  const moreButton = doc.createElement("button");
+  moreButton.type = "button";
+  moreButton.className = "question-math-entry__more";
+  moreButton.textContent = "More symbols";
+  moreButton.setAttribute("aria-expanded", "false");
+
   const toolbar = doc.createElement("div");
   toolbar.className = "question-math-entry__toolbar";
   toolbar.setAttribute("role", "toolbar");
   toolbar.setAttribute("aria-label", "Common mathematics symbols");
+  const primaryToolbar = doc.createElement("div");
+  primaryToolbar.className = "question-math-entry__keys question-math-entry__keys--primary";
+  const extraToolbar = doc.createElement("div");
+  extraToolbar.className = "question-math-entry__keys question-math-entry__keys--extra";
+  extraToolbar.hidden = true;
+  extraToolbar.setAttribute("data-question-math-entry-extra", "");
 
+  const buttonsById = new Map();
   for (const spec of mathToolbar) {
     const button = doc.createElement("button");
     button.type = "button";
     button.className = "question-math-entry__key";
     button.textContent = spec.label;
+    button.dataset.mathKey = spec.id;
     button.setAttribute("aria-label", spec.ariaLabel);
     button.addEventListener("click", () => insertAtSelection(input, spec));
-    toolbar.append(button);
+    buttonsById.set(spec.id, button);
+    extraToolbar.append(button);
   }
-  toolbarWrap.append(toolbarLabel, toolbar);
+
+  toolbarHeader.append(toolbarLabel, moreButton);
+  toolbar.append(primaryToolbar, extraToolbar);
+  toolbarWrap.append(toolbarHeader, toolbar);
+
+  let extraOpen = false;
+  const setExtraOpen = (open) => {
+    extraOpen = Boolean(open);
+    extraToolbar.hidden = !extraOpen;
+    moreButton.textContent = extraOpen ? "Fewer symbols" : "More symbols";
+    moreButton.setAttribute("aria-expanded", extraOpen ? "true" : "false");
+  };
+  moreButton.addEventListener("click", () => setExtraOpen(!extraOpen));
 
   const hint = doc.createElement("p");
   hint.className = "question-math-entry__hint";
-  hint.textContent = "Type normally or use the maths keys. Your answer is checked from what you type; the preview only improves readability.";
+  hint.textContent = "Type normally or use the maths keys.";
 
   inputGroup.insertBefore(shell, input);
   entryRow.append(input);
@@ -162,9 +229,26 @@ export function createMathEntryEnhancement({ inputGroup, input } = {}) {
     renderMathElement(preview, { source: formatMathInputForDisplay(raw) });
   }
 
-  function setMode(responseType) {
-    shell.dataset.responseType = responseType ?? "";
+  function setMode(questionOrResponseType) {
+    const question = typeof questionOrResponseType === "object" && questionOrResponseType
+      ? questionOrResponseType
+      : { responseType: questionOrResponseType };
+    const responseType = question.responseType ?? "";
+    shell.dataset.responseType = responseType;
     toolbarWrap.hidden = responseType !== "algebraic";
+    if (toolbarWrap.hidden) return;
+
+    const primaryIds = new Set(contextualMathToolbarIds(question));
+    primaryToolbar.replaceChildren();
+    extraToolbar.replaceChildren();
+    for (const spec of mathToolbar) {
+      const button = buttonsById.get(spec.id);
+      if (!button) continue;
+      (primaryIds.has(spec.id) ? primaryToolbar : extraToolbar).append(button);
+    }
+    const hasExtras = extraToolbar.children.length > 0;
+    moreButton.hidden = !hasExtras;
+    setExtraOpen(false);
   }
 
   sync(input.value);

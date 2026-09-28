@@ -206,7 +206,6 @@ const questionShellSelectors = [
   '[data-question-shell-hint-list]',
   '[data-question-shell-solution-panel]',
   '[data-question-shell-solution-steps]',
-  '[data-question-shell-progress]',
   '[data-question-shell-new]',
   '[data-question-shell-next]',
   '[data-question-shell-next-label]',

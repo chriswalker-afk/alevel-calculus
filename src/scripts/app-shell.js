@@ -9,7 +9,7 @@ import { APP_STATE_SCHEMA_VERSION } from "./local-state-store.js";
 import { activityRouteFromId, createHistoryRouteController } from "./navigation-route.js";
 import { renderVocabularyRichText } from "./vocabulary-term.js?v=memorymath1";
 import { buildWordBankEntries, filterWordBankEntries } from "./word-bank-model.js?v=memorymath1";
-import { createQuestionShell } from "./question-shell.js?v=setsummary2";
+import { createQuestionShell } from "./question-shell.js?v=aolayout1";
 import { getQuestionPracticeDefinitionForActivity } from "./question-catalogue.js?v=integralfix1";
 import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner.js?v=questionfix1";
 import { createQuestionPracticeSession } from "./question-practice-session.js";
@@ -885,7 +885,8 @@ const questionShell = createQuestionShell(questionShellElement, {
     return questionPracticeSessionForActivity(activity.activityId)?.nextBatch() ?? null;
   },
   onSetSummaryVisibilityChange(visible) {
-    if (activityControls) activityControls.hidden = Boolean(visible);
+    const assessmentMode = activeMode === "ao1" || activeMode === "ao2" || activeMode === "ao3";
+    if (activityControls) activityControls.hidden = assessmentMode || Boolean(visible);
     shell.dataset.questionSetSummary = visible ? "true" : "false";
   },
   getSetCompletionChoices() {
@@ -1642,8 +1643,11 @@ export function renderActivity(index) {
   integrationMethodMapSurface.setContext({topicId:currentTopicId,activityId:activity.activityId});
   const position = `${activityIndex + 1} of ${activities.length}`;
 
+  const assessmentMode = activeMode === "ao1" || activeMode === "ao2" || activeMode === "ao3";
   fields.kicker.textContent = activity.kicker;
   fields.position.textContent = position;
+  fields.position.hidden = assessmentMode;
+  if (activityControls) activityControls.hidden = assessmentMode;
   fields.overline.textContent = activity.overline;
   fields.title.textContent = activity.title;
   if (Array.isArray(activity.bodySegments)) {

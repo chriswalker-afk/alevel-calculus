@@ -5,6 +5,7 @@ import {
   formatMathInputForDisplay,
   isAo3SelfReviewQuestion,
   mathEntryToolbarLabels,
+  contextualMathToolbarIds,
   selfReviewFocusIds
 } from "../src/scripts/question-response-enhancements.js";
 import { listQuestionDefinitions } from "../src/scripts/question-catalogue.js";
@@ -15,6 +16,19 @@ assert.equal(formatMathInputForDisplay("-30x^(4)+-9x^(2)"), "−30x^4−9x^2");
 assert.equal(formatMathInputForDisplay("3x^-4"), "3x^-4", "Negative powers must remain parseable by the shared superscript renderer.");
 assert.ok(mathEntryToolbarLabels.includes("dy/dx"));
 assert.ok(mathEntryToolbarLabels.includes("d/dx"));
+const differentiationKeys = contextualMathToolbarIds({
+  responseType: "algebraic",
+  prompt: "Differentiate with respect to x.",
+  metadata: { topicId: "topic:y12:differentiation:basics", methodTags: ["power-rule"] }
+});
+assert.ok(differentiationKeys.includes("dy-dx") && differentiationKeys.includes("d-dx"), "Differentiation questions should promote derivative notation keys.");
+assert.ok(!differentiationKeys.includes("sin"), "Unneeded specialist symbols should stay behind More symbols.");
+const trigKeys = contextualMathToolbarIds({
+  responseType: "algebraic",
+  prompt: "Differentiate sin x.",
+  metadata: { topicId: "topic:y13:differentiation:trigonometric", methodTags: ["trig"] }
+});
+assert.ok(trigKeys.includes("sin") && trigKeys.includes("cos") && trigKeys.includes("tan") && trigKeys.includes("pi"), "Trig questions should promote trig keys.");
 assert.deepEqual(selfReviewFocusIds, ["method", "working", "explanation", "interpretation", "units"]);
 
 const explicit = deriveSelfReviewCriteria({
@@ -46,6 +60,8 @@ const responseEnhancementSource = await import("node:fs").then(({ readFileSync }
 );
 assert.match(responseEnhancementSource, /question-self-review__criterion/);
 assert.match(responseEnhancementSource, /span\.setAttribute\("data-math-prose", ""\)/);
+assert.match(responseEnhancementSource, /More symbols/);
+assert.match(responseEnhancementSource, /question-math-entry__keys--extra/);
 
 const runner = createGeneratorRunner({ debugSeed: "answer-entry-pass" });
 let ao2ReasoningCount = 0;

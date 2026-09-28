@@ -8,7 +8,7 @@ import {
   nextHintRevealCount
 } from "./hint-sequence.js";
 import { createWorkedSolutionRenderer } from "./worked-solution-renderer.js?v=ao3math1";
-import { createMathEntryEnhancement, createReasoningMathPreview, createSelfReviewPanel, deriveSelfReviewCriteria, isAo3SelfReviewQuestion } from "./question-response-enhancements.js?v=memorymath2";
+import { createMathEntryEnhancement, createReasoningMathPreview, createSelfReviewPanel, deriveSelfReviewCriteria, isAo3SelfReviewQuestion } from "./question-response-enhancements.js?v=aolayout1";
 import { renderMathElement } from "./math-renderer.js?v=memorymath2";
 
 export const questionResponseTypes = Object.freeze([
@@ -98,7 +98,6 @@ export function createQuestionShell(root, {
     hintList: assertElement(root.querySelector("[data-question-shell-hint-list]"), "hint list"),
     solutionPanel: assertElement(root.querySelector("[data-question-shell-solution-panel]"), "worked solution panel"),
     solutionSteps: assertElement(root.querySelector("[data-question-shell-solution-steps]"), "worked solution steps"),
-    progress: assertElement(root.querySelector("[data-question-shell-progress]"), "footer progress"),
     nextButton: assertElement(root.querySelector("[data-question-shell-next]"), "next question button"),
     nextLabel: assertElement(root.querySelector("[data-question-shell-next-label]"), "next question label"),
     summary: assertElement(root.querySelector("[data-question-set-summary]"), "set summary"),
@@ -501,7 +500,6 @@ export function createQuestionShell(root, {
     const interactiveVisual = handlesInteractiveVisual(question);
     fields.format.textContent = interactiveVisual ? "Graph selection" : responseTypeLabel(question.responseType);
     fields.counter.textContent = `${batchPrefix}Question ${position}`;
-    fields.progress.textContent = `${batchPrefix}Question ${position}`;
     renderPrompt(question);
     const standaloneMath = String(question.math ?? "").trim();
     fields.math.hidden = !standaloneMath;
@@ -523,7 +521,7 @@ export function createQuestionShell(root, {
     fields.reasoning.placeholder = question.placeholder || "Write a short explanation.";
     fields.checkButton.textContent = isAo3SelfReviewQuestion(question) ? "Review my reasoning" : "Check answer";
 
-    mathEntry.setMode(question.responseType);
+    mathEntry.setMode(question);
     renderOptions(question);
     writeResponse(question, state);
     renderInteractiveVisual(question, state.response);
