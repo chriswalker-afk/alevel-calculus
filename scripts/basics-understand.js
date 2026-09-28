@@ -222,7 +222,6 @@ export class BasicsUnderstandExperience {
 
     const coefficientDetails = el(this.document, 'details', 'basics-understand__coefficient-details');
     const coefficientSummary = el(this.document, 'summary', 'basics-understand__coefficient-summary', 'Or edit the coefficients');
-    coefficientSummary.setAttribute('aria-label', 'Open coefficient editor');
     const coefficientEditor = el(this.document, 'div', 'basics-understand__coefficient-editor');
     const fallbackLabel = el(this.document, 'div', 'basics-understand__coefficient-heading');
     fallbackLabel.append(
