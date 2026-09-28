@@ -6,6 +6,10 @@
 .pre-calculus-understand__panel-body { min-height:0; display:grid; gap:var(--space-3); align-content:start; overflow:auto; padding-right:2px; }
 .pre-calculus-understand__graph-host { min-height:300px; }
 .pre-calculus-understand__car { font-size:30px; dominant-baseline:middle; pointer-events:none; }
+.pre-calculus-understand__sign-line { cursor:pointer; transition:stroke-width .16s ease, opacity .16s ease, filter .16s ease; }
+.pre-calculus-understand__sign-line:hover,.pre-calculus-understand__sign-line:focus-visible { stroke-width:5; }
+.pre-calculus-understand__sign-line:focus-visible { outline:none; filter:drop-shadow(0 0 3px var(--focus-ring)); }
+.pre-calculus-understand__sign-line--selected { stroke-width:6; opacity:1; filter:drop-shadow(0 0 4px var(--mode-accent)); }
 .pre-calculus-understand__action-row,.pre-calculus-understand__choice-row { display:flex; flex-wrap:wrap; align-items:center; gap:var(--space-2); }
 .pre-calculus-understand__action-row .diagram-primitives__slider { flex:1 1 260px; }
 .pre-calculus-understand__button { min-height:var(--touch-target-min); padding:0 var(--space-3); border:1px solid var(--border-default); border-radius:var(--radius-md); background:var(--surface-base); color:var(--text-primary); font:inherit; font-weight:var(--weight-semibold); cursor:pointer; }
