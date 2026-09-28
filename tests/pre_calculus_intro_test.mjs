@@ -47,16 +47,19 @@ assert(experience.includes('same gradient') || experience.includes('gradient rem
 const beforeDeltaIntroduction = experience.split('render_delta_meaning()')[0];
 assert(!beforeDeltaIntroduction.includes('Δx') && !beforeDeltaIntroduction.includes('Δy'), 'Delta notation must not appear before the delta-introduction activity');
 assert(!beforeDeltaIntroduction.includes('m →') && !beforeDeltaIntroduction.includes('Horizontal: m') && !beforeDeltaIntroduction.includes('side: m ≈'), 'm notation must not appear in student-facing pre-delta content');
-assert(experience.includes('The symbol Δ is the capital Greek letter delta'), 'The new activity must explicitly explain what delta means before using it in the formula');
-assert(experience.includes('change in x = 5 − 1 = 4') && experience.includes('change in y = 3 − 1 = 2'), 'The delta activity must begin with plain-language change in x and change in y');
-assert(experience.includes('gradient of a straight line = Δy ÷ Δx'), 'The delta activity must introduce the straight-line gradient formula');
-assert(experience.includes('(y₂ − y₁) ÷ (x₂ − x₁)'), 'The formula must be connected to two-point coordinate notation');
+assert(experience.includes('Δ is the Greek letter delta'), 'The new activity must explicitly explain what delta means before using it in the formula');
+assert(experience.includes('change in x = 5 - 1 = 4') && experience.includes('change in y = 3 - 1 = 2'), 'The delta activity must begin with plain-language change in x and change in y');
+assert(experience.includes('gradient = Δy/Δx'), 'The delta activity must introduce the straight-line gradient formula through the shared maths renderer');
+assert(experience.includes('(y_2 - y_1)/(x_2 - x_1)'), 'The formula must be connected to two-point coordinate notation in renderer-friendly source syntax');
+assert((experience.match(/data-math-display/g) || []).length >= 7, 'The delta activity must use the shared display-maths renderer for its equations');
+assert(experience.includes('pre-calculus-understand__delta-layout'), 'The delta activity must use the compact single-screen layout');
 
 const css = read('src/styles/pre-calculus-understand.css');
 assert(css.includes('var(--touch-target-min)'), 'Step 37 controls must use the shared 44px touch-target token');
 assert(css.includes(':focus-visible'), 'Step 37 controls must preserve visible keyboard focus');
 assert(/@media\s*\(max-width:680px\)/.test(css), 'Step 37 must include the frozen phone breakpoint');
 assert(css.includes('overflow:auto'), 'Step 37 must use internal scrolling rather than document-level overflow');
+assert(css.includes('.pre-calculus-understand--delta-intro .pre-calculus-understand__panel-body { overflow:hidden;'), 'Delta introduction must avoid vertical scrolling at desktop widths');
 
 const shell = read('src/scripts/app-shell.js');
 assert(shell.includes('topic:y12:foundations:pre-calculus'), 'AppShell must recognise the implemented Pre-calculus topic');
