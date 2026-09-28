@@ -6,6 +6,9 @@ const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf
 for (const path of ["src/index.html", "index.html", "404.html"]) {
   const html = read(path);
   assert.match(html, /data-landing-page/, `${path} should include the course landing page.`);
+  assert.match(html, /<div class="app-shell" data-app-shell data-navigation-open="false" data-view="landing">/, `${path} should default to the landing view before JavaScript routing.`);
+  assert.match(html, /<main class="landing-page" data-landing-page aria-labelledby="landing-title">/, `${path} should render the landing page immediately rather than the temporary workspace.`);
+  assert.match(html, /<div class="app-shell__body" hidden>/, `${path} workspace should be hidden before routing.`);
   assert.match(html, /Understand it\. Remember it\. Practise it\. Explain it\. Apply it\./);
   assert.match(html, /AO1 · Practise/);
   assert.match(html, /Use and apply standard techniques/);
@@ -52,5 +55,11 @@ assert.match(sourceCss, /\.landing-page\[hidden\]/);
 assert.match(sourceCss, /\.landing-mode-grid/);
 assert.match(sourceCss, /\.landing-tool-grid/);
 assert.match(sourceCss, /@media \(max-width: 780px\)/);
+
+const sourceAppCss = read("src/styles/app-shell.css");
+const publishedAppCss = read("styles/app-shell.css");
+assert.equal(sourceAppCss, publishedAppCss, "Source and published app-shell styles must stay mirrored.");
+assert.match(sourceAppCss, /\.app-shell \[hidden\][\s\S]*display:\s*none !important;/, "Hidden workspace/landing states must override component display rules.");
+assert.match(sourceAppCss, /@media \(max-height: 700px\) and \(min-width: 681px\)/, "Short desktop viewports need a compact-height layout rather than simulated zoom.");
 
 console.log("PASS landing page course guide, AO explanations, entry points and root/home behaviour");

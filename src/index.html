@@ -6,7 +6,7 @@
   <meta name="description" content="Calculus learning site shell prototype for Pearson Edexcel 8MA0 / 9MA0.">
   <title>Calculus | Learning workspace</title>
   <link rel="stylesheet" href="./styles/tokens.css">
-  <link rel="stylesheet" href="./styles/app-shell.css?v=workspacetools1">
+  <link rel="stylesheet" href="./styles/app-shell.css?v=shellhome1">
   <link rel="stylesheet" href="./styles/landing-page.css?v=landing3">
   <link rel="stylesheet" href="./styles/question-shell.css?v=aolayout2">
   <link rel="stylesheet" href="./styles/math-renderer.css?v=memorymath2">
@@ -55,7 +55,7 @@
   <link rel="stylesheet" href="./styles/trapezium-integration-understand.css?v=auditstep15">
 </head>
 <body>
-  <div class="app-shell" data-app-shell data-navigation-open="false">
+  <div class="app-shell" data-app-shell data-navigation-open="false" data-view="landing">
     <header class="app-shell__topbar" data-shell-topbar>
       <a class="brand" data-brand-home href="./" aria-label="Calculus home">
         <span class="brand__mark" aria-hidden="true">∫</span>
@@ -86,7 +86,7 @@
       </div>
     </header>
 
-    <main class="landing-page" data-landing-page hidden aria-labelledby="landing-title">
+    <main class="landing-page" data-landing-page aria-labelledby="landing-title">
       <div class="landing-page__inner">
         <section class="landing-hero" aria-labelledby="landing-title">
           <div class="landing-hero__main">
@@ -277,7 +277,7 @@
       </div>
     </main>
 
-    <div class="app-shell__body">
+    <div class="app-shell__body" hidden>
       <button
         class="navigation-scrim"
         type="button"
@@ -1836,6 +1836,6 @@
   </dialog>
 
   <noscript>This prototype needs JavaScript to switch learning modes and activities and to open the topic, help and Word Bank drawers.</noscript>
-  <script type="module" src="./scripts/app-shell.js?v=landing17"></script>
+  <script type="module" src="./scripts/app-shell.js?v=landing18"></script>
 </body>
 </html>
