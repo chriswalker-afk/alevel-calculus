@@ -7,6 +7,7 @@
   <title>Calculus | Learning workspace</title>
   <link rel="stylesheet" href="/alevel-calculus/styles/tokens.css">
   <link rel="stylesheet" href="/alevel-calculus/styles/app-shell.css?v=interactionfix1">
+  <link rel="stylesheet" href="/alevel-calculus/styles/landing-page.css?v=landing1">
   <link rel="stylesheet" href="/alevel-calculus/styles/question-shell.css?v=integralfix2">
   <link rel="stylesheet" href="/alevel-calculus/styles/math-renderer.css?v=integralfix2">
   <link rel="stylesheet" href="/alevel-calculus/styles/memory-lab.css?v=mathnotation1">
@@ -55,7 +56,7 @@
 <body>
   <div class="app-shell" data-app-shell data-navigation-open="false">
     <header class="app-shell__topbar" data-shell-topbar>
-      <a class="brand" href="/alevel-calculus/" aria-label="Calculus home">
+      <a class="brand" data-brand-home href="/alevel-calculus/" aria-label="Calculus home">
         <span class="brand__mark" aria-hidden="true">∫</span>
         <span class="brand__text">Calculus</span>
       </a>
@@ -80,9 +81,200 @@
 
       <div class="topbar__status" aria-label="Course status">
         <span class="status-dot" aria-hidden="true"></span>
-        <span>Course pathway</span>
+        <span data-topbar-status-label>Course pathway</span>
       </div>
     </header>
+
+    <main class="landing-page" data-landing-page hidden aria-labelledby="landing-title">
+      <div class="landing-page__inner">
+        <section class="landing-hero" aria-labelledby="landing-title">
+          <div class="landing-hero__main">
+            <p class="landing-hero__eyebrow">A level Calculus · 8MA0 / 9MA0</p>
+            <h1 id="landing-title" tabindex="-1" data-landing-heading>Understand it. Remember it. Practise it. Explain it. Apply it.</h1>
+            <p class="landing-hero__lead">
+              This site is designed to take you from first understanding a calculus idea to using it confidently in unfamiliar problems.
+              Each topic is organised as a learning journey rather than a list of notes: explore the idea, retrieve the key facts, practise the standard methods,
+              explain the mathematics, then apply it.
+            </p>
+            <div class="landing-note">
+              <strong>You do not have to use every section every time.</strong>
+              If a topic is already secure, move quickly to the practice you need. If something breaks down, use <strong>Need a reminder?</strong> to jump back to the right explanation, fact or practice activity.
+            </div>
+          </div>
+
+          <aside class="landing-quick-start" aria-labelledby="landing-quick-start-title">
+            <p class="landing-section__eyebrow">Choose an entry point</p>
+            <h2 id="landing-quick-start-title">Start learning</h2>
+            <p>Pick the pathway that matches where you are in the course. You can change topic at any time from the Topics panel.</p>
+            <div class="landing-entry-list">
+              <button class="landing-entry" type="button" data-landing-enter-topic="topic:y12:foundations:pre-calculus">
+                <span class="landing-entry__badge">Y12 · 8MA0</span>
+                <span class="landing-entry__copy">
+                  <strong>Start the Year 12 pathway</strong>
+                  <span>Begin with the pre-calculus ideas that the rest of the course builds on.</span>
+                </span>
+                <span class="landing-entry__arrow" aria-hidden="true">→</span>
+              </button>
+              <button class="landing-entry" type="button" data-landing-enter-topic="topic:y13:differentiation:standard-functions">
+                <span class="landing-entry__badge">Y13 · 9MA0</span>
+                <span class="landing-entry__copy">
+                  <strong>Open the Year 13 pathway</strong>
+                  <span>Continue into the additional differentiation and integration content.</span>
+                </span>
+                <span class="landing-entry__arrow" aria-hidden="true">→</span>
+              </button>
+              <button class="landing-entry" type="button" data-landing-enter-topic="topic:full:review:calculus-mastery">
+                <span class="landing-entry__badge">Full A level</span>
+                <span class="landing-entry__copy">
+                  <strong>Go to calculus review &amp; mastery</strong>
+                  <span>Use mixed, topic-blind practice once you are ready to bring the course together.</span>
+                </span>
+                <span class="landing-entry__arrow" aria-hidden="true">→</span>
+              </button>
+            </div>
+          </aside>
+        </section>
+
+        <section class="landing-section" aria-labelledby="landing-first-steps-title">
+          <div class="landing-section__header">
+            <p class="landing-section__eyebrow">First steps</p>
+            <h2 id="landing-first-steps-title">A good way to use the site</h2>
+            <p class="landing-section__intro">For a new topic, work from understanding towards independence. The order is deliberate, but you can move backwards whenever you need to.</p>
+          </div>
+          <ol class="landing-steps">
+            <li class="landing-step">
+              <span class="landing-step__number">1</span>
+              <strong>Choose your topic</strong>
+              <p>Use the Topics panel to find the part of the course you are studying. The pathway separates Year 12 content from the additional Year 13 material.</p>
+            </li>
+            <li class="landing-step">
+              <span class="landing-step__number">2</span>
+              <strong>Start with Understand</strong>
+              <p>Read the Topic goals, then work through the explanations, diagrams and interactives until the main ideas make sense.</p>
+            </li>
+            <li class="landing-step">
+              <span class="landing-step__number">3</span>
+              <strong>Make the facts retrievable</strong>
+              <p>Use Memorise for notation, rules, definitions and key facts. Flashcards, games and review activities are there to make recall quick.</p>
+            </li>
+            <li class="landing-step">
+              <span class="landing-step__number">4</span>
+              <strong>Move through AO1 → AO2 → AO3</strong>
+              <p>First practise the technique, then reasoning and explanation, then harder applications and modelling.</p>
+            </li>
+            <li class="landing-step">
+              <span class="landing-step__number">5</span>
+              <strong>Use feedback to loop back</strong>
+              <p>Check answers, reveal hints when useful and follow targeted reminder links instead of simply repeating the same question.</p>
+            </li>
+          </ol>
+        </section>
+
+        <section class="landing-section" aria-labelledby="landing-modes-title">
+          <div class="landing-section__header">
+            <p class="landing-section__eyebrow">The five learning modes</p>
+            <h2 id="landing-modes-title">What each section is for</h2>
+            <p class="landing-section__intro">Most topics use the same five-part structure. Some foundation or review topics deliberately use fewer modes when another section would add no value.</p>
+          </div>
+          <div class="landing-mode-grid">
+            <article class="landing-mode-card">
+              <span class="landing-mode-card__label">Understand · Explore</span>
+              <h3>Build the idea</h3>
+              <p>Concept explanations, worked examples, visual models and interactive diagrams. Use this when the mathematics is new or when a method has stopped making sense.</p>
+              <span class="landing-mode-card__question">Ask: “Do I understand why this works?”</span>
+            </article>
+            <article class="landing-mode-card">
+              <span class="landing-mode-card__label">Memorise · Recall</span>
+              <h3>Make key knowledge available</h3>
+              <p>Definitions, notation, standard results and method cues are turned into active-recall tasks, flashcards, games and mixed review.</p>
+              <span class="landing-mode-card__question">Ask: “Can I recall this without looking it up?”</span>
+            </article>
+            <article class="landing-mode-card">
+              <span class="landing-mode-card__label">AO1 · Practise</span>
+              <h3>Use and apply standard techniques</h3>
+              <p>AO1 is about carrying out familiar mathematical procedures accurately and efficiently: algebra, differentiation, integration and other standard methods.</p>
+              <span class="landing-mode-card__question">Ask: “Can I execute the method correctly?”</span>
+            </article>
+            <article class="landing-mode-card">
+              <span class="landing-mode-card__label">AO2 · Explain</span>
+              <h3>Reason, interpret and communicate</h3>
+              <p>AO2 asks you to justify choices, interpret results, connect representations, diagnose errors and communicate mathematical reasoning clearly.</p>
+              <span class="landing-mode-card__question">Ask: “Can I explain or justify the mathematics?”</span>
+            </article>
+            <article class="landing-mode-card">
+              <span class="landing-mode-card__label">AO3 · Apply</span>
+              <h3>Solve problems in context</h3>
+              <p>AO3 is about choosing and connecting mathematics in less familiar problems, including modelling and problems set in mathematical or real-world contexts.</p>
+              <span class="landing-mode-card__question">Ask: “Can I decide what mathematics to use?”</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="landing-section" aria-labelledby="landing-tools-title">
+          <div class="landing-section__header">
+            <p class="landing-section__eyebrow">Tools around the course</p>
+            <h2 id="landing-tools-title">What the other site functions do</h2>
+            <p class="landing-section__intro">The controls around each activity are there to help you navigate, practise independently and recover when you get stuck.</p>
+          </div>
+          <div class="landing-tool-grid">
+            <article class="landing-tool">
+              <span class="landing-tool__icon" aria-hidden="true">◎</span>
+              <h3>Topic goals</h3>
+              <p>Shows what you should be able to understand or do by the end of the topic. Check these at the start and again when reviewing.</p>
+            </article>
+            <article class="landing-tool">
+              <span class="landing-tool__icon" aria-hidden="true">?</span>
+              <h3>Need a reminder?</h3>
+              <p>Takes you to targeted support for the exact gap: an Understand explanation, a Memorise item or suitable AO1 practice.</p>
+            </article>
+            <article class="landing-tool">
+              <span class="landing-tool__icon" aria-hidden="true">Aa</span>
+              <h3>Word Bank</h3>
+              <p>Collects important vocabulary and notation as you meet it. Use it to check definitions and mark terms that need more review.</p>
+            </article>
+            <article class="landing-tool">
+              <span class="landing-tool__icon" aria-hidden="true">fx</span>
+              <h3>ClassWiz</h3>
+              <p>Appears only where calculator support is genuinely useful. It shows how a Casio ClassWiz can be used to check or support the mathematics without replacing the method.</p>
+            </article>
+            <article class="landing-tool">
+              <span class="landing-tool__icon" aria-hidden="true">↻</span>
+              <h3>Generated questions</h3>
+              <p>Practice questions can generate fresh examples. Use <strong>New question</strong>, hints, answer checking and worked solutions to build independence rather than memorising one example.</p>
+            </article>
+            <article class="landing-tool">
+              <span class="landing-tool__icon" aria-hidden="true">✓</span>
+              <h3>Progress &amp; Data</h3>
+              <p>Topic markers show what you have visited and completed. Progress is stored locally in your browser; the Data tool lets you export, import or reset it.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="landing-section" aria-labelledby="landing-pathway-title">
+          <div class="landing-section__header">
+            <p class="landing-section__eyebrow">Course pathway</p>
+            <h2 id="landing-pathway-title">How the course is organised</h2>
+          </div>
+          <div class="landing-tool-grid">
+            <article class="landing-tool">
+              <span class="landing-tool__icon" aria-hidden="true">12</span>
+              <h3>Year 12 · 8MA0</h3>
+              <p>The first part of the pathway develops the core ideas of differentiation and integration and ends with a Year 12 review and mastery checkpoint.</p>
+            </article>
+            <article class="landing-tool">
+              <span class="landing-tool__icon" aria-hidden="true">13</span>
+              <h3>Additional Year 13 · 9MA0</h3>
+              <p>The second part extends those ideas into the additional differentiation and integration techniques required for the full A level.</p>
+            </article>
+            <article class="landing-tool">
+              <span class="landing-tool__icon" aria-hidden="true">R</span>
+              <h3>Review &amp; mastery</h3>
+              <p>Review sections mix topics so you must recognise the structure yourself. They are designed for consolidation once individual topics are reasonably secure.</p>
+            </article>
+          </div>
+        </section>
+      </div>
+    </main>
 
     <div class="app-shell__body">
       <button
