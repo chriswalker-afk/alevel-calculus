@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="./styles/tokens.css">
   <link rel="stylesheet" href="./styles/app-shell.css?v=interactionfix1">
   <link rel="stylesheet" href="./styles/landing-page.css?v=landing3">
-  <link rel="stylesheet" href="./styles/question-shell.css?v=integralfix2">
+  <link rel="stylesheet" href="./styles/question-shell.css?v=setsummary1">
   <link rel="stylesheet" href="./styles/math-renderer.css?v=memorymath1">
   <link rel="stylesheet" href="./styles/memory-lab.css?v=mathnotation1">
   <link rel="stylesheet" href="./styles/diagram-primitives.css?v=diagramfix3">
@@ -1345,15 +1345,15 @@
             </section>
 
             <section class="question-shell" data-question-shell aria-label="Practice question" hidden>
-              <div class="question-shell__topline">
+              <div class="question-shell__topline" data-question-shell-topline>
                 <span class="question-shell__format" data-question-shell-format>Algebraic response</span>
                 <div class="question-shell__topline-actions">
                   <span class="question-shell__counter" data-question-shell-counter>Question 1 of 4</span>
-                  <button class="question-shell__button question-shell__button--new" type="button" data-question-shell-new>New question</button>
+                  <button class="question-shell__button question-shell__button--new" type="button" data-question-shell-new>New set</button>
                 </div>
               </div>
 
-              <div class="question-shell__body">
+              <div class="question-shell__body" data-question-shell-body>
                 <section class="question-shell__prompt" aria-labelledby="question-shell-prompt">
                   <p class="question-shell__prompt-label">Question</p>
                   <h2 id="question-shell-prompt" data-question-shell-prompt>Differentiate with respect to x.</h2>
@@ -1444,11 +1444,30 @@
                 </section>
               </div>
 
-              <footer class="question-shell__footer">
+              <section class="question-set-summary" data-question-set-summary aria-labelledby="question-set-summary-title" hidden>
+                <div class="question-set-summary__heading">
+                  <p class="eyebrow">Set complete</p>
+                  <h2 id="question-set-summary-title" data-question-set-summary-title>Set complete</h2>
+                  <p>Your score is shown before you choose where to go next.</p>
+                </div>
+                <div class="question-set-summary__score-card" aria-live="polite">
+                  <span class="question-set-summary__score-label">Your score</span>
+                  <strong class="question-set-summary__score" data-question-set-summary-score>0 / 0</strong>
+                  <span class="question-set-summary__percentage" data-question-set-summary-percentage>0%</span>
+                </div>
+                <p class="question-set-summary__detail" data-question-set-summary-detail></p>
+                <div class="question-set-summary__actions" aria-label="Choose what to do next">
+                  <button class="question-shell__button question-set-summary__action question-set-summary__action--primary" type="button" data-question-set-summary-new-set>New set</button>
+                  <button class="question-shell__button question-set-summary__action" type="button" data-question-set-summary-next-ao>Continue to next AO</button>
+                  <button class="question-shell__button question-set-summary__action" type="button" data-question-set-summary-next-topic>Next topic</button>
+                </div>
+              </section>
+
+              <footer class="question-shell__footer" data-question-shell-footer>
                 <span class="question-shell__progress" data-question-shell-progress>Question 1 of 4</span>
                 <span class="question-shell__footer-spacer" aria-hidden="true"></span>
                 <button class="question-shell__button question-shell__button--next" type="button" data-question-shell-next disabled>
-                  <span>Another question</span>
+                  <span data-question-shell-next-label>Next question</span>
                   <span aria-hidden="true">→</span>
                 </button>
               </footer>
@@ -1807,6 +1826,6 @@
   </dialog>
 
   <noscript>This prototype needs JavaScript to switch learning modes and activities and to open the topic, help and Word Bank drawers.</noscript>
-  <script type="module" src="./scripts/app-shell.js?v=landing13"></script>
+  <script type="module" src="./scripts/app-shell.js?v=landing14"></script>
 </body>
 </html>

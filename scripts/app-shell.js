@@ -9,7 +9,7 @@ import { APP_STATE_SCHEMA_VERSION } from "./local-state-store.js";
 import { activityRouteFromId, createHistoryRouteController } from "./navigation-route.js";
 import { renderVocabularyRichText } from "./vocabulary-term.js?v=memorymath1";
 import { buildWordBankEntries, filterWordBankEntries } from "./word-bank-model.js?v=memorymath1";
-import { createQuestionShell } from "./question-shell.js?v=memorymath1";
+import { createQuestionShell } from "./question-shell.js?v=setsummary1";
 import { getQuestionPracticeDefinitionForActivity } from "./question-catalogue.js?v=integralfix1";
 import { createGeneratorRunner, readQuestionDebugSeed } from "./generator-runner.js?v=questionfix1";
 import { createQuestionPracticeSession } from "./question-practice-session.js";
@@ -129,6 +129,7 @@ const fullDifferentiationMasteryWeaknesses = document.querySelector("[data-full-
 const memoryLabElement = document.querySelector("[data-memory-lab]");
 const previousButton = document.querySelector("[data-previous-activity]");
 const nextButton = document.querySelector("[data-next-activity]");
+const activityControls = document.querySelector("[data-activity-controls]");
 const footerPosition = document.querySelector("[data-footer-position]");
 const classWizPanelElement = document.querySelector("[data-classwiz-panel]");
 const classWizTrigger = document.querySelector("[data-classwiz-trigger]");
@@ -848,11 +849,61 @@ function generatedQuestionSetForActivity(activityId) {
   return questionPracticeSessionForActivity(activityId)?.currentBatch() ?? null;
 }
 
+function nextQuestionAoMode() {
+  if (activeMode === "ao1" && currentTopicRuntime().availableModes.includes("ao2")) return "ao2";
+  if (activeMode === "ao2" && currentTopicRuntime().availableModes.includes("ao3")) return "ao3";
+  return null;
+}
+
+function nextPathwayTopic() {
+  const currentIndex = topicProgressItems.findIndex((item) => item.dataset.topicId === currentTopicId);
+  if (currentIndex < 0) return null;
+  for (const item of topicProgressItems.slice(currentIndex + 1)) {
+    const topicId = item.dataset.topicId;
+    if (topicRuntime[topicId]) return topicRuntime[topicId];
+  }
+  return null;
+}
+
+function questionSetCompletionChoices() {
+  const nextAoMode = nextQuestionAoMode();
+  const nextTopic = nextPathwayTopic();
+  return Object.freeze({
+    nextAo: nextAoMode
+      ? Object.freeze({ mode: nextAoMode, label: `Continue to ${nextAoMode.toUpperCase()}` })
+      : null,
+    nextTopic: nextTopic
+      ? Object.freeze({ topicId: nextTopic.topicId, label: `Next topic · ${nextTopic.label}` })
+      : null
+  });
+}
+
 const questionShell = createQuestionShell(questionShellElement, {
   onRequestFreshSet() {
     const activity = currentActivities()[activityIndex];
     if (!activity?.activityId) return null;
     return questionPracticeSessionForActivity(activity.activityId)?.nextBatch() ?? null;
+  },
+  onSetSummaryVisibilityChange(visible) {
+    if (activityControls) activityControls.hidden = Boolean(visible);
+    shell.dataset.questionSetSummary = visible ? "true" : "false";
+  },
+  getSetCompletionChoices() {
+    return questionSetCompletionChoices();
+  },
+  onRequestNextAo(choice) {
+    if (!choice?.mode || !currentTopicRuntime().availableModes.includes(choice.mode)) return false;
+    activityIndexByTopicMode.set(topicModeKey(currentTopicId, choice.mode), 0);
+    selectMode(choice.mode, { focusTab: true });
+    stage.focus?.({ preventScroll: true });
+    return true;
+  },
+  onRequestNextTopic(choice) {
+    const runtime = choice?.topicId ? topicRuntime[choice.topicId] : null;
+    if (!runtime) return false;
+    const startMode = runtime.availableModes.includes("understand") ? "understand" : (runtime.availableModes[0] ?? "understand");
+    activityIndexByTopicMode.set(topicModeKey(choice.topicId, startMode), 0);
+    return selectTopic(choice.topicId, { focusStage: true });
   },
   resolveDiagnostic(attempt) {
     return diagnosticRouter.routeOutcome(attempt);

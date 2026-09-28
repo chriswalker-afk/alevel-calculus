@@ -37,6 +37,9 @@ class FakeElement {
 function buildQuestionShellFixture() {
   const root = new FakeElement('root');
   const selectors = [
+    '[data-question-shell-topline]',
+    '[data-question-shell-body]',
+    '[data-question-shell-footer]',
     '[data-question-shell-format]',
     '[data-question-shell-counter]',
     '[data-question-shell-prompt]',
@@ -67,7 +70,16 @@ function buildQuestionShellFixture() {
     '[data-question-shell-solution-steps]',
     '[data-question-shell-progress]',
     '[data-question-shell-new]',
-    '[data-question-shell-next]'
+    '[data-question-shell-next]',
+    '[data-question-shell-next-label]',
+    '[data-question-set-summary]',
+    '[data-question-set-summary-title]',
+    '[data-question-set-summary-score]',
+    '[data-question-set-summary-percentage]',
+    '[data-question-set-summary-detail]',
+    '[data-question-set-summary-new-set]',
+    '[data-question-set-summary-next-ao]',
+    '[data-question-set-summary-next-topic]'
   ];
   for (const selector of selectors) root.children.set(selector, new FakeElement(selector));
 
@@ -87,6 +99,7 @@ const ao1Definition = getQuestionSetDefinitionForActivity('activity:y12:differen
 const ao2Definition = getQuestionSetDefinitionForActivity('activity:y12:differentiation:basics:ao2:diagnose-power-rule');
 const ao1Set = runner.generateSet(ao1Definition);
 const ao2Set = runner.generateSet(ao2Definition);
+const summaryFreshSet = runner.generateSet({ ...ao1Definition, seed: 'question-shell-summary-fresh' });
 assert(ao1Set.questions.length === 3, 'Generated AO1 set should contain algebraic, numeric and choice questions');
 assert(questionResponseTypes.filter((type) => type !== 'short-reasoning').every((type) => ao1Set.questions.some((question) => question.responseType === type)), 'AO1 generated set should cover algebraic, numeric and choice responses');
 assert(ao2Set.questions.length === 1 && ao2Set.questions[0].responseType === 'short-reasoning', 'Generated AO2 set should exercise the short-reasoning response surface');
@@ -94,11 +107,19 @@ assert(ao2Set.questions.length === 1 && ao2Set.questions[0].responseType === 'sh
 const { root, optionRows } = buildQuestionShellFixture();
 const attempts = [];
 const diagnosticNavigations = [];
+const completionActions = [];
 const diagnosticRouter = createDiagnosticRouter();
 const shell = createQuestionShell(root, {
   resolveDiagnostic: (attempt) => diagnosticRouter.routeOutcome(attempt),
   onDiagnosticNavigate: (target) => diagnosticNavigations.push(target),
-  onAttempt: (attempt) => attempts.push(attempt)
+  onAttempt: (attempt) => attempts.push(attempt),
+  onRequestFreshSet: () => summaryFreshSet,
+  getSetCompletionChoices: () => ({
+    nextAo: { mode: 'ao2', label: 'Continue to AO2' },
+    nextTopic: { topicId: 'topic:y12:differentiation:first-principles', label: 'Next topic · First principles' }
+  }),
+  onRequestNextAo: (choice) => completionActions.push({ type: 'ao', choice }),
+  onRequestNextTopic: (choice) => completionActions.push({ type: 'topic', choice })
 });
 shell.loadSet(ao1Set);
 
@@ -187,8 +208,19 @@ shell.checkCurrent();
 assert(feedback.dataset.tone === 'correct', 'Generated choice response should be checkable in the shared shell');
 assert(root.querySelector('[data-question-shell-diagnostic]').hidden === true, 'A successful retry should clear the current diagnostic next-step card');
 shell.nextQuestion();
-assert(root.dataset.questionResponseType === 'algebraic', 'Generated AO1 set should wrap to its first question');
-assert(input.value === expected, 'Wrapped generated set should restore the original algebraic response');
+assert(root.dataset.questionView === 'summary', 'Finishing the last question must stop on a set summary instead of auto-generating or wrapping.');
+assert(root.querySelector('[data-question-set-summary]').hidden === false, 'Set summary should be the active surface after the final checked question.');
+assert(root.querySelector('[data-question-set-summary-score]').textContent === '2 / 3', 'Set score should count the first checked result for each question.');
+assert(root.querySelector('[data-question-set-summary-percentage]').textContent === '67%', 'Set summary should show a readable percentage alongside the total score.');
+assert(root.querySelector('[data-question-set-summary-next-ao]').hidden === false, 'Next AO should be offered when AppShell reports one.');
+assert(root.querySelector('[data-question-set-summary-next-topic]').hidden === false, 'Next topic should be offered when AppShell reports one.');
+root.querySelector('[data-question-set-summary-next-ao]').trigger('click');
+assert(completionActions.at(-1)?.type === 'ao' && completionActions.at(-1)?.choice?.mode === 'ao2', 'Set summary should delegate the next-AO choice to AppShell.');
+root.querySelector('[data-question-set-summary-next-topic]').trigger('click');
+assert(completionActions.at(-1)?.type === 'topic' && completionActions.at(-1)?.choice?.topicId === 'topic:y12:differentiation:first-principles', 'Set summary should delegate the next-topic choice to AppShell.');
+root.querySelector('[data-question-set-summary-new-set]').trigger('click');
+assert(root.dataset.questionView === 'question', 'Choosing New set from the summary should return to a fresh question surface.');
+assert(shell.getActiveQuestionId() === summaryFreshSet.questions[0].id, 'Choosing New set should load the first question of the fresh batch.');
 
 shell.loadSet(ao2Set);
 assert(root.dataset.questionResponseType === 'short-reasoning', 'Same QuestionShell should accept generated AO2 short reasoning');
@@ -197,14 +229,13 @@ shell.checkCurrent();
 assert(feedback.dataset.tone === 'correct', 'Generated short-reasoning question should support concise response feedback');
 
 shell.loadSet(ao1Set);
-assert(shell.getSnapshot().checked === true, 'Question state should survive switching generated sets and returning');
-assert(shell.getSnapshot().hintOpen === true && shell.getSnapshot().hintsRevealed === 2 && shell.getSnapshot().solutionOpen === true, 'Progressive-hint and worked-solution state should survive returning to the generated question');
-assert(input.value === expected, 'Generated question response should survive returning to the set');
+assert(root.dataset.questionView === 'summary', 'Returning to a completed generated set should restore its summary rather than silently reopening the last question.');
+assert(shell.getSnapshot().setComplete === true, 'Completed-set state should survive switching generated sets and returning');
 
 shell.hide();
 assert(root.hidden === true, 'QuestionShell can be hidden when the current activity is not question-based');
 shell.loadSet(ao1Set);
-assert(shell.getSnapshot().response === expected, 'Question state should survive hiding and restoring the same generated set');
+assert(root.dataset.questionView === 'summary', 'Completed-set summary should survive hiding and restoring the same generated set');
 
 const freshSet = runner.generateSet({ ...ao1Definition, seed: 'question-shell-manual-fresh' });
 const freshFixture = buildQuestionShellFixture();
@@ -218,8 +249,8 @@ const freshShell = createQuestionShell(freshFixture.root, {
 freshShell.loadSet(ao1Set);
 const originalFreshQuestionId = freshShell.getActiveQuestionId();
 freshFixture.root.querySelector('[data-question-shell-new]').trigger('click');
-assert(freshRequestCount === 1, 'New question must request a fresh generated set immediately');
-assert(freshShell.getActiveQuestionId() !== originalFreshQuestionId, 'New question must replace the current generated question without requiring an attempted answer');
-assert(freshShell.getSnapshot().checked === false && freshShell.getSnapshot().response === '', 'A manually generated new question must start clean');
+assert(freshRequestCount === 1, 'New set must request a fresh generated batch immediately');
+assert(freshShell.getActiveQuestionId() !== originalFreshQuestionId, 'New set must replace the current generated question without requiring an attempted answer');
+assert(freshShell.getSnapshot().checked === false && freshShell.getSnapshot().response === '', 'A manually generated new set must start clean');
 
-console.log('PASS shared QuestionShell consumes generated AO1/AO2 QuestionDefinition objects, validates flexible maths input, exposes New question, and preserves state');
+console.log('PASS shared QuestionShell scores completed AO sets, pauses on a decision screen, and preserves generated-question state');

@@ -175,6 +175,9 @@ memoryLabElement.children.set('[data-memory-learn-complete]', memoryLearnComplet
 memoryLabElement.collections.set('[data-memory-lab-view]', memoryViews);
 memoryLabElement.collections.set('[data-memory-lab-panel]', [memoryLearnPanel, memoryFlashPanel, memoryGamesPanel, memoryReviewPanel]);
 const questionShellSelectors = [
+  '[data-question-shell-topline]',
+  '[data-question-shell-body]',
+  '[data-question-shell-footer]',
   '[data-question-shell-format]',
   '[data-question-shell-counter]',
   '[data-question-shell-prompt]',
@@ -205,7 +208,16 @@ const questionShellSelectors = [
   '[data-question-shell-solution-steps]',
   '[data-question-shell-progress]',
   '[data-question-shell-new]',
-  '[data-question-shell-next]'
+  '[data-question-shell-next]',
+  '[data-question-shell-next-label]',
+  '[data-question-set-summary]',
+  '[data-question-set-summary-title]',
+  '[data-question-set-summary-score]',
+  '[data-question-set-summary-percentage]',
+  '[data-question-set-summary-detail]',
+  '[data-question-set-summary-new-set]',
+  '[data-question-set-summary-next-ao]',
+  '[data-question-set-summary-next-topic]'
 ];
 for (const selector of questionShellSelectors) questionShellElement.children.set(selector, new FakeElement(`question:${selector}`));
 const questionOptionRows = Array.from({ length: 4 }, (_, index) => {

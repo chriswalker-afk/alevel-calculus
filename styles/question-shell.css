@@ -551,6 +551,131 @@
   }
 }
 
+/* Shared AO1-AO3 end-of-set decision screen. */
+.question-set-summary {
+  grid-row: 1 / -1;
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.42fr);
+  grid-template-areas:
+    "heading score"
+    "detail score"
+    "actions actions";
+  gap: var(--space-4) var(--space-6);
+  align-content: center;
+  padding: clamp(var(--space-5), 4vw, var(--space-8));
+  background: var(--surface-canvas);
+}
+
+.question-set-summary[hidden] { display: none; }
+
+.question-set-summary__heading {
+  grid-area: heading;
+  align-self: end;
+}
+
+.question-set-summary__heading .eyebrow {
+  margin: 0 0 var(--space-2);
+  color: var(--mode-soft-text);
+}
+
+.question-set-summary__heading h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3.2vw, 2.55rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.question-set-summary__heading p:last-child,
+.question-set-summary__detail {
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+}
+
+.question-set-summary__heading p:last-child {
+  margin: var(--space-2) 0 0;
+}
+
+.question-set-summary__score-card {
+  grid-area: score;
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--space-1);
+  padding: var(--space-5);
+  border: 2px solid var(--mode-accent);
+  border-radius: var(--radius-xl);
+  background: var(--mode-soft);
+  color: var(--mode-soft-text);
+  text-align: center;
+  box-shadow: var(--shadow-raised);
+}
+
+.question-set-summary__score-label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.question-set-summary__score {
+  font-size: clamp(2.5rem, 6vw, 4.6rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.question-set-summary__percentage {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.question-set-summary__detail {
+  grid-area: detail;
+  margin: 0;
+  align-self: start;
+}
+
+.question-set-summary__actions {
+  grid-area: actions;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+}
+
+.question-set-summary__action {
+  min-height: 58px;
+  padding: var(--space-3) var(--space-4);
+  font-weight: var(--weight-semibold);
+}
+
+.question-set-summary__action--primary {
+  border-color: var(--mode-accent);
+  background: var(--mode-accent);
+  color: var(--mode-accent-text);
+}
+
+.question-set-summary__action--primary:hover {
+  box-shadow: var(--shadow-raised);
+}
+
+@media (max-width: 680px) {
+  .question-set-summary {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "heading"
+      "score"
+      "detail"
+      "actions";
+    align-content: start;
+    padding: var(--space-4);
+  }
+
+  .question-set-summary__score-card { min-height: 130px; }
+  .question-set-summary__actions { grid-template-columns: 1fr; }
+}
+
 /* Step 21: diagnostic next-step support. Uses existing universal information tokens. */
 .question-shell__diagnostic {
   display: grid;

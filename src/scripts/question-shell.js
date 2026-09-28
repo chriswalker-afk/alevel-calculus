@@ -47,7 +47,8 @@ function makeBlankState() {
     selfReviewCriteria: new Set(),
     selfReviewFocus: new Set(),
     selfReviewOutcome: null,
-    selfReviewAttemptCount: 0
+    selfReviewAttemptCount: 0,
+    scorePoint: null
   };
 }
 
@@ -55,14 +56,21 @@ export function createQuestionShell(root, {
   onAttempt = () => {},
   resolveDiagnostic = () => null,
   onDiagnosticNavigate = () => {},
-  onRequestFreshSet = () => null
+  onRequestFreshSet = () => null,
+  onSetSummaryVisibilityChange = () => {},
+  getSetCompletionChoices = () => ({}),
+  onRequestNextAo = () => false,
+  onRequestNextTopic = () => false
 } = {}) {
   assertElement(root, "root");
 
   const fields = Object.freeze({
+    topline: root.querySelector("[data-question-shell-topline]"),
+    body: root.querySelector("[data-question-shell-body]"),
+    footer: root.querySelector("[data-question-shell-footer]"),
     format: assertElement(root.querySelector("[data-question-shell-format]"), "format label"),
     counter: assertElement(root.querySelector("[data-question-shell-counter]"), "question counter"),
-    newButton: assertElement(root.querySelector("[data-question-shell-new]"), "new question button"),
+    newButton: assertElement(root.querySelector("[data-question-shell-new]"), "new set button"),
     prompt: assertElement(root.querySelector("[data-question-shell-prompt]"), "prompt"),
     math: assertElement(root.querySelector("[data-question-shell-math]"), "mathematics prompt"),
     visual: root.querySelector("[data-question-shell-visual]"),
@@ -91,7 +99,16 @@ export function createQuestionShell(root, {
     solutionPanel: assertElement(root.querySelector("[data-question-shell-solution-panel]"), "worked solution panel"),
     solutionSteps: assertElement(root.querySelector("[data-question-shell-solution-steps]"), "worked solution steps"),
     progress: assertElement(root.querySelector("[data-question-shell-progress]"), "footer progress"),
-    nextButton: assertElement(root.querySelector("[data-question-shell-next]"), "next question button")
+    nextButton: assertElement(root.querySelector("[data-question-shell-next]"), "next question button"),
+    nextLabel: assertElement(root.querySelector("[data-question-shell-next-label]"), "next question label"),
+    summary: assertElement(root.querySelector("[data-question-set-summary]"), "set summary"),
+    summaryTitle: assertElement(root.querySelector("[data-question-set-summary-title]"), "set summary title"),
+    summaryScore: assertElement(root.querySelector("[data-question-set-summary-score]"), "set summary score"),
+    summaryPercentage: assertElement(root.querySelector("[data-question-set-summary-percentage]"), "set summary percentage"),
+    summaryDetail: assertElement(root.querySelector("[data-question-set-summary-detail]"), "set summary detail"),
+    summaryNewSet: assertElement(root.querySelector("[data-question-set-summary-new-set]"), "new set button"),
+    summaryNextAo: assertElement(root.querySelector("[data-question-set-summary-next-ao]"), "next AO button"),
+    summaryNextTopic: assertElement(root.querySelector("[data-question-set-summary-next-topic]"), "next topic button")
   });
 
   for (const element of [
@@ -153,7 +170,9 @@ export function createQuestionShell(root, {
 
   let activeSet = null;
   let questionIndex = 0;
+  let completionChoices = Object.freeze({});
   const setIndex = new Map();
+  const completedSetKeys = new Set();
   const stateByQuestionId = new Map();
   const mathEntry = createMathEntryEnhancement({ inputGroup: fields.inputGroup, input: fields.input });
   const reasoningPreview = createReasoningMathPreview({ reasoningGroup: fields.reasoningGroup, reasoning: fields.reasoning });
@@ -166,6 +185,61 @@ export function createQuestionShell(root, {
 
   function currentQuestion() {
     return activeSet?.questions?.[questionIndex] ?? null;
+  }
+
+  function setKey(set = activeSet) {
+    if (!set) return "";
+    return `${set.id}::${set.practiceBatch ?? set.generationSeed ?? "base"}`;
+  }
+
+  function scoreActiveSet() {
+    const questions = activeSet?.questions ?? [];
+    const score = questions.reduce((total, question) => total + (stateFor(question).scorePoint === 1 ? 1 : 0), 0);
+    const completed = questions.reduce((total, question) => total + (stateFor(question).checked ? 1 : 0), 0);
+    const total = questions.length;
+    return Object.freeze({
+      score,
+      total,
+      completed,
+      percentage: total ? Math.round((score / total) * 100) : 0,
+      setId: activeSet?.id ?? null,
+      practiceBatch: activeSet?.practiceBatch ?? null,
+      assessmentObjective: currentQuestion()?.metadata?.assessmentObjective ?? null
+    });
+  }
+
+  function setQuestionSurfaceVisible(visible) {
+    if (fields.topline) fields.topline.hidden = !visible;
+    if (fields.body) fields.body.hidden = !visible;
+    if (fields.footer) fields.footer.hidden = !visible;
+    fields.summary.hidden = visible;
+    root.dataset.questionView = visible ? "question" : "summary";
+    onSetSummaryVisibilityChange(!visible);
+  }
+
+  function renderSetSummary({ focus = false } = {}) {
+    if (!activeSet) return;
+    const result = scoreActiveSet();
+    completionChoices = Object.freeze(getSetCompletionChoices(result) ?? {});
+    const setLabel = Number.isInteger(result.practiceBatch) ? `Set ${result.practiceBatch}` : "Set";
+    fields.summaryTitle.textContent = `${setLabel} complete`;
+    fields.summaryScore.textContent = `${result.score} / ${result.total}`;
+    fields.summaryPercentage.textContent = `${result.percentage}%`;
+    fields.summaryDetail.textContent = `You scored ${result.score} out of ${result.total} on this set, based on the first checked response for each question. Choose what you want to do next.`;
+
+    const nextAo = completionChoices.nextAo ?? null;
+    fields.summaryNextAo.hidden = !nextAo;
+    fields.summaryNextAo.disabled = !nextAo;
+    if (nextAo) fields.summaryNextAo.textContent = nextAo.label ?? `Continue to ${String(nextAo.mode ?? "").toUpperCase()}`;
+
+    const nextTopic = completionChoices.nextTopic ?? null;
+    fields.summaryNextTopic.hidden = !nextTopic;
+    fields.summaryNextTopic.disabled = !nextTopic;
+    if (nextTopic) fields.summaryNextTopic.textContent = nextTopic.label ?? "Next topic";
+
+    setQuestionSurfaceVisible(false);
+    root.hidden = false;
+    if (focus) fields.summaryNewSet.focus?.();
   }
 
   selfReview = createSelfReviewPanel({
@@ -327,6 +401,8 @@ export function createQuestionShell(root, {
     solutionRenderer.render(question.solutionSteps);
 
     renderSelfReview(question, state);
+    const atEndOfSet = questionIndex >= (activeSet?.questions?.length ?? 0) - 1;
+    fields.nextLabel.textContent = atEndOfSet ? "Finish set" : "Next question";
     fields.nextButton.disabled = selfReviewQuestion ? state.selfReviewOutcome !== "secure" : !state.checked;
   }
 
@@ -415,6 +491,7 @@ export function createQuestionShell(root, {
   function render({ focus = false } = {}) {
     const question = currentQuestion();
     if (!question || !activeSet) return;
+    setQuestionSurfaceVisible(true);
     const state = stateFor(question);
     const position = `${questionIndex + 1} of ${activeSet.questions.length}`;
     const batchPrefix = Number.isInteger(activeSet.practiceBatch) ? `Set ${activeSet.practiceBatch} · ` : "";
@@ -466,7 +543,8 @@ export function createQuestionShell(root, {
     questionIndex = resetIndex
       ? 0
       : Math.min(setIndex.get(set.id) ?? 0, set.questions.length - 1);
-    render({ focus });
+    if (completedSetKeys.has(setKey(set))) renderSetSummary({ focus });
+    else render({ focus });
   }
 
   function hide() {
@@ -475,6 +553,7 @@ export function createQuestionShell(root, {
     visualRenderer.clear();
     specialVisualRenderer.clear();
     conceptVisualRenderer.clear();
+    onSetSummaryVisibilityChange(false);
     root.hidden = true;
   }
 
@@ -526,6 +605,7 @@ export function createQuestionShell(root, {
       message: result.message || "",
       errorCategory: result.errorCategory ?? null
     };
+    if (state.scorePoint === null) state.scorePoint = tone === "correct" ? 1 : 0;
     const attemptBase = {
       setId: activeSet.id,
       questionId: question.id,
@@ -556,6 +636,7 @@ export function createQuestionShell(root, {
     const secure = outcome === "secure";
     state.selfReviewOutcome = secure ? "secure" : "needs-review";
     state.checked = true;
+    if (state.scorePoint === null) state.scorePoint = secure ? 1 : 0;
     state.selfReviewAttemptCount += 1;
     state.feedback = secure
       ? { tone: "correct", title: "Self-review complete", message: "You have checked your reasoning against the model and the success criteria.", errorCategory: null }
@@ -585,7 +666,7 @@ export function createQuestionShell(root, {
     return state.feedback;
   }
 
-  function requestFreshQuestion() {
+  function requestFreshQuestion(source = "manual-new-set") {
     const question = currentQuestion();
     if (!question || !activeSet) return null;
     saveCurrentResponse();
@@ -594,7 +675,7 @@ export function createQuestionShell(root, {
       questionId: question.id,
       templateId: question.templateId ?? null,
       practiceBatch: activeSet.practiceBatch ?? null,
-      source: "manual-new-question"
+      source
     }));
     if (!freshSet) return null;
     loadSet(freshSet, { focus: true, resetIndex: true });
@@ -612,18 +693,12 @@ export function createQuestionShell(root, {
     saveCurrentResponse();
     const atEndOfSet = questionIndex >= activeSet.questions.length - 1;
     if (atEndOfSet) {
-      const freshSet = onRequestFreshSet(Object.freeze({
-        setId: activeSet.id,
-        questionId: question.id,
-        practiceBatch: activeSet.practiceBatch ?? null
-      }));
-      if (freshSet) {
-        loadSet(freshSet, { focus: true, resetIndex: true });
-        return;
-      }
+      completedSetKeys.add(setKey());
+      renderSetSummary({ focus: true });
+      return;
     }
 
-    questionIndex = (questionIndex + 1) % activeSet.questions.length;
+    questionIndex = questionIndex + 1;
     setIndex.set(activeSet.id, questionIndex);
     render({ focus: true });
   }
@@ -665,14 +740,24 @@ export function createQuestionShell(root, {
     event.preventDefault();
     onDiagnosticNavigate(diagnostic.target, diagnostic);
   });
-  fields.newButton.addEventListener("click", requestFreshQuestion);
+  fields.newButton.addEventListener("click", () => requestFreshQuestion("manual-new-set"));
   fields.nextButton.addEventListener("click", moveNext);
+  fields.summaryNewSet.addEventListener("click", () => requestFreshQuestion("set-summary-new-set"));
+  fields.summaryNextAo.addEventListener("click", () => {
+    const choice = completionChoices.nextAo;
+    if (choice) onRequestNextAo(choice, scoreActiveSet());
+  });
+  fields.summaryNextTopic.addEventListener("click", () => {
+    const choice = completionChoices.nextTopic;
+    if (choice) onRequestNextTopic(choice, scoreActiveSet());
+  });
 
   return Object.freeze({
     loadSet,
     hide,
     checkCurrent,
     newQuestion: requestFreshQuestion,
+    newSet: requestFreshQuestion,
     nextQuestion: moveNext,
     getActiveQuestionId: () => currentQuestion()?.id ?? null,
     getSnapshot: () => {
@@ -697,7 +782,9 @@ export function createQuestionShell(root, {
         selfReviewOpen: state.selfReviewOpen,
         selfReviewCriteria: [...state.selfReviewCriteria],
         selfReviewFocus: [...state.selfReviewFocus],
-        selfReviewOutcome: state.selfReviewOutcome
+        selfReviewOutcome: state.selfReviewOutcome,
+        scorePoint: state.scorePoint,
+        setComplete: completedSetKeys.has(setKey())
       });
     }
   });
