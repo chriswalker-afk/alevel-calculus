@@ -419,8 +419,15 @@ export class PreCalculusUnderstandExperience {
 
     const step1 = makeStep(1, 'Start with words');
     step1.append(
-      el(this.document, 'p', '', 'From P to Q, the horizontal change is 4 and the vertical change is 2.')
+      el(this.document, 'p', '', 'Read the coordinates first, then work out each change.')
     );
+    const wordChanges = el(this.document, 'div', 'pre-calculus-understand__delta-math-pair');
+    const changeX = el(this.document, 'div', 'pre-calculus-understand__delta-math', 'change in x = 5 - 1 = 4');
+    const changeY = el(this.document, 'div', 'pre-calculus-understand__delta-math', 'change in y = 3 - 1 = 2');
+    changeX.setAttribute('data-math-display', '');
+    changeY.setAttribute('data-math-display', '');
+    wordChanges.append(changeX, changeY);
+    step1.append(wordChanges);
 
     const step2 = makeStep(2, 'Introduce the symbol Δ');
     step2.append(
@@ -435,11 +442,13 @@ export class PreCalculusUnderstandExperience {
     step2.append(deltaPair);
 
     const step3 = makeStep(3, 'Gradient of a straight line');
-    const formula = el(this.document, 'div', 'pre-calculus-understand__delta-formula', 'gradient = Δy/Δx = (y_2 - y_1)/(x_2 - x_1)');
-    formula.setAttribute('data-math-display', '');
+    const formulaA = el(this.document, 'div', 'pre-calculus-understand__delta-formula', 'gradient = Δy/Δx');
+    const formulaB = el(this.document, 'div', 'pre-calculus-understand__delta-formula', 'gradient = (y_2 - y_1)/(x_2 - x_1)');
+    formulaA.setAttribute('data-math-display', '');
+    formulaB.setAttribute('data-math-display', '');
     const example = el(this.document, 'div', 'pre-calculus-understand__delta-example', 'gradient = 2/4 = 0.5');
     example.setAttribute('data-math-display', '');
-    step3.append(formula, example);
+    step3.append(formulaA, formulaB, example);
   }
 
   render_delta_change() {
