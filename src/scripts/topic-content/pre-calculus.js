@@ -51,21 +51,21 @@ export const preCalculusTopic = defineTopicMetadata({
     {
       id: 'vertical-limit',
       title: 'What happens near vertical?',
-      summary: 'Approach vertical from positive- and negative-gradient sides: m tends to +∞ or −∞ while an exactly vertical line still has undefined gradient.',
+      summary: 'Approach vertical from positive- and negative-gradient sides and observe that the gradient magnitude grows without bound, while an exactly vertical line has undefined gradient.',
       microSkillIds: [skill('vertical-line-gradient')],
       vocabularyTags: ['vocab:gradient']
     },
     {
       id: 'delta-meaning',
-      title: 'What does Δ mean?',
-      summary: 'Introduce Δ as “change in”, then connect Δx and Δy to horizontal and vertical change before stating the straight-line gradient formula.',
+      title: 'From “change in” to Δ',
+      summary: 'Begin with change in x and change in y, then introduce Δ as shorthand for “change in” and build the straight-line gradient formula from two points.',
       microSkillIds: [skill('delta-meaning')],
       vocabularyTags: ['vocab:gradient']
     },
     {
       id: 'delta-change',
-      title: 'Test the straight-line gradient formula',
-      summary: 'Use Δy/Δx at different pairs of points on the same straight line to show that the formula works and gives the same gradient everywhere on that line.',
+      title: 'Show that the formula works',
+      summary: 'Use the newly introduced straight-line gradient formula at different pairs of points to show that it gives the same gradient everywhere on one straight line.',
       microSkillIds: [skill('delta-y-over-delta-x')],
       vocabularyTags: ['vocab:gradient']
     },
@@ -83,8 +83,8 @@ export const preCalculusTopic = defineTopicMetadata({
     { microSkillId: skill('gradient-steepness'), slug: 'gradient-steepness', title: 'Compare gradient magnitudes using steepness', prerequisiteTags: ['straight-lines'], vocabularyTags: ['vocab:gradient'], supportTargets: { understand: activity('steepness') } },
     { microSkillId: skill('gradient-not-height'), slug: 'gradient-not-height', title: 'Distinguish gradient from absolute vertical position', prerequisiteTags: ['coordinates'], vocabularyTags: ['vocab:gradient'], supportTargets: { understand: activity('gradient-vs-height') } },
     { microSkillId: skill('vertical-line-gradient'), slug: 'vertical-line-gradient', title: 'Explain unbounded gradient near vertical and undefined gradient at vertical', prerequisiteTags: ['straight-lines'], vocabularyTags: ['vocab:gradient'], supportTargets: { understand: activity('vertical-limit') } },
-    { microSkillId: skill('delta-meaning'), slug: 'delta-meaning', title: 'Interpret Δ as “change in” and connect Δx and Δy to horizontal and vertical change', prerequisiteTags: ['coordinates', 'straight-lines'], vocabularyTags: ['vocab:gradient'], supportTargets: { understand: activity('delta-meaning') } },
-    { microSkillId: skill('delta-y-over-delta-x'), slug: 'delta-y-over-delta-x', title: 'Use Δy/Δx to verify the gradient of a straight line', prerequisiteTags: ['coordinates', 'straight-lines'], vocabularyTags: ['vocab:gradient'], supportTargets: { understand: activity('delta-change') } },
+    { microSkillId: skill('delta-meaning'), slug: 'delta-meaning', title: 'Introduce Δ as “change in” only after using the words change in x and change in y', prerequisiteTags: ['coordinates', 'straight-lines'], vocabularyTags: ['vocab:gradient'], supportTargets: { understand: activity('delta-meaning') } },
+    { microSkillId: skill('delta-y-over-delta-x'), slug: 'delta-y-over-delta-x', title: 'Use the straight-line gradient formula to verify the same gradient at different points', prerequisiteTags: ['coordinates', 'straight-lines'], vocabularyTags: ['vocab:gradient'], supportTargets: { understand: activity('delta-change') } },
     { microSkillId: skill('curve-transition'), slug: 'curve-transition', title: 'Recognise why curved graphs need a local idea of gradient', prerequisiteTags: ['straight-lines'], vocabularyTags: ['vocab:gradient'], supportTargets: { understand: activity('curve-question') } }
   ],
   activities: [
@@ -93,8 +93,8 @@ export const preCalculusTopic = defineTopicMetadata({
     { activityId: activity('steepness'), mode: 'understand', slug: 'steepness', title: 'Steepness and gradient', activityType: 'interactive', microSkillIds: [skill('gradient-steepness')], vocabularyTags: ['vocab:gradient'], implementationStep: 37 },
     { activityId: activity('gradient-vs-height'), mode: 'understand', slug: 'gradient-vs-height', title: 'Gradient is not height', activityType: 'interactive', microSkillIds: [skill('gradient-not-height')], vocabularyTags: ['vocab:gradient'], implementationStep: 37 },
     { activityId: activity('vertical-limit'), mode: 'understand', slug: 'vertical-limit', title: 'Near-vertical gradient and the vertical line', activityType: 'interactive', microSkillIds: [skill('vertical-line-gradient')], vocabularyTags: ['vocab:gradient'], implementationStep: 37 },
-    { activityId: activity('delta-meaning'), mode: 'understand', slug: 'delta-meaning', title: 'What does Δ mean?', activityType: 'interactive', microSkillIds: [skill('delta-meaning')], vocabularyTags: ['vocab:gradient'], implementationStep: 37 },
-    { activityId: activity('delta-change'), mode: 'understand', slug: 'delta-change', title: 'Test the straight-line gradient formula', activityType: 'interactive', microSkillIds: [skill('delta-y-over-delta-x')], vocabularyTags: ['vocab:gradient'], implementationStep: 37 },
+    { activityId: activity('delta-meaning'), mode: 'understand', slug: 'delta-meaning', title: 'From “change in” to Δ', activityType: 'interactive', microSkillIds: [skill('delta-meaning')], vocabularyTags: ['vocab:gradient'], implementationStep: 37 },
+    { activityId: activity('delta-change'), mode: 'understand', slug: 'delta-change', title: 'Show that the formula works', activityType: 'interactive', microSkillIds: [skill('delta-y-over-delta-x')], vocabularyTags: ['vocab:gradient'], implementationStep: 37 },
     { activityId: activity('curve-question'), mode: 'understand', slug: 'curve-question', title: 'What about a curve?', activityType: 'interactive', microSkillIds: [skill('curve-transition')], vocabularyTags: ['vocab:gradient'], implementationStep: 37 }
   ]
 });
