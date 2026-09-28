@@ -83,11 +83,13 @@ function buildPolynomialDefinition(coefficients) {
 }
 
 export class BasicsUnderstandExperience {
-  constructor(host, { onStateChange = () => {} } = {}) {
+  constructor(host, { onStateChange = () => {}, sidebarHost = null } = {}) {
     if (!host) throw new Error('BasicsUnderstandExperience requires a DOM host.');
     this.host = host;
     this.document = host.ownerDocument || globalThis.document;
     this.onStateChange = onStateChange;
+    this.sidebarHost = sidebarHost;
+    this.sidebarPanel = null;
     this.explorer = null;
     this.cleanup = [];
     this.state = { activityId: null };
@@ -98,6 +100,7 @@ export class BasicsUnderstandExperience {
   destroy() {
     this.#destroyExplorer();
     for (const cleanup of this.cleanup.splice(0)) cleanup();
+    this.#clearSidebar();
     this.host.replaceChildren();
     this.host.classList.remove('basics-understand');
     delete this.host.dataset.basicsActivity;
@@ -107,6 +110,7 @@ export class BasicsUnderstandExperience {
     if (!this.supports(activityId)) return false;
     this.#destroyExplorer();
     for (const cleanup of this.cleanup.splice(0)) cleanup();
+    this.#clearSidebar();
     this.host.classList.add('basics-understand');
     this.host.replaceChildren();
     this.state.activityId = activityId;
@@ -122,6 +126,20 @@ export class BasicsUnderstandExperience {
   #destroyExplorer() {
     this.explorer?.destroy();
     this.explorer = null;
+  }
+
+  #clearSidebar() {
+    this.sidebarPanel?.remove();
+    this.sidebarPanel = null;
+  }
+
+  #createSidebarPanel(title) {
+    if (!this.sidebarHost) return null;
+    const panel = el(this.document, 'section', 'basics-understand__sidebar-panel');
+    panel.append(el(this.document, 'strong', 'basics-understand__sidebar-title', title));
+    this.sidebarHost.append(panel);
+    this.sidebarPanel = panel;
+    return panel;
   }
 
   #panel(title, eyebrow) {
@@ -146,19 +164,84 @@ export class BasicsUnderstandExperience {
 
   render_curve_tangent_gradient() {
     const body = this.#panel('Move the point. Read the tangent.', '1 · Gradient on a curve');
-    const prompt = el(this.document, 'div', 'basics-understand__prompt', 'Before looking at the number, decide: positive, negative or zero gradient?');
-    const insight = el(this.document, 'p', 'basics-understand__insight');
-    body.append(prompt, insight);
-    this.#mountExplorer(body, {
+    const sidebar = this.#createSidebarPanel('Curve controls');
+    let functionSelect = null;
+    let xValue = null;
+    let functionValue = null;
+
+    if (sidebar) {
+      const label = el(this.document, 'label', 'basics-understand__sidebar-label');
+      label.append(el(this.document, 'span', '', 'Function'));
+      functionSelect = el(this.document, 'select', 'basics-understand__sidebar-select');
+      functionSelect.setAttribute('aria-label', 'Choose a function');
+      for (const definition of POLYNOMIAL_FUNCTIONS) {
+        const option = el(this.document, 'option', '', definition.label);
+        option.value = definition.id;
+        functionSelect.append(option);
+      }
+      functionSelect.value = 'cubic-turns';
+      label.append(functionSelect);
+
+      const values = el(this.document, 'div', 'basics-understand__sidebar-values');
+      xValue = el(this.document, 'span', 'basics-understand__sidebar-value', 'x = —');
+      functionValue = el(this.document, 'span', 'basics-understand__sidebar-value', 'f(x) = —');
+      values.append(xValue, functionValue);
+      sidebar.append(label, values);
+    }
+
+    const graphStage = el(this.document, 'div', 'basics-understand__gradient-stage');
+    body.append(graphStage);
+
+    const popin = el(this.document, 'aside', 'basics-understand__gradient-popin');
+    const prompt = el(this.document, 'p', 'basics-understand__gradient-prompt', 'Before looking at the number, decide: positive, negative or zero gradient?');
+    const insight = el(this.document, 'p', 'basics-understand__gradient-feedback');
+    insight.id = 'basics-gradient-feedback';
+    insight.hidden = true;
+    let gradientVisible = false;
+    const reveal = button(this.document, 'Show gradient', () => {
+      gradientVisible = !gradientVisible;
+      insight.hidden = !gradientVisible;
+      reveal.textContent = gradientVisible ? 'Hide gradient' : 'Show gradient';
+      reveal.setAttribute('aria-expanded', gradientVisible ? 'true' : 'false');
+      popin.classList.toggle('is-revealed', gradientVisible);
+    }, 'basics-understand__button basics-understand__gradient-toggle');
+    reveal.setAttribute('aria-expanded', 'false');
+    reveal.setAttribute('aria-controls', insight.id);
+    popin.append(prompt, reveal, insight);
+
+    const sync = ({ functionId, x, values }) => {
+      if (functionSelect && functionSelect.value !== functionId) functionSelect.value = functionId;
+      if (xValue) xValue.textContent = `x = ${format(x)}`;
+      if (functionValue) functionValue.textContent = `f(x) = ${format(values.function)}`;
+      insight.textContent = signedGradientMessage(values.derivative);
+    };
+
+    const explorer = this.#mountExplorer(graphStage, {
       functions: POLYNOMIAL_FUNCTIONS,
       initialFunctionId: 'cubic-turns',
       revealDerivative: false,
-      showFunctionSelector: true,
+      showFunctionSelector: false,
       showDerivativeControls: false,
       showDerivativeReadout: false,
-      onChange: ({ values }) => { insight.textContent = signedGradientMessage(values.derivative); }
+      onChange: sync
     });
-    insight.textContent = 'Move the point to compare upward, downward and horizontal tangents.';
+    graphStage.append(popin);
+
+    if (functionSelect) {
+      const onFunctionChange = () => explorer.setFunction(functionSelect.value);
+      functionSelect.addEventListener('change', onFunctionChange);
+      this.cleanup.push(() => functionSelect.removeEventListener('change', onFunctionChange));
+    }
+
+    const state = explorer.getState();
+    const definition = explorer.definition;
+    sync({
+      ...state,
+      values: {
+        function: definition.evaluate(state.x),
+        derivative: definition.derivative(state.x)
+      }
+    });
   }
 
   render_gradient_function() {

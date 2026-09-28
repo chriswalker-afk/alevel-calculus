@@ -20,7 +20,7 @@ import { getMemoryGamePackForTopic } from "./memory-game-content.js?v=auditstep5
 import { getMemoryReviewPackForTopic } from "./memory-review-content.js";
 import { createClassWizSupportPanel } from "./classwiz-support-panel.js?v=auditstep16final";
 import { hasClassWizSupport } from "./classwiz-support-data.js?v=auditstep16final";
-import { createBasicsUnderstandExperience } from "./basics-understand.js?v=auditstep5";
+import { createBasicsUnderstandExperience } from "./basics-understand.js?v=auditstep6";
 import { createPreCalculusUnderstandExperience } from "./pre-calculus-understand.js?v=auditstep2";
 import { preCalculusLearningModes } from "./pre-calculus-activities.js?v=auditstep2";
 import { createFirstPrinciplesUnderstandExperience } from "./first-principles-understand.js?v=auditstep6";
@@ -110,6 +110,7 @@ const currentTopicLabelElement = document.querySelector("[data-current-topic-lab
 const currentTopicBreadcrumb = document.querySelector("[data-current-topic-breadcrumb]");
 const stage = document.querySelector("[data-activity-stage]");
 const standardActivityContent = document.querySelector("[data-standard-activity-content]");
+const activityCopy = standardActivityContent?.querySelector(".activity-copy");
 const activityVisual = document.querySelector("[data-activity-visual]");
 const customUnderstandHost = document.querySelector("[data-understand-visual-host]");
 const questionShellElement = document.querySelector("[data-question-shell]");
@@ -204,6 +205,7 @@ const required = [
   modePanel,
   stage,
   standardActivityContent,
+  activityCopy,
   activityVisual,
   customUnderstandHost,
   questionShellElement,
@@ -326,7 +328,7 @@ const integrationMethodMapSurface=createIntegrationMethodMapSurface({
   triggerHost:stage.querySelector('.activity-stage__tools'),
   onNavigate:navigateToActivityTarget
 });
-const basicsUnderstand = createBasicsUnderstandExperience(customUnderstandHost);
+const basicsUnderstand = createBasicsUnderstandExperience(customUnderstandHost, { sidebarHost: activityCopy });
 const preCalculusUnderstand = createPreCalculusUnderstandExperience(customUnderstandHost);
 const firstPrinciplesUnderstand = createFirstPrinciplesUnderstandExperience(customUnderstandHost);
 const tangentsNormalsUnderstand = createTangentsNormalsUnderstandExperience(customUnderstandHost);
