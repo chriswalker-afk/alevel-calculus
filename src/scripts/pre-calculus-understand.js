@@ -125,20 +125,54 @@ export class PreCalculusUnderstandExperience {
     diagram.polyline(xs.map((x) => ({ x, y: hillY(x) })), { tone: 'curve' });
     const car = diagram.label({ x: -4.2, y: hillY(-4.2), text: '🚗', dx: 0, dy: -10, tone: 'interactive', className: 'pre-calculus-understand__car', keepInView: false });
     car.element?.setAttribute?.('role', 'img');
-    car.element?.setAttribute?.('aria-label', 'car');
+    car.element?.setAttribute?.('aria-label', 'car facing right');
     const direction = diagram.arrow({ x1: -4.4, y1: -2.1, x2: -2.8, y2: -2.1, tone: 'accent', label: 'read left → right' });
     void direction;
+
+    const pauseWindow = el(this.document, 'div', 'pre-calculus-understand__journey-note');
+    pauseWindow.setAttribute('role', 'status');
+    pauseWindow.setAttribute('aria-live', 'polite');
+    pauseWindow.hidden = true;
+    graphHost.append(pauseWindow);
+
+    const teachingPauses = [
+      {
+        x: -3.35,
+        text: 'As the car goes downhill, its vertical position decreases as it moves to the right. The gradient is negative.'
+      },
+      {
+        x: -2.17245,
+        text: 'At the bottom of the valley, the car is momentarily moving horizontally. The gradient is zero.'
+      },
+      {
+        x: 0,
+        text: 'As the car goes uphill, its vertical position increases as it moves to the right. The gradient is positive.'
+      },
+      {
+        x: 2.17245,
+        text: 'At the top of the hill, the car is momentarily moving horizontally. The gradient is zero.'
+      },
+      {
+        x: 3.35,
+        text: 'As the car goes downhill again, its vertical position decreases as it moves to the right. The gradient is negative.'
+      }
+    ];
 
     const slider = diagram.slider({
       label: 'Car position — move right only', min: -4.2, max: 4.2, step: 0.05, value: -4.2,
       format: (x) => `x = ${format(x, 1)}`,
       onInput: (x) => {
         car.set({ x, y: hillY(x) });
-        const m = hillGradient(x);
-        const message = Math.abs(m) < 0.08 ? 'Almost horizontal: height is barely changing.' : m > 0 ? 'Climbing: y increases as x increases → positive gradient.' : 'Descending: y decreases as x increases → negative gradient.';
+        const gradient = hillGradient(x);
+        const message = Math.abs(gradient) < 0.08
+          ? 'Momentarily horizontal: the gradient is zero.'
+          : gradient > 0
+            ? 'Climbing: vertical position increases as the car moves right → positive gradient.'
+            : 'Descending: vertical position decreases as the car moves right → negative gradient.';
         status.textContent = message;
       }
     });
+
     let furthest = -4.2;
     let internalSliderUpdate = false;
     const nativeSetValue = slider.setValue.bind(slider);
@@ -165,46 +199,75 @@ export class PreCalculusUnderstandExperience {
     });
     controls.append(slider.element);
 
+    const hideJourneyNote = () => {
+      pauseWindow.hidden = true;
+      pauseWindow.textContent = '';
+    };
+    const showJourneyNote = (text) => {
+      pauseWindow.textContent = text;
+      pauseWindow.hidden = false;
+    };
+
     const play = button(this.document, 'Drive across hill', () => {
       if (this.animationRunning) {
         this.#stopAnimation();
+        hideJourneyNote();
         play.textContent = 'Continue drive';
         return;
       }
       if (furthest >= 4.15) return;
+
       this.animationRunning = true;
       play.textContent = 'Pause car';
       let x = furthest;
       let last = 0;
       let pausedUntil = 0;
-      let lastType = Math.abs(hillGradient(x)) < 0.08 ? 'zero' : hillGradient(x) > 0 ? 'positive' : 'negative';
+      let nextPauseIndex = teachingPauses.findIndex((checkpoint) => checkpoint.x > x + 0.01);
+      if (nextPauseIndex < 0) nextPauseIndex = teachingPauses.length;
+
       const raf = globalThis.requestAnimationFrame ?? ((fn) => globalThis.setTimeout(() => fn(Date.now()), 16));
       const frame = (time) => {
         if (!this.animationRunning) return;
-        if (pausedUntil && time < pausedUntil) {
-          this.animationHandle = raf(frame);
-          return;
+
+        if (pausedUntil) {
+          if (time < pausedUntil) {
+            this.animationHandle = raf(frame);
+            return;
+          }
+          pausedUntil = 0;
+          hideJourneyNote();
+          last = time;
         }
+
         if (!last) last = time;
         const elapsed = Math.min(60, time - last);
         last = time;
+        const previousX = x;
         x += elapsed * 0.00115;
+
+        const checkpoint = teachingPauses[nextPauseIndex];
+        if (checkpoint && previousX < checkpoint.x && x >= checkpoint.x) {
+          x = checkpoint.x;
+          setSliderValue(x);
+          showJourneyNote(checkpoint.text);
+          pausedUntil = time + 1450;
+          nextPauseIndex += 1;
+          this.animationHandle = raf(frame);
+          return;
+        }
+
         if (x >= 4.2) {
           x = 4.2;
           setSliderValue(x);
+          hideJourneyNote();
           this.#stopAnimation();
           play.hidden = true;
           reset.hidden = false;
           reset.focus?.();
           return;
         }
+
         setSliderValue(x);
-        const m = hillGradient(x);
-        const nextType = Math.abs(m) < 0.08 ? 'zero' : m > 0 ? 'positive' : 'negative';
-        if (nextType !== lastType) {
-          lastType = nextType;
-          pausedUntil = time + 500;
-        }
         this.animationHandle = raf(frame);
       };
       this.animationHandle = raf(frame);
@@ -212,6 +275,7 @@ export class PreCalculusUnderstandExperience {
 
     const reset = button(this.document, 'Reset', () => {
       this.#stopAnimation();
+      hideJourneyNote();
       setSliderValue(-4.2);
       status.textContent = 'Start at the left and notice whether the car is climbing or descending.';
       play.textContent = 'Drive across hill';
