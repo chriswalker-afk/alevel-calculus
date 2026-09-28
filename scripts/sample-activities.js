@@ -72,10 +72,17 @@ export const learningModes = Object.freeze({
         activityId: "activity:y12:differentiation:basics:understand:differentiation-machine",
         microSkillId: "skill:y12:differentiation:basics:differentiation-operator",
         kicker: "Understand", overline: "The d/dx operator",
-        title: "Treat d/dx as a differentiation machine",
-        body: "Place a whole expression inside the operator. The machine differentiates that entire expression with respect to x and outputs its derivative.",
-        calloutLabel: "Operator", callout: "The brackets matter: d/dx acts on the complete expression placed inside them.",
-        formula: "d/dx [ expression ] → derivative", caption: "Change the input and watch the differentiation operator produce a derivative.", basicsUnderstand: true
+        title: "Change the expression beside d/dx",
+        body: "Choose an expression beside d/dx. The operator stays fixed; the derivative on the right updates immediately.",
+        bodySegments: Object.freeze([
+          "Choose an expression beside the ",
+          Object.freeze({ termId: "vocab:d-dx-operator" }),
+          ". The instruction stays fixed; the ",
+          Object.freeze({ termId: "vocab:derivative" }),
+          " on the right updates immediately."
+        ]),
+        calloutLabel: "Read left to right", callout: "d/dx acts on the expression immediately beside it. Change that expression and the derivative changes.",
+        formula: "d/dx [ expression ] = derivative", caption: "The selected expression is the object being differentiated.", basicsUnderstand: true
       }),
       Object.freeze({
         activityId: "activity:y12:differentiation:basics:understand:calculus-backstory",

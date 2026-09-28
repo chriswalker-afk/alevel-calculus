@@ -51,7 +51,7 @@ function signedGradientMessage(gradient) {
   return `The curve is decreasing here, so the gradient is negative (${format(gradient)}).`;
 }
 
-function differentiationMachineResult(key) {
+function differentiationOperatorResult(key) {
   return ({
     'x3': ['x³', '3x²'],
     '4x2': ['4x²', '8x'],
@@ -510,21 +510,47 @@ export class BasicsUnderstandExperience {
   }
 
   render_differentiation_machine() {
-    const body = this.#panel('Put an expression inside the operator', '5 · The d/dx machine');
-    const machine = el(this.document, 'div', 'basics-understand__machine');
-    const select = el(this.document, 'select', 'basics-understand__machine-select');
-    [['x3','x³'],['4x2','4x²'],['5x-7','5x − 7'],['2x4+3x','2x⁴ + 3x']].forEach(([value,label]) => { const option=el(this.document,'option','',label); option.value=value; select.append(option); });
-    select.setAttribute('aria-label', 'Expression to differentiate');
-    const inputBox = el(this.document, 'div', 'basics-understand__machine-box');
-    const operator = el(this.document, 'div', 'basics-understand__machine-operator', 'd/dx'); operator.setAttribute('data-math-render','');
-    const arrow = el(this.document, 'div', 'basics-understand__machine-arrow', '→');
-    const output = el(this.document, 'div', 'basics-understand__machine-box basics-understand__machine-box--output');
+    const body = this.#panel('Change the expression beside d/dx', '5 · The d/dx operator');
+    const workspace = el(this.document, 'div', 'basics-understand__operator-workspace');
+    const equation = el(this.document, 'div', 'basics-understand__operator-equation');
+
+    const operator = el(this.document, 'span', 'basics-understand__operator-symbol', 'd/dx');
+    operator.setAttribute('data-math-display', '');
+
+    const selectWrap = el(this.document, 'span', 'basics-understand__operator-choice');
+    const select = el(this.document, 'select', 'basics-understand__operator-select');
+    [
+      ['x3', 'x³'],
+      ['4x2', '4x²'],
+      ['5x-7', '5x − 7'],
+      ['2x4+3x', '2x⁴ + 3x']
+    ].forEach(([value, label]) => {
+      const option = el(this.document, 'option', '', label);
+      option.value = value;
+      select.append(option);
+    });
+    select.setAttribute('aria-label', 'Expression immediately after d by d x');
+    selectWrap.append(select);
+
+    const equals = el(this.document, 'span', 'basics-understand__operator-equals', '=');
+    const output = el(this.document, 'span', 'basics-understand__operator-result', '3x²');
+    output.setAttribute('data-math-display', '');
     output.setAttribute('role', 'status');
     output.setAttribute('aria-live', 'polite');
-    const update = () => { const [input, result] = differentiationMachineResult(select.value); inputBox.textContent = `[ ${input} ]`; output.textContent = result; };
-    select.addEventListener('change', update); this.cleanup.push(() => select.removeEventListener('change', update)); update();
-    machine.append(select, inputBox, operator, arrow, output);
-    body.append(machine, el(this.document, 'p', 'basics-understand__takeaway', 'The operator acts on the whole expression inside the brackets. The output is the derivative.'));
+    output.setAttribute('aria-atomic', 'true');
+
+    const update = () => {
+      const [, result] = differentiationOperatorResult(select.value);
+      output.textContent = result;
+    };
+    select.addEventListener('change', update);
+    this.cleanup.push(() => select.removeEventListener('change', update));
+    update();
+
+    equation.append(operator, selectWrap, equals, output);
+    const hint = el(this.document, 'p', 'basics-understand__operator-hint', 'Change only the expression. The d/dx instruction stays fixed; the derivative on the right changes immediately.');
+    workspace.append(equation, hint);
+    body.append(workspace);
   }
 
   render_calculus_backstory() {

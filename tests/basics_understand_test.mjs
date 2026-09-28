@@ -47,5 +47,10 @@ assert(source.includes("basics-understand__graph-card-tools--derivative") && sou
 assert(source.includes("derivativeExpression.hidden = true"),'The derivative rule must stay hidden until the student reveals the complete derivative.');
 assert(source.includes("xReadout") && source.includes("functionReadout"),'The live x and f(x) values must be relocated into the function graph card.');
 assert(cssSource.includes('gradient_function') && cssSource.includes('.linked-gradient-explorer__controls { display:none; }'),'Activity 3 must remove the redundant top explorer toolbar for a single-screen layout.');
+assert(source.includes("basics-understand__operator-equation"),'The d/dx operator activity must use one direct equation rather than the old machine layout.');
+assert(source.includes("operator, selectWrap, equals, output"),'The d/dx activity must read left-to-right as d/dx, selected expression, equals, derivative.');
+assert(!source.includes("const inputBox = el(this.document, 'div', 'basics-understand__machine-box')"),'The old duplicated input box must be removed from the d/dx activity.');
+assert(!source.includes("const arrow = el(this.document, 'div', 'basics-understand__machine-arrow', '→')"),'The old machine arrow must not be used in the d/dx activity.');
+assert(cssSource.includes('.basics-understand__operator-select') && cssSource.includes('.basics-understand__operator-result'),'The rebuilt operator equation needs dedicated inline selection and result styling.');
 
 console.log('PASS Basics Understand eight-state reference journey and linked polynomial contract');
