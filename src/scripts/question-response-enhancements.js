@@ -1,4 +1,4 @@
-import { renderMathElement } from "./math-renderer.js?v=memorymath1";
+import { renderMathElement } from "./math-renderer.js?v=memorymath2";
 import { formatStudentMathForDisplay } from "./student-math-input.js?v=questionfix1";
 
 const mathToolbar = Object.freeze([
