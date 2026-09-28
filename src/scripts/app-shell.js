@@ -673,6 +673,9 @@ function topbarScopeBadge() {
 function showLanding({ focus = false } = {}) {
   if (!landingPage || !appBody) return false;
   closeTopicNavigation({ restoreFocus: false });
+  if (classWizOpen) closeClassWizSupport({ restoreFocus: false });
+  if (helpOpen) closeHelpDrawer({ restoreFocus: false });
+  if (wordBankOpen) closeWordBank({ restoreFocus: false });
   appBody.hidden = true;
   landingPage.hidden = false;
   shell.dataset.view = "landing";
