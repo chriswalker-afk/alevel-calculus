@@ -6,6 +6,7 @@ const STEP37_IDS = new Set([
   'activity:y12:foundations:pre-calculus:understand:steepness',
   'activity:y12:foundations:pre-calculus:understand:gradient-vs-height',
   'activity:y12:foundations:pre-calculus:understand:vertical-limit',
+  'activity:y12:foundations:pre-calculus:understand:delta-meaning',
   'activity:y12:foundations:pre-calculus:understand:delta-change',
   'activity:y12:foundations:pre-calculus:understand:curve-question'
 ]);
@@ -371,11 +372,40 @@ export class PreCalculusUnderstandExperience {
     );
   }
 
+  render_delta_meaning() {
+    const body = this.#panel('What does Δ mean?', '6 · From an idea to a formula');
+    body.append(
+      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'The symbol Δ (capital Greek delta) means “change in”. So Δx means the change in x, and Δy means the change in y.')
+    );
+
+    const { diagram } = this.#graph(body, { xDomain: [0, 7], yDomain: [0, 6], ariaLabel: 'A straight line showing horizontal and vertical changes between two points' });
+    const p = { x: 1, y: 1 };
+    const q = { x: 5, y: 3 };
+    diagram.line({ x1: 0.4, y1: 0.7, x2: 6.6, y2: 3.8, tone: 'curve' });
+    diagram.point({ ...p, label: 'P' });
+    diagram.point({ ...q, label: 'Q', tone: 'interactive' });
+    diagram.line({ x1: p.x, y1: p.y, x2: q.x, y2: p.y, tone: 'accent', dashed: true });
+    diagram.line({ x1: q.x, y1: p.y, x2: q.x, y2: q.y, tone: 'tangent', dashed: true });
+    diagram.label({ x: 3, y: 1, text: 'Δx = change in x = 4', dy: 24, tone: 'accent' });
+    diagram.label({ x: 5, y: 2, text: 'Δy = change in y = 2', dx: 18, anchor: 'start', tone: 'tangent' });
+
+    const formula = el(this.document, 'div', 'pre-calculus-understand__formula-card');
+    formula.append(
+      el(this.document, 'div', 'pre-calculus-understand__formula-main', 'gradient = Δy ÷ Δx'),
+      el(this.document, 'div', 'pre-calculus-understand__formula-words', 'vertical change ÷ horizontal change'),
+      el(this.document, 'div', 'pre-calculus-understand__formula-example', 'Here: gradient = 2 ÷ 4 = 0.5')
+    );
+    body.append(formula);
+    body.append(
+      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'This is the formal version of the idea from earlier: how much vertical change there is for each unit of horizontal change.')
+    );
+  }
+
   render_delta_change() {
-    const body = this.#panel('See the two changes before the ratio', '6 · Δy / Δx');
+    const body = this.#panel('Test the formula at different points', '7 · Same line, same gradient');
     const controls = el(this.document, 'div', 'pre-calculus-understand__action-row');
     body.append(controls);
-    const status = this.#status(body, 'Δx = 4, Δy = 2, so gradient = 2 ÷ 4 = 0.5.');
+    const status = this.#status(body, 'Start with P and Q: Δx = 4 and Δy = 2, so gradient = Δy ÷ Δx = 0.5.');
     const { diagram } = this.#graph(body, { xDomain: [-1, 7], yDomain: [-1, 6], ariaLabel: 'A straight line with horizontal and vertical change triangle' });
     const p = { x: 1, y: 1 };
     const q = { x: 5, y: 3 };
@@ -396,15 +426,16 @@ export class PreCalculusUnderstandExperience {
         vertical.setCoordinates({ x1: x, y1: p.y, x2: x, y2: y });
         dxLabel.set({ x: (p.x + x) / 2, y: p.y, text: `Δx = ${format(x - p.x, 1)}` });
         dyLabel.set({ x, y: (p.y + y) / 2, text: `Δy = ${format(y - p.y, 1)}` });
-        status.textContent = `Δx = ${format(x - p.x, 1)}, Δy = ${format(y - p.y, 1)}; ratio = 0.5 every time because the line has one gradient.`;
+        status.textContent = `Δx = ${format(x - p.x, 1)}, Δy = ${format(y - p.y, 1)}; Δy ÷ Δx = 0.5. The formula gives the same gradient wherever Q is chosen on this straight line.`;
       }
     });
     controls.append(slider.element);
+    body.append(el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Move Q to test the formula. The horizontal and vertical changes alter, but their ratio stays constant: a straight line has the same gradient at every point.'));
     void line;
   }
 
   render_curve_question() {
-    const body = this.#panel('Straight line: one gradient. Curve: now what?', '7 · Transition to differentiation');
+    const body = this.#panel('Straight line: one gradient. Curve: now what?', '8 · Transition to differentiation');
     const { diagram } = this.#graph(body, { yDomain: [-4, 4], ariaLabel: 'A straight line compared with a curved graph' });
     diagram.line({ x1: -4, y1: -2.4, x2: 4, y2: 2.4, tone: 'secondary', dashed: true });
     const xs = Array.from({ length: 161 }, (_, i) => -4 + i * 8 / 160);
