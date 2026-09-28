@@ -6,7 +6,7 @@
   <meta name="description" content="Interactive calculus learning site for Pearson Edexcel 8MA0 / 9MA0.">
   <title>Calculus | Learning workspace</title>
   <link rel="stylesheet" href="/alevel-calculus/styles/tokens.css">
-  <link rel="stylesheet" href="/alevel-calculus/styles/app-shell.css?v=density1">
+  <link rel="stylesheet" href="/alevel-calculus/styles/app-shell.css?v=spacepass1">
   <link rel="stylesheet" href="/alevel-calculus/styles/landing-page.css?v=landing3">
   <link rel="stylesheet" href="/alevel-calculus/styles/question-shell.css?v=aolayout2">
   <link rel="stylesheet" href="/alevel-calculus/styles/math-renderer.css?v=memorymath2">
@@ -832,11 +832,9 @@
       </nav>
 
       <main class="learning-workspace" data-learning-workspace>
-        <section class="workspace-header" aria-label="Activity context">
-          <div>
-            <p class="eyebrow" data-current-topic-label>Basics of differentiation</p>
-            <h1>Learning workspace</h1>
-          </div>
+        <section class="workspace-header" aria-label="Topic and learning mode">
+          <h1 class="workspace-topic-title" data-current-topic-label>Basics of differentiation</h1>
+          <div class="workspace-header__controls">
           <div class="mode-tabs" role="tablist" aria-label="Learning mode" data-mode-tabs>
             <button class="mode-tab" id="mode-tab-understand" type="button" role="tab" aria-selected="true" aria-controls="learning-mode-panel" tabindex="0" data-mode-tab="understand" data-learning-mode="understand">
               <span class="mode-tab__icon" aria-hidden="true">
@@ -869,16 +867,19 @@
               <span class="mode-tab__text"><span class="mode-tab__label">AO3</span><span class="mode-tab__sublabel">Apply</span></span>
             </button>
           </div>
-        </section>
-
-        <section class="activity-frame" id="learning-mode-panel" role="tabpanel" aria-labelledby="mode-tab-understand" aria-live="polite" aria-atomic="false" data-mode-panel>
-          <div class="activity-stage" data-activity-stage>
-            <div class="activity-stage__header" data-workspace-tools-bar>
-              <div class="workspace-tools__identity">
-                <span class="activity-chip" data-activity-kicker>Understand</span>
-                <span class="activity-position" data-activity-position>1 of 3</span>
-              </div>
-              <div class="activity-stage__tools" id="workspace-tools-content" data-workspace-tools-content>
+            <div class="workspace-tools" data-workspace-tools-bar>
+              <button
+                class="workspace-tools-toggle"
+                type="button"
+                aria-controls="workspace-tools-content"
+                aria-expanded="false"
+                data-workspace-tools-toggle
+              >
+                <span data-workspace-tools-toggle-label>Tools</span>
+                <span class="workspace-tools-toggle__icon" aria-hidden="true" data-workspace-tools-toggle-icon>⌄</span>
+              </button>
+            </div>
+              <div class="activity-stage__tools workspace-tools-popover" id="workspace-tools-content" role="group" aria-label="Workspace tools" data-workspace-tools-content hidden>
                 <button
                   class="classwiz-support-button"
                   type="button"
@@ -923,17 +924,14 @@
                   <span>Need a reminder?</span>
                 </button>
               </div>
-              <button
-                class="workspace-tools-toggle"
-                type="button"
-                aria-controls="workspace-tools-content"
-                aria-expanded="true"
-                data-workspace-tools-toggle
-              >
-                <span data-workspace-tools-toggle-label>Hide tools</span>
-                <span class="workspace-tools-toggle__icon" aria-hidden="true" data-workspace-tools-toggle-icon>⌃</span>
-              </button>
             </div>
+          </div>
+        </section>
+
+        <section class="activity-frame" id="learning-mode-panel" role="tabpanel" aria-labelledby="mode-tab-understand" aria-live="polite" aria-atomic="false" data-mode-panel>
+          <div class="activity-stage" data-activity-stage>
+            <span class="visually-hidden" data-activity-kicker>Understand</span>
+            <span class="visually-hidden" data-activity-position>1 of 3</span>
             <div class="activity-stage__content" data-standard-activity-content>
               <section class="topic-objectives-card topic-objectives-card--inline" data-topic-objectives-inline hidden>
                 <div class="topic-objectives-card__heading">
@@ -1836,6 +1834,6 @@
   </dialog>
 
   <noscript>This site needs JavaScript to switch learning modes and activities and to open the topic, help and Word Bank drawers.</noscript>
-  <script type="module" src="/alevel-calculus/scripts/app-shell.js?v=density1"></script>
+  <script type="module" src="/alevel-calculus/scripts/app-shell.js?v=spacepass1"></script>
 </body>
 </html>
