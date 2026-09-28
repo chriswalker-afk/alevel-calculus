@@ -427,9 +427,9 @@ export class PreCalculusUnderstandExperience {
     });
     const presets = el(this.document, 'div', 'pre-calculus-understand__choice-row');
     presets.append(
-      button(this.document, 'Near vertical: negative', () => slider.setValue(-89)),
+      button(this.document, 'Near vertical −', () => slider.setValue(-89)),
       button(this.document, 'Horizontal', () => slider.setValue(0)),
-      button(this.document, 'Near vertical: positive', () => slider.setValue(89))
+      button(this.document, 'Near vertical +', () => slider.setValue(89))
     );
     controls.append(slider.element, presets);
     const summary = el(this.document, 'div', 'pre-calculus-understand__summary-grid');
