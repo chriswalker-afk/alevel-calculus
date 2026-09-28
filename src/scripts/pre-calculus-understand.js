@@ -435,7 +435,7 @@ export class PreCalculusUnderstandExperience {
     const summary = el(this.document, 'div', 'pre-calculus-understand__summary-grid');
     summary.append(
       el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Near vertical: the gradient magnitude grows without bound. This does not mean a vertical line has gradient “infinity”.'),
-      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Exactly vertical: there is no horizontal change, so finding a gradient would require division by zero. The gradient is undefined.')
+      el(this.document, 'div', 'pre-calculus-understand__takeaway', 'Exactly vertical: there is vertical change but no horizontal change, so finding a gradient would require division by zero. The gradient is undefined.')
     );
     body.append(summary);
   }
