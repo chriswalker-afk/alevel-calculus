@@ -1,15 +1,30 @@
 /* Senior Maths Competition 2026 — browser OMR marker */
 'use strict';
-const APP={competition:'Senior Maths Competition 2026',form:'A',candidateMin:1,candidateMax:140,pageWmm:210,pageHmm:297,pxPerMm:6,qr:{x:164,y:252,w:25,h:25},fiducials:{TL:{x:10,y:281.5,size:5.5},TR:{x:194.5,y:281.5,size:5.5},BR:{x:194.5,y:10,size:5.5},BL:{x:10,y:10,size:5.5}},thresholds:{innerRadiusFraction:.66,pixelDark:205,blank:.075,marked:.22,ambiguityDelta:.075,moderate:.13,geometry:.035}};
+const APP={competition:'Senior Maths Competition 2026',form:'A',candidateMin:1,candidateMax:140,pageWmm:210,pageHmm:297,pxPerMm:4,qr:{x:164,y:252,w:25,h:25},fiducials:{TL:{x:10,y:281.5,size:5.5},TR:{x:194.5,y:281.5,size:5.5},BR:{x:194.5,y:10,size:5.5},BL:{x:10,y:10,size:5.5}},thresholds:{innerRadiusFraction:.66,pixelDark:205,blank:.075,marked:.22,ambiguityDelta:.075,moderate:.13,geometry:.035}};
 APP.outW=Math.round(APP.pageWmm*APP.pxPerMm);APP.outH=Math.round(APP.pageHmm*APP.pxPerMm);APP.bubbles=buildBubbleTemplate();
 const state={key:null,scoring:{start:25,correct:4,incorrect:-1,blank:0},roster:new Map(),scans:[],results:[],reviewLog:[],engineReady:false,processing:false};
 const el=id=>document.getElementById(id);
 window.addEventListener('DOMContentLoaded',init);
-function init(){if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';bindUI();refreshKeyFromText();loadOpenCV().then(()=>{state.engineReady=true;el('runtimeStatus').textContent='Marking engine ready';el('runtimeStatus').style.color='#1f6a48';updateMarkButton()}).catch(e=>{el('runtimeStatus').textContent='Marking engine could not load — refresh to retry';el('runtimeStatus').style.color='#9e2e2e';console.error(e)})}
+function init(){
+  if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  bindUI();
+  refreshKeyFromText();
+  const missing=[];
+  if(!window.pdfjsLib) missing.push('PDF.js');
+  if(!window.jsQR) missing.push('QR reader');
+  if(!window.XLSX) missing.push('Excel export');
+  if(missing.length){
+    state.engineReady=false;
+    el('runtimeStatus').textContent='Could not load: '+missing.join(', ');
+    el('runtimeStatus').style.color='#9e2e2e';
+  }else{
+    state.engineReady=true;
+    el('runtimeStatus').textContent='Marking engine ready';
+    el('runtimeStatus').style.color='#1f6a48';
+  }
+  updateMarkButton();
+}
 function bindUI(){el('answerKeyText').addEventListener('input',refreshKeyFromText);el('answerKeyFile').addEventListener('change',handleKeyFile);['scoreStart','scoreCorrect','scoreIncorrect','scoreBlank'].forEach(id=>el(id).addEventListener('input',refreshScoring));el('rosterFile').addEventListener('change',handleRosterFile);el('scanFiles').addEventListener('change',e=>setScanFiles([...e.target.files]));const dz=el('dropZone');['dragenter','dragover'].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.add('dragover')}));['dragleave','drop'].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.remove('dragover')}));dz.addEventListener('drop',e=>setScanFiles([...e.dataTransfer.files]));el('markButton').addEventListener('click',processAll);el('clearButton').addEventListener('click',clearAll);el('exportXlsx').addEventListener('click',exportExcel);el('exportCsv').addEventListener('click',exportCsv)}
-async function loadOpenCV(){if(await openCVReady(500))return;const sources=[['jsDelivr','https://cdn.jsdelivr.net/npm/opencv.js@1.2.1/opencv.min.js'],['OpenCV mirror','https://docs.opencv.org/4.x/opencv.js']];let lastError=null;for(const [label,url] of sources){try{el('runtimeStatus').textContent='Loading marking engine from '+label+'…';await loadExternalScript(url,30000);if(await openCVReady(30000))return;throw new Error(label+' loaded but OpenCV did not initialise')}catch(e){lastError=e;console.warn('OpenCV source failed:',label,e);try{window.cv=undefined}catch(_){}}}throw lastError||new Error('OpenCV failed to load')}
-function loadExternalScript(src,timeoutMs){return new Promise((resolve,reject)=>{const s=document.createElement('script');let done=false;const timer=setTimeout(()=>finish(new Error('Timed out loading '+src)),timeoutMs);function finish(err){if(done)return;done=true;clearTimeout(timer);if(err){s.remove();reject(err)}else resolve()}s.src=src;s.async=true;s.crossOrigin='anonymous';s.onload=()=>finish();s.onerror=()=>finish(new Error('Browser blocked or could not reach '+src));document.head.appendChild(s)})}
-async function openCVReady(timeoutMs=30000){const start=Date.now();while(Date.now()-start<timeoutMs){if(window.cv){try{if(typeof window.cv.then==='function')window.cv=await window.cv}catch(_){ }if(window.cv&&typeof window.cv.Mat==='function'&&typeof window.cv.imread==='function')return true}await sleep(120)}return false}
 function buildBubbleTemplate(){const b={};for(let q=1;q<=25;q++){const left=q<=13,row=left?q-1:q-14,baseX=left?47.5:135.5,y=178.5-9.8*row;b[q]={};['A','B','C','D','E'].forEach((c,i)=>b[q][c]={x:baseX+12*i,y,r:2.55})}return b}
 function parseKey(t){const a=String(t||'').toUpperCase().match(/[A-E]/g)||[];return a.length===25?Object.fromEntries(a.map((v,i)=>[i+1,v])):null}
 function refreshKeyFromText(){state.key=parseKey(el('answerKeyText').value);const s=el('keyStatus');if(state.key){s.textContent='25 answers loaded';s.className='status-pill good'}else{const n=(el('answerKeyText').value.toUpperCase().match(/[A-E]/g)||[]).length;s.textContent=n?`${n}/25 answers`:'No key loaded';s.className=n?'status-pill warning':'status-pill neutral'}updateMarkButton()}
