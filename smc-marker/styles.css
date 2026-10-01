@@ -18,3 +18,15 @@ select{width:100%;margin-top:7px;border:1px solid #c9d2d9;border-radius:9px;padd
   .certificate-grid,.cert-form-grid{grid-template-columns:1fr}
   .cert-checks{flex-direction:column;gap:8px}
 }
+
+.competition-settings{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(300px,.8fr);gap:22px;align-items:end;box-shadow:0 7px 24px rgba(24,48,64,.06)}
+.competition-settings-copy h2{margin:2px 0 6px}.competition-settings-copy p:last-child{color:var(--muted);font-size:.84rem;line-height:1.5}
+.competition-settings-fields{display:grid;grid-template-columns:minmax(180px,1fr) 130px;gap:12px}
+.cert-import-strip{border:1px solid #cddce3;background:#f4f9fb;border-radius:12px;padding:14px 16px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.cert-import-strip strong{display:block;margin-bottom:4px}
+.cert-import-strip .hint{max-width:700px;line-height:1.45}
+@media(max-width:800px){
+  .competition-settings{grid-template-columns:1fr}
+  .competition-settings-fields{grid-template-columns:1fr}
+  .cert-import-strip{flex-direction:column;align-items:flex-start}
+}
