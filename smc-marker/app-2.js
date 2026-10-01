@@ -22,7 +22,7 @@ async function processAll(){
         setProgress(done/tasks,`Processed ${done} of ${tasks} pages`);await yieldUI();
       }
     }
-    flagDuplicateIds();renderAll();setProgress(1,`Finished — ${state.results.length} pages processed`);
+    flagDuplicateIds();renderAll();if(typeof refreshCertificateCandidates==='function')refreshCertificateCandidates();setProgress(1,`Finished — ${state.results.length} pages processed`);
   }catch(err){console.error(err);alert(`Marking stopped: ${err.message}`)}
   finally{state.processing=false;updateMarkButton();el('clearButton').disabled=false}
 }
@@ -58,9 +58,10 @@ async function processCanvas(canvas,sourceFile,pageNumber){
   const parsed=parseQR(best.qr),readings=readBubbles(source,best.H),geometryOk=best.score>=APP.thresholds.geometry,warnings=[];
   if(!geometryOk)warnings.push('Registration alignment confidence is low; all answers require review.');
   if(!parsed)warnings.push('QR code could not be read; candidate ID needs checking.');
+  if(parsed&&Number(parsed.year)!==Number(state.competition.year))warnings.push(`Answer sheet is for ${parsed.year}, while the selected competition year is ${state.competition.year}.`);
   const candidateId=parsed?parsed.candidateId:'',review=new Set(geometryOk?readings.reviewQuestions:Array.from({length:25},(_,i)=>i+1)),details={};
   for(const q of review)details[q]={initial:readings.responses[q],reason:geometryOk?readings.reasons[q]:'Low geometry confidence',scores:readings.scores[q],cropUrl:questionCropUrl(source,best.H,q)};
-  return{sourceFile,pageNumber,candidateId,qrPayload:best.qr,qrOk:!!parsed,form:parsed?.form||'?',geometryOk,geometryScore:best.score,responses:readings.responses,bubbleScores:readings.scores,unresolved:new Set([...review]),reviewDetails:details,warnings,pageThumb,status:'processed'};
+  return{sourceFile,pageNumber,candidateId,qrPayload:best.qr,qrOk:!!parsed,qrYear:parsed?.year||'',form:parsed?.form||'?',geometryOk,geometryScore:best.score,responses:readings.responses,bubbleScores:readings.scores,unresolved:new Set([...review]),reviewDetails:details,warnings,pageThumb,status:'processed'};
 }
 function makeFailedPage(sourceFile,pageNumber,pageThumb,message){
   return{sourceFile,pageNumber,candidateId:'',qrPayload:'',qrOk:false,form:'?',geometryOk:false,geometryScore:0,responses:{},bubbleScores:{},unresolved:new Set(Array.from({length:25},(_,i)=>i+1)),reviewDetails:{},warnings:[message],pageThumb,status:'rescan'};
@@ -146,5 +147,5 @@ function decodeQR(src,H){
   const c=renderCanonicalRegion(src,H,x0,y0,x1,y1,1.7),im=c.getContext('2d').getImageData(0,0,c.width,c.height),a=jsQR(im.data,im.width,im.height,{inversionAttempts:'attemptBoth'});
   return a?.data?.trim()||'';
 }
-function parseQR(t){const m=String(t||'').match(/^SMC2026\|FORM=([A-Z])\|CANDIDATE=(\d{3})\|OMR=([0-9.]+)$/);return m?{form:m[1],candidateId:m[2],version:m[3]}:null}
+function parseQR(t){const m=String(t||'').match(/^SMC(20\\d{2})\\|FORM=([A-Z])\\|CANDIDATE=(\\d{3})\\|OMR=([0-9.]+)$/);return m?{year:Number(m[1]),form:m[2],candidateId:m[3],version:m[4]}:null}
 function compareCandidate(a,b){if(a.qrValid!==b.qrValid)return a.qrValid?1:-1;return a.score-b.score}
