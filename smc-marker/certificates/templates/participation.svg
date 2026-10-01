@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1123 794" width="1123" height="794">
+  <rect width="1123" height="794" fill="#fbfaf7"/>
+  <rect x="28" y="28" width="1067" height="738" rx="8" fill="none" stroke="#345f75" stroke-width="3"/>
+  <rect x="40" y="40" width="1043" height="714" rx="5" fill="none" stroke="#d7d1c7" stroke-width="1"/>
+  <path d="M72 92 H295 M828 92 H1051 M72 702 H295 M828 702 H1051" stroke="#345f75" stroke-width="2"/>
+  <g opacity=".12" fill="none" stroke="#345f75" stroke-width="2">
+    <circle cx="101" cy="122" r="26"/><circle cx="1020" cy="670" r="26"/>
+    <path d="M75 670 C145 610 205 635 270 570 M853 225 C920 160 980 182 1048 116"/>
+    <path d="M92 650 l18 18 30-38 M983 144 l18 18 30-38"/>
+  </g>
+  <text x="561.5" y="126" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" letter-spacing="4" fill="#3f4a50">SENIOR MATHS COMPETITION 2026</text>
+  <text x="561.5" y="184" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#69747a">Certificate of</text>
+  <text x="561.5" y="246" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="45" font-weight="700" fill="#345f75">Participation</text>
+  <path d="M370 268 H753" stroke="#345f75" stroke-width="2"/>
+  <text x="561.5" y="315" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#69747a">awarded in recognition of taking part in the competition</text>
+  <text x="561.5" y="391" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="38" font-weight="700" fill="#18242c">{{NAME}}</text>
+  <path d="M310 412 H813" stroke="#b7b0a5" stroke-width="1"/>
+  <text x="561.5" y="456" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#39474f">{{DETAIL}}</text>
+  <text x="561.5" y="495" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#69747a">{{SCHOOL}}</text>
+  <text x="561.5" y="548" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#7a8388">{{SCORE_LINE}}</text>
+  <g transform="translate(165 624)">
+    <path d="M0 0 H250" stroke="#91999d" stroke-width="1"/>
+    <text x="125" y="25" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#7a8388">Date: {{DATE}}</text>
+  </g>
+  <g transform="translate(708 624)">
+    <path d="M0 0 H250" stroke="#91999d" stroke-width="1"/>
+    <text x="125" y="25" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#7a8388">{{SIGNATORY}}</text>
+  </g>
+  <text x="561.5" y="714" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="1.6" fill="#8a9195">AN INDEPENDENT MATHEMATICS COMPETITION FOR YEARS 12-13</text>
+  <text x="1040" y="733" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#345f75" opacity=".65">PARTICIPATION</text>
+</svg>
