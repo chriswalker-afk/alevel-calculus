@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>Senior Maths Competition 2026 — OMR Marker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div><p class="eyebrow">Senior Maths Competition 2026</p><h1>Answer-sheet marker</h1><p class="subtitle">Scan, review and export results from the QR-coded OMR answer sheets.</p></div>
+    <div class="privacy-badge"><span class="privacy-dot"></span>Local processing</div>
+  </header>
+  <main>
+    <section class="notice"><strong>Privacy:</strong> scans, answer keys and rosters are processed in this browser tab. This site does not upload them to a marking server.<span id="runtimeStatus" class="runtime-status">Loading marking engine…</span></section>
+    <div class="steps">
+      <section class="card step-card">
+        <div class="step-heading"><span class="step-number">1</span><div><h2>Answer key</h2><p>Paste 25 letters, or load the private JSON answer-key file.</p></div></div>
+        <label>Answers (Q1–Q25)<textarea id="answerKeyText" rows="3" spellcheck="false" placeholder="C C E D C A …"></textarea></label>
+        <div class="row wrap"><label class="file-button">Load answer-key JSON<input id="answerKeyFile" type="file" accept=".json,application/json" /></label><span id="keyStatus" class="status-pill neutral">No key loaded</span></div>
+        <details class="advanced"><summary>Scoring settings</summary><div class="score-grid">
+          <label>Starting score<input id="scoreStart" type="number" value="25" /></label><label>Correct<input id="scoreCorrect" type="number" value="4" /></label><label>Incorrect<input id="scoreIncorrect" type="number" value="-1" /></label><label>Blank<input id="scoreBlank" type="number" value="0" /></label>
+        </div></details>
+      </section>
+      <section class="card step-card">
+        <div class="step-heading"><span class="step-number">2</span><div><h2>Roster <span class="optional">optional</span></h2><p>Add names, year groups and schools to candidate IDs.</p></div></div>
+        <label class="file-button primary-lite">Choose CSV / Excel roster<input id="rosterFile" type="file" accept=".csv,.xlsx,.xls" /></label>
+        <p class="hint">Recognised headings include Candidate ID, Name, Year and School.</p><span id="rosterStatus" class="status-pill neutral">No roster loaded</span>
+      </section>
+      <section class="card step-card wide">
+        <div class="step-heading"><span class="step-number">3</span><div><h2>Scanned answer sheets</h2><p>Use one multi-page PDF or select image files. A4 scans at about 300 dpi are ideal.</p></div></div>
+        <div id="dropZone" class="drop-zone" tabindex="0"><div class="drop-icon">⇩</div><strong>Drop scans here</strong><span>or click to choose PDF / PNG / JPG files</span><input id="scanFiles" type="file" accept=".pdf,.png,.jpg,.jpeg,image/png,image/jpeg,application/pdf" multiple /></div>
+        <div id="scanList" class="scan-list"></div>
+        <div class="action-row"><button id="markButton" class="button primary" disabled>Mark papers</button><button id="clearButton" class="button secondary" disabled>Clear</button><div class="progress-wrap" id="progressWrap" hidden><div class="progress-track"><div id="progressBar" class="progress-bar"></div></div><span id="progressText">Preparing…</span></div></div>
+      </section>
+    </div>
+    <section id="resultsSection" class="card results-card" hidden>
+      <div class="section-heading"><div><p class="eyebrow">Step 4</p><h2>Results</h2><p id="resultsSummary">No papers processed.</p></div><div class="row wrap"><button id="exportXlsx" class="button primary-lite">Export Excel</button><button id="exportCsv" class="button secondary">Export CSV</button></div></div>
+      <div id="summaryTiles" class="summary-tiles"></div><div class="table-scroll"><table id="resultsTable"><thead><tr><th>ID</th><th>Name</th><th>Year</th><th>Page</th><th>Correct</th><th>Incorrect</th><th>Blank</th><th>Review</th><th>Score</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+    </section>
+    <section id="reviewSection" class="card review-card" hidden><div class="section-heading"><div><p class="eyebrow">Manual check</p><h2>Review flagged responses</h2><p>The marker flags light, multiple or uncertain marks instead of silently guessing.</p></div><span id="reviewCount" class="status-pill warning">0 to review</span></div><div id="reviewList" class="review-list"></div></section>
+    <section class="card help-card"><h2>Recommended scanning</h2><div class="help-grid"><div><strong>Paper</strong><span>A4, 100%</span></div><div><strong>Resolution</strong><span>About 300 dpi</span></div><div><strong>Colour</strong><span>Greyscale or colour</span></div><div><strong>PDF</strong><span>One sheet per page</span></div></div><p class="hint">Keep all four black registration squares visible. Pages with missing marks are rejected rather than guessed.</p></section>
+  </main>
+  <footer><span>Senior Maths Competition 2026 OMR Marker</span><span>Form A · Template 1.0</span></footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script async src="https://docs.opencv.org/4.10.0/opencv.js"></script>
+  <script src="app.js" defer></script>
+</body></html>
