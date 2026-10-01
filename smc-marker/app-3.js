@@ -94,8 +94,29 @@ function renderReview(){
   });
   el('reviewSection').hidden=count===0;el('reviewCount').textContent=`${count} to review`;
 }
+function competitionMaximumScore(){
+  return state.scoring.start+25*state.scoring.correct;
+}
 function resultRows(){
-  return state.results.map(r=>{const s=scoreResult(r),p=state.roster.get(r.candidateId)||{};return{'Candidate ID':r.candidateId,Name:p.name||'',Year:p.year||'',School:p.school||'',Page:r.pageNumber,Correct:s.correct,Incorrect:s.incorrect,Blank:s.blank,Unresolved:s.unresolved,Score:s.score??'',Warnings:(r.warnings||[]).join(' | ')}})
+  return state.results.map(r=>{
+    const s=scoreResult(r),p=state.roster.get(r.candidateId)||{};
+    return{
+      'Candidate ID':r.candidateId,
+      Name:p.name||'',
+      Year:p.year||'',
+      School:p.school||'',
+      'Competition':state.competition.name,
+      'Competition Year':state.competition.year,
+      'Maximum Score':competitionMaximumScore(),
+      Page:r.pageNumber,
+      Correct:s.correct,
+      Incorrect:s.incorrect,
+      Blank:s.blank,
+      Unresolved:s.unresolved,
+      Score:s.score??'',
+      Warnings:(r.warnings||[]).join(' | ')
+    };
+  })
 }
 function responseRows(){
   return state.results.map(r=>{const row={'Candidate ID':r.candidateId};for(let q=1;q<=25;q++)row[`Q${q}`]=r.unresolved.has(q)?`REVIEW (${r.responses[q]||''})`:(r.responses[q]||'');return row})
@@ -107,10 +128,19 @@ function analysisRows(){
   }return rows;
 }
 function exportExcel(){
-  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(resultRows()),'Results');XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(responseRows()),'Responses');XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(analysisRows()),'Question Analysis');XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(state.reviewLog),'Review Log');XLSX.writeFile(wb,'Senior_Maths_Competition_2026_Results.xlsx');
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(resultRows()),'Results');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(responseRows()),'Responses');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(analysisRows()),'Question Analysis');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(state.reviewLog),'Review Log');
+  XLSX.writeFile(wb,`${competitionFileStem()}_Results.xlsx`);
 }
 function exportCsv(){
-  const csv=XLSX.utils.sheet_to_csv(XLSX.utils.json_to_sheet(resultRows())),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='Senior_Maths_Competition_2026_Results.csv';a.click();
+  const csv=XLSX.utils.sheet_to_csv(XLSX.utils.json_to_sheet(resultRows())),a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`${competitionFileStem()}_Results.csv`;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1500);
 }
 function setProgress(f,t){el('progressBar').style.width=`${Math.max(0,Math.min(1,f))*100}%`;el('progressText').textContent=t}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
