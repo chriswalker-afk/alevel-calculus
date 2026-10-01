@@ -1,43 +1,54 @@
 /* Certificate generator - all personal data remains in the browser. */
 'use strict';
 
-const CERTIFICATE_TEMPLATES = {
-  'participation': 'certificates/templates/participation.svg',
-  'silver': 'certificates/templates/silver.svg',
-  'gold': 'certificates/templates/gold.svg',
-  'best-in-year': 'certificates/templates/best-in-year.svg',
-  'best-in-school': 'certificates/templates/best-in-school.svg'
+const CERTIFICATE_TEMPLATES={
+  'participation':'certificates/templates/participation.svg',
+  'silver':'certificates/templates/silver.svg',
+  'gold':'certificates/templates/gold.svg',
+  'best-in-year':'certificates/templates/best-in-year.svg',
+  'best-in-school':'certificates/templates/best-in-school.svg'
 };
-const CERTIFICATE_LABELS = {
-  'participation': 'Participation',
-  'silver': 'Silver',
-  'gold': 'Gold',
-  'best-in-year': 'Best in Year',
-  'best-in-school': 'Best in School'
-};
-const certState = {templates:{}, batch:[], currentSvg:'', currentName:''};
 
-window.addEventListener('DOMContentLoaded', initCertificates);
+const CERTIFICATE_LABELS={
+  'participation':'Participation',
+  'silver':'Silver',
+  'gold':'Gold',
+  'best-in-year':'Best in Year',
+  'best-in-school':'Best in School'
+};
+
+const certState={
+  templates:{},
+  batch:[],
+  currentSvg:'',
+  currentName:'',
+  importedResults:new Map(),
+  importedMeta:{}
+};
+
+window.addEventListener('DOMContentLoaded',initCertificates);
 
 async function initCertificates(){
-  if(!document.getElementById('certificateSection')) return;
-  const today = new Date();
-  const localDate = new Date(today.getTime() - today.getTimezoneOffset()*60000).toISOString().slice(0,10);
-  el('certBatchDate').value = localDate;
-  el('certIndividualDate').value = localDate;
+  if(!document.getElementById('certificateSection'))return;
 
-  el('certCandidateSelect').addEventListener('focus', refreshCertificateCandidates);
-  el('certCandidateSelect').addEventListener('change', populateCertificateCandidate);
-  el('certPreviewSingle').addEventListener('click', previewIndividualCertificate);
-  el('certDownloadSvg').addEventListener('click', downloadIndividualCertificate);
-  el('certPrintSingle').addEventListener('click', printIndividualCertificate);
-  el('certBuildBatch').addEventListener('click', buildCertificateBatch);
-  el('certPrintBatch').addEventListener('click', printCertificateBatch);
-  el('certCutoffMode').addEventListener('change', updateCertificateCutoffLabels);
+  const today=new Date();
+  const localDate=new Date(today.getTime()-today.getTimezoneOffset()*60000).toISOString().slice(0,10);
+  el('certBatchDate').value=localDate;
+  el('certIndividualDate').value=localDate;
+
+  el('certResultsFile').addEventListener('change',handleCertificateResultsFile);
+  el('certCandidateSelect').addEventListener('focus',refreshCertificateCandidates);
+  el('certCandidateSelect').addEventListener('change',populateCertificateCandidate);
+  el('certPreviewSingle').addEventListener('click',previewIndividualCertificate);
+  el('certDownloadSvg').addEventListener('click',downloadIndividualCertificate);
+  el('certPrintSingle').addEventListener('click',printIndividualCertificate);
+  el('certBuildBatch').addEventListener('click',buildCertificateBatch);
+  el('certPrintBatch').addEventListener('click',printCertificateBatch);
+  el('certCutoffMode').addEventListener('change',updateCertificateCutoffLabels);
 
   ['certCutoffMode','certMaxScore','certSilverCutoff','certGoldCutoff','certParticipationRule',
    'certBestYear','certBestSchool','certShowScore','certBatchDate','certSignatory']
-    .forEach(id=>el(id).addEventListener('input', invalidateCertificateBatch));
+    .forEach(id=>el(id).addEventListener('input',invalidateCertificateBatch));
 
   await loadCertificateTemplates();
   refreshCertificateCandidates();
@@ -45,16 +56,16 @@ async function initCertificates(){
 }
 
 async function loadCertificateTemplates(){
-  const status = el('certificateStatus');
+  const status=el('certificateStatus');
   try{
-    status.textContent='Loading templates…';
-    const entries = await Promise.all(Object.entries(CERTIFICATE_TEMPLATES).map(async ([key,path])=>{
-      const response = await fetch(path, {cache:'no-store'});
-      if(!response.ok) throw new Error('Could not load '+path);
-      return [key, await response.text()];
+    status.textContent='Loading templates...';
+    const entries=await Promise.all(Object.entries(CERTIFICATE_TEMPLATES).map(async([key,path])=>{
+      const response=await fetch(path,{cache:'no-store'});
+      if(!response.ok)throw new Error('Could not load '+path);
+      return[key,await response.text()];
     }));
-    certState.templates = Object.fromEntries(entries);
-    status.textContent='Templates ready';
+    certState.templates=Object.fromEntries(entries);
+    status.textContent='Premium templates ready';
     status.className='status-pill good';
   }catch(err){
     console.error(err);
@@ -63,64 +74,165 @@ async function loadCertificateTemplates(){
   }
 }
 
+function normalizeSheetRow(row){
+  const n={};
+  Object.entries(row||{}).forEach(([k,v])=>{
+    const key=String(k).trim().toLowerCase().replace(/[_-]+/g,' ').replace(/\s+/g,' ');
+    n[key]=v;
+  });
+  return n;
+}
+
+async function handleCertificateResultsFile(e){
+  const f=e.target.files[0];
+  if(!f)return;
+
+  const status=el('certResultsStatus');
+  try{
+    status.textContent='Loading results...';
+    status.className='status-pill neutral';
+
+    const wb=XLSX.read(await f.arrayBuffer(),{type:'array'});
+    const ws=wb.Sheets.Results||wb.Sheets[wb.SheetNames[0]];
+    if(!ws)throw new Error('No worksheet was found.');
+
+    const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+    const map=new Map();
+    let skipped=0,unresolvedCount=0;
+    let metaName='',metaYear='',metaMax='';
+
+    rows.forEach((row,index)=>{
+      const n=normalizeSheetRow(row);
+      const id=normalizeId(pick(n,['candidate id','candidate','candidate number','id','number']));
+      const scoreRaw=pick(n,['score','total score','mark','total']);
+      const score=Number(scoreRaw);
+      const unresolvedRaw=pick(n,['unresolved','review','to review']);
+      const unresolved=Number(unresolvedRaw||0);
+
+      if(!metaName)metaName=String(pick(n,['competition','competition name'])||'').trim();
+      if(!metaYear)metaYear=String(pick(n,['competition year','edition year','year of competition'])||'').trim();
+      if(!metaMax)metaMax=String(pick(n,['maximum score','max score','maximum','max'])||'').trim();
+
+      if(!id||!Number.isFinite(score)){skipped++;return}
+      if(Number.isFinite(unresolved)&&unresolved>0)unresolvedCount++;
+
+      map.set(id,{
+        candidateId:id,
+        name:String(pick(n,['name','student name','student'])||'').trim(),
+        year:String(pick(n,['year','year group','grade'])||'').trim(),
+        school:String(pick(n,['school','school name'])||'').trim(),
+        score,
+        unresolved:Number.isFinite(unresolved)?unresolved:0,
+        sourceRow:index+2
+      });
+    });
+
+    if(!map.size)throw new Error('No rows with both Candidate ID and Score were found.');
+
+    certState.importedResults=map;
+    certState.importedMeta={fileName:f.name,competition:metaName,year:metaYear,maxScore:metaMax};
+
+    if(metaName)el('competitionName').value=metaName;
+    if(validCompetitionYear(metaYear))el('competitionYear').value=Number(metaYear);
+    if(metaName||validCompetitionYear(metaYear))applyCompetitionSettings(true);
+
+    const max=Number(metaMax);
+    if(Number.isFinite(max)&&max>0)el('certMaxScore').value=max;
+
+    status.textContent=`${map.size} results loaded`;
+    status.className='status-pill good';
+
+    const detail=[];
+    if(unresolvedCount)detail.push(`${unresolvedCount} with unresolved responses will be excluded`);
+    if(skipped)detail.push(`${skipped} row(s) skipped`);
+    el('certBatchSummary').textContent=`Loaded ${map.size} result(s) from ${f.name}.${detail.length?' '+detail.join('; ')+'.':''}`;
+
+    invalidateCertificateBatch();
+    refreshCertificateCandidates();
+  }catch(err){
+    console.error(err);
+    certState.importedResults=new Map();
+    status.textContent='Could not load results';
+    status.className='status-pill bad';
+    alert(`Could not read the results file: ${err.message}`);
+    refreshCertificateCandidates();
+  }
+}
+
 function updateCertificateCutoffLabels(){
-  const pct = el('certCutoffMode').value==='percentage';
-  el('certSilverCutoff').placeholder = pct ? 'e.g. 65' : 'e.g. 80';
-  el('certGoldCutoff').placeholder = pct ? 'e.g. 80' : 'e.g. 100';
-  el('certMaxScoreWrap').style.opacity = pct ? '1' : '.72';
+  const pct=el('certCutoffMode').value==='percentage';
+  el('certSilverCutoff').placeholder=pct?'e.g. 65':'e.g. 80';
+  el('certGoldCutoff').placeholder=pct?'e.g. 80':'e.g. 100';
+  el('certMaxScoreWrap').style.opacity=pct?'1':'.72';
 }
 
 function invalidateCertificateBatch(){
-  if(!certState.batch.length) return;
+  if(!certState.batch.length)return;
   certState.batch=[];
   el('certPrintBatch').disabled=true;
   el('certBatchSummary').textContent='Settings changed - rebuild the batch before printing.';
 }
 
-function refreshCertificateCandidates(){
-  const select=el('certCandidateSelect');
-  if(!select) return;
-  const previous=select.value;
+function mergeCandidateRecord(records,id,patch){
+  const existing=records.get(id)||{id,name:'',year:'',school:'',score:'',unresolved:0};
+  const merged={...existing};
+  ['name','year','school'].forEach(k=>{if(String(patch[k]??'').trim())merged[k]=String(patch[k]).trim()});
+  if(patch.score!==''&&patch.score!==null&&patch.score!==undefined&&Number.isFinite(Number(patch.score)))merged.score=Number(patch.score);
+  if(Number.isFinite(Number(patch.unresolved)))merged.unresolved=Number(patch.unresolved);
+  records.set(id,merged);
+}
+
+function combinedCertificateRecords(){
   const records=new Map();
 
-  state.roster.forEach((p,id)=>records.set(id,{
-    id,
-    name:p.name||'',
-    year:p.year||'',
-    school:p.school||'',
-    score:''
+  state.roster.forEach((p,id)=>mergeCandidateRecord(records,id,{
+    name:p.name||'',year:p.year||'',school:p.school||'',score:''
   }));
 
+  certState.importedResults.forEach((p,id)=>mergeCandidateRecord(records,id,p));
+
   state.results.forEach(r=>{
-    if(!r.candidateId) return;
+    if(!r.candidateId)return;
     const p=state.roster.get(r.candidateId)||{};
     const s=scoreResult(r);
-    const existing=records.get(r.candidateId)||{id:r.candidateId,name:'',year:'',school:'',score:''};
-    existing.name=p.name||existing.name;
-    existing.year=p.year||existing.year;
-    existing.school=p.school||existing.school;
-    if(s.score!==null) existing.score=s.score;
-    records.set(r.candidateId,existing);
+    mergeCandidateRecord(records,r.candidateId,{
+      name:p.name||'',
+      year:p.year||'',
+      school:p.school||'',
+      score:s.score===null?'':s.score,
+      unresolved:s.unresolved
+    });
   });
 
+  return records;
+}
+
+function refreshCertificateCandidates(){
+  const select=el('certCandidateSelect');
+  if(!select)return;
+  const previous=select.value;
+  const records=combinedCertificateRecords();
   const options=[...records.values()].sort((a,b)=>Number(a.id)-Number(b.id));
+
   select.innerHTML='<option value="">Manual entry</option>';
   options.forEach(p=>{
     const option=document.createElement('option');
     option.value=p.id;
-    option.textContent=`${p.id} - ${p.name||'Unnamed candidate'}${p.score!==''?' · '+p.score+' marks':''}`;
-    option.dataset.name=p.name;
-    option.dataset.year=p.year;
-    option.dataset.school=p.school;
+    const review=p.unresolved>0?' · unresolved':'';
+    option.textContent=`${p.id} - ${p.name||'Unnamed candidate'}${p.score!==''?' · '+p.score+' marks':''}${review}`;
+    option.dataset.name=p.name||'';
+    option.dataset.year=p.year||'';
+    option.dataset.school=p.school||'';
     option.dataset.score=p.score;
     select.appendChild(option);
   });
-  if([...select.options].some(o=>o.value===previous)) select.value=previous;
+
+  if([...select.options].some(o=>o.value===previous))select.value=previous;
 }
 
 function populateCertificateCandidate(){
-  const select=el('certCandidateSelect'), option=select.selectedOptions[0];
-  if(!select.value || !option) return;
+  const select=el('certCandidateSelect'),option=select.selectedOptions[0];
+  if(!select.value||!option)return;
   el('certName').value=option.dataset.name||'';
   el('certYear').value=option.dataset.year||'';
   el('certSchool').value=option.dataset.school||'';
@@ -134,9 +246,9 @@ function xmlEscape(value){
 }
 
 function displayDate(value){
-  if(!value) return '';
+  if(!value)return'';
   const d=new Date(value+'T12:00:00');
-  if(Number.isNaN(d.getTime())) return value;
+  if(Number.isNaN(d.getTime()))return value;
   return new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'long',year:'numeric'}).format(d);
 }
 
@@ -145,38 +257,41 @@ function certificateMaxScore(){
   return Number.isFinite(m)&&m>0?m:125;
 }
 
-function scoreLine(score, show=true){
-  if(!show || score==='' || score===null || score===undefined || !Number.isFinite(Number(score))) return '';
-  const max=certificateMaxScore(), value=Number(score), pct=100*value/max;
-  return `Score: ${formatNumber(value)} / ${formatNumber(max)} (${pct.toFixed(1)}%)`;
+function scoreLine(score,show=true){
+  if(!show||score===''||score===null||score===undefined||!Number.isFinite(Number(score)))return'';
+  const max=certificateMaxScore(),value=Number(score),pct=100*value/max;
+  return`Score: ${formatNumber(value)} / ${formatNumber(max)} (${pct.toFixed(1)}%)`;
 }
 
 function formatNumber(n){
   return Number.isInteger(Number(n))?String(Number(n)):Number(n).toFixed(1).replace(/\.0$/,'');
 }
 
-function detailForCertificate(type, data){
+function detailForCertificate(type,data){
   switch(type){
-    case 'participation':
-      return 'for participating in the Senior Maths Competition 2026';
-    case 'silver':
-      return 'for achieving a Silver Award';
-    case 'gold':
-      return 'for achieving a Gold Award';
-    case 'best-in-year':
-      return data.year ? `for achieving the highest score in ${data.year}` : 'for achieving the highest score in the year group';
-    case 'best-in-school':
-      return data.school ? 'for achieving the highest score in the school' : 'for achieving the highest score in the school';
+    case'participation':
+      return`for participating in ${competitionLabel()}`;
+    case'silver':
+      return'for achieving a Silver Award';
+    case'gold':
+      return'for achieving a Gold Award';
+    case'best-in-year':
+      return data.year?`for achieving the highest score in ${data.year}`:'for achieving the highest score in the year group';
+    case'best-in-school':
+      return'for achieving the highest score in the school';
     default:
-      return '';
+      return'';
   }
 }
 
 function renderCertificate(type,data){
   let svg=certState.templates[type];
-  if(!svg) throw new Error('Certificate template is not ready.');
+  if(!svg)throw new Error('Certificate template is not ready.');
+
   const schoolLine=[data.school,data.year].filter(Boolean).join('  •  ');
   const replacements={
+    '{{COMPETITION}}':state.competition.name,
+    '{{YEAR}}':state.competition.year,
     '{{NAME}}':data.name||'',
     '{{DETAIL}}':detailForCertificate(type,data),
     '{{SCHOOL}}':schoolLine,
@@ -187,8 +302,9 @@ function renderCertificate(type,data){
   Object.entries(replacements).forEach(([token,value])=>{svg=svg.split(token).join(xmlEscape(value))});
 
   const length=String(data.name||'').length;
-  const size=length>52?21:length>42?25:length>32?30:38;
-  svg=svg.replace(/(<text x="561\.5" y="391"[^>]*font-size=")38("[^>]*>)/, `$1${size}$2`);
+  const size=length>52?22:length>42?26:length>32?31:42;
+  svg=svg.replace(/(<text[^>]*data-role="recipient"[^>]*font-size=")42("[^>]*>)/,`$1${size}$2`);
+  svg=svg.replace(/(<text x="561\.5" y="391"[^>]*font-size=")38("[^>]*>)/,`$1${Math.min(size,38)}$2`);
   return svg;
 }
 
@@ -200,7 +316,7 @@ function setCertificatePreview(svg){
 }
 
 function individualCertificateData(){
-  return {
+  return{
     name:el('certName').value.trim(),
     year:el('certYear').value.trim(),
     school:el('certSchool').value.trim(),
@@ -212,11 +328,11 @@ function individualCertificateData(){
 }
 
 function previewIndividualCertificate(){
-  const type=el('certAward').value, data=individualCertificateData();
+  const type=el('certAward').value,data=individualCertificateData();
   if(!data.name){alert('Enter the student name before generating a certificate.');return}
   try{
     const svg=renderCertificate(type,data);
-    certState.currentName=`${data.name} - ${CERTIFICATE_LABELS[type]}`;
+    certState.currentName=`${competitionLabel()} - ${data.name} - ${CERTIFICATE_LABELS[type]}`;
     setCertificatePreview(svg);
     el('certificateStatus').textContent='Individual preview ready';
     el('certificateStatus').className='status-pill good';
@@ -224,9 +340,8 @@ function previewIndividualCertificate(){
 }
 
 function downloadIndividualCertificate(){
-  if(!certState.currentSvg) return;
-  const blob=new Blob([certState.currentSvg],{type:'image/svg+xml;charset=utf-8'});
-  const a=document.createElement('a');
+  if(!certState.currentSvg)return;
+  const blob=new Blob([certState.currentSvg],{type:'image/svg+xml;charset=utf-8'}),a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
   a.download=safeFilename(certState.currentName||'Certificate')+'.svg';
   a.click();
@@ -234,68 +349,69 @@ function downloadIndividualCertificate(){
 }
 
 function printIndividualCertificate(){
-  if(!certState.currentSvg) return;
-  openCertificatePrintWindow([certState.currentSvg], certState.currentName||'Certificate');
+  if(!certState.currentSvg)return;
+  openCertificatePrintWindow([certState.currentSvg],certState.currentName||'Certificate');
 }
 
 function collectCertificateCandidates(){
-  const skipped=[];
-  const candidates=[];
-  state.results.forEach(r=>{
-    if(!r.candidateId || r.status==='rescan') return;
-    const s=scoreResult(r);
-    if(s.score===null) return;
-    const p=state.roster.get(r.candidateId)||{};
+  const skipped=[],candidates=[];
+  const records=combinedCertificateRecords();
+
+  records.forEach((p,id)=>{
+    if(p.unresolved>0)return;
+    if(!Number.isFinite(Number(p.score)))return;
     if(!String(p.name||'').trim()){
-      skipped.push(r.candidateId);
+      skipped.push(id);
       return;
     }
     candidates.push({
-      candidateId:r.candidateId,
+      candidateId:id,
       name:String(p.name).trim(),
       year:String(p.year||'').trim(),
       school:String(p.school||'').trim(),
-      score:s.score,
-      percentage:100*s.score/certificateMaxScore()
+      score:Number(p.score),
+      percentage:100*Number(p.score)/certificateMaxScore()
     });
   });
-  return {candidates,skipped};
+
+  return{candidates,skipped};
 }
 
 function buildCertificateBatch(){
   if(Object.keys(certState.templates).length!==5){alert('Certificate templates are still loading.');return}
-  if(!state.results.length){alert('Mark the answer sheets first, or use the Individual certificate panel.');return}
 
   const mode=el('certCutoffMode').value;
-  const silver=Number(el('certSilverCutoff').value), gold=Number(el('certGoldCutoff').value);
+  const silver=Number(el('certSilverCutoff').value),gold=Number(el('certGoldCutoff').value);
+
   if(!Number.isFinite(silver)||!Number.isFinite(gold)){
     alert('Enter both the Silver and Gold cut-offs.');
     return;
   }
   if(gold<silver){alert('The Gold cut-off must be at least as high as the Silver cut-off.');return}
-  if(mode==='percentage' && (silver<0||gold>100)){
-    alert('Percentage cut-offs should be between 0 and 100.');
-    return;
-  }
+  if(mode==='percentage'&&(silver<0||gold>100)){alert('Percentage cut-offs should be between 0 and 100.');return}
   if(certificateMaxScore()<=0){alert('Enter a positive maximum score.');return}
 
-  const {candidates,skipped}=collectCertificateCandidates();
+  const{candidates,skipped}=collectCertificateCandidates();
   if(!candidates.length){
-    alert('No completed results with matching student names were found. Load a roster with Candidate ID and Name, or generate an individual certificate manually.');
+    alert('No completed results with student names were found. Mark papers, load a results Excel/CSV, load a matching roster, or use the Individual certificate panel.');
     return;
   }
 
   const participationRule=el('certParticipationRule').value;
   const showScore=el('certShowScore').checked;
-  const common={date:el('certBatchDate').value,signatory:el('certSignatory').value.trim()||'Competition Organiser',showScore};
+  const common={
+    date:el('certBatchDate').value,
+    signatory:el('certSignatory').value.trim()||'Competition Organiser',
+    showScore
+  };
   const certs=[];
 
   candidates.forEach(c=>{
     const value=mode==='percentage'?c.percentage:c.score;
-    if(participationRule==='all') certs.push({type:'participation',data:{...c,...common}});
-    if(value>=gold) certs.push({type:'gold',data:{...c,...common}});
-    else if(value>=silver) certs.push({type:'silver',data:{...c,...common}});
-    else if(participationRule==='below') certs.push({type:'participation',data:{...c,...common}});
+    if(participationRule==='all')certs.push({type:'participation',data:{...c,...common}});
+    if(value>=gold)certs.push({type:'gold',data:{...c,...common}});
+    else if(value>=silver)certs.push({type:'silver',data:{...c,...common}});
+    else if(participationRule==='below')certs.push({type:'participation',data:{...c,...common}});
   });
 
   if(el('certBestYear').checked){
@@ -306,7 +422,7 @@ function buildCertificateBatch(){
   }
 
   const order={'gold':1,'silver':2,'participation':3,'best-in-year':4,'best-in-school':5};
-  certs.sort((a,b)=>Number(a.data.candidateId)-Number(b.data.candidateId) || order[a.type]-order[b.type]);
+  certs.sort((a,b)=>Number(a.data.candidateId)-Number(b.data.candidateId)||order[a.type]-order[b.type]);
 
   certState.batch=certs.map(c=>({...c,svg:renderCertificate(c.type,c.data)}));
   el('certPrintBatch').disabled=certState.batch.length===0;
@@ -315,26 +431,26 @@ function buildCertificateBatch(){
   certState.batch.forEach(c=>counts[c.type]=(counts[c.type]||0)+1);
   const parts=Object.entries(counts).map(([type,n])=>`${CERTIFICATE_LABELS[type]}: ${n}`);
   let summary=`${certState.batch.length} certificates built from ${candidates.length} completed candidates. ${parts.join(' · ')}.`;
-  if(skipped.length) summary+=` Skipped ${skipped.length} result(s) with no roster name: ${skipped.join(', ')}.`;
+  if(skipped.length)summary+=` Skipped ${skipped.length} result(s) with no student name: ${skipped.join(', ')}.`;
   summary+=' Tied top scores receive the same Best in Year / Best in School award.';
+
   el('certBatchSummary').textContent=summary;
   el('certificateStatus').textContent='Batch ready';
   el('certificateStatus').className='status-pill good';
 
-  if(certState.batch[0]){
-    el('certificatePreview').innerHTML=certState.batch[0].svg;
-  }
+  if(certState.batch[0])el('certificatePreview').innerHTML=certState.batch[0].svg;
 }
 
 function groupedWinners(candidates,field){
   const groups=new Map();
   candidates.forEach(c=>{
     const raw=String(c[field]||'').trim();
-    if(!raw) return;
+    if(!raw)return;
     const key=raw.toLocaleLowerCase();
-    if(!groups.has(key)) groups.set(key,[]);
+    if(!groups.has(key))groups.set(key,[]);
     groups.get(key).push(c);
   });
+
   const winners=[];
   groups.forEach(list=>{
     const max=Math.max(...list.map(c=>c.score));
@@ -344,13 +460,14 @@ function groupedWinners(candidates,field){
 }
 
 function printCertificateBatch(){
-  if(!certState.batch.length) return;
-  openCertificatePrintWindow(certState.batch.map(c=>c.svg), 'Senior Maths Competition 2026 Certificates');
+  if(!certState.batch.length)return;
+  openCertificatePrintWindow(certState.batch.map(c=>c.svg),`${competitionLabel()} Certificates`);
 }
 
 function openCertificatePrintWindow(svgs,title){
   const w=window.open('','_blank');
   if(!w){alert('The browser blocked the print window. Allow pop-ups for this site and try again.');return}
+
   const pages=svgs.map(svg=>`<section class="certificate-page">${svg}</section>`).join('');
   w.document.open();
   w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${htmlEscape(title)}</title>
@@ -368,6 +485,7 @@ function openCertificatePrintWindow(svgs,title){
 function safeFilename(value){
   return String(value||'Certificate').replace(/[\\/:*?"<>|]+/g,'-').replace(/\s+/g,' ').trim();
 }
+
 function htmlEscape(value){
   return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 }
