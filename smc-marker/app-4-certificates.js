@@ -189,8 +189,6 @@ function combinedCertificateRecords(){
     name:p.name||'',year:p.year||'',school:p.school||'',score:''
   }));
 
-  certState.importedResults.forEach((p,id)=>mergeCandidateRecord(records,id,p));
-
   state.results.forEach(r=>{
     if(!r.candidateId)return;
     const p=state.roster.get(r.candidateId)||{};
@@ -203,6 +201,10 @@ function combinedCertificateRecords(){
       unresolved:s.unresolved
     });
   });
+
+  // An explicitly loaded results sheet is treated as the certificate source of truth.
+  // Blank name/year/school cells still fall back to the roster/current session.
+  certState.importedResults.forEach((p,id)=>mergeCandidateRecord(records,id,p));
 
   return records;
 }
