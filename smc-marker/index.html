@@ -4,87 +4,129 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light" />
-  <title>Senior Maths Competition 2026 — OMR Marker</title>
-  <link rel="stylesheet" href="styles.css?v=0.3.0" />
+  <title>Senior Maths Competition 2026 - OMR Marker</title>
+  <link rel="stylesheet" href="styles.css?v=0.4.0" />
 </head>
 <body>
   <header class="site-header">
-    <div><p class="eyebrow">Senior Maths Competition 2026</p><h1>Answer-sheet marker</h1><p class="subtitle">Scan, review, export results and generate certificates from the QR-coded OMR answer sheets.</p></div>
+    <div>
+      <p class="eyebrow"><span data-competition-name>Senior Maths Competition</span> <span data-competition-year>2026</span></p>
+      <h1>Answer-sheet marker</h1>
+      <p class="subtitle">Scan, review, export results and generate certificates from QR-coded OMR answer sheets.</p>
+    </div>
     <div class="privacy-badge"><span class="privacy-dot"></span>Local processing</div>
   </header>
+
   <main>
-    <section class="notice"><strong>Privacy:</strong> scans, answer keys and rosters are processed in this browser tab. This site does not upload them to a marking server.<span id="runtimeStatus" class="runtime-status">Starting marking engine…</span></section>
+    <section class="notice">
+      <span><strong>Privacy:</strong> scans, answer keys, rosters and results files are processed in this browser tab. This site does not upload them to a marking server.</span>
+      <span id="runtimeStatus" class="runtime-status">Starting marking engine...</span>
+    </section>
+
+    <section class="competition-settings" aria-labelledby="competitionSettingsTitle">
+      <div class="competition-settings-copy">
+        <p class="eyebrow">Reusable setup</p>
+        <h2 id="competitionSettingsTitle">Competition settings</h2>
+        <p>Change these once for a new edition. The name and year are used across the marker, exports, QR checks and certificates, and are saved in this browser.</p>
+      </div>
+      <div class="competition-settings-fields">
+        <label>Competition name
+          <input id="competitionName" type="text" value="Senior Maths Competition" autocomplete="off">
+        </label>
+        <label>Edition year
+          <input id="competitionYear" type="number" value="2026" min="2000" max="2099" step="1">
+        </label>
+      </div>
+    </section>
+
     <div class="steps">
       <section class="card step-card">
         <div class="step-heading"><span class="step-number">1</span><div><h2>Answer key</h2><p>Paste 25 letters, or load the private JSON answer-key file.</p></div></div>
-        <label>Answers (Q1–Q25)<textarea id="answerKeyText" rows="3" spellcheck="false" placeholder="C C E D C A …"></textarea></label>
+        <label>Answers (Q1-Q25)<textarea id="answerKeyText" rows="3" spellcheck="false" placeholder="C C E D C A ..."></textarea></label>
         <div class="row wrap"><label class="file-button">Load answer-key JSON<input id="answerKeyFile" type="file" accept=".json,application/json" /></label><span id="keyStatus" class="status-pill neutral">No key loaded</span></div>
         <details class="advanced"><summary>Scoring settings</summary><div class="score-grid">
-          <label>Starting score<input id="scoreStart" type="number" value="25" /></label><label>Correct<input id="scoreCorrect" type="number" value="4" /></label><label>Incorrect<input id="scoreIncorrect" type="number" value="-1" /></label><label>Blank<input id="scoreBlank" type="number" value="0" /></label>
+          <label>Starting score<input id="scoreStart" type="number" value="25" /></label>
+          <label>Correct<input id="scoreCorrect" type="number" value="4" /></label>
+          <label>Incorrect<input id="scoreIncorrect" type="number" value="-1" /></label>
+          <label>Blank<input id="scoreBlank" type="number" value="0" /></label>
         </div></details>
       </section>
+
       <section class="card step-card">
         <div class="step-heading"><span class="step-number">2</span><div><h2>Roster <span class="optional">optional</span></h2><p>Add names, year groups and schools to candidate IDs.</p></div></div>
         <label class="file-button primary-lite">Choose CSV / Excel roster<input id="rosterFile" type="file" accept=".csv,.xlsx,.xls" /></label>
-        <p class="hint">Recognised headings include Candidate ID, Name, Year and School.</p><span id="rosterStatus" class="status-pill neutral">No roster loaded</span>
+        <p class="hint">Recognised headings include Candidate ID, Name, Year and School.</p>
+        <span id="rosterStatus" class="status-pill neutral">No roster loaded</span>
       </section>
+
       <section class="card step-card wide">
         <div class="step-heading"><span class="step-number">3</span><div><h2>Scanned answer sheets</h2><p>Use one multi-page PDF or select image files. A4 scans at about 300 dpi are ideal.</p></div></div>
-        <div id="dropZone" class="drop-zone" tabindex="0"><div class="drop-icon">⇩</div><strong>Drop scans here</strong><span>or click to choose PDF / PNG / JPG files</span><input id="scanFiles" type="file" accept=".pdf,.png,.jpg,.jpeg,image/png,image/jpeg,application/pdf" multiple /></div>
+        <div id="dropZone" class="drop-zone" tabindex="0">
+          <div class="drop-icon">⇩</div><strong>Drop scans here</strong><span>or click to choose PDF / PNG / JPG files</span>
+          <input id="scanFiles" type="file" accept=".pdf,.png,.jpg,.jpeg,image/png,image/jpeg,application/pdf" multiple />
+        </div>
         <div id="scanList" class="scan-list"></div>
-        <div class="action-row"><button id="markButton" class="button primary" disabled>Mark papers</button><button id="clearButton" class="button secondary" disabled>Clear</button><div class="progress-wrap" id="progressWrap" hidden><div class="progress-track"><div id="progressBar" class="progress-bar"></div></div><span id="progressText">Preparing…</span></div></div>
+        <div class="action-row">
+          <button id="markButton" class="button primary" disabled>Mark papers</button>
+          <button id="clearButton" class="button secondary" disabled>Clear</button>
+          <div class="progress-wrap" id="progressWrap" hidden><div class="progress-track"><div id="progressBar" class="progress-bar"></div></div><span id="progressText">Preparing...</span></div>
+        </div>
       </section>
     </div>
+
     <section id="resultsSection" class="card results-card" hidden>
-      <div class="section-heading"><div><p class="eyebrow">Step 4</p><h2>Results</h2><p id="resultsSummary">No papers processed.</p></div><div class="row wrap"><button id="exportXlsx" class="button primary-lite">Export Excel</button><button id="exportCsv" class="button secondary">Export CSV</button></div></div>
-      <div id="summaryTiles" class="summary-tiles"></div><div class="table-scroll"><table id="resultsTable"><thead><tr><th>ID</th><th>Name</th><th>Year</th><th>Page</th><th>Correct</th><th>Incorrect</th><th>Blank</th><th>Review</th><th>Score</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+      <div class="section-heading">
+        <div><p class="eyebrow">Step 4</p><h2>Results</h2><p id="resultsSummary">No papers processed.</p></div>
+        <div class="row wrap"><button id="exportXlsx" class="button primary-lite">Export Excel</button><button id="exportCsv" class="button secondary">Export CSV</button></div>
+      </div>
+      <div id="summaryTiles" class="summary-tiles"></div>
+      <div class="table-scroll"><table id="resultsTable"><thead><tr><th>ID</th><th>Name</th><th>Year</th><th>Page</th><th>Correct</th><th>Incorrect</th><th>Blank</th><th>Review</th><th>Score</th><th>Status</th></tr></thead><tbody></tbody></table></div>
     </section>
-    <section id="reviewSection" class="card review-card" hidden><div class="section-heading"><div><p class="eyebrow">Manual check</p><h2>Review flagged responses</h2><p>The marker flags light, multiple or uncertain marks instead of silently guessing.</p></div><span id="reviewCount" class="status-pill warning">0 to review</span></div><div id="reviewList" class="review-list"></div></section>
+
+    <section id="reviewSection" class="card review-card" hidden>
+      <div class="section-heading"><div><p class="eyebrow">Manual check</p><h2>Review flagged responses</h2><p>The marker flags light, multiple or uncertain marks instead of silently guessing.</p></div><span id="reviewCount" class="status-pill warning">0 to review</span></div>
+      <div id="reviewList" class="review-list"></div>
+    </section>
+
     <section id="certificateSection" class="card certificate-card">
       <div class="section-heading">
-        <div><p class="eyebrow">Step 5</p><h2>Certificate generator</h2><p>Create certificates from completed results, or make an individual certificate manually. Personal details stay in this browser.</p></div>
+        <div><p class="eyebrow">Step 5</p><h2>Certificate generator</h2><p>Create certificates from completed results, from a previously exported results sheet, or individually. Personal details stay in this browser.</p></div>
         <span id="certificateStatus" class="status-pill neutral">Ready</span>
+      </div>
+
+      <div class="cert-import-strip">
+        <div>
+          <strong>Already have a results sheet?</strong>
+          <p class="hint">Load the Excel or CSV exported by this marker. Names, year groups, schools and scores are then available without rescanning the answer sheets.</p>
+        </div>
+        <div class="row wrap">
+          <label class="file-button primary-lite">Load results Excel / CSV<input id="certResultsFile" type="file" accept=".csv,.xlsx,.xls" /></label>
+          <span id="certResultsStatus" class="status-pill neutral">Using current marked results</span>
+        </div>
       </div>
 
       <div class="certificate-grid">
         <div class="certificate-panel">
           <h3>Batch certificates</h3>
-          <p class="hint">Silver and Gold can use absolute scores or percentages. Best in Year and Best in School are calculated from the completed results; ties are included.</p>
+          <p class="hint">Silver and Gold can use absolute scores or percentages. Best in Year and Best in School are calculated from completed results; ties are included.</p>
           <div class="cert-form-grid">
             <label>Cut-off type
-              <select id="certCutoffMode">
-                <option value="absolute">Absolute score</option>
-                <option value="percentage">Percentage</option>
-              </select>
+              <select id="certCutoffMode"><option value="absolute">Absolute score</option><option value="percentage">Percentage</option></select>
             </label>
-            <label id="certMaxScoreWrap">Maximum score
-              <input id="certMaxScore" type="number" value="125" min="1" step="1">
-            </label>
-            <label>Silver cut-off
-              <input id="certSilverCutoff" type="number" placeholder="Enter cut-off" step="0.1">
-            </label>
-            <label>Gold cut-off
-              <input id="certGoldCutoff" type="number" placeholder="Enter cut-off" step="0.1">
-            </label>
+            <label id="certMaxScoreWrap">Maximum score<input id="certMaxScore" type="number" value="125" min="1" step="1"></label>
+            <label>Silver cut-off<input id="certSilverCutoff" type="number" placeholder="Enter cut-off" step="0.1"></label>
+            <label>Gold cut-off<input id="certGoldCutoff" type="number" placeholder="Enter cut-off" step="0.1"></label>
             <label>Participation certificates
-              <select id="certParticipationRule">
-                <option value="below">Candidates below Silver</option>
-                <option value="all">All candidates</option>
-                <option value="none">Do not generate</option>
-              </select>
+              <select id="certParticipationRule"><option value="below">Candidates below Silver</option><option value="all">All candidates</option><option value="none">Do not generate</option></select>
             </label>
-            <label>Certificate date
-              <input id="certBatchDate" type="date">
-            </label>
+            <label>Certificate date<input id="certBatchDate" type="date"></label>
           </div>
           <div class="cert-checks">
             <label><input id="certBestYear" type="checkbox" checked> Generate Best in Year</label>
             <label><input id="certBestSchool" type="checkbox" checked> Generate Best in School</label>
             <label><input id="certShowScore" type="checkbox"> Show score on certificates</label>
           </div>
-          <label>Signatory / footer label
-            <input id="certSignatory" type="text" value="Competition Organiser">
-          </label>
+          <label>Signatory / footer label<input id="certSignatory" type="text" value="Competition Organiser"></label>
           <div class="action-row">
             <button id="certBuildBatch" class="button primary-lite">Build batch</button>
             <button id="certPrintBatch" class="button primary" disabled>Print / save batch PDF</button>
@@ -94,23 +136,15 @@
 
         <div class="certificate-panel">
           <h3>Individual certificate</h3>
-          <p class="hint">Choose a marked candidate or enter the details manually.</p>
-          <label>Candidate
-            <select id="certCandidateSelect"><option value="">Manual entry</option></select>
-          </label>
+          <p class="hint">Choose a marked/imported candidate or enter the details manually.</p>
+          <label>Candidate<select id="certCandidateSelect"><option value="">Manual entry</option></select></label>
           <div class="cert-form-grid">
             <label>Name<input id="certName" type="text" placeholder="Student name"></label>
             <label>Year<input id="certYear" type="text" placeholder="Year 12"></label>
             <label>School<input id="certSchool" type="text" placeholder="School"></label>
             <label>Score<input id="certScore" type="number" placeholder="Optional" step="0.1"></label>
             <label>Award
-              <select id="certAward">
-                <option value="participation">Participation</option>
-                <option value="silver">Silver</option>
-                <option value="gold">Gold</option>
-                <option value="best-in-year">Best in Year</option>
-                <option value="best-in-school">Best in School</option>
-              </select>
+              <select id="certAward"><option value="participation">Participation</option><option value="silver">Silver</option><option value="gold">Gold</option><option value="best-in-year">Best in Year</option><option value="best-in-school">Best in School</option></select>
             </label>
             <label>Date<input id="certIndividualDate" type="date"></label>
           </div>
@@ -122,13 +156,11 @@
         </div>
       </div>
 
-      <div id="certificatePreview" class="certificate-preview">
-        <div class="certificate-placeholder">Certificate preview will appear here.</div>
-      </div>
+      <div id="certificatePreview" class="certificate-preview"><div class="certificate-placeholder">Certificate preview will appear here.</div></div>
 
       <details class="advanced cert-template-links">
         <summary>Blank certificate templates</summary>
-        <p class="hint">These SVG files contain placeholders only; student details are inserted locally by the generator.</p>
+        <p class="hint">The templates contain placeholders only. Student details, competition name and edition year are inserted locally by the generator.</p>
         <div class="row wrap">
           <a class="button secondary" href="certificates/templates/participation.svg" target="_blank" rel="noopener">Participation</a>
           <a class="button secondary" href="certificates/templates/silver.svg" target="_blank" rel="noopener">Silver</a>
@@ -138,11 +170,18 @@
         </div>
       </details>
     </section>
-    <section class="card help-card"><h2>Recommended scanning</h2><div class="help-grid"><div><strong>Paper</strong><span>A4, 100%</span></div><div><strong>Resolution</strong><span>About 300 dpi</span></div><div><strong>Colour</strong><span>Greyscale or colour</span></div><div><strong>PDF</strong><span>One sheet per page</span></div></div><p class="hint">Keep all four black registration squares visible. Pages with missing marks are rejected rather than guessed.</p></section>
+
+    <section class="card help-card">
+      <h2>Recommended scanning</h2>
+      <div class="help-grid"><div><strong>Paper</strong><span>A4, 100%</span></div><div><strong>Resolution</strong><span>About 300 dpi</span></div><div><strong>Colour</strong><span>Greyscale or colour</span></div><div><strong>PDF</strong><span>One sheet per page</span></div></div>
+      <p class="hint">Keep all four black registration squares visible. Pages with missing marks are rejected rather than guessed.</p>
+    </section>
   </main>
-  <footer><span>Senior Maths Competition 2026 OMR Marker</span><span>Form A · Browser marker 0.3</span></footer>
+
+  <footer><span><span data-competition-name>Senior Maths Competition</span> <span data-competition-year>2026</span> OMR Marker</span><span>Form A · Browser marker 0.4</span></footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-  <script src="app-1.js?v=0.3.0"></script><script src="app-2.js?v=0.3.0"></script><script src="app-3.js?v=0.3.0"></script><script src="app-4-certificates.js?v=0.3.0"></script>
-</body></html>
+  <script src="app-1.js?v=0.4.0"></script><script src="app-2.js?v=0.4.0"></script><script src="app-3.js?v=0.4.0"></script><script src="app-4-certificates.js?v=0.4.0"></script>
+</body>
+</html>
