@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light" />
   <title>Senior Maths Competition 2026 — OMR Marker</title>
-  <link rel="stylesheet" href="styles.css?v=0.2.1" />
+  <link rel="stylesheet" href="styles.css?v=0.3.0" />
 </head>
 <body>
   <header class="site-header">
-    <div><p class="eyebrow">Senior Maths Competition 2026</p><h1>Answer-sheet marker</h1><p class="subtitle">Scan, review and export results from the QR-coded OMR answer sheets.</p></div>
+    <div><p class="eyebrow">Senior Maths Competition 2026</p><h1>Answer-sheet marker</h1><p class="subtitle">Scan, review, export results and generate certificates from the QR-coded OMR answer sheets.</p></div>
     <div class="privacy-badge"><span class="privacy-dot"></span>Local processing</div>
   </header>
   <main>
@@ -40,11 +40,109 @@
       <div id="summaryTiles" class="summary-tiles"></div><div class="table-scroll"><table id="resultsTable"><thead><tr><th>ID</th><th>Name</th><th>Year</th><th>Page</th><th>Correct</th><th>Incorrect</th><th>Blank</th><th>Review</th><th>Score</th><th>Status</th></tr></thead><tbody></tbody></table></div>
     </section>
     <section id="reviewSection" class="card review-card" hidden><div class="section-heading"><div><p class="eyebrow">Manual check</p><h2>Review flagged responses</h2><p>The marker flags light, multiple or uncertain marks instead of silently guessing.</p></div><span id="reviewCount" class="status-pill warning">0 to review</span></div><div id="reviewList" class="review-list"></div></section>
+    <section id="certificateSection" class="card certificate-card">
+      <div class="section-heading">
+        <div><p class="eyebrow">Step 5</p><h2>Certificate generator</h2><p>Create certificates from completed results, or make an individual certificate manually. Personal details stay in this browser.</p></div>
+        <span id="certificateStatus" class="status-pill neutral">Ready</span>
+      </div>
+
+      <div class="certificate-grid">
+        <div class="certificate-panel">
+          <h3>Batch certificates</h3>
+          <p class="hint">Silver and Gold can use absolute scores or percentages. Best in Year and Best in School are calculated from the completed results; ties are included.</p>
+          <div class="cert-form-grid">
+            <label>Cut-off type
+              <select id="certCutoffMode">
+                <option value="absolute">Absolute score</option>
+                <option value="percentage">Percentage</option>
+              </select>
+            </label>
+            <label id="certMaxScoreWrap">Maximum score
+              <input id="certMaxScore" type="number" value="125" min="1" step="1">
+            </label>
+            <label>Silver cut-off
+              <input id="certSilverCutoff" type="number" placeholder="Enter cut-off" step="0.1">
+            </label>
+            <label>Gold cut-off
+              <input id="certGoldCutoff" type="number" placeholder="Enter cut-off" step="0.1">
+            </label>
+            <label>Participation certificates
+              <select id="certParticipationRule">
+                <option value="below">Candidates below Silver</option>
+                <option value="all">All candidates</option>
+                <option value="none">Do not generate</option>
+              </select>
+            </label>
+            <label>Certificate date
+              <input id="certBatchDate" type="date">
+            </label>
+          </div>
+          <div class="cert-checks">
+            <label><input id="certBestYear" type="checkbox" checked> Generate Best in Year</label>
+            <label><input id="certBestSchool" type="checkbox" checked> Generate Best in School</label>
+            <label><input id="certShowScore" type="checkbox"> Show score on certificates</label>
+          </div>
+          <label>Signatory / footer label
+            <input id="certSignatory" type="text" value="Competition Organiser">
+          </label>
+          <div class="action-row">
+            <button id="certBuildBatch" class="button primary-lite">Build batch</button>
+            <button id="certPrintBatch" class="button primary" disabled>Print / save batch PDF</button>
+          </div>
+          <div id="certBatchSummary" class="cert-summary">No batch built yet.</div>
+        </div>
+
+        <div class="certificate-panel">
+          <h3>Individual certificate</h3>
+          <p class="hint">Choose a marked candidate or enter the details manually.</p>
+          <label>Candidate
+            <select id="certCandidateSelect"><option value="">Manual entry</option></select>
+          </label>
+          <div class="cert-form-grid">
+            <label>Name<input id="certName" type="text" placeholder="Student name"></label>
+            <label>Year<input id="certYear" type="text" placeholder="Year 12"></label>
+            <label>School<input id="certSchool" type="text" placeholder="School"></label>
+            <label>Score<input id="certScore" type="number" placeholder="Optional" step="0.1"></label>
+            <label>Award
+              <select id="certAward">
+                <option value="participation">Participation</option>
+                <option value="silver">Silver</option>
+                <option value="gold">Gold</option>
+                <option value="best-in-year">Best in Year</option>
+                <option value="best-in-school">Best in School</option>
+              </select>
+            </label>
+            <label>Date<input id="certIndividualDate" type="date"></label>
+          </div>
+          <div class="action-row wrap">
+            <button id="certPreviewSingle" class="button primary-lite">Preview certificate</button>
+            <button id="certDownloadSvg" class="button secondary" disabled>Download SVG</button>
+            <button id="certPrintSingle" class="button primary" disabled>Print / save PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="certificatePreview" class="certificate-preview">
+        <div class="certificate-placeholder">Certificate preview will appear here.</div>
+      </div>
+
+      <details class="advanced cert-template-links">
+        <summary>Blank certificate templates</summary>
+        <p class="hint">These SVG files contain placeholders only; student details are inserted locally by the generator.</p>
+        <div class="row wrap">
+          <a class="button secondary" href="certificates/templates/participation.svg" target="_blank" rel="noopener">Participation</a>
+          <a class="button secondary" href="certificates/templates/silver.svg" target="_blank" rel="noopener">Silver</a>
+          <a class="button secondary" href="certificates/templates/gold.svg" target="_blank" rel="noopener">Gold</a>
+          <a class="button secondary" href="certificates/templates/best-in-year.svg" target="_blank" rel="noopener">Best in Year</a>
+          <a class="button secondary" href="certificates/templates/best-in-school.svg" target="_blank" rel="noopener">Best in School</a>
+        </div>
+      </details>
+    </section>
     <section class="card help-card"><h2>Recommended scanning</h2><div class="help-grid"><div><strong>Paper</strong><span>A4, 100%</span></div><div><strong>Resolution</strong><span>About 300 dpi</span></div><div><strong>Colour</strong><span>Greyscale or colour</span></div><div><strong>PDF</strong><span>One sheet per page</span></div></div><p class="hint">Keep all four black registration squares visible. Pages with missing marks are rejected rather than guessed.</p></section>
   </main>
-  <footer><span>Senior Maths Competition 2026 OMR Marker</span><span>Form A · Browser marker 0.2</span></footer>
+  <footer><span>Senior Maths Competition 2026 OMR Marker</span><span>Form A · Browser marker 0.3</span></footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-  <script src="app-1.js?v=0.2.1"></script><script src="app-2.js?v=0.2.1"></script><script src="app-3.js?v=0.2.1"></script>
+  <script src="app-1.js?v=0.3.0"></script><script src="app-2.js?v=0.3.0"></script><script src="app-3.js?v=0.3.0"></script><script src="app-4-certificates.js?v=0.3.0"></script>
 </body></html>
