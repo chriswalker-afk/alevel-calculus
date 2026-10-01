@@ -1,31 +1,64 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1123 794" width="1123" height="794">
-  <rect width="1123" height="794" fill="#fbfaf7"/>
-  <rect x="28" y="28" width="1067" height="738" rx="8" fill="none" stroke="#275b43" stroke-width="3"/>
-  <rect x="40" y="40" width="1043" height="714" rx="5" fill="none" stroke="#d7d1c7" stroke-width="1"/>
-  <path d="M72 92 H295 M828 92 H1051 M72 702 H295 M828 702 H1051" stroke="#275b43" stroke-width="2"/>
-  <g opacity=".12" fill="none" stroke="#275b43" stroke-width="2">
-    <circle cx="101" cy="122" r="26"/><circle cx="1020" cy="670" r="26"/>
-    <path d="M75 670 C145 610 205 635 270 570 M853 225 C920 160 980 182 1048 116"/>
-    <path d="M92 650 l18 18 30-38 M983 144 l18 18 30-38"/>
+  <defs>
+    <linearGradient id="bgFade" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fcfbf7"/>
+      <stop offset="100%" stop-color="#f3efe7"/>
+    </linearGradient>
+    <linearGradient id="frameAccent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7cb592"/>
+      <stop offset="100%" stop-color="#285840"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1123" height="794" fill="url(#bgFade)"/>
+  <rect x="20" y="20" width="1083" height="754" rx="10" fill="none" stroke="url(#frameAccent)" stroke-width="4"/>
+  <rect x="34" y="34" width="1055" height="726" rx="8" fill="none" stroke="#d9d1c2" stroke-width="1.5"/>
+  <rect x="48" y="48" width="1027" height="698" rx="6" fill="none" stroke="#285840" stroke-opacity="0.28" stroke-width="1"/>
+
+  <g opacity="0.12" fill="none" stroke="#285840" stroke-width="1.6">
+    <path d="M88 143 C182 97 275 99 365 143"/>
+    <path d="M758 143 C848 99 941 97 1035 143"/>
+    <path d="M88 650 C182 696 275 694 365 650"/>
+    <path d="M758 650 C848 694 941 696 1035 650"/>
+    <circle cx="118" cy="138" r="14"/><circle cx="1005" cy="138" r="14"/>
+    <circle cx="118" cy="655" r="14"/><circle cx="1005" cy="655" r="14"/>
   </g>
-  <text x="561.5" y="126" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" letter-spacing="4" fill="#3f4a50">SENIOR MATHS COMPETITION 2026</text>
-  <text x="561.5" y="184" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#69747a">Certificate of</text>
-  <text x="561.5" y="246" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="45" font-weight="700" fill="#275b43">Best in School</text>
-  <path d="M370 268 H753" stroke="#275b43" stroke-width="2"/>
-  <text x="561.5" y="315" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#69747a">awarded for the highest score in the school</text>
-  <text x="561.5" y="391" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="38" font-weight="700" fill="#18242c">{{NAME}}</text>
-  <path d="M310 412 H813" stroke="#b7b0a5" stroke-width="1"/>
-  <text x="561.5" y="456" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#39474f">{{DETAIL}}</text>
-  <text x="561.5" y="495" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#69747a">{{SCHOOL}}</text>
-  <text x="561.5" y="548" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#7a8388">{{SCORE_LINE}}</text>
-  <g transform="translate(165 624)">
-    <path d="M0 0 H250" stroke="#91999d" stroke-width="1"/>
-    <text x="125" y="25" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#7a8388">Date: {{DATE}}</text>
+
+  <g opacity="0.07" fill="#285840" font-family="Georgia, 'Times New Roman', serif" font-size="46">
+    <text x="80" y="112">π</text>
+    <text x="1005" y="112">∞</text>
+    <text x="80" y="700">∑</text>
+    <text x="1000" y="700">√</text>
   </g>
-  <g transform="translate(708 624)">
-    <path d="M0 0 H250" stroke="#91999d" stroke-width="1"/>
-    <text x="125" y="25" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#7a8388">{{SIGNATORY}}</text>
+
+  <g transform="translate(561.5 127)">
+    <circle r="54" fill="#397658" stroke="#24513b" stroke-width="2.4"/>
+    <circle r="42" fill="none" stroke="#ffffff" stroke-opacity="0.78" stroke-width="1.8"/>
+    <text y="-4" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-weight="700" fill="#ffffff" letter-spacing="1.5">{{YEAR}}</text>
+    <text y="19" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="8.2" fill="#ffffff" letter-spacing="1.5">BEST IN SCHOOL</text>
   </g>
-  <text x="561.5" y="714" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" letter-spacing="1.6" fill="#8a9195">AN INDEPENDENT MATHEMATICS COMPETITION FOR YEARS 12-13</text>
-  <text x="1040" y="733" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#275b43" opacity=".65">BEST IN SCHOOL</text>
+
+  <text x="561.5" y="214" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" letter-spacing="4" fill="#687278">{{COMPETITION}}</text>
+  <text x="561.5" y="252" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" fill="#555e63">Certificate of</text>
+  <text x="561.5" y="306" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="44" font-weight="700" fill="#285840">Best in School</text>
+  <path d="M350 328 H773" stroke="#285840" stroke-width="1.8" stroke-opacity="0.55"/>
+  <text x="561.5" y="360" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#6b7479">awarded for the highest score in the school</text>
+
+  <text data-role="recipient" x="561.5" y="435" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="700" fill="#1b252b">{{NAME}}</text>
+  <path d="M305 452 H818" stroke="#b8aea0" stroke-width="1.2"/>
+  <text x="561.5" y="494" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="17.5" fill="#334148">{{DETAIL}}</text>
+  <text x="561.5" y="531" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#677278">{{SCHOOL}}</text>
+  <text x="561.5" y="567" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#7a8387">{{SCORE_LINE}}</text>
+
+  <g transform="translate(160 643)">
+    <path d="M0 0 H255" stroke="#92989c" stroke-width="1"/>
+    <text x="127.5" y="24" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" fill="#727c81">Date: {{DATE}}</text>
+  </g>
+  <g transform="translate(708 643)">
+    <path d="M0 0 H255" stroke="#92989c" stroke-width="1"/>
+    <text x="127.5" y="24" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" fill="#727c81">{{SIGNATORY}}</text>
+  </g>
+
+  <text x="561.5" y="708" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10.5" letter-spacing="1.8" fill="#8b8f93">AN INDEPENDENT MATHEMATICS COMPETITION FOR YEARS 12-13</text>
+  <text x="561.5" y="730" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" letter-spacing="2.2" fill="#285840" opacity="0.72">HONOUR • PRESTIGE • MATHEMATICAL EXCELLENCE</text>
 </svg>
