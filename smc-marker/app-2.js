@@ -96,7 +96,7 @@ function detectFiducials(src){
     for(let y=Math.max(0,best.cy-r);y<Math.min(h,best.cy+r+1);y++)for(let x=Math.max(0,best.cx-r);x<Math.min(w,best.cx+r+1);x++){
       const p=(y*w+x)*4;if(grayOf(src.data,p)<150){sx+=x;sy+=y;n++}
     }
-    out.push(n>[best.size*best.size*.25]?[sx/n,sy/n]:[best.cx,best.cy]);
+    out.push(n>best.size*best.size*.25?[sx/n,sy/n]:[best.cx,best.cy]);
   }
   return out;
 }
