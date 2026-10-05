@@ -103,11 +103,29 @@ export function createProgressStore(localStateStore, { now = () => new Date().to
     return upsert(activityId, { security }, meta, "progress:security");
   }
 
-  function getModeCompletionState(topicId, mode) {
+  function getModeCompletionState(topicId, mode, expectedActivityIds = null) {
     const records = listActivities().filter((record) => record.topicId === topicId && record.mode === mode);
+    const expected = Array.isArray(expectedActivityIds)
+      ? [...new Set(expectedActivityIds.filter(Boolean))]
+      : [];
+
+    if (expected.length > 0) {
+      const byId = new Map(records.map((record) => [record.activityId, record]));
+      const expectedRecords = expected.map((activityId) => byId.get(activityId) ?? null);
+      const started = expectedRecords.some((record) => Boolean(record?.visited || record?.completed || record?.attempts > 0));
+      if (!started) return "not-started";
+
+      // Understand is a linear reading/exploration journey. Reaching the final
+      // pathway page is the durable signal that the section has been finished.
+      if (mode === "understand" && expectedRecords.at(-1)?.visited) return "complete";
+
+      if (expectedRecords.every((record) => Boolean(record?.completed))) return "complete";
+      return "partial";
+    }
+
     if (records.length === 0) return "not-started";
     if (records.every((record) => record.completed)) return "complete";
-    if (records.some((record) => record.completed || record.attempts > 0)) return "partial";
+    if (records.some((record) => record.visited || record.completed || record.attempts > 0)) return "partial";
     return "not-started";
   }
 
