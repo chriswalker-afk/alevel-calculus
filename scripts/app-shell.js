@@ -103,6 +103,10 @@ const topicNavigationToggle = document.querySelector("[data-topic-navigation-tog
 const topicNavigationClose = document.querySelector("[data-topic-navigation-close]");
 const navigationScrim = document.querySelector("[data-navigation-scrim]");
 const learningWorkspace = document.querySelector("[data-learning-workspace]");
+const workspaceNavHost = document.querySelector("[data-workspace-nav-host]");
+const workspaceHeaderControls = document.querySelector(".workspace-header__controls");
+const topicSidebarToggle = document.querySelector("[data-topic-sidebar-toggle]");
+const topicSidebarToggleIcon = document.querySelector("[data-topic-sidebar-toggle-icon]");
 const modePanel = document.querySelector("[data-mode-panel]");
 const modeTabs = Array.from(document.querySelectorAll("[data-mode-tab]"));
 const scopeBadges = Array.from(document.querySelectorAll("[data-scope-badge]"));
@@ -209,6 +213,10 @@ const required = [
   topicNavigationClose,
   navigationScrim,
   learningWorkspace,
+  workspaceNavHost,
+  workspaceHeaderControls,
+  topicSidebarToggle,
+  topicSidebarToggleIcon,
   modePanel,
   stage,
   standardActivityContent,
@@ -295,7 +303,13 @@ if (required.some((element) => !element) || modeTabs.length !== learningModeOrde
 
 installMathRendering(document);
 
+// The topic context, five learning modes and Tools now share the fixed top bar.
+// Move the existing controls rather than cloning them so all established event,
+// focus and accessibility behaviour remains attached to the same elements.
+workspaceNavHost.append(workspaceHeaderControls);
+
 const compactNavigationMedia = window.matchMedia("(max-width: 900px)");
+const SIDEBAR_COLLAPSED_KEY = "calculus:topics-sidebar-collapsed";
 
 const fields = Object.freeze({
   kicker: stage.querySelector("[data-activity-kicker]"),
@@ -322,6 +336,10 @@ const workspaceToolsCollapsedByMode = new Map(
 const workspaceToolsPreferenceLocked = new Set();
 let activityIndex = 0;
 let navigationOpen = false;
+let sidebarCollapsed = false;
+try {
+  sidebarCollapsed = window.localStorage?.getItem(SIDEBAR_COLLAPSED_KEY) === "true";
+} catch {}
 let classWizOpen = false;
 let helpOpen = false;
 let wordBankOpen = false;
@@ -1476,6 +1494,23 @@ function followHelpTarget(need) {
   followSupportTarget(getHelpTarget(currentTopicId, need));
 }
 
+function syncDesktopSidebar() {
+  const collapsed = !compactNavigationMedia.matches && sidebarCollapsed;
+  shell.dataset.sidebarCollapsed = collapsed ? "true" : "false";
+  topicSidebarToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
+  topicSidebarToggle.setAttribute("aria-label", collapsed ? "Expand topics sidebar" : "Collapse topics sidebar");
+  topicSidebarToggle.setAttribute("title", collapsed ? "Expand topics sidebar" : "Collapse topics sidebar");
+  topicSidebarToggleIcon.textContent = collapsed ? "›" : "‹";
+}
+
+function setDesktopSidebarCollapsed(collapsed, { remember = true } = {}) {
+  sidebarCollapsed = Boolean(collapsed);
+  if (remember) {
+    try { window.localStorage?.setItem(SIDEBAR_COLLAPSED_KEY, sidebarCollapsed ? "true" : "false"); } catch {}
+  }
+  syncDesktopSidebar();
+}
+
 export function openTopicNavigation() {
   if (!compactNavigationMedia.matches || navigationOpen) return;
   if (classWizOpen) closeClassWizSupport({ restoreFocus: false });
@@ -1511,6 +1546,7 @@ export function closeTopicNavigation({ restoreFocus = true } = {}) {
 
 function syncNavigationForViewport() {
   closeTopicNavigation({ restoreFocus: false });
+  syncDesktopSidebar();
 }
 
 function syncViewportDensity() {
@@ -1985,6 +2021,10 @@ localStateStore.subscribe(() => {
 });
 
 topicNavigationToggle.addEventListener("click", openTopicNavigation);
+topicSidebarToggle.addEventListener("click", () => {
+  if (compactNavigationMedia.matches) return;
+  setDesktopSidebarCollapsed(!sidebarCollapsed);
+});
 topicNavigationClose.addEventListener("click", () => closeTopicNavigation());
 navigationScrim.addEventListener("click", () => closeTopicNavigation());
 previousButton.addEventListener("click", () => renderActivity(activityIndex - 1));
@@ -2017,6 +2057,8 @@ document.addEventListener("keydown", (event) => {
     workspaceToolsToggle.focus({ preventScroll: true });
   }
 });
+
+syncDesktopSidebar();
 
 if (typeof compactNavigationMedia.addEventListener === "function") {
   compactNavigationMedia.addEventListener("change", syncNavigationForViewport);
