@@ -40,6 +40,9 @@ assert.match(appCss, /data-custom-understand-active="true"/);
 assert.match(appCss, /data-custom-understand-active="true"[\s\S]*\.math-placeholder[\s\S]*height:\s*auto/);
 assert.match(appCss, /data-custom-understand-active="true"[\s\S]*\.math-placeholder[\s\S]*overflow:\s*visible/);
 assert.match(appCss, /\.understand-visual-host\[hidden\]\s*\{\s*display:\s*none/);
+assert.match(appCss, /html\[data-learning-mode="understand"\][\s\S]*\.activity-copy > \.activity-overline[\s\S]*display:\s*none/, "Understand pages must not repeat the activity title as an overline.");
+assert.match(appCss, /data-custom-understand-active="true"[\s\S]*> \.activity-copy > h2[\s\S]*display:\s*none/, "Custom Understand visuals must own the single visible activity title.");
+assert.match(appCss, /\.understand-visual-host \[class\$="__eyebrow"\][\s\S]*display:\s*none/, "Custom Understand primary headings must not be repeated by an internal eyebrow label.");
 
 assert.match(diagramSource, /preserveAspectRatio:\s*"xMidYMid meet"/);
 assert.match(diagramSource, /const scale = Math\.min\(rect\.width \/ this\.width, rect\.height \/ this\.height\)/);
