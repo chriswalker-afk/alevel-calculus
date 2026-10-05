@@ -301,3 +301,374 @@
   }
   .basics-understand__coefficient-details:not([open]) .basics-understand__coefficient-editor { display: none; }
 }
+
+
+/* Basics of differentiation layout pass 2026-10-05.
+   Keep this topic's seven bespoke Understand activities stable inside the
+   resized app shell. The visual column owns its available height on desktop,
+   while individual activities adapt to the width they actually receive. */
+.activity-stage__content[data-basics-understand-active="true"] {
+  min-height: 0;
+  height: 100%;
+  grid-template-columns: clamp(210px, 23%, 290px) minmax(0, 1fr);
+  gap: clamp(var(--space-3), 1.4vw, var(--space-5));
+  align-items: stretch;
+}
+
+.activity-stage__content[data-basics-understand-active="true"] .activity-copy {
+  min-width: 0;
+  max-width: none;
+  max-height: 100%;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.activity-stage__content[data-basics-understand-active="true"] .math-placeholder,
+.activity-stage__content[data-basics-understand-active="true"] .understand-visual-host {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.activity-stage__content[data-basics-understand-active="true"] .math-placeholder {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.activity-stage__content[data-basics-understand-active="true"] .understand-visual-host > .basics-understand {
+  width: 100%;
+  height: 100% !important;
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
+  container-name: basics-understand;
+  container-type: inline-size;
+}
+
+.activity-stage__content[data-basics-understand-active="true"] .basics-understand__panel,
+.activity-stage__content[data-basics-understand-active="true"] .basics-understand__panel-body,
+.activity-stage__content[data-basics-understand-active="true"] .basics-understand__gradient-stage,
+.activity-stage__content[data-basics-understand-active="true"] .basics-understand__graph-host,
+.activity-stage__content[data-basics-understand-active="true"] .linked-gradient-explorer,
+.activity-stage__content[data-basics-understand-active="true"] .linked-gradient-explorer__graphs,
+.activity-stage__content[data-basics-understand-active="true"] .linked-gradient-explorer__card,
+.activity-stage__content[data-basics-understand-active="true"] .linked-gradient-explorer__diagram {
+  min-width: 0;
+  min-height: 0;
+}
+
+.activity-stage__content[data-basics-understand-active="true"] .basics-understand__panel {
+  overflow: hidden;
+}
+
+.activity-stage__content[data-basics-understand-active="true"] .basics-understand__panel-body {
+  height: 100%;
+}
+
+.activity-stage__content[data-basics-understand-active="true"] .linked-gradient-explorer__card-heading {
+  min-width: 0;
+}
+
+.activity-stage__content[data-basics-understand-active="true"] .basics-understand__graph-card-tools,
+.activity-stage__content[data-basics-understand-active="true"] .basics-understand__graph-values {
+  max-width: 100%;
+}
+
+.activity-stage__content[data-basics-understand-active="true"] .basics-understand__graph-action {
+  max-width: 100%;
+}
+
+/* 1. Gradient on a curve: the graph remains the primary surface and the
+   prompt stays a compact overlay rather than forcing the graph downward. */
+.basics-understand[data-basics-activity="curve_tangent_gradient"] .basics-understand__gradient-stage,
+.basics-understand[data-basics-activity="curve_tangent_gradient"] .basics-understand__graph-host,
+.basics-understand[data-basics-activity="curve_tangent_gradient"] .linked-gradient-explorer {
+  height: 100%;
+}
+
+.basics-understand[data-basics-activity="curve_tangent_gradient"] .basics-understand__gradient-popin {
+  max-width: calc(100% - 2 * var(--space-3));
+}
+
+/* 2. Gradient function: graph-card controls may wrap, but they must never
+   compete with the graph title for an impossible fixed width. */
+.basics-understand[data-basics-activity="gradient_function"] .basics-understand__graph-card-tools {
+  flex-wrap: wrap;
+}
+
+.basics-understand[data-basics-activity="gradient_function"] .basics-understand__graph-action {
+  white-space: normal;
+  text-align: center;
+}
+
+.basics-understand[data-basics-activity="gradient_function"] .basics-understand__graph-status {
+  min-width: 0;
+  white-space: normal;
+}
+
+/* 3. Polynomial explorer: keep the coefficient editor in normal flow when it
+   is opened. This avoids the former popover being clipped by the full-height
+   visual surface. */
+.basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__panel-body {
+  overflow: auto;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto minmax(220px, 1fr);
+  align-content: start;
+}
+
+.basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__coefficient-details {
+  position: static;
+  min-width: 190px;
+}
+
+.basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__coefficient-details[open] {
+  grid-column: 1 / -1;
+}
+
+.basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__coefficient-editor {
+  position: static;
+  width: auto;
+  max-width: none;
+  margin-top: var(--space-2);
+  box-shadow: none;
+}
+
+.basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__graph-host {
+  grid-column: 1 / -1;
+  min-height: 220px;
+}
+
+/* 4. Derivative notation: cards choose the number of columns from their real
+   container width, and this text-led page may scroll rather than crop. */
+.basics-understand[data-basics-activity="derivative_notation"] .basics-understand__panel-body {
+  overflow: auto;
+  grid-template-rows: auto auto auto;
+  align-content: start;
+}
+
+.basics-understand[data-basics-activity="derivative_notation"] .basics-understand__notation-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+}
+
+/* 5. d/dx operator: retain the large direct equation while allowing its
+   controls to reflow inside a narrow visual column. */
+.basics-understand[data-basics-activity="differentiation_machine"] .basics-understand__operator-equation > * {
+  min-width: 0;
+}
+
+/* 6. Power-rule pattern: revealing the rule must never push content below an
+   inaccessible clipped edge. */
+.basics-understand[data-basics-activity="power_rule_pattern"] .basics-understand__panel-body {
+  overflow: auto;
+  grid-template-rows: auto auto auto;
+  align-content: start;
+}
+
+.basics-understand[data-basics-activity="power_rule_pattern"] .basics-understand__pattern-list {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+}
+
+/* 7. Term by term: preserve readable algebra instead of squeezing five grid
+   columns until the terms collide. */
+.basics-understand[data-basics-activity="term_by_term"] .basics-understand__panel-body {
+  overflow: auto;
+}
+
+.basics-understand[data-basics-activity="term_by_term"] .basics-understand__term-map {
+  min-width: 0;
+}
+
+/* Container-aware refinements. These react to the mathematics panel itself,
+   so expanding/collapsing Topics no longer leaves the graphs in the wrong
+   breakpoint merely because the browser viewport did not change. */
+@container basics-understand (max-width: 840px) {
+  .basics-understand[data-basics-activity="gradient_function"] .linked-gradient-explorer__card-heading {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+  }
+
+  .basics-understand[data-basics-activity="gradient_function"] .linked-gradient-explorer__card-title,
+  .basics-understand[data-basics-activity="gradient_function"] .linked-gradient-explorer__expression,
+  .basics-understand[data-basics-activity="gradient_function"] .basics-understand__graph-card-tools {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .basics-understand[data-basics-activity="gradient_function"] .basics-understand__graph-card-tools {
+    justify-content: flex-start;
+    margin-top: var(--space-1);
+  }
+
+  .basics-understand[data-basics-activity="gradient_function"] .basics-understand__graph-values {
+    justify-content: flex-start;
+  }
+
+  .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__panel-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(220px, 1fr);
+  }
+
+  .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__polynomial-entry,
+  .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__coefficient-details,
+  .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__graph-host {
+    grid-column: 1;
+  }
+
+  .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__polynomial-help {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .basics-understand[data-basics-activity="derivative_notation"] .basics-understand__notation-story {
+    grid-template-columns: minmax(120px, .35fr) minmax(0, 1fr);
+  }
+}
+
+@container basics-understand (max-width: 700px) {
+  .basics-understand[data-basics-activity="curve_tangent_gradient"] .basics-understand__gradient-popin {
+    top: var(--space-2);
+    right: var(--space-2);
+    width: min(300px, calc(100% - 2 * var(--space-2)));
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--space-2);
+  }
+
+  .basics-understand[data-basics-activity="curve_tangent_gradient"] .basics-understand__gradient-toggle {
+    justify-self: start;
+  }
+
+  .basics-understand[data-basics-activity="gradient_function"] .linked-gradient-explorer__graphs,
+  .basics-understand[data-basics-activity="polynomial_explorer"] .linked-gradient-explorer__graphs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .basics-understand[data-basics-activity="gradient_function"] .linked-gradient-explorer__diagram > .diagram-primitives,
+  .basics-understand[data-basics-activity="polynomial_explorer"] .linked-gradient-explorer__diagram > .diagram-primitives {
+    min-height: 150px;
+  }
+
+  .basics-understand[data-basics-activity="differentiation_machine"] .basics-understand__operator-equation {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "operator choice equals"
+      "result result result";
+    gap: var(--space-2);
+  }
+
+  .basics-understand[data-basics-activity="differentiation_machine"] .basics-understand__operator-symbol { grid-area: operator; }
+  .basics-understand[data-basics-activity="differentiation_machine"] .basics-understand__operator-choice { grid-area: choice; }
+  .basics-understand[data-basics-activity="differentiation_machine"] .basics-understand__operator-equals { grid-area: equals; }
+  .basics-understand[data-basics-activity="differentiation_machine"] .basics-understand__operator-result {
+    grid-area: result;
+    min-height: 64px;
+  }
+
+  .basics-understand[data-basics-activity="differentiation_machine"] .basics-understand__operator-select,
+  .basics-understand[data-basics-activity="differentiation_machine"] .basics-understand__operator-symbol {
+    min-height: 64px;
+    font-size: clamp(1.35rem, 5cqw, 1.9rem);
+  }
+
+  .basics-understand[data-basics-activity="term_by_term"] .basics-understand__term-map {
+    min-width: 620px;
+    grid-template-columns: auto repeat(4, minmax(104px, 1fr));
+    gap: 0 var(--space-2);
+    padding: var(--space-3);
+  }
+}
+
+@container basics-understand (max-width: 520px) {
+  .basics-understand[data-basics-activity="derivative_notation"] .basics-understand__notation-grid,
+  .basics-understand[data-basics-activity="derivative_notation"] .basics-understand__notation-story,
+  .basics-understand[data-basics-activity="derivative_notation"] .basics-understand__equivalence {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__polynomial-entry {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__polynomial-entry .basics-understand__button,
+  .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__polynomial-help,
+  .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__polynomial-entry .basics-understand__status {
+    grid-column: 1;
+  }
+
+  .basics-understand[data-basics-activity="power_rule_pattern"] .basics-understand__pattern-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Short laptop windows keep interactive diagrams usable by trimming decorative
+   spacing; text-led activities scroll inside the panel instead of being cut off. */
+html[data-ui-density="compact"] .activity-stage__content[data-basics-understand-active="true"] .basics-understand__panel,
+html[data-ui-density="tight"] .activity-stage__content[data-basics-understand-active="true"] .basics-understand__panel {
+  gap: var(--space-1);
+}
+
+html[data-ui-density="compact"] .activity-stage__content[data-basics-understand-active="true"] .linked-gradient-explorer__card-heading,
+html[data-ui-density="tight"] .activity-stage__content[data-basics-understand-active="true"] .linked-gradient-explorer__card-heading {
+  padding-top: var(--space-1);
+  padding-bottom: var(--space-1);
+}
+
+html[data-ui-density="tight"] .activity-stage__content[data-basics-understand-active="true"] .linked-gradient-explorer__diagram > .diagram-primitives {
+  min-height: 140px;
+}
+
+html[data-ui-density="tight"] .activity-stage__content[data-basics-understand-active="true"] .basics-understand__notation-card,
+html[data-ui-density="tight"] .activity-stage__content[data-basics-understand-active="true"] .basics-understand__pattern-card {
+  padding: var(--space-2);
+}
+
+/* At tablet width the explanation moves above the visual instead of squeezing
+   both into narrow columns. Phone layouts remain natural-height and scrollable. */
+@media (max-width: 900px) {
+  .activity-stage__content[data-basics-understand-active="true"] {
+    height: auto;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+  }
+
+  .activity-stage__content[data-basics-understand-active="true"] .activity-copy {
+    max-width: 78ch;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .activity-stage__content[data-basics-understand-active="true"] .math-placeholder {
+    min-height: 460px;
+    height: min(68vh, 680px);
+  }
+}
+
+@media (max-width: 680px) {
+  .activity-stage__content[data-basics-understand-active="true"] .math-placeholder,
+  .activity-stage__content[data-basics-understand-active="true"] .understand-visual-host {
+    min-height: 390px;
+    height: auto;
+    overflow: visible;
+  }
+
+  .activity-stage__content[data-basics-understand-active="true"] .understand-visual-host > .basics-understand {
+    height: auto !important;
+    min-height: 390px;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .activity-stage__content[data-basics-understand-active="true"] .basics-understand__panel {
+    height: auto;
+    min-height: 390px;
+    overflow: visible;
+  }
+
+  .activity-stage__content[data-basics-understand-active="true"] .basics-understand__panel-body {
+    height: auto;
+    overflow: auto;
+  }
+}
