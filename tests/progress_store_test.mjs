@@ -35,6 +35,34 @@ store.setCompleted(id, true, meta);
 assert(store.getModeCompletionState(meta.topicId, meta.mode) === 'complete', 'Explicit completion should drive completion state');
 assert(store.getActivity(id).security === 'developing', 'Completion must not overwrite security');
 
+const understandMeta = { topicId: 'topic:y12:foundations:pre-calculus', mode: 'understand' };
+const understandStart = 'activity:y12:foundations:pre-calculus:understand:topic-goals';
+const understandEnd = 'activity:y12:foundations:pre-calculus:understand:next-steps';
+store.markVisited(understandStart, understandMeta);
+assert(
+  store.getModeCompletionState(understandMeta.topicId, understandMeta.mode, [understandStart, understandEnd]) === 'partial',
+  'Opening Understand should show the section as in progress'
+);
+store.markVisited(understandEnd, understandMeta);
+assert(
+  store.getModeCompletionState(understandMeta.topicId, understandMeta.mode, [understandStart, understandEnd]) === 'complete',
+  'Reaching the final Understand pathway page should finish the section'
+);
+
+const aoMeta = { topicId: 'topic:y12:differentiation:basics', mode: 'ao2' };
+const aoA = 'activity:y12:differentiation:basics:ao2:a';
+const aoB = 'activity:y12:differentiation:basics:ao2:b';
+store.setCompleted(aoA, true, aoMeta);
+assert(
+  store.getModeCompletionState(aoMeta.topicId, aoMeta.mode, [aoA, aoB]) === 'partial',
+  'Completing one AO set must not finish a multi-set section'
+);
+store.setCompleted(aoB, true, aoMeta);
+assert(
+  store.getModeCompletionState(aoMeta.topicId, aoMeta.mode, [aoA, aoB]) === 'complete',
+  'Completing every AO set should finish the section'
+);
+
 let invalidSecurityRejected = false;
 try { store.setSecurity(id, 'excellent', meta); } catch { invalidSecurityRejected = true; }
 assert(invalidSecurityRejected, 'Unknown security labels must be rejected');
