@@ -1777,6 +1777,7 @@ export function renderActivity(index) {
   syncUnderstandJourneyPages(activity);
   syncActivityNavigation(activities);
   standardActivityContent.dataset.customUnderstandActive = "false";
+  standardActivityContent.dataset.basicsUnderstandActive = "false";
   customUnderstandHost.hidden = true;
 
   const memoryLabView = activeMode === "memorise" ? activity.memoryLabView : null;
@@ -1804,7 +1805,9 @@ export function renderActivity(index) {
       ? currentTopicRuntime().understandExperience
       : null;
     const customUnderstand = Boolean(understandExperience?.supports?.(activity.activityId));
+    const basicsUnderstandActive = customUnderstand && currentTopicId === "topic:y12:differentiation:basics";
     standardActivityContent.dataset.customUnderstandActive = customUnderstand ? "true" : "false";
+    standardActivityContent.dataset.basicsUnderstandActive = basicsUnderstandActive ? "true" : "false";
     customUnderstandHost.hidden = !customUnderstand;
 
     if (customUnderstand) {
