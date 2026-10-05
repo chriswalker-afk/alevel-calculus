@@ -6,7 +6,7 @@
   <meta name="description" content="Interactive calculus learning site for Pearson Edexcel 8MA0 / 9MA0.">
   <title>Calculus | Learning workspace</title>
   <link rel="stylesheet" href="/alevel-calculus/styles/tokens.css">
-  <link rel="stylesheet" href="/alevel-calculus/styles/app-shell.css?v=chrome2">
+  <link rel="stylesheet" href="/alevel-calculus/styles/app-shell.css?v=edgenav1">
   <link rel="stylesheet" href="/alevel-calculus/styles/landing-page.css?v=landing3">
   <link rel="stylesheet" href="/alevel-calculus/styles/question-shell.css?v=aolayout2">
   <link rel="stylesheet" href="/alevel-calculus/styles/math-renderer.css?v=memorymath2">
@@ -1533,18 +1533,30 @@
           </div>
         </section>
 
-        <footer class="activity-controls" data-activity-controls>
-          <button class="activity-button activity-button--secondary" type="button" data-previous-activity>
-            <span aria-hidden="true">←</span>
-            <span>Previous</span>
+        <footer class="activity-controls activity-edge-navigation" data-activity-controls aria-label="Activity navigation">
+          <button
+            class="activity-button activity-button--secondary activity-edge-navigation__button activity-edge-navigation__button--previous"
+            type="button"
+            aria-label="Previous activity"
+            title="Previous activity"
+            data-previous-activity
+          >
+            <span class="activity-edge-navigation__icon" aria-hidden="true">‹</span>
+            <span class="visually-hidden">Previous activity</span>
           </button>
           <div class="activity-controls__summary" aria-live="polite">
             <span class="eyebrow">Activity</span>
             <strong data-footer-position>1 of 3</strong>
           </div>
-          <button class="activity-button activity-button--primary" type="button" data-next-activity>
-            <span>Next</span>
-            <span aria-hidden="true">→</span>
+          <button
+            class="activity-button activity-button--primary activity-edge-navigation__button activity-edge-navigation__button--next"
+            type="button"
+            aria-label="Next activity"
+            title="Next activity"
+            data-next-activity
+          >
+            <span class="activity-edge-navigation__icon" aria-hidden="true">›</span>
+            <span class="visually-hidden">Next activity</span>
           </button>
         </footer>
       </main>
@@ -1846,6 +1858,6 @@
   </dialog>
 
   <noscript>This site needs JavaScript to switch learning modes and activities and to open the topic, help and Word Bank drawers.</noscript>
-  <script type="module" src="/alevel-calculus/scripts/app-shell.js?v=chrome2"></script>
+  <script type="module" src="/alevel-calculus/scripts/app-shell.js?v=edgenav1"></script>
 </body>
 </html>
