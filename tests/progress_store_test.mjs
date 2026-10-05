@@ -14,7 +14,7 @@ const meta = { topicId: 'topic:y12:differentiation:basics', mode: 'ao1' };
 
 const visited = store.markVisited(id, meta);
 assert(visited.visited === true && visited.attempts === 0, 'Visit should persist without pretending an attempt occurred');
-assert(store.getModeCompletionState(meta.topicId, meta.mode) === 'not-started', 'Visit alone must not become completion progress');
+assert(store.getModeCompletionState(meta.topicId, meta.mode) === 'partial', 'Visiting a section must show that it has been started');
 
 store.recordAttempt(id, { ...meta, success: false, result: 0.4 });
 assert(store.getModeCompletionState(meta.topicId, meta.mode) === 'partial', 'A meaningful attempt should produce partial completion progress');
