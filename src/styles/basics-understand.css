@@ -120,7 +120,7 @@
 .activity-stage__content[data-basics-understand-active="true"] .math-placeholder__formula,
 .activity-stage__content[data-basics-understand-active="true"] .math-placeholder__caption { display:none; }
 
-@media (max-width: 1080px) {
+@media (max-width: 900px) {
   .activity-stage__content[data-basics-understand-active="true"] { grid-template-columns:minmax(190px,.48fr) minmax(0,1.52fr); gap:var(--space-4); }
   .basics-understand__notation-grid { grid-template-columns:1fr; }
   .basics-understand__notation-card { padding:var(--space-3); }
@@ -644,7 +644,7 @@ html[data-ui-density="tight"] .activity-stage__content[data-basics-understand-ac
 
 /* At tablet width the explanation moves above the visual instead of squeezing
    both into narrow columns. Phone layouts remain natural-height and scrollable. */
-@media (max-width: 900px) {
+@media (max-width: 1080px) {
   .activity-stage__content[data-basics-understand-active="true"] {
     height: auto;
     grid-template-columns: minmax(0, 1fr);
