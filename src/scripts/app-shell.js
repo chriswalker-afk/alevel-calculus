@@ -21,7 +21,7 @@ import { getMemoryReviewPackForTopic } from "./memory-review-content.js";
 import { createClassWizSupportPanel } from "./classwiz-support-panel.js?v=auditstep16final";
 import { hasClassWizSupport } from "./classwiz-support-data.js?v=auditstep16final";
 import { createBasicsUnderstandExperience } from "./basics-understand.js?v=auditstep12";
-import { createPreCalculusUnderstandExperience } from "./pre-calculus-understand.js?v=auditstep2";
+import { createPreCalculusUnderstandExperience } from "./pre-calculus-understand.js?v=numberfix1";
 import { preCalculusLearningModes } from "./pre-calculus-activities.js?v=auditstep2";
 import { createFirstPrinciplesUnderstandExperience } from "./first-principles-understand.js?v=auditstep6";
 import { firstPrinciplesLearningModes } from "./first-principles-activities.js?v=auditstep6";
