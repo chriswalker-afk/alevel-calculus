@@ -642,9 +642,9 @@ html[data-ui-density="tight"] .activity-stage__content[data-basics-understand-ac
   padding: var(--space-2);
 }
 
-/* At tablet width the explanation moves above the visual instead of squeezing
-   both into narrow columns. Phone layouts remain natural-height and scrollable. */
-@media (max-width: 1080px) {
+/* When the shell leaves too little room for a useful side-by-side teaching
+   column, move the explanation above the visual. Phones remain natural-height. */
+@media (max-width: 1100px) {
   .activity-stage__content[data-basics-understand-active="true"] {
     height: auto;
     grid-template-columns: minmax(0, 1fr);
