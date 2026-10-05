@@ -66,6 +66,12 @@ assert(cssSource.includes('.basics-understand__term-map') && cssSource.includes(
 assert(cssSource.includes('.basics-understand__pattern-card') && cssSource.includes('.basics-understand__pattern-answer'),'Power-rule examples need a deliberate card-and-answer visual hierarchy.');
 assert(cssSource.includes('.basics-understand__rule-coefficient') && cssSource.includes('.basics-understand__rule-power') && cssSource.includes('.basics-understand__rule-variable'),'The power-rule roles need distinct colour styling.');
 assert(cssSource.includes('.basics-understand__power-rule-notice'),'The revealed rule needs a prominent explanatory notice underneath.');
+assert(shellSource.includes('dataset.basicsUnderstandActive'),'AppShell must expose a Basics-only layout state instead of relying on a stale CSS selector.');
+assert(cssSource.includes('container-name: basics-understand') && cssSource.includes('@container basics-understand'),'Basics Understand must respond to its actual visual-column width.');
+assert(cssSource.includes('height: 100% !important'),'Basics Understand must override the generic natural-height Understand rule on desktop.');
+assert(cssSource.includes('polynomial_explorer') && cssSource.includes('.basics-understand__coefficient-details[open]'),'The polynomial coefficient editor must expand in flow instead of being clipped.');
+assert(cssSource.includes('grid-template-areas:') && cssSource.includes('"operator choice equals"'),'The d/dx operator must reflow when its visual container narrows.');
+assert(cssSource.includes('min-width: 620px'),'Term-by-term algebra must preserve readable term widths rather than compressing until terms collide.');
 
 assert(!understand.some((activity) => activity.activityId.endsWith(':calculus-backstory')),'The duplicated calculus-backstory activity must stay removed now that its content lives on derivative notation.');
 console.log('PASS Basics Understand seven-state audited journey and linked polynomial contract');
