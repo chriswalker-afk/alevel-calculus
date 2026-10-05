@@ -6,7 +6,7 @@
   <meta name="description" content="Calculus learning site shell prototype for Pearson Edexcel 8MA0 / 9MA0.">
   <title>Calculus | Learning workspace</title>
   <link rel="stylesheet" href="./styles/tokens.css">
-  <link rel="stylesheet" href="./styles/app-shell.css?v=spacepass1">
+  <link rel="stylesheet" href="./styles/app-shell.css?v=chrome2">
   <link rel="stylesheet" href="./styles/landing-page.css?v=landing3">
   <link rel="stylesheet" href="./styles/question-shell.css?v=aolayout2">
   <link rel="stylesheet" href="./styles/math-renderer.css?v=memorymath2">
@@ -79,6 +79,8 @@
         <span class="breadcrumb" data-current-topic-breadcrumb>Differentiation <span aria-hidden="true">›</span> Basics</span>
         <span class="scope-badge" data-scope-badge data-course-scope="y12"></span>
       </div>
+
+      <div class="topbar-workspace-controls" data-workspace-nav-host aria-label="Topic learning modes and tools"></div>
 
       <div class="topbar__status" aria-label="Course status">
         <span class="status-dot" aria-hidden="true"></span>
@@ -298,6 +300,17 @@
             <span class="topic-navigation__course">Calculus pathway</span>
           </div>
           <div class="topic-navigation__actions">
+            <button
+              class="topic-navigation__collapse"
+              type="button"
+              aria-controls="topic-navigation"
+              aria-expanded="true"
+              aria-label="Collapse topics sidebar"
+              title="Collapse topics sidebar"
+              data-topic-sidebar-toggle
+            >
+              <span class="topic-navigation__collapse-icon" aria-hidden="true" data-topic-sidebar-toggle-icon>‹</span>
+            </button>
             <button class="data-management-trigger" type="button" aria-haspopup="dialog" aria-controls="data-management-dialog" data-data-management-trigger>
               <span aria-hidden="true">↕</span>
               <span>Data</span>
@@ -1833,6 +1846,6 @@
   </dialog>
 
   <noscript>This prototype needs JavaScript to switch learning modes and activities and to open the topic, help and Word Bank drawers.</noscript>
-  <script type="module" src="./scripts/app-shell.js?v=spacepass1"></script>
+  <script type="module" src="./scripts/app-shell.js?v=chrome2"></script>
 </body>
 </html>
