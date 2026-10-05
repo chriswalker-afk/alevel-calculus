@@ -120,7 +120,7 @@
 .activity-stage__content[data-basics-understand-active="true"] .math-placeholder__formula,
 .activity-stage__content[data-basics-understand-active="true"] .math-placeholder__caption { display:none; }
 
-@media (max-width: 900px) {
+@media (max-width: 1080px) {
   .activity-stage__content[data-basics-understand-active="true"] { grid-template-columns:minmax(190px,.48fr) minmax(0,1.52fr); gap:var(--space-4); }
   .basics-understand__notation-grid { grid-template-columns:1fr; }
   .basics-understand__notation-card { padding:var(--space-3); }
@@ -415,17 +415,29 @@
 .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__panel-body {
   overflow: auto;
   grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto auto minmax(220px, 1fr);
+  grid-template-rows: auto minmax(220px, 1fr);
   align-content: start;
+}
+
+.basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__polynomial-entry {
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__coefficient-details {
   position: static;
   min-width: 190px;
+  grid-column: 2;
+  grid-row: 1;
 }
 
 .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__coefficient-details[open] {
   grid-column: 1 / -1;
+  grid-row: 2;
+}
+
+.basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__panel-body:has(.basics-understand__coefficient-details[open]) {
+  grid-template-rows: auto auto minmax(220px, 1fr);
 }
 
 .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__coefficient-editor {
@@ -438,7 +450,12 @@
 
 .basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__graph-host {
   grid-column: 1 / -1;
+  grid-row: 2;
   min-height: 220px;
+}
+
+.basics-understand[data-basics-activity="polynomial_explorer"] .basics-understand__panel-body:has(.basics-understand__coefficient-details[open]) .basics-understand__graph-host {
+  grid-row: 3;
 }
 
 /* 4. Derivative notation: cards choose the number of columns from their real
@@ -541,11 +558,6 @@
     justify-self: start;
   }
 
-  .basics-understand[data-basics-activity="gradient_function"] .linked-gradient-explorer__graphs,
-  .basics-understand[data-basics-activity="polynomial_explorer"] .linked-gradient-explorer__graphs {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .basics-understand[data-basics-activity="gradient_function"] .linked-gradient-explorer__diagram > .diagram-primitives,
   .basics-understand[data-basics-activity="polynomial_explorer"] .linked-gradient-explorer__diagram > .diagram-primitives {
     min-height: 150px;
@@ -582,6 +594,11 @@
 }
 
 @container basics-understand (max-width: 520px) {
+  .basics-understand[data-basics-activity="gradient_function"] .linked-gradient-explorer__graphs,
+  .basics-understand[data-basics-activity="polynomial_explorer"] .linked-gradient-explorer__graphs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .basics-understand[data-basics-activity="derivative_notation"] .basics-understand__notation-grid,
   .basics-understand[data-basics-activity="derivative_notation"] .basics-understand__notation-story,
   .basics-understand[data-basics-activity="derivative_notation"] .basics-understand__equivalence {
