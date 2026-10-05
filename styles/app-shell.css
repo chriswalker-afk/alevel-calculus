@@ -3725,11 +3725,13 @@ html[data-ui-density="tight"] .activity-stage__content {
 
 
 /* Understand title deduplication 2026-10-05.
-   Every bespoke Understand activity already renders its own single, contextual
-   heading inside the visual experience. Do not repeat the activity metadata as
-   a second title in the teaching column, and suppress the small internal
-   eyebrow/step label so each activity presents one visible title only. */
-.activity-stage__content[data-custom-understand-active="true"] > .activity-copy > .activity-overline,
+   Every Understand page should present one visible title. Standard pages keep
+   the activity h2 and drop its overline; bespoke visual pages keep their own
+   contextual heading and drop the duplicate teaching-column title as well. */
+html[data-learning-mode="understand"] .activity-copy > .activity-overline {
+  display: none;
+}
+
 .activity-stage__content[data-custom-understand-active="true"] > .activity-copy > h2 {
   display: none;
 }
