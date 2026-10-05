@@ -1,5 +1,5 @@
 import { createBlankAppState, createLocalStateStore } from "./local-state-store.js";
-import { createProgressStore } from "./progress-store.js";
+import { createProgressStore } from "./progress-store.js?v=progressfix1";
 import { createVocabularyStore } from "./vocabulary-store.js";
 
 export const localStateStore = createLocalStateStore({
