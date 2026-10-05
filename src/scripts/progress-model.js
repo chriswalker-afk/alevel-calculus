@@ -44,11 +44,11 @@ function normalizeState(value) {
   return progressStates.includes(value) ? value : "not-started";
 }
 
-export function getModeProgress(topicId, mode, progressStore) {
+export function getModeProgress(topicId, mode, progressStore, expectedActivityIds = null) {
   const enabledModes = topicModeCatalog[topicId] ?? progressModeOrder;
   const enabled = enabledModes.includes(mode);
   const state = enabled && progressStore
-    ? normalizeState(progressStore.getModeCompletionState(topicId, mode))
+    ? normalizeState(progressStore.getModeCompletionState(topicId, mode, expectedActivityIds))
     : "not-started";
 
   return Object.freeze({
@@ -61,10 +61,13 @@ export function getModeProgress(topicId, mode, progressStore) {
   });
 }
 
-export function getTopicProgress(topicId, progressStore) {
+export function getTopicProgress(topicId, progressStore, expectedActivityIdsByMode = null) {
   const enabledCatalog = topicModeCatalog[topicId] ?? progressModeOrder;
   const modes = Object.fromEntries(
-    progressModeOrder.map((mode) => [mode, getModeProgress(topicId, mode, progressStore)])
+    progressModeOrder.map((mode) => [
+      mode,
+      getModeProgress(topicId, mode, progressStore, expectedActivityIdsByMode?.[mode] ?? null)
+    ])
   );
   const enabledModes = progressModeOrder.filter((mode) => enabledCatalog.includes(mode));
   const enabledStates = enabledModes.map((mode) => modes[mode].state);
