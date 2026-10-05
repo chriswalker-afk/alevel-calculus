@@ -3404,3 +3404,170 @@ html[data-ui-density="tight"] .activity-stage__content {
   }
 }
 
+
+
+/* Combined workspace chrome + collapsible desktop topic rail.
+   Keep the learning modes in the global top bar so the activity receives the
+   vertical space previously occupied by a second workspace header. */
+.topbar-workspace-controls {
+  grid-area: workspace-controls;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.app-shell[data-view="landing"] .topbar-workspace-controls {
+  display: none;
+}
+
+.app-shell[data-view="workspace"] .topbar__status {
+  display: none;
+}
+
+.app-shell[data-view="workspace"] .app-shell__topbar {
+  grid-template-areas: "brand context workspace-controls";
+  grid-template-columns: minmax(150px, 0.65fr) minmax(220px, 0.95fr) minmax(500px, 2fr);
+  gap: var(--space-3);
+}
+
+.topbar-workspace-controls .workspace-header__controls {
+  width: 100%;
+  flex: 1 1 auto;
+}
+
+.topbar-workspace-controls .mode-tabs {
+  width: min(100%, 520px);
+}
+
+.app-shell[data-view="workspace"] .workspace-header {
+  display: none;
+}
+
+.topic-navigation__collapse {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  background: var(--surface-base);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.topic-navigation__collapse:hover,
+.topic-navigation__collapse:focus-visible {
+  border-color: var(--mode-accent);
+  background: var(--mode-soft);
+  color: var(--mode-soft-text);
+  outline: none;
+}
+
+.topic-navigation__collapse-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+@media (min-width: 901px) {
+  .app-shell__body {
+    transition: grid-template-columns var(--motion-normal) var(--motion-easing);
+  }
+
+  .topic-navigation {
+    transition:
+      width var(--motion-normal) var(--motion-easing),
+      padding var(--motion-normal) var(--motion-easing);
+  }
+
+  .app-shell[data-sidebar-collapsed="true"] .app-shell__body {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+
+  .app-shell[data-sidebar-collapsed="true"] .topic-navigation {
+    width: 48px;
+    padding: 6px;
+    overflow: hidden;
+  }
+
+  .app-shell[data-sidebar-collapsed="true"] .topic-navigation__heading-row {
+    min-height: 36px;
+    justify-content: center;
+  }
+
+  .app-shell[data-sidebar-collapsed="true"] .topic-navigation__heading,
+  .app-shell[data-sidebar-collapsed="true"] .topic-navigation__section,
+  .app-shell[data-sidebar-collapsed="true"] .topic-navigation__checkpoint,
+  .app-shell[data-sidebar-collapsed="true"] .topic-navigation__full-course,
+  .app-shell[data-sidebar-collapsed="true"] .data-management-trigger {
+    display: none;
+  }
+
+  .app-shell[data-sidebar-collapsed="true"] .topic-navigation__actions {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 1180px) and (min-width: 901px) {
+  .app-shell[data-view="workspace"] .app-shell__topbar {
+    grid-template-columns: minmax(120px, 0.5fr) minmax(170px, 0.7fr) minmax(440px, 2fr);
+  }
+
+  .app-shell[data-view="workspace"] .breadcrumb {
+    font-size: var(--text-sm);
+  }
+
+  .app-shell[data-view="workspace"] .scope-badge {
+    padding-inline: var(--space-2);
+    font-size: 0.64rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .topic-navigation__collapse {
+    display: none;
+  }
+
+  .app-shell[data-view="workspace"] .app-shell__topbar {
+    grid-template-areas:
+      "brand nav-toggle context"
+      "workspace-controls workspace-controls workspace-controls";
+    grid-template-columns: auto auto minmax(0, 1fr);
+    row-gap: var(--space-2);
+  }
+
+  .topbar-workspace-controls {
+    width: 100%;
+  }
+
+  .topbar-workspace-controls .workspace-header__controls {
+    justify-content: stretch;
+  }
+
+  .topbar-workspace-controls .mode-tabs {
+    flex: 1 1 auto;
+    max-width: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .app-shell[data-view="workspace"] .app-shell__topbar {
+    grid-template-areas:
+      "brand nav-toggle"
+      "context context"
+      "workspace-controls workspace-controls";
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .topbar-workspace-controls .workspace-header__controls {
+    gap: 4px;
+  }
+
+  .topbar-workspace-controls .workspace-tools-toggle {
+    min-width: 54px;
+  }
+}
