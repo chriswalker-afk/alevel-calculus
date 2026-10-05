@@ -3722,3 +3722,25 @@ html[data-ui-density="tight"] .activity-stage__content {
     transition: none;
   }
 }
+
+
+/* Understand title deduplication 2026-10-05.
+   Every bespoke Understand activity already renders its own single, contextual
+   heading inside the visual experience. Do not repeat the activity metadata as
+   a second title in the teaching column, and suppress the small internal
+   eyebrow/step label so each activity presents one visible title only. */
+.activity-stage__content[data-custom-understand-active="true"] > .activity-copy > .activity-overline,
+.activity-stage__content[data-custom-understand-active="true"] > .activity-copy > h2 {
+  display: none;
+}
+
+.activity-stage__content[data-custom-understand-active="true"] .understand-visual-host [class$="__eyebrow"] {
+  display: none;
+}
+
+/* With the duplicate heading removed, the teaching column begins directly
+   with explanation/support copy rather than leaving title-sized whitespace. */
+.activity-stage__content[data-custom-understand-active="true"] > .activity-copy > p[data-activity-body]:first-of-type,
+.activity-stage__content[data-custom-understand-active="true"] > .activity-copy > .activity-callout:first-child {
+  margin-top: 0;
+}
