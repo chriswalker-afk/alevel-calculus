@@ -1,10 +1,10 @@
 import { learningModeOrder, learningModes } from "./sample-activities.js?v=auditstep9";
 import { getCourseScope } from "./scope-metadata.js";
-import { getTopicProgress, progressModeOrder } from "./progress-model.js";
+import { getTopicProgress, progressModeOrder } from "./progress-model.js?v=progressfix1";
 import { getHelpTarget, getHelpTargets } from "./help-content.js?v=helpfix3";
 import { createDiagnosticRouter } from "./diagnostic-router.js";
 import { createMasteryFeedbackModel } from "./mastery-feedback-model.js";
-import { localStateStore, progressStore, vocabularyStore } from "./app-state.js";
+import { localStateStore, progressStore, vocabularyStore } from "./app-state.js?v=progressfix1";
 import { APP_STATE_SCHEMA_VERSION } from "./local-state-store.js";
 import { activityRouteFromId, createHistoryRouteController } from "./navigation-route.js";
 import { renderVocabularyRichText } from "./vocabulary-term.js?v=memorymath1";
@@ -946,6 +946,18 @@ const questionShell = createQuestionShell(questionShellElement, {
     const assessmentMode = activeMode === "ao1" || activeMode === "ao2" || activeMode === "ao3";
     if (activityControls) activityControls.hidden = assessmentMode || Boolean(visible);
     shell.dataset.questionSetSummary = visible ? "true" : "false";
+
+    // The summary only appears once the current generated set has been worked
+    // through, so it is the natural completion point for that AO activity.
+    if (visible && assessmentMode) {
+      const activity = currentActivities()[activityIndex];
+      if (activity?.activityId) {
+        progressStore.setCompleted(activity.activityId, true, {
+          topicId: currentTopicId,
+          mode: activeMode
+        });
+      }
+    }
   },
   getSetCompletionChoices() {
     return questionSetCompletionChoices();
@@ -1171,7 +1183,16 @@ function syncScopeBadges() {
 function syncTopicProgress() {
   for (const item of topicProgressItems) {
     const topicId = item.dataset.topicId;
-    const progress = getTopicProgress(topicId, progressStore);
+    const runtime = topicRuntime[topicId] ?? null;
+    const expectedActivityIdsByMode = Object.fromEntries(
+      progressModeOrder.map((mode) => [
+        mode,
+        (runtime?.learningModes?.[mode]?.activities ?? [])
+          .map((activity) => activity?.activityId)
+          .filter(Boolean)
+      ])
+    );
+    const progress = getTopicProgress(topicId, progressStore, expectedActivityIdsByMode);
     const marker = item.querySelector("[data-topic-state-marker]");
     const description = item.querySelector("[data-topic-progress-description]");
     const modeProgress = item.querySelector("[data-topic-mode-progress]");
@@ -1186,7 +1207,7 @@ function syncTopicProgress() {
 
     if (!modeProgress) continue;
     const modeMarkers = Array.from(modeProgress.querySelectorAll("[data-mode-progress]"));
-    const implementedModes = topicRuntime[topicId]?.availableModes ?? null;
+    const implementedModes = runtime?.availableModes ?? null;
     for (const modeMarker of modeMarkers) {
       const mode = modeMarker.dataset.modeProgress;
       const modeState = progress.modes[mode];
@@ -1799,6 +1820,12 @@ export function renderActivity(index) {
   stage.dataset.learningMode = activeMode;
   if (activity.activityId) {
     progressStore.markVisited(activity.activityId, { topicId: currentTopicId, mode: activeMode });
+
+    // The Learn page in Memorise is informational rather than a scored task;
+    // viewing it is therefore enough to finish that activity.
+    if (activeMode === "memorise" && activity.memoryLabView === "learn") {
+      progressStore.setCompleted(activity.activityId, true, { topicId: currentTopicId, mode: activeMode });
+    }
   }
   syncYear12MasterySummary();
   syncFullDifferentiationMasterySummary();
