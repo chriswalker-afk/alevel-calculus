@@ -57,6 +57,19 @@ assert(experience.includes('gradient = Δy/Δx'), 'The delta activity must intro
 assert(experience.includes('(y_2 - y_1)/(x_2 - x_1)'), 'The formula must be connected to two-point coordinate notation in renderer-friendly source syntax');
 assert((experience.match(/data-math-display/g) || []).length >= 7, 'The delta activity must use the shared display-maths renderer for its equations');
 assert(experience.includes('pre-calculus-understand__delta-layout'), 'The delta activity must use the compact single-screen layout');
+for (const [number, label] of [
+  [1, 'Gradient means change'],
+  [2, 'Sign of gradient'],
+  [3, 'Steepness'],
+  [4, 'Gradient is not height'],
+  [5, 'Vertical-line limit idea'],
+  [6, 'Gradient from two points'],
+  [7, 'Same straight line, same gradient'],
+  [8, 'Transition to differentiation']
+]) {
+  assert(experience.includes(`${number} · ${label}`), `Pre-calculus Understand numbering must include ${number} · ${label}`);
+}
+assert(!experience.includes('9 · Transition to differentiation'), 'Pre-calculus Understand numbering must not retain the stale 9 label');
 
 const css = read('src/styles/pre-calculus-understand.css');
 assert(css.includes('var(--touch-target-min)'), 'Step 37 controls must use the shared 44px touch-target token');
