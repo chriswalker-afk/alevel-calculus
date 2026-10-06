@@ -53,11 +53,13 @@
     }
     h1{margin:.15rem 0 .35rem;font-size:clamp(2rem,6vw,3.6rem);line-height:1;letter-spacing:-.045em}
     .hero p{margin:0;color:var(--muted);max-width:720px}
-    .ghost{
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .ghost,.game-link{
       border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);
-      padding:11px 16px;border-radius:12px;cursor:pointer;font-weight:800;
+      padding:11px 16px;border-radius:12px;cursor:pointer;font-weight:800;text-decoration:none;
     }
-    .ghost:hover{background:rgba(255,255,255,.07)}
+    .game-link{border-color:rgba(79,209,197,.45);color:#bff7f1}
+    .ghost:hover,.game-link:hover{background:rgba(255,255,255,.07)}
     .stats{
       display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:16px 0;
     }
@@ -204,7 +206,7 @@
     footer{color:#7795aa;text-align:center;font-size:.8rem;margin-top:18px}
     @media (max-width:720px){
       .hero{grid-template-columns:1fr}
-      .hero .ghost{justify-self:start}
+      .hero-actions{justify-content:flex-start}
       .stats{grid-template-columns:repeat(3,1fr)}
       .stats .stat:nth-child(4),.stats .stat:nth-child(5){grid-column:span 1}
       .rules{grid-template-columns:1fr}
@@ -229,7 +231,10 @@
         <h1>Quadratic Vault</h1>
         <p>Crack factorisations, unlock the tougher Missing Factor level, protect your shields and reveal Professor Hoot.</p>
       </div>
-      <button id="newGame" class="ghost" type="button">New game</button>
+      <div class="hero-actions">
+        <a class="game-link" href="factor-factory.html">Factor Factory →</a>
+        <button id="newGame" class="ghost" type="button">New game</button>
+      </div>
     </header>
 
     <section class="stats" aria-label="Game statistics">
