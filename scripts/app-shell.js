@@ -313,6 +313,9 @@ installMathRendering(document);
 // Move the existing controls rather than cloning them so all established event,
 // focus and accessibility behaviour remains attached to the same elements.
 workspaceNavHost.append(workspaceHeaderControls);
+// Instructions are a contextual workspace action, so keep the review control
+// in the shared top bar rather than floating over the mathematical title.
+workspaceHeaderControls.insertBefore(understandInstructionsReview, workspaceToolsBar);
 
 const compactNavigationMedia = window.matchMedia("(max-width: 900px)");
 const SIDEBAR_COLLAPSED_KEY = "calculus:topics-sidebar-collapsed";
