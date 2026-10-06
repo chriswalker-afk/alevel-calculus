@@ -116,6 +116,9 @@ const currentTopicBreadcrumb = document.querySelector("[data-current-topic-bread
 const stage = document.querySelector("[data-activity-stage]");
 const standardActivityContent = document.querySelector("[data-standard-activity-content]");
 const activityCopy = standardActivityContent?.querySelector(".activity-copy");
+const understandInstructionsHeader = document.querySelector("[data-understand-instructions-header]");
+const understandInstructionsClose = document.querySelector("[data-understand-instructions-close]");
+const understandInstructionsReview = document.querySelector("[data-understand-instructions-review]");
 const activityVisual = document.querySelector("[data-activity-visual]");
 const customUnderstandHost = document.querySelector("[data-understand-visual-host]");
 const questionShellElement = document.querySelector("[data-question-shell]");
@@ -221,6 +224,9 @@ const required = [
   stage,
   standardActivityContent,
   activityCopy,
+  understandInstructionsHeader,
+  understandInstructionsClose,
+  understandInstructionsReview,
   activityVisual,
   customUnderstandHost,
   questionShellElement,
@@ -310,6 +316,8 @@ workspaceNavHost.append(workspaceHeaderControls);
 
 const compactNavigationMedia = window.matchMedia("(max-width: 900px)");
 const SIDEBAR_COLLAPSED_KEY = "calculus:topics-sidebar-collapsed";
+const dismissedUnderstandInstructions = new Set();
+activityCopy.id = "understand-instructions-popin";
 
 const fields = Object.freeze({
   kicker: stage.querySelector("[data-activity-kicker]"),
@@ -1740,6 +1748,46 @@ export function wrappedIndex(index, length = currentActivities().length) {
   return ((index % length) + length) % length;
 }
 
+function syncUnderstandInstructions(activity, customUnderstand) {
+  const enabled = activeMode === "understand" && Boolean(customUnderstand) && Boolean(activity?.activityId);
+  if (!enabled) {
+    activityCopy.hidden = false;
+    understandInstructionsHeader.hidden = true;
+    understandInstructionsReview.hidden = true;
+    standardActivityContent.dataset.understandInstructionsOpen = "false";
+    understandInstructionsReview.setAttribute("aria-expanded", "false");
+    return;
+  }
+
+  const open = !dismissedUnderstandInstructions.has(activity.activityId);
+  activityCopy.hidden = !open;
+  understandInstructionsHeader.hidden = false;
+  understandInstructionsReview.hidden = open;
+  understandInstructionsReview.setAttribute("aria-expanded", open ? "true" : "false");
+  standardActivityContent.dataset.understandInstructionsOpen = open ? "true" : "false";
+}
+
+function closeUnderstandInstructions({ remember = true } = {}) {
+  const activity = currentActivities()[activityIndex];
+  if (activeMode !== "understand" || standardActivityContent.dataset.customUnderstandActive !== "true" || !activity?.activityId) return;
+  if (remember) dismissedUnderstandInstructions.add(activity.activityId);
+  activityCopy.hidden = true;
+  understandInstructionsReview.hidden = false;
+  understandInstructionsReview.setAttribute("aria-expanded", "false");
+  standardActivityContent.dataset.understandInstructionsOpen = "false";
+  understandInstructionsReview.focus?.({ preventScroll: true });
+}
+
+function reviewUnderstandInstructions() {
+  if (activeMode !== "understand" || standardActivityContent.dataset.customUnderstandActive !== "true") return;
+  activityCopy.hidden = false;
+  understandInstructionsHeader.hidden = false;
+  understandInstructionsReview.hidden = true;
+  understandInstructionsReview.setAttribute("aria-expanded", "true");
+  standardActivityContent.dataset.understandInstructionsOpen = "true";
+  understandInstructionsClose.focus?.({ preventScroll: true });
+}
+
 export function renderActivity(index) {
   const activities = currentActivities();
   if (activities.length === 0) return;
@@ -1816,6 +1864,7 @@ export function renderActivity(index) {
     } else {
       destroyUnderstandExperiences();
     }
+    syncUnderstandInstructions(activity, customUnderstand);
   }
 
   shell.dataset.activityIndex = String(activityIndex);
@@ -1885,6 +1934,9 @@ function moveModeFocus(fromTab, key) {
     selectMode(enabledTabs[nextIndex].dataset.modeTab, { focusTab: true });
   }
 }
+
+understandInstructionsClose.addEventListener("click", () => closeUnderstandInstructions({ remember: true }));
+understandInstructionsReview.addEventListener("click", reviewUnderstandInstructions);
 
 for (const button of landingTopicButtons) {
   button.addEventListener?.("click", () => openLandingTopic(button.dataset.landingEnterTopic));
