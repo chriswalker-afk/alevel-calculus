@@ -3746,3 +3746,150 @@ html[data-learning-mode="understand"] .activity-copy > .activity-overline {
 .activity-stage__content[data-custom-understand-active="true"] > .activity-copy > .activity-callout:first-child {
   margin-top: 0;
 }
+
+
+/* Dismissible instruction pop-ins for bespoke Understand experiences.
+   The instructional copy appears on first visit, can be dismissed, and can be
+   reopened without permanently occupying a teaching column. */
+.activity-stage__content[data-custom-understand-active="true"] {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr) !important;
+  align-items: stretch;
+}
+
+.activity-stage__content[data-custom-understand-active="true"] > .activity-copy {
+  position: absolute !important;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 24;
+  width: min(390px, calc(100% - 2 * var(--space-3)));
+  max-width: calc(100% - 2 * var(--space-3));
+  max-height: min(72%, 620px) !important;
+  overflow: auto !important;
+  padding: var(--space-4);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  background: color-mix(in srgb, var(--surface-base) 96%, transparent);
+  box-shadow: var(--shadow-drawer);
+  backdrop-filter: blur(8px);
+}
+
+.activity-stage__content[data-custom-understand-active="true"] > .activity-copy[hidden],
+.understand-instructions-popin__header[hidden],
+.understand-instructions-review[hidden] {
+  display: none !important;
+}
+
+.activity-stage__content[data-custom-understand-active="true"] > .math-placeholder {
+  grid-column: 1 !important;
+  width: 100%;
+  min-width: 0;
+}
+
+.understand-instructions-popin__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--divider-default);
+}
+
+.understand-instructions-popin__header strong {
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  letter-spacing: .02em;
+}
+
+.understand-instructions-popin__close {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  background: var(--surface-subtle);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.understand-instructions-popin__close:hover,
+.understand-instructions-popin__close:focus-visible {
+  border-color: var(--mode-accent);
+  background: var(--mode-soft);
+  color: var(--mode-soft-text);
+  outline: none;
+}
+
+.activity-stage__content[data-custom-understand-active="true"] > .activity-copy > p[data-activity-body] {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+}
+
+.activity-stage__content[data-custom-understand-active="true"] > .activity-copy > .activity-callout {
+  margin-top: var(--space-3);
+}
+
+.understand-instructions-review {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 23;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--surface-base) 92%, transparent);
+  color: var(--text-secondary);
+  box-shadow: var(--shadow-raised);
+  backdrop-filter: blur(6px);
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+
+.understand-instructions-review:hover,
+.understand-instructions-review:focus-visible {
+  border-color: var(--mode-accent);
+  background: var(--mode-soft);
+  color: var(--mode-soft-text);
+  outline: none;
+}
+
+.understand-instructions-review > span:first-child {
+  width: 20px;
+  height: 20px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--surface-subtle);
+  font-weight: var(--weight-bold);
+}
+
+@media (max-width: 680px) {
+  .activity-stage__content[data-custom-understand-active="true"] > .activity-copy {
+    top: var(--space-2);
+    left: var(--space-2);
+    width: calc(100% - 2 * var(--space-2));
+    max-width: calc(100% - 2 * var(--space-2));
+    max-height: min(66dvh, 560px) !important;
+    padding: var(--space-3);
+  }
+
+  .understand-instructions-review {
+    top: var(--space-2);
+    left: var(--space-2);
+  }
+}
