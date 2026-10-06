@@ -301,7 +301,7 @@
           </div>
 
           <p id="revealMessage" class="reveal-message" aria-live="polite">
-            Correct answers uncover Professor Hoot. Vault Locks reveal two pieces.
+            Correct answers uncover Professor Hoot. Level 2 reveals faster, and Vault Locks reveal an extra piece.
           </p>
         </section>
 
@@ -534,7 +534,7 @@
           els.revealMessage.classList.add("done");
         } else {
           els.revealMessage.classList.remove("done");
-          els.revealMessage.textContent = "Correct answers uncover Professor Hoot. Vault Locks reveal two pieces.";
+          els.revealMessage.textContent = "Correct answers uncover Professor Hoot. Level 2 reveals faster, and Vault Locks reveal an extra piece.";
         }
       }
 
@@ -687,7 +687,7 @@
         }
 
         state.typedAttempts++;
-        input.select();
+        input.focus();
         els.feedback.className = "feedback bad";
 
         if(state.typedAttempts === 1){
