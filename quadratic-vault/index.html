@@ -136,6 +136,36 @@
     summary{cursor:pointer;font-weight:900}
     details p,.mini p{color:var(--muted);margin:.65rem 0 0}
     .mini strong{color:var(--accent-2)}
+    .reveal-panel{
+      margin-top:16px;border:1px solid var(--line);background:rgba(16,40,61,.62);
+      border-radius:16px;padding:14px 16px;
+    }
+    .reveal-head{
+      display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .reveal-head strong{font-size:1rem}
+    .reveal-head span{color:var(--muted);font-size:.9rem;font-weight:800}
+    .reveal-stage{
+      position:relative;width:min(100%,320px);aspect-ratio:1;margin:0 auto;
+      border-radius:18px;overflow:hidden;border:1px solid #315774;
+      background:linear-gradient(180deg,#dbeafe,#bfdbfe);
+    }
+    .cartoon-svg{display:block;width:100%;height:100%}
+    .tile-mask{
+      position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);
+      grid-template-rows:repeat(4,1fr);gap:2px;padding:2px;background:rgba(7,21,34,.15);
+    }
+    .tile{
+      background:linear-gradient(135deg,#10283d,#1e3a5a);
+      border:1px solid rgba(255,255,255,.08);
+      transition:opacity .35s ease,transform .35s ease;
+    }
+    .tile.revealed{opacity:0;transform:scale(.88);pointer-events:none}
+    .reveal-message{
+      margin:10px 0 0;color:var(--muted);text-align:center;font-size:.92rem;min-height:1.5em;
+    }
+    .reveal-message.done{color:#ffe8ad;font-weight:900;font-size:1rem}
     .master{
       display:none;margin-top:14px;border-radius:16px;padding:14px 16px;
       border:1px solid rgba(255,209,102,.55);background:rgba(255,209,102,.08);
@@ -221,6 +251,44 @@
         </div>
 
         <div id="feedback" class="feedback" role="status" aria-live="polite">Choose the factorisation that works.</div>
+
+        <section class="reveal-panel" aria-label="Secret cartoon reward">
+          <div class="reveal-head">
+            <strong>Secret picture</strong>
+            <span id="revealCount">0 / 16 pieces revealed</span>
+          </div>
+
+          <div class="reveal-stage">
+            <svg class="cartoon-svg" viewBox="0 0 260 260" role="img" aria-label="A cheerful cartoon maths owl called Professor Hoot">
+              <rect width="260" height="260" fill="#dbeafe"/>
+              <circle cx="42" cy="44" r="14" fill="#fde68a" opacity=".9"/>
+              <circle cx="218" cy="54" r="9" fill="#c4b5fd" opacity=".9"/>
+              <path d="M38 198 Q130 242 222 198 L222 260 L38 260 Z" fill="#93c5fd"/>
+              <circle cx="130" cy="130" r="92" fill="#8b5cf6"/>
+              <circle cx="130" cy="145" r="72" fill="#c4b5fd"/>
+              <path d="M70 72 L92 42 L104 80 Z" fill="#7c3aed"/>
+              <path d="M190 72 L168 42 L156 80 Z" fill="#7c3aed"/>
+              <circle cx="95" cy="115" r="28" fill="#fff"/>
+              <circle cx="165" cy="115" r="28" fill="#fff"/>
+              <circle cx="95" cy="118" r="11" fill="#111827"/>
+              <circle cx="165" cy="118" r="11" fill="#111827"/>
+              <circle cx="99" cy="114" r="4" fill="#fff"/>
+              <circle cx="169" cy="114" r="4" fill="#fff"/>
+              <polygon points="130,128 116,150 144,150" fill="#f59e0b"/>
+              <path d="M88 170 Q108 188 130 170" stroke="#111827" stroke-width="5" fill="none" stroke-linecap="round"/>
+              <path d="M130 170 Q152 188 172 170" stroke="#111827" stroke-width="5" fill="none" stroke-linecap="round"/>
+              <path d="M80 210 Q130 240 180 210" fill="#7c3aed"/>
+              <rect x="93" y="198" width="74" height="28" rx="8" fill="#10283d"/>
+              <text x="130" y="218" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">x² + bx + c</text>
+            </svg>
+            <div id="tileMask" class="tile-mask" aria-hidden="true"></div>
+          </div>
+
+          <p id="revealMessage" class="reveal-message" aria-live="polite">
+            Correct answers uncover Professor Hoot. Vault Locks reveal two pieces.
+          </p>
+        </section>
+
         <div id="master" class="master">🏆 Vault Master achieved: 8 correct answers in a row.</div>
       </div>
 
@@ -257,13 +325,24 @@
         prompt:$("prompt"), expression:$("expression"), options:$("options"), hintBtn:$("hintBtn"),
         hint:$("hint"), feedback:$("feedback"), master:$("master"), playArea:$("playArea"),
         gameOver:$("gameOver"), finalScore:$("finalScore"), gameOverText:$("gameOverText"),
-        newGame:$("newGame"), restart:$("restart"), confetti:$("confetti")
+        newGame:$("newGame"), restart:$("restart"), confetti:$("confetti"),
+        revealCount:$("revealCount"), tileMask:$("tileMask"), revealMessage:$("revealMessage")
       };
 
       const state = {
         score:0, streak:0, round:1, shields:3, current:null, locked:false, mastered:false, hintUsed:false,
-        best: Number(localStorage.getItem("quadraticVaultBest") || 0)
+        best: Number(localStorage.getItem("quadraticVaultBest") || 0),
+        revealTotal:16, revealed:new Set(), pictureCompleted:false
       };
+
+      const revealJokes = [
+        "Hoot hoot! You cracked the vault!",
+        "Professor Hoot officially approves your factor pairs.",
+        "You found the factors. Professor Hoot found the exit.",
+        "Maximum hoot achieved. Minimum algebraic chaos.",
+        "The owl is free! Your middle terms were magnificent.",
+        "No quadratics were harmed in the opening of this vault."
+      ];
 
       const randInt = (min,max) => Math.floor(Math.random()*(max-min+1))+min;
       const pick = (arr) => arr[Math.floor(Math.random()*arr.length)];
@@ -413,6 +492,56 @@
         els.options.appendChild(btn);
       }
 
+      function buildRevealGrid(){
+        els.tileMask.innerHTML = "";
+        for(let i=0;i<state.revealTotal;i++){
+          const tile = document.createElement("div");
+          tile.className = "tile";
+          tile.dataset.index = String(i);
+          els.tileMask.appendChild(tile);
+        }
+        updateRevealDisplay();
+      }
+
+      function updateRevealDisplay(){
+        els.revealCount.textContent = `${state.revealed.size} / ${state.revealTotal} pieces revealed`;
+        [...els.tileMask.children].forEach((tile,index)=>{
+          tile.classList.toggle("revealed",state.revealed.has(index));
+        });
+
+        if(state.revealed.size === state.revealTotal){
+          els.revealMessage.classList.add("done");
+        } else {
+          els.revealMessage.classList.remove("done");
+          els.revealMessage.textContent = "Correct answers uncover Professor Hoot. Vault Locks reveal two pieces.";
+        }
+      }
+
+      function revealTiles(count=1){
+        const hidden = [];
+        for(let i=0;i<state.revealTotal;i++){
+          if(!state.revealed.has(i)) hidden.push(i);
+        }
+        if(hidden.length === 0) return;
+
+        const chosen = shuffle(hidden).slice(0,Math.min(count,hidden.length));
+        chosen.forEach(i=>state.revealed.add(i));
+        updateRevealDisplay();
+
+        if(state.revealed.size === state.revealTotal && !state.pictureCompleted){
+          state.pictureCompleted = true;
+          state.score += 5;
+          const joke = pick(revealJokes);
+          els.revealMessage.textContent = `${joke} +5 picture bonus.`;
+          if(state.score > state.best){
+            state.best = state.score;
+            localStorage.setItem("quadraticVaultBest",String(state.best));
+          }
+          updateStats();
+          burst();
+        }
+      }
+
       function render(){
         const q = state.current;
         updateStats();
@@ -479,6 +608,7 @@
           const streakBonus = Math.floor(state.streak / 3);
           const gained = base + streakBonus;
           state.score += gained;
+          revealTiles(q.type === "lock" ? 2 : 1);
 
           button.classList.add("correct");
           buttons.forEach(b => { if(b !== button) b.classList.add("dim"); });
@@ -566,12 +696,15 @@
         state.locked = false;
         state.mastered = false;
         state.hintUsed = false;
+        state.revealed = new Set();
+        state.pictureCompleted = false;
         state.current = buildQuestion();
 
         els.playArea.style.display = "";
         els.gameOver.classList.remove("show");
         els.master.classList.remove("show");
         els.confetti.innerHTML = "";
+        buildRevealGrid();
         render();
       }
 
