@@ -3982,7 +3982,7 @@ html[data-ui-density="tight"] .activity-stage__content[data-custom-understand-ac
 }
 
 .activity-stage__content[data-custom-understand-active="true"] .understand-visual-host > * {
-  height: 100% !important;
+  height: auto !important;
   max-height: 100% !important;
   min-height: 0 !important;
   overflow: auto !important;
