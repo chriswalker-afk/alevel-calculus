@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a43">
+  <title>Quadratic Vault | Factorising Quadratics Game</title>
+  <style>
+    :root{
+      --bg:#071522;
+      --panel:#10283d;
+      --panel-2:#15344e;
+      --card:#0d2234;
+      --text:#f6fbff;
+      --muted:#aac0d1;
+      --line:#2b4e68;
+      --accent:#4fd1c5;
+      --accent-2:#ffd166;
+      --good:#68d391;
+      --bad:#fc8181;
+      --purple:#b794f4;
+      --shadow:0 18px 50px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box}
+    html{background:var(--bg)}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 14% 12%, rgba(79,209,197,.12), transparent 30rem),
+        radial-gradient(circle at 88% 18%, rgba(183,148,244,.10), transparent 30rem),
+        linear-gradient(180deg,#071522 0%,#0a1c2b 100%);
+      font:16px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    button{font:inherit}
+    button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+    .shell{width:min(100% - 28px,980px);margin:0 auto;padding:28px 0 48px}
+    .hero{
+      display:grid;
+      gap:18px;
+      grid-template-columns:1fr auto;
+      align-items:center;
+      margin-bottom:18px;
+    }
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      color:var(--accent);
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-size:.78rem;
+    }
+    h1{margin:.15rem 0 .35rem;font-size:clamp(2rem,6vw,3.6rem);line-height:1;letter-spacing:-.045em}
+    .hero p{margin:0;color:var(--muted);max-width:720px}
+    .ghost{
+      border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);
+      padding:11px 16px;border-radius:12px;cursor:pointer;font-weight:800;
+    }
+    .ghost:hover{background:rgba(255,255,255,.07)}
+    .stats{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:16px 0;
+    }
+    .stat{
+      background:rgba(16,40,61,.82);border:1px solid var(--line);border-radius:16px;
+      padding:12px 10px;text-align:center;box-shadow:0 8px 22px rgba(0,0,0,.13);
+    }
+    .stat span{display:block;color:var(--muted);font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+    .stat strong{display:block;margin-top:2px;font-size:1.35rem}
+    .board{
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(180deg,rgba(21,52,78,.98),rgba(13,34,52,.98));
+      border:1px solid var(--line);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:clamp(18px,4vw,30px);
+    }
+    .board:before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(135deg,rgba(255,255,255,.035),transparent 36%);
+    }
+    .topline{
+      position:relative;display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap
+    }
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(79,209,197,.13);border:1px solid rgba(79,209,197,.35);
+      color:#bff7f1;border-radius:999px;padding:7px 11px;font-weight:900;font-size:.84rem;
+    }
+    .level{color:var(--muted);font-weight:800}
+    .progress-wrap{position:relative;margin:18px 0 8px}
+    .progress-label{display:flex;justify-content:space-between;color:var(--muted);font-size:.78rem;font-weight:800;margin-bottom:6px}
+    .progress{height:8px;border-radius:999px;background:#081a29;overflow:hidden;border:1px solid #23455f}
+    .progress > div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--purple));transition:width .35s ease}
+    .question{
+      position:relative;text-align:center;padding:26px 8px 14px;
+    }
+    .prompt{margin:0;color:var(--muted);font-weight:800}
+    .expression{
+      margin:.45rem 0 0;font-family:"Cambria Math","STIX Two Math",Georgia,serif;
+      font-size:clamp(2rem,7vw,4.5rem);line-height:1.1;letter-spacing:.01em;
+      overflow-wrap:anywhere;
+    }
+    .options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}
+    .answer{
+      min-height:68px;border:1px solid #315774;background:#102b42;color:var(--text);
+      border-radius:16px;padding:12px 14px;cursor:pointer;text-align:center;
+      font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:1.35rem;font-weight:800;
+      transition:transform .15s ease,border-color .15s ease,background .15s ease;
+    }
+    .answer:hover{transform:translateY(-2px);border-color:var(--accent)}
+    .answer:disabled{cursor:default}
+    .answer.correct{background:rgba(104,211,145,.16);border-color:var(--good)}
+    .answer.wrong{background:rgba(252,129,129,.14);border-color:var(--bad)}
+    .answer.dim{opacity:.52}
+    .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+    .hint-btn{
+      border:1px solid rgba(255,209,102,.48);color:#ffe5a3;background:rgba(255,209,102,.07);
+      border-radius:12px;padding:10px 13px;cursor:pointer;font-weight:900;
+    }
+    .hint-btn:disabled{opacity:.45;cursor:default}
+    .hint{color:var(--muted);font-size:.93rem;min-height:1.4em;flex:1}
+    .feedback{
+      margin-top:14px;border:1px dashed #3a627e;border-radius:14px;padding:13px 14px;
+      background:rgba(6,22,34,.44);min-height:52px;color:#dcebf5;
+    }
+    .feedback.good{border-color:rgba(104,211,145,.65);color:#c6f6d5}
+    .feedback.bad{border-color:rgba(252,129,129,.65);color:#fed7d7}
+    .rules{
+      margin-top:16px;display:grid;grid-template-columns:1.3fr .7fr;gap:14px;
+    }
+    details,.mini{
+      border:1px solid var(--line);background:rgba(16,40,61,.62);border-radius:16px;padding:14px 16px
+    }
+    summary{cursor:pointer;font-weight:900}
+    details p,.mini p{color:var(--muted);margin:.65rem 0 0}
+    .mini strong{color:var(--accent-2)}
+    .master{
+      display:none;margin-top:14px;border-radius:16px;padding:14px 16px;
+      border:1px solid rgba(255,209,102,.55);background:rgba(255,209,102,.08);
+      color:#ffe8ad;font-weight:900;text-align:center;
+    }
+    .master.show{display:block}
+    .confetti{pointer-events:none;position:absolute;inset:0;overflow:hidden}
+    .piece{position:absolute;top:-20px;width:9px;height:16px;border-radius:2px;animation:fall 1.2s ease-in forwards}
+    @keyframes fall{to{transform:translateY(620px) rotate(540deg);opacity:.1}}
+    .gameover{
+      display:none;text-align:center;padding:22px 8px 6px
+    }
+    .gameover.show{display:block}
+    .gameover h2{font-size:2rem;margin:.2rem 0}
+    .gameover p{color:var(--muted)}
+    .restart{
+      border:0;background:var(--accent);color:#06211f;font-weight:950;border-radius:14px;
+      padding:12px 18px;cursor:pointer
+    }
+    footer{color:#7795aa;text-align:center;font-size:.8rem;margin-top:18px}
+    @media (max-width:720px){
+      .hero{grid-template-columns:1fr}
+      .hero .ghost{justify-self:start}
+      .stats{grid-template-columns:repeat(3,1fr)}
+      .stats .stat:nth-child(4),.stats .stat:nth-child(5){grid-column:span 1}
+      .rules{grid-template-columns:1fr}
+      .options{grid-template-columns:1fr}
+    }
+    @media (max-width:420px){
+      .shell{width:min(100% - 18px,980px);padding-top:18px}
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .stat:last-child{grid-column:1/-1}
+      .board{border-radius:18px;padding:16px}
+    }
+    @media (prefers-reduced-motion:reduce){
+      *,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">D11 · Early finisher game</div>
+        <h1>Quadratic Vault</h1>
+        <p>Crack factorisations, protect your shields and build an eight-answer streak to become a Vault Master.</p>
+      </div>
+      <button id="newGame" class="ghost" type="button">New game</button>
+    </header>
+
+    <section class="stats" aria-label="Game statistics">
+      <div class="stat"><span>Score</span><strong id="score">0</strong></div>
+      <div class="stat"><span>Streak</span><strong id="streak">0</strong></div>
+      <div class="stat"><span>Round</span><strong id="round">1</strong></div>
+      <div class="stat"><span>Shields</span><strong id="shields" aria-label="3 shields">◆ ◆ ◆</strong></div>
+      <div class="stat"><span>Best</span><strong id="best">0</strong></div>
+    </section>
+
+    <section class="board" aria-label="Quadratic Vault game">
+      <div id="confetti" class="confetti" aria-hidden="true"></div>
+
+      <div id="playArea">
+        <div class="topline">
+          <div id="badge" class="badge">Factorise</div>
+          <div id="level" class="level">Level 1 · Positive factors</div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-label"><span>Progress to next Vault Lock</span><span id="lockText">4 rounds</span></div>
+          <div class="progress" aria-hidden="true"><div id="progressBar"></div></div>
+        </div>
+
+        <div class="question">
+          <p id="prompt" class="prompt">Factorise completely</p>
+          <div id="expression" class="expression">x² + 7x + 12</div>
+        </div>
+
+        <div id="options" class="options" aria-label="Answer choices"></div>
+
+        <div class="actions">
+          <button id="hintBtn" class="hint-btn" type="button">Reveal a hint (-1 point)</button>
+          <div id="hint" class="hint"></div>
+        </div>
+
+        <div id="feedback" class="feedback" role="status" aria-live="polite">Choose the factorisation that works.</div>
+        <div id="master" class="master">🏆 Vault Master achieved: 8 correct answers in a row.</div>
+      </div>
+
+      <div id="gameOver" class="gameover">
+        <div class="eyebrow">Vault sealed</div>
+        <h2>Final score: <span id="finalScore">0</span></h2>
+        <p id="gameOverText">Three shields lost. Try again and chase a longer streak.</p>
+        <button id="restart" class="restart" type="button">Try the vault again</button>
+      </div>
+    </section>
+
+    <section class="rules">
+      <details>
+        <summary>How does the maths work?</summary>
+        <p>For <strong>x² + bx + c</strong>, find two integers that <strong>add to b</strong> and <strong>multiply to c</strong>. If they are p and q, the factorisation is <strong>(x + p)(x + q)</strong>.</p>
+      </details>
+      <div class="mini">
+        <strong>Vault Locks</strong>
+        <p>Every fifth round is worth bonus points. Hints still work, but they cost one point.</p>
+      </div>
+    </section>
+
+    <footer>Quadratic Vault · monic quadratics with integer factors · built for D11 practice</footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const $ = (id) => document.getElementById(id);
+      const els = {
+        score:$("score"), streak:$("streak"), round:$("round"), shields:$("shields"), best:$("best"),
+        badge:$("badge"), level:$("level"), lockText:$("lockText"), progressBar:$("progressBar"),
+        prompt:$("prompt"), expression:$("expression"), options:$("options"), hintBtn:$("hintBtn"),
+        hint:$("hint"), feedback:$("feedback"), master:$("master"), playArea:$("playArea"),
+        gameOver:$("gameOver"), finalScore:$("finalScore"), gameOverText:$("gameOverText"),
+        newGame:$("newGame"), restart:$("restart"), confetti:$("confetti")
+      };
+
+      const state = {
+        score:0, streak:0, round:1, shields:3, current:null, locked:false, mastered:false, hintUsed:false,
+        best: Number(localStorage.getItem("quadraticVaultBest") || 0)
+      };
+
+      const randInt = (min,max) => Math.floor(Math.random()*(max-min+1))+min;
+      const pick = (arr) => arr[Math.floor(Math.random()*arr.length)];
+      const nonZero = (min,max) => {
+        let n = 0;
+        while(n === 0) n = randInt(min,max);
+        return n;
+      };
+      const shuffle = (arr) => {
+        const a = [...arr];
+        for(let i=a.length-1;i>0;i--){
+          const j = Math.floor(Math.random()*(i+1));
+          [a[i],a[j]] = [a[j],a[i]];
+        }
+        return a;
+      };
+      const pairKey = (a,b) => [a,b].sort((x,y)=>x-y).join(",");
+
+      function level(){
+        if(state.round >= 11) return 3;
+        if(state.round >= 5) return 2;
+        return 1;
+      }
+
+      function levelLabel(){
+        const lv = level();
+        if(lv === 1) return "Level 1 · Positive factors";
+        if(lv === 2) return "Level 2 · Signs matter";
+        return "Level 3 · Larger factors";
+      }
+
+      function quadratic(b,c){
+        let out = "x²";
+        if(b !== 0){
+          const mag = Math.abs(b);
+          out += b > 0 ? ` + ${mag === 1 ? "" : mag}x` : ` - ${mag === 1 ? "" : mag}x`;
+        }
+        if(c !== 0) out += c > 0 ? ` + ${c}` : ` - ${Math.abs(c)}`;
+        return out;
+      }
+
+      function bracket(n){
+        if(n === 0) return "(x)";
+        return `(x ${n > 0 ? "+" : "-"} ${Math.abs(n)})`;
+      }
+
+      function pairText(a,b){ return bracket(a) + bracket(b); }
+
+      function choosePair(){
+        const lv = level();
+        let p,q;
+
+        if(lv === 1){
+          p = randInt(1,7);
+          q = randInt(1,7);
+        } else if(lv === 2){
+          const mode = pick(["positive","negative","mixed","mixed"]);
+          const a = randInt(1,9);
+          const b = randInt(1,9);
+          if(mode === "positive"){ p=a; q=b; }
+          else if(mode === "negative"){ p=-a; q=-b; }
+          else {
+            p = Math.random() < .5 ? a : -a;
+            q = p > 0 ? -b : b;
+          }
+        } else {
+          p = nonZero(-12,12);
+          q = nonZero(-12,12);
+        }
+
+        return [p,q];
+      }
+
+      function distractorPairs(p,q){
+        const used = new Set([pairKey(p,q)]);
+        const out = [];
+        const candidates = [
+          [p+1,q-1],[p-1,q+1],[p+1,q+1],[p-1,q-1],
+          [-p,q],[p,-q],[-p,-q],
+          [p+2,q-1],[p-2,q+1],[q+1,p],[q-1,p],
+          [p+2,q-2],[p-2,q+2]
+        ];
+
+        for(const candidate of shuffle(candidates)){
+          const [a,b] = candidate;
+          if(a === 0 || b === 0) continue;
+          const key = pairKey(a,b);
+          if(!used.has(key)){
+            used.add(key);
+            out.push(candidate);
+          }
+          if(out.length === 3) break;
+        }
+
+        while(out.length < 3){
+          const a = nonZero(-12,12);
+          const b = nonZero(-12,12);
+          const key = pairKey(a,b);
+          if(!used.has(key)){
+            used.add(key);
+            out.push([a,b]);
+          }
+        }
+        return out;
+      }
+
+      function buildQuestion(){
+        const [p,q] = choosePair();
+        const b = p + q;
+        const c = p * q;
+        const boss = state.round % 5 === 0;
+        let type = "factor";
+
+        if(!boss && state.round >= 4 && Math.random() < .24) type = "missing";
+        if(boss) type = "lock";
+
+        return {p,q,b,c,type};
+      }
+
+      function nextLock(){
+        const remainder = state.round % 5;
+        return remainder === 0 ? 0 : 5 - remainder;
+      }
+
+      function updateStats(){
+        els.score.textContent = state.score;
+        els.streak.textContent = state.streak;
+        els.round.textContent = state.round;
+        els.shields.textContent = state.shields > 0 ? "◆ ".repeat(state.shields).trim() : "—";
+        els.shields.setAttribute("aria-label", `${state.shields} shields`);
+        els.best.textContent = state.best;
+        els.level.textContent = levelLabel();
+
+        const remaining = nextLock();
+        els.lockText.textContent = remaining === 0 ? "NOW" : `${remaining} round${remaining === 1 ? "" : "s"}`;
+        const completed = remaining === 0 ? 5 : (5 - remaining);
+        els.progressBar.style.width = `${Math.min(100,(completed/5)*100)}%`;
+      }
+
+      function addOption(label,isCorrect,ariaLabel){
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "answer";
+        btn.textContent = label;
+        btn.setAttribute("aria-label", ariaLabel || label);
+        btn.addEventListener("click", () => answer(isCorrect,btn));
+        els.options.appendChild(btn);
+      }
+
+      function render(){
+        const q = state.current;
+        updateStats();
+
+        els.options.innerHTML = "";
+        els.hint.textContent = "";
+        els.hintBtn.disabled = false;
+        els.hintUsed = false;
+        els.feedback.className = "feedback";
+        els.master.classList.toggle("show",state.mastered);
+
+        if(q.type === "missing"){
+          els.badge.textContent = "Missing factor";
+          els.prompt.textContent = "Recover the missing bracket number";
+          els.expression.textContent = `${quadratic(q.b,q.c)} = ${bracket(q.p)}(x ?)`;
+
+          const values = new Set([q.q]);
+          while(values.size < 4) values.add(nonZero(-12,12));
+          for(const v of shuffle([...values])){
+            addOption(`${v > 0 ? "+" : "-"} ${Math.abs(v)}`,v === q.q,`missing bracket number ${v}`);
+          }
+          els.feedback.textContent = "Use the middle coefficient and constant term to reconstruct the second bracket.";
+        } else {
+          els.badge.textContent = q.type === "lock" ? "🔐 Vault Lock" : "Factorise";
+          els.prompt.textContent = q.type === "lock" ? "Crack the lock: factorise completely" : "Factorise completely";
+          els.expression.textContent = quadratic(q.b,q.c);
+
+          const choices = shuffle([[q.p,q.q],...distractorPairs(q.p,q.q)]);
+          for(const pair of choices){
+            addOption(pairText(pair[0],pair[1]),pairKey(pair[0],pair[1]) === pairKey(q.p,q.q),pairText(pair[0],pair[1]));
+          }
+          els.feedback.textContent = q.type === "lock"
+            ? "Vault Lock: check both the sum and the product before you commit."
+            : "Choose the factorisation that works.";
+        }
+      }
+
+      function burst(){
+        const colours = ["#4fd1c5","#ffd166","#b794f4","#68d391","#63b3ed"];
+        els.confetti.innerHTML = "";
+        for(let i=0;i<34;i++){
+          const piece = document.createElement("span");
+          piece.className = "piece";
+          piece.style.left = `${Math.random()*100}%`;
+          piece.style.background = pick(colours);
+          piece.style.animationDelay = `${Math.random()*.25}s`;
+          piece.style.transform = `rotate(${Math.random()*180}deg)`;
+          els.confetti.appendChild(piece);
+        }
+        setTimeout(()=>{ els.confetti.innerHTML = ""; },1600);
+      }
+
+      function answer(correct,button){
+        if(state.locked) return;
+        state.locked = true;
+
+        const q = state.current;
+        const buttons = [...els.options.querySelectorAll("button")];
+        buttons.forEach(b => b.disabled = true);
+
+        if(correct){
+          state.streak++;
+          const base = q.type === "lock" ? 3 : 1;
+          const streakBonus = Math.floor(state.streak / 3);
+          const gained = base + streakBonus;
+          state.score += gained;
+
+          button.classList.add("correct");
+          buttons.forEach(b => { if(b !== button) b.classList.add("dim"); });
+
+          let message = `Correct. ${q.p} + ${q.q} = ${q.b}, and ${q.p} × ${q.q} = ${q.c}. +${gained} point${gained === 1 ? "" : "s"}.`;
+          if(q.type === "lock"){
+            message = `Vault Lock cracked! ${message}`;
+            burst();
+          }
+          if(state.streak >= 8 && !state.mastered){
+            state.mastered = true;
+            message += " Vault Master achieved!";
+            burst();
+          }
+          els.feedback.className = "feedback good";
+          els.feedback.textContent = message;
+        } else {
+          state.streak = 0;
+          state.shields--;
+          button.classList.add("wrong");
+
+          for(const b of buttons){
+            if(b !== button && !b.disabled) b.disabled = true;
+          }
+
+          els.feedback.className = "feedback bad";
+          els.feedback.textContent = `Not this one. You need two numbers that add to ${q.b} and multiply to ${q.c}. One shield lost.`;
+        }
+
+        if(state.score > state.best){
+          state.best = state.score;
+          localStorage.setItem("quadraticVaultBest",String(state.best));
+        }
+        updateStats();
+
+        setTimeout(() => {
+          if(state.shields <= 0){
+            endGame();
+            return;
+          }
+          state.round++;
+          state.current = buildQuestion();
+          state.locked = false;
+          state.hintUsed = false;
+          render();
+        },1450);
+      }
+
+      function showHint(){
+        if(state.locked || state.hintUsed) return;
+        state.hintUsed = true;
+        state.score = Math.max(0,state.score - 1);
+        const q = state.current;
+
+        const signHint = q.c > 0
+          ? "The product is positive, so the two numbers have the same sign."
+          : "The product is negative, so the two numbers have different signs.";
+
+        const sizeHint = q.c < 0
+          ? `The larger absolute value must give the middle-term sign (${q.b < 0 ? "negative" : q.b > 0 ? "positive" : "zero"}).`
+          : q.b < 0
+            ? "Because the sum is negative, both numbers must be negative."
+            : "Because the sum is positive, both numbers must be positive.";
+
+        els.hint.textContent = `${signHint} ${sizeHint} Target: sum ${q.b}, product ${q.c}.`;
+        els.hintBtn.disabled = true;
+        updateStats();
+      }
+
+      function endGame(){
+        state.locked = true;
+        els.playArea.style.display = "none";
+        els.gameOver.classList.add("show");
+        els.finalScore.textContent = state.score;
+        els.gameOverText.textContent = state.mastered
+          ? "You reached Vault Master status. Can you beat your best score?"
+          : "Three shields lost. Start again and aim for an eight-answer streak.";
+      }
+
+      function reset(){
+        state.score = 0;
+        state.streak = 0;
+        state.round = 1;
+        state.shields = 3;
+        state.locked = false;
+        state.mastered = false;
+        state.hintUsed = false;
+        state.current = buildQuestion();
+
+        els.playArea.style.display = "";
+        els.gameOver.classList.remove("show");
+        els.master.classList.remove("show");
+        els.confetti.innerHTML = "";
+        render();
+      }
+
+      els.hintBtn.addEventListener("click",showHint);
+      els.newGame.addEventListener("click",reset);
+      els.restart.addEventListener("click",reset);
+
+      document.addEventListener("keydown",(event)=>{
+        const active = document.activeElement;
+        if(active && ["INPUT","TEXTAREA","SELECT"].includes(active.tagName)) return;
+        const n = Number(event.key);
+        if(n >= 1 && n <= 4 && !state.locked){
+          const buttons = [...els.options.querySelectorAll("button")];
+          const btn = buttons[n-1];
+          if(btn) btn.click();
+        }
+      });
+
+      reset();
+    })();
+  </script>
+</body>
+</html>
