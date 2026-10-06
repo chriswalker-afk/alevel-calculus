@@ -112,6 +112,22 @@
     .answer:hover{transform:translateY(-2px);border-color:var(--accent)}
     .answer:disabled{cursor:default}
     .answer.correct{background:rgba(104,211,145,.16);border-color:var(--good)}
+    .missing-entry{
+      display:flex;gap:10px;justify-content:center;align-items:stretch;flex-wrap:wrap;margin-top:18px
+    }
+    .number-input{
+      width:min(220px,100%);min-height:58px;border:1px solid #315774;border-radius:14px;
+      background:#081a29;color:var(--text);padding:10px 14px;text-align:center;
+      font-size:1.4rem;font-weight:850;
+    }
+    .number-input::placeholder{color:#6f8ba0}
+    .submit-answer{
+      min-height:58px;border:0;border-radius:14px;padding:10px 18px;cursor:pointer;
+      background:var(--accent);color:#06211f;font-weight:950;
+    }
+    .submit-answer:hover{filter:brightness(1.06)}
+    .typed-note{margin:8px 0 0;color:var(--muted);text-align:center;font-size:.88rem}
+    .answer.correct{background:rgba(104,211,145,.16);border-color:var(--good)}
     .answer.wrong{background:rgba(252,129,129,.14);border-color:var(--bad)}
     .answer.dim{opacity:.52}
     .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
@@ -211,7 +227,7 @@
       <div>
         <div class="eyebrow">D11 · Early finisher game</div>
         <h1>Quadratic Vault</h1>
-        <p>Crack factorisations, protect your shields and build an eight-answer streak to become a Vault Master.</p>
+        <p>Crack factorisations, unlock the tougher Missing Factor level, protect your shields and reveal Professor Hoot.</p>
       </div>
       <button id="newGame" class="ghost" type="button">New game</button>
     </header>
@@ -306,8 +322,8 @@
         <p>For <strong>x² + bx + c</strong>, find two integers that <strong>add to b</strong> and <strong>multiply to c</strong>. If they are p and q, the factorisation is <strong>(x + p)(x + q)</strong>.</p>
       </details>
       <div class="mini">
-        <strong>Vault Locks</strong>
-        <p>Every fifth round is worth bonus points. Hints still work, but they cost one point.</p>
+        <strong>Level 2: Missing Factor</strong>
+        <p>Get 6 Level 1 questions correct to unlock it. Then type the signed number in the missing bracket yourself. Vault Locks still appear every fifth round.</p>
       </div>
     </section>
 
@@ -332,7 +348,9 @@
       const state = {
         score:0, streak:0, round:1, shields:3, current:null, locked:false, mastered:false, hintUsed:false,
         best: Number(localStorage.getItem("quadraticVaultBest") || 0),
-        revealTotal:16, revealed:new Set(), pictureCompleted:false
+        revealTotal:16, revealed:new Set(), pictureCompleted:false,
+        gameLevel:1, level1Correct:0, level2Unlocked:false, advanceToLevel2:false,
+        typedAttempts:0
       };
 
       const revealJokes = [
@@ -368,10 +386,10 @@
       }
 
       function levelLabel(){
-        const lv = level();
-        if(lv === 1) return "Level 1 · Positive factors";
-        if(lv === 2) return "Level 2 · Signs matter";
-        return "Level 3 · Larger factors";
+        if(state.gameLevel === 1){
+          return `Level 1 · Crack the Factors · ${state.level1Correct}/6`;
+        }
+        return "Level 2 · Missing Factor";
       }
 
       function quadratic(b,c){
@@ -454,12 +472,15 @@
         const b = p + q;
         const c = p * q;
         const boss = state.round % 5 === 0;
-        let type = "factor";
 
-        if(!boss && state.round >= 4 && Math.random() < .24) type = "missing";
-        if(boss) type = "lock";
+        if(state.gameLevel === 2){
+          const knownFirst = Math.random() < .5;
+          const knownValue = knownFirst ? p : q;
+          const missingValue = knownFirst ? q : p;
+          return {p,q,b,c,type:"typedMissing",boss,knownFirst,knownValue,missingValue};
+        }
 
-        return {p,q,b,c,type};
+        return {p,q,b,c,type:boss ? "lock" : "factor",boss};
       }
 
       function nextLock(){
@@ -549,21 +570,53 @@
         els.options.innerHTML = "";
         els.hint.textContent = "";
         els.hintBtn.disabled = false;
-        els.hintUsed = false;
+        state.hintUsed = false;
+        state.typedAttempts = 0;
         els.feedback.className = "feedback";
         els.master.classList.toggle("show",state.mastered);
 
-        if(q.type === "missing"){
-          els.badge.textContent = "Missing factor";
-          els.prompt.textContent = "Recover the missing bracket number";
-          els.expression.textContent = `${quadratic(q.b,q.c)} = ${bracket(q.p)}(x ?)`;
+        if(q.type === "typedMissing"){
+          els.badge.textContent = q.boss ? "🔐 Level 2 Vault Lock" : "Level 2 · Missing Factor";
+          els.prompt.textContent = "Type the signed number in the missing bracket";
+          const partial = q.knownFirst
+            ? `${bracket(q.knownValue)}(x □)`
+            : `(x □)${bracket(q.knownValue)}`;
+          els.expression.textContent = `${quadratic(q.b,q.c)} = ${partial}`;
 
-          const values = new Set([q.q]);
-          while(values.size < 4) values.add(nonZero(-12,12));
-          for(const v of shuffle([...values])){
-            addOption(`${v > 0 ? "+" : "-"} ${Math.abs(v)}`,v === q.q,`missing bracket number ${v}`);
-          }
-          els.feedback.textContent = "Use the middle coefficient and constant term to reconstruct the second bracket.";
+          const form = document.createElement("form");
+          form.className = "missing-entry";
+          form.setAttribute("aria-label","Missing factor answer");
+
+          const input = document.createElement("input");
+          input.id = "typedAnswer";
+          input.className = "number-input";
+          input.type = "number";
+          input.step = "1";
+          input.inputMode = "numeric";
+          input.placeholder = "e.g. -4";
+          input.setAttribute("aria-label","Signed number in the missing bracket");
+
+          const submit = document.createElement("button");
+          submit.type = "submit";
+          submit.className = "submit-answer";
+          submit.textContent = "Unlock";
+
+          form.append(input,submit);
+          form.addEventListener("submit",(event)=>{
+            event.preventDefault();
+            submitTypedAnswer(input,submit);
+          });
+          els.options.appendChild(form);
+
+          const note = document.createElement("p");
+          note.className = "typed-note";
+          note.textContent = "Enter the bracket number itself: type -4 for (x - 4), or 5 for (x + 5).";
+          els.options.appendChild(note);
+
+          els.feedback.textContent = q.boss
+            ? "Vault Lock: no choices this time. Reconstruct the missing factor."
+            : "Use the known bracket with both the product and the middle coefficient.";
+          setTimeout(()=>input.focus(),0);
         } else {
           els.badge.textContent = q.type === "lock" ? "🔐 Vault Lock" : "Factorise";
           els.prompt.textContent = q.type === "lock" ? "Crack the lock: factorise completely" : "Factorise completely";
@@ -577,6 +630,91 @@
             ? "Vault Lock: check both the sum and the product before you commit."
             : "Choose the factorisation that works.";
         }
+      }
+
+      function submitTypedAnswer(input,submit){
+        if(state.locked) return;
+        const q = state.current;
+        const raw = input.value.trim();
+
+        if(raw === "" || !Number.isInteger(Number(raw))){
+          els.feedback.className = "feedback bad";
+          els.feedback.textContent = "Enter one whole signed number, such as -4 or 6.";
+          input.focus();
+          return;
+        }
+
+        const value = Number(raw);
+        if(value === q.missingValue){
+          state.locked = true;
+          input.disabled = true;
+          submit.disabled = true;
+          state.streak++;
+
+          const base = q.boss ? 4 : 2;
+          const streakBonus = Math.floor(state.streak / 3);
+          const gained = base + streakBonus;
+          state.score += gained;
+          revealTiles(q.boss ? 3 : 2);
+
+          els.feedback.className = "feedback good";
+          let message = `Correct. The missing number is ${q.missingValue}: ${q.knownValue} + ${q.missingValue} = ${q.b}, and ${q.knownValue} × ${q.missingValue} = ${q.c}. +${gained} points.`;
+          if(q.boss){
+            message = "Level 2 Vault Lock cracked! " + message;
+            burst();
+          }
+          if(state.streak >= 8 && !state.mastered){
+            state.mastered = true;
+            message += " Vault Master achieved!";
+            burst();
+          }
+          els.feedback.textContent = message;
+
+          if(state.score > state.best){
+            state.best = state.score;
+            localStorage.setItem("quadraticVaultBest",String(state.best));
+          }
+          updateStats();
+
+          setTimeout(()=>{
+            if(state.shields <= 0){ endGame(); return; }
+            state.round++;
+            state.current = buildQuestion();
+            state.locked = false;
+            render();
+          },1550);
+          return;
+        }
+
+        state.typedAttempts++;
+        input.select();
+        els.feedback.className = "feedback bad";
+
+        if(state.typedAttempts === 1){
+          els.feedback.textContent = `Not quite. First clue: ${q.knownValue} × ? must equal ${q.c}. Try again - no shield lost yet.`;
+          return;
+        }
+
+        if(state.typedAttempts === 2){
+          els.feedback.textContent = `Still locked. Second clue: ${q.knownValue} + ? must equal ${q.b}. One more try - no shield lost yet.`;
+          return;
+        }
+
+        state.locked = true;
+        state.streak = 0;
+        state.shields--;
+        input.disabled = true;
+        submit.disabled = true;
+        els.feedback.textContent = `The missing number was ${q.missingValue}, giving ${q.knownValue} × ${q.missingValue} = ${q.c} and ${q.knownValue} + ${q.missingValue} = ${q.b}. One shield lost.`;
+        updateStats();
+
+        setTimeout(()=>{
+          if(state.shields <= 0){ endGame(); return; }
+          state.round++;
+          state.current = buildQuestion();
+          state.locked = false;
+          render();
+        },1800);
       }
 
       function burst(){
@@ -604,6 +742,7 @@
 
         if(correct){
           state.streak++;
+          if(state.gameLevel === 1) state.level1Correct++;
           const base = q.type === "lock" ? 3 : 1;
           const streakBonus = Math.floor(state.streak / 3);
           const gained = base + streakBonus;
@@ -616,6 +755,12 @@
           let message = `Correct. ${q.p} + ${q.q} = ${q.b}, and ${q.p} × ${q.q} = ${q.c}. +${gained} point${gained === 1 ? "" : "s"}.`;
           if(q.type === "lock"){
             message = `Vault Lock cracked! ${message}`;
+            burst();
+          }
+          if(state.gameLevel === 1 && state.level1Correct >= 6 && !state.level2Unlocked){
+            state.level2Unlocked = true;
+            state.advanceToLevel2 = true;
+            message += " 🔓 Vault security upgraded! Level 2: Missing Factor unlocked.";
             burst();
           }
           if(state.streak >= 8 && !state.mastered){
@@ -650,6 +795,10 @@
             return;
           }
           state.round++;
+          if(state.advanceToLevel2){
+            state.gameLevel = 2;
+            state.advanceToLevel2 = false;
+          }
           state.current = buildQuestion();
           state.locked = false;
           state.hintUsed = false;
@@ -662,6 +811,13 @@
         state.hintUsed = true;
         state.score = Math.max(0,state.score - 1);
         const q = state.current;
+
+        if(q.type === "typedMissing"){
+          els.hint.textContent = `Start with the constant term: ${q.knownValue} × ? = ${q.c}. Then check that ${q.knownValue} + ? = ${q.b}.`;
+          els.hintBtn.disabled = true;
+          updateStats();
+          return;
+        }
 
         const signHint = q.c > 0
           ? "The product is positive, so the two numbers have the same sign."
@@ -698,6 +854,11 @@
         state.hintUsed = false;
         state.revealed = new Set();
         state.pictureCompleted = false;
+        state.gameLevel = 1;
+        state.level1Correct = 0;
+        state.level2Unlocked = false;
+        state.advanceToLevel2 = false;
+        state.typedAttempts = 0;
         state.current = buildQuestion();
 
         els.playArea.style.display = "";
