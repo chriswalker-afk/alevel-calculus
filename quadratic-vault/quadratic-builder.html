@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a43">
+  <title>Quadratic Builder | Factorising Quadratics Game</title>
+  <style>
+    :root{
+      --bg:#071522;
+      --panel:#10283d;
+      --panel-2:#15344e;
+      --card:#0d2234;
+      --text:#f6fbff;
+      --muted:#aac0d1;
+      --line:#2b4e68;
+      --accent:#4fd1c5;
+      --accent-2:#ffd166;
+      --good:#68d391;
+      --bad:#fc8181;
+      --purple:#b794f4;
+      --blue:#63b3ed;
+      --shadow:0 18px 50px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box}
+    html{background:var(--bg)}
+    body{
+      margin:0;min-height:100vh;color:var(--text);
+      background:
+        radial-gradient(circle at 12% 12%,rgba(99,179,237,.12),transparent 30rem),
+        radial-gradient(circle at 88% 16%,rgba(79,209,197,.10),transparent 30rem),
+        linear-gradient(180deg,#071522 0%,#0a1c2b 100%);
+      font:16px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    button,a{font:inherit}
+    a{color:inherit}
+    button:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:3px}
+    .shell{width:min(100% - 28px,1040px);margin:0 auto;padding:28px 0 48px}
+    .hero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-bottom:14px}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--accent);font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem}
+    h1{margin:.15rem 0 .35rem;font-size:clamp(2rem,6vw,3.6rem);line-height:1;letter-spacing:-.045em}
+    .hero p{margin:0;color:var(--muted);max-width:760px}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .ghost,.nav-link{
+      border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);
+      padding:11px 16px;border-radius:12px;cursor:pointer;font-weight:800;text-decoration:none
+    }
+    .nav-link{border-color:rgba(79,209,197,.45);color:#bff7f1}
+    .ghost:hover,.nav-link:hover{background:rgba(255,255,255,.07)}
+    .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:16px 0}
+    .stat{background:rgba(16,40,61,.82);border:1px solid var(--line);border-radius:16px;padding:12px 10px;text-align:center;box-shadow:0 8px 22px rgba(0,0,0,.13)}
+    .stat span{display:block;color:var(--muted);font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+    .stat strong{display:block;margin-top:2px;font-size:1.35rem}
+    .studio{
+      position:relative;overflow:hidden;border:1px solid var(--line);border-radius:24px;
+      background:linear-gradient(180deg,rgba(21,52,78,.98),rgba(13,34,52,.98));
+      box-shadow:var(--shadow);padding:clamp(18px,4vw,30px)
+    }
+    .studio:before{
+      content:"";position:absolute;inset:0;pointer-events:none;opacity:.15;
+      background-image:
+        linear-gradient(rgba(99,179,237,.35) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(99,179,237,.35) 1px,transparent 1px);
+      background-size:28px 28px
+    }
+    .studio>*{position:relative}
+    .studio-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:7px 11px;
+      background:rgba(99,179,237,.13);border:1px solid rgba(99,179,237,.42);color:#cceaff;
+      font-weight:900;font-size:.84rem
+    }
+    .blueprint-progress{color:var(--muted);font-weight:800}
+    .mission-card{
+      margin-top:16px;background:#eef7ff;color:#10283d;border:3px solid #9ac7e6;border-radius:18px;
+      padding:18px 20px;box-shadow:0 12px 20px rgba(0,0,0,.16)
+    }
+    .mission-kicker{font-size:.76rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase;color:#486b84}
+    .mission-card h2{margin:.3rem 0 .35rem;font-size:clamp(1.25rem,4vw,1.8rem);line-height:1.2}
+    .mission-card p{margin:0;color:#486b84}
+    .workbench{display:grid;grid-template-columns:1fr minmax(280px,.9fr);gap:16px;margin-top:16px}
+    .build-panel,.readout-panel{
+      border:1px solid #315774;background:rgba(6,22,34,.58);border-radius:18px;padding:16px
+    }
+    .panel-title{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+    .panel-title strong{font-size:1rem}
+    .panel-title span{color:var(--muted);font-size:.84rem}
+    .factor-slots{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+    .slot{
+      min-height:78px;border:2px dashed #5a7d97;background:#0b2538;color:var(--text);
+      border-radius:16px;padding:10px 12px;cursor:pointer;
+      font-family:"Cambria Math","STIX Two Math",Georgia,serif;
+      font-size:clamp(1.45rem,5vw,2.35rem);font-weight:900
+    }
+    .slot.filled{border-style:solid;border-color:var(--accent)}
+    .times{color:var(--muted);font-weight:950}
+    .tiles{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:14px}
+    .tile{
+      min-height:48px;border:1px solid #3a627e;background:#102b42;color:var(--text);
+      border-radius:12px;cursor:pointer;font-size:1rem;font-weight:950;
+      transition:transform .15s ease,border-color .15s ease,background .15s ease
+    }
+    .tile:hover{transform:translateY(-2px);border-color:var(--accent);background:#153b57}
+    .live-quadratic{
+      min-height:84px;display:flex;align-items:center;justify-content:center;text-align:center;
+      border:1px solid #315774;border-radius:14px;background:#081a29;
+      font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:clamp(1.7rem,5vw,2.8rem);font-weight:900
+    }
+    .readouts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    .readout{border:1px solid #315774;background:#10283d;border-radius:13px;padding:12px}
+    .readout span{display:block;color:var(--muted);font-size:.75rem;font-weight:900;text-transform:uppercase;letter-spacing:.05em}
+    .readout strong{display:block;margin-top:3px;font-size:1.12rem}
+    .criteria{margin-top:12px;display:grid;gap:8px}
+    .criterion{
+      display:flex;gap:10px;align-items:flex-start;border:1px solid #315774;border-radius:12px;
+      padding:9px 10px;color:#dcebf5;background:rgba(16,40,61,.55)
+    }
+    .criterion .mark{width:1.35rem;flex:0 0 1.35rem;text-align:center;font-weight:950;color:var(--muted)}
+    .criterion.pass{border-color:rgba(104,211,145,.7);background:rgba(104,211,145,.08)}
+    .criterion.pass .mark{color:var(--good)}
+    .criterion.fail{border-color:rgba(252,129,129,.7);background:rgba(252,129,129,.07)}
+    .criterion.fail .mark{color:var(--bad)}
+    .controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+    .inspect{
+      border:0;background:var(--accent);color:#06211f;font-weight:950;border-radius:14px;
+      padding:12px 20px;cursor:pointer;min-width:160px
+    }
+    .secondary{
+      border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);
+      font-weight:850;border-radius:14px;padding:12px 18px;cursor:pointer
+    }
+    .hint-btn{border-color:rgba(255,209,102,.48);color:#ffe5a3}
+    .inspect:disabled,.secondary:disabled{opacity:.45;cursor:default}
+    .feedback{
+      margin-top:14px;border:1px dashed #3a627e;border-radius:14px;padding:13px 14px;
+      background:rgba(6,22,34,.55);min-height:52px;color:#dcebf5
+    }
+    .feedback.good{border-color:rgba(104,211,145,.65);color:#c6f6d5}
+    .feedback.bad{border-color:rgba(252,129,129,.65);color:#fed7d7}
+    .stars{letter-spacing:.08em;color:var(--accent-2);font-weight:950}
+    .architect{
+      margin-top:16px;display:grid;grid-template-columns:74px 1fr;gap:14px;align-items:center;
+      border:1px solid #294d68;background:rgba(6,22,34,.5);border-radius:16px;padding:12px
+    }
+    .owl{width:74px;height:74px}
+    .architect-text{color:#dcebf5}
+    .architect-text strong{color:var(--accent-2)}
+    .rules{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:16px}
+    details,.mini{border:1px solid var(--line);background:rgba(16,40,61,.62);border-radius:16px;padding:14px 16px}
+    summary{cursor:pointer;font-weight:900}
+    details p,.mini p{color:var(--muted);margin:.65rem 0 0}
+    .mini strong{color:var(--accent-2)}
+    footer{color:#7795aa;text-align:center;font-size:.8rem;margin-top:18px}
+    @media(max-width:780px){
+      .hero{grid-template-columns:1fr}.hero-actions{justify-content:flex-start}
+      .stats{grid-template-columns:repeat(3,1fr)}
+      .workbench{grid-template-columns:1fr}
+      .tiles{grid-template-columns:repeat(6,minmax(0,1fr))}
+      .rules{grid-template-columns:1fr}
+    }
+    @media(max-width:520px){
+      .shell{width:min(100% - 18px,1040px);padding-top:18px}
+      .stats{grid-template-columns:repeat(2,1fr)}.stat:last-child{grid-column:1/-1}
+      .studio{border-radius:18px;padding:16px}
+      .factor-slots{grid-template-columns:1fr}.times{display:none}
+      .tiles{grid-template-columns:repeat(4,minmax(0,1fr))}
+      .readouts{grid-template-columns:1fr}
+      .architect{grid-template-columns:58px 1fr}.owl{width:58px;height:58px}
+    }
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">D11 · Game 3</div>
+        <h1>Quadratic Builder</h1>
+        <p>Work backwards: choose the bracket numbers yourself and design a quadratic that matches each blueprint.</p>
+      </div>
+      <div class="hero-actions">
+        <a class="nav-link" href="index.html">Quadratic Vault</a>
+        <a class="nav-link" href="factor-factory.html">Factor Factory</a>
+        <button id="newGame" class="ghost" type="button">New workshop</button>
+      </div>
+    </header>
+
+    <section class="stats" aria-label="Builder statistics">
+      <div class="stat"><span>Stars</span><strong id="stars">0</strong></div>
+      <div class="stat"><span>Blueprints</span><strong id="completed">0</strong></div>
+      <div class="stat"><span>Streak</span><strong id="streak">0</strong></div>
+      <div class="stat"><span>Workshop</span><strong id="workshopStat">1</strong></div>
+      <div class="stat"><span>Best stars</span><strong id="best">0</strong></div>
+    </section>
+
+    <section class="studio" aria-label="Quadratic Builder workshop">
+      <div class="studio-head">
+        <div id="badge" class="badge">Workshop 1 · Target Builder</div>
+        <div id="blueprintProgress" class="blueprint-progress">Blueprint 1 of 4</div>
+      </div>
+
+      <div class="mission-card">
+        <div class="mission-kicker">Blueprint brief</div>
+        <h2 id="missionTitle">Build a quadratic with constant term +24</h2>
+        <p id="missionText">Both bracket numbers must be positive.</p>
+      </div>
+
+      <div class="workbench">
+        <section class="build-panel" aria-label="Factor number workbench">
+          <div class="panel-title">
+            <strong>Choose your bracket numbers</strong>
+            <span>Tap a filled bracket to clear it.</span>
+          </div>
+
+          <div class="factor-slots">
+            <button id="slotA" class="slot" type="button">(x + □)</button>
+            <span class="times">×</span>
+            <button id="slotB" class="slot" type="button">(x + □)</button>
+          </div>
+
+          <div id="tiles" class="tiles" aria-label="Factor number tiles"></div>
+        </section>
+
+        <section class="readout-panel" aria-label="Live quadratic readout">
+          <div class="panel-title">
+            <strong>Your design</strong>
+            <span>Changes live as you build.</span>
+          </div>
+
+          <div id="liveQuadratic" class="live-quadratic">Choose two numbers</div>
+
+          <div class="readouts">
+            <div class="readout">
+              <span>Middle coefficient b</span>
+              <strong id="sumReadout">p + q = ?</strong>
+            </div>
+            <div class="readout">
+              <span>Constant c</span>
+              <strong id="productReadout">pq = ?</strong>
+            </div>
+          </div>
+
+          <div id="criteria" class="criteria" aria-label="Blueprint criteria"></div>
+        </section>
+      </div>
+
+      <div class="controls">
+        <button id="inspect" class="inspect" type="button">Inspect design</button>
+        <button id="hint" class="secondary hint-btn" type="button">Blueprint hint (-1 possible star)</button>
+        <button id="clear" class="secondary" type="button">Clear design</button>
+        <button id="next" class="secondary" type="button" disabled>Next blueprint</button>
+      </div>
+
+      <div id="feedback" class="feedback" role="status" aria-live="polite">Build a pair of brackets, then ask Professor Hoot to inspect your design.</div>
+
+      <div class="architect">
+        <svg class="owl" viewBox="0 0 100 100" role="img" aria-label="Professor Hoot, chief quadratic architect">
+          <circle cx="50" cy="52" r="40" fill="#8b5cf6"/>
+          <circle cx="50" cy="60" r="30" fill="#c4b5fd"/>
+          <path d="M23 31 L34 12 L40 35 Z" fill="#7c3aed"/>
+          <path d="M77 31 L66 12 L60 35 Z" fill="#7c3aed"/>
+          <circle cx="36" cy="45" r="13" fill="#fff"/><circle cx="64" cy="45" r="13" fill="#fff"/>
+          <circle cx="36" cy="47" r="5" fill="#111827"/><circle cx="64" cy="47" r="5" fill="#111827"/>
+          <polygon points="50,51 43,62 57,62" fill="#f59e0b"/>
+          <path d="M36 70 Q50 80 64 70" stroke="#111827" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div id="architectText" class="architect-text"><strong>Professor Hoot:</strong> A good builder thinks about the sum and product before choosing the numbers.</div>
+      </div>
+    </section>
+
+    <section class="rules">
+      <details>
+        <summary>What is this practising?</summary>
+        <p>If the bracket numbers are <strong>p</strong> and <strong>q</strong>, then <strong>(x + p)(x + q) = x² + (p + q)x + pq</strong>. This game reverses the usual question: you are given constraints and must construct suitable factors.</p>
+      </details>
+      <div class="mini">
+        <strong>Workshop progression</strong>
+        <p>Target Builder → Precision Builds → Optimisation Lab → Master Builder. Hints are allowed, but using one reduces the best possible score for that blueprint by one star.</p>
+      </div>
+    </section>
+
+    <footer>Quadratic Builder · reverse thinking with monic quadratics · built for D11 early finishers</footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const $ = id => document.getElementById(id);
+      const els = {
+        stars:$("stars"),completed:$("completed"),streak:$("streak"),workshopStat:$("workshopStat"),best:$("best"),
+        badge:$("badge"),blueprintProgress:$("blueprintProgress"),missionTitle:$("missionTitle"),missionText:$("missionText"),
+        slotA:$("slotA"),slotB:$("slotB"),tiles:$("tiles"),liveQuadratic:$("liveQuadratic"),
+        sumReadout:$("sumReadout"),productReadout:$("productReadout"),criteria:$("criteria"),
+        inspect:$("inspect"),hint:$("hint"),clear:$("clear"),next:$("next"),feedback:$("feedback"),
+        architectText:$("architectText"),newGame:$("newGame")
+      };
+
+      const state = {
+        stars:0,completed:0,streak:0,workshop:1,withinWorkshop:0,
+        best:Number(localStorage.getItem("quadraticBuilderBest")||0),
+        p:null,q:null,current:null,attempts:0,hintUsed:false,solved:false,lastMissionKey:""
+      };
+
+      const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+      const shuffle = arr => {
+        const a=[...arr];
+        for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+        return a;
+      };
+
+      const praise = [
+        "Blueprint approved. Elegant bracket engineering.",
+        "Excellent construction. The sum and product are exactly where they belong.",
+        "That design has structural integrity.",
+        "Beautiful. Not a loose coefficient anywhere.",
+        "A fine piece of quadratic architecture."
+      ];
+
+      const workshopLabels = [
+        "",
+        "Workshop 1 · Target Builder",
+        "Workshop 2 · Precision Builds",
+        "Workshop 3 · Optimisation Lab",
+        "Master Builder · Open Workshop"
+      ];
+
+      function quadratic(b,c){
+        let out="x²";
+        if(b!==0){
+          const m=Math.abs(b);
+          out+=b>0?` + ${m===1?"":m}x`:` - ${m===1?"":m}x`;
+        }
+        if(c!==0)out+=c>0?` + ${c}`:` - ${Math.abs(c)}`;
+        return out;
+      }
+
+      function bracket(n){
+        if(n===null)return "(x + □)";
+        if(n===0)return "(x)";
+        return `(x ${n>0?"+":"-"} ${Math.abs(n)})`;
+      }
+
+      function createMission(workshop){
+        const pools = {
+          1:[
+            {
+              key:"w1-pos24",title:"Build a quadratic with constant term +24",
+              text:"Both bracket numbers must be positive.",
+              hint:"Find a positive factor pair of 24. There is more than one correct design.",
+              criteria:["The product must be +24.","Both bracket numbers must be positive."],
+              check:(p,q)=>[
+                {ok:p*q===24,text:"Product pq = +24"},
+                {ok:p>0&&q>0,text:"Both bracket numbers are positive"}
+              ]
+            },
+            {
+              key:"w1-neg30",title:"Build a quadratic with constant term +30",
+              text:"Both bracket numbers must be negative.",
+              hint:"Use a positive factor pair of 30, then make both numbers negative.",
+              criteria:["The product must be +30.","Both bracket numbers must be negative."],
+              check:(p,q)=>[
+                {ok:p*q===30,text:"Product pq = +30"},
+                {ok:p<0&&q<0,text:"Both bracket numbers are negative"}
+              ]
+            },
+            {
+              key:"w1-mix24pos",title:"Build a quadratic with constant term -24",
+              text:"Make the middle coefficient positive.",
+              hint:"Use opposite signs. The positive factor must have the larger absolute value.",
+              criteria:["The product must be -24.","The sum p + q must be positive."],
+              check:(p,q)=>[
+                {ok:p*q===-24,text:"Product pq = -24"},
+                {ok:p+q>0,text:"Middle coefficient b is positive"}
+              ]
+            },
+            {
+              key:"w1-mix30neg",title:"Build a quadratic with constant term -30",
+              text:"Make the middle coefficient negative.",
+              hint:"Use opposite signs. The negative factor must have the larger absolute value.",
+              criteria:["The product must be -30.","The sum p + q must be negative."],
+              check:(p,q)=>[
+                {ok:p*q===-30,text:"Product pq = -30"},
+                {ok:p+q<0,text:"Middle coefficient b is negative"}
+              ]
+            },
+            {
+              key:"w1-pos36",title:"Build a quadratic with constant term +36",
+              text:"Use two positive bracket numbers that are not equal.",
+              hint:"Choose two different positive factors of 36.",
+              criteria:["The product must be +36.","Both numbers positive.","The two numbers must differ."],
+              check:(p,q)=>[
+                {ok:p*q===36,text:"Product pq = +36"},
+                {ok:p>0&&q>0,text:"Both bracket numbers are positive"},
+                {ok:p!==q,text:"The bracket numbers are different"}
+              ]
+            }
+          ],
+          2:[
+            {
+              key:"w2-11-24",title:"Precision build: b = 11 and c = 24",
+              text:"Construct exactly x² + 11x + 24.",
+              hint:"Find two integers that add to 11 and multiply to 24.",
+              criteria:["The sum must be 11.","The product must be 24."],
+              check:(p,q)=>[
+                {ok:p+q===11,text:"p + q = 11"},
+                {ok:p*q===24,text:"pq = 24"}
+              ]
+            },
+            {
+              key:"w2--13-36",title:"Precision build: b = -13 and c = 36",
+              text:"Construct exactly x² - 13x + 36.",
+              hint:"The product is positive but the sum is negative, so both numbers are negative.",
+              criteria:["The sum must be -13.","The product must be 36."],
+              check:(p,q)=>[
+                {ok:p+q===-13,text:"p + q = -13"},
+                {ok:p*q===36,text:"pq = 36"}
+              ]
+            },
+            {
+              key:"w2-5--24",title:"Precision build: b = 5 and c = -24",
+              text:"Construct exactly x² + 5x - 24.",
+              hint:"Use opposite signs. Look for a factor pair of 24 whose difference is 5.",
+              criteria:["The sum must be 5.","The product must be -24."],
+              check:(p,q)=>[
+                {ok:p+q===5,text:"p + q = 5"},
+                {ok:p*q===-24,text:"pq = -24"}
+              ]
+            },
+            {
+              key:"w2-equal--14",title:"Build with identical brackets",
+              text:"Make the middle coefficient -14.",
+              hint:"If the bracket numbers are equal, each one is half of -14.",
+              criteria:["The two bracket numbers must be equal.","Their sum must be -14."],
+              check:(p,q)=>[
+                {ok:p===q,text:"The bracket numbers are identical"},
+                {ok:p+q===-14,text:"p + q = -14"}
+              ]
+            },
+            {
+              key:"w2-opposite64",title:"Build opposite equal factors",
+              text:"Make the constant term -64 and the middle coefficient 0.",
+              hint:"Opposite equal numbers always add to 0. Which square gives 64?",
+              criteria:["The sum must be 0.","The product must be -64."],
+              check:(p,q)=>[
+                {ok:p+q===0,text:"p + q = 0"},
+                {ok:p*q===-64,text:"pq = -64"}
+              ]
+            },
+            {
+              key:"w2-sum9",title:"Build a positive quadratic with b = 9",
+              text:"Both bracket numbers must be positive. The constant term is your choice.",
+              hint:"Choose any two positive integers that add to 9.",
+              criteria:["The sum must be 9.","Both numbers must be positive."],
+              check:(p,q)=>[
+                {ok:p+q===9,text:"p + q = 9"},
+                {ok:p>0&&q>0,text:"Both bracket numbers are positive"}
+              ]
+            }
+          ],
+          3:[
+            {
+              key:"w3-min36",title:"Optimise: constant +36",
+              text:"Both bracket numbers must be positive. Make the middle coefficient as small as possible.",
+              hint:"For a fixed positive product, the closest factor pair gives the smallest positive sum.",
+              criteria:["The product must be 36.","Both numbers positive.","The smallest possible b is 12."],
+              check:(p,q)=>[
+                {ok:p*q===36,text:"Product pq = 36"},
+                {ok:p>0&&q>0,text:"Both bracket numbers are positive"},
+                {ok:p+q===12,text:"Middle coefficient is the minimum possible: b = 12"}
+              ]
+            },
+            {
+              key:"w3-min48",title:"Optimise: constant +48",
+              text:"Both bracket numbers must be positive. Make the middle coefficient as small as possible.",
+              hint:"Compare the positive factor pairs of 48. Which pair is closest together?",
+              criteria:["The product must be 48.","Both numbers positive.","The smallest possible b is 14."],
+              check:(p,q)=>[
+                {ok:p*q===48,text:"Product pq = 48"},
+                {ok:p>0&&q>0,text:"Both bracket numbers are positive"},
+                {ok:p+q===14,text:"Middle coefficient is the minimum possible: b = 14"}
+              ]
+            },
+            {
+              key:"w3-nearzero60",title:"Optimise: constant -60",
+              text:"Make the middle coefficient as close to 0 as possible.",
+              hint:"Use opposite-sign factor pairs of 60. The closest magnitudes produce the smallest |b|.",
+              criteria:["The product must be -60.","|b| must be as small as possible: 4."],
+              check:(p,q)=>[
+                {ok:p*q===-60,text:"Product pq = -60"},
+                {ok:Math.abs(p+q)===4,text:"|b| is the minimum possible: 4"}
+              ]
+            },
+            {
+              key:"w3-nearzero48",title:"Optimise: constant -48",
+              text:"Make the middle coefficient as close to 0 as possible.",
+              hint:"Look for opposite-sign factors of 48 that are closest in magnitude.",
+              criteria:["The product must be -48.","|b| must be as small as possible: 2."],
+              check:(p,q)=>[
+                {ok:p*q===-48,text:"Product pq = -48"},
+                {ok:Math.abs(p+q)===2,text:"|b| is the minimum possible: 2"}
+              ]
+            },
+            {
+              key:"w3-diff36",title:"Structure challenge: constant +36",
+              text:"Make the two bracket numbers differ by exactly 5.",
+              hint:"Search the factor pairs of 36 for a pair with difference 5.",
+              criteria:["The product must be 36.","The factor numbers must differ by 5."],
+              check:(p,q)=>[
+                {ok:p*q===36,text:"Product pq = 36"},
+                {ok:Math.abs(p-q)===5,text:"The bracket numbers differ by 5"}
+              ]
+            },
+            {
+              key:"w3-56one",title:"Structure challenge: constant -56",
+              text:"Make the middle coefficient have absolute value 1.",
+              hint:"Find factors of 56 that differ by exactly 1, then give them opposite signs.",
+              criteria:["The product must be -56.","|b| must equal 1."],
+              check:(p,q)=>[
+                {ok:p*q===-56,text:"Product pq = -56"},
+                {ok:Math.abs(p+q)===1,text:"|b| = 1"}
+              ]
+            }
+          ]
+        };
+
+        const masterPool=[...pools[2],...pools[3],...pools[1].slice(2)];
+        const source=workshop>=4?masterPool:pools[workshop];
+        const available=source.filter(m=>m.key!==state.lastMissionKey);
+        const mission=pick(available.length?available:source);
+        state.lastMissionKey=mission.key;
+        return mission;
+      }
+
+      function buildTiles(){
+        els.tiles.innerHTML="";
+        const values=[];
+        for(let n=-12;n<=12;n++)if(n!==0)values.push(n);
+        for(const n of values){
+          const btn=document.createElement("button");
+          btn.type="button";btn.className="tile";
+          btn.textContent=n>0?`+${n}`:String(n);
+          btn.setAttribute("aria-label",`choose ${n}`);
+          btn.addEventListener("click",()=>chooseNumber(n));
+          els.tiles.appendChild(btn);
+        }
+      }
+
+      function chooseNumber(n){
+        if(state.solved)return;
+        if(state.p===null)state.p=n;
+        else if(state.q===null)state.q=n;
+        else state.q=n;
+        renderBuild();
+        clearInspection();
+      }
+
+      function clearSlot(which){
+        if(state.solved)return;
+        if(which==="p")state.p=null;else state.q=null;
+        renderBuild();clearInspection();
+      }
+
+      function clearDesign(){
+        if(state.solved)return;
+        state.p=null;state.q=null;
+        renderBuild();clearInspection();
+        els.feedback.className="feedback";
+        els.feedback.textContent="Design cleared. Try a fresh pair of bracket numbers.";
+      }
+
+      function renderBuild(){
+        els.slotA.textContent=bracket(state.p);
+        els.slotB.textContent=bracket(state.q);
+        els.slotA.classList.toggle("filled",state.p!==null);
+        els.slotB.classList.toggle("filled",state.q!==null);
+
+        if(state.p===null||state.q===null){
+          els.liveQuadratic.textContent="Choose two numbers";
+          els.sumReadout.textContent="p + q = ?";
+          els.productReadout.textContent="pq = ?";
+          return;
+        }
+
+        const b=state.p+state.q,c=state.p*state.q;
+        els.liveQuadratic.textContent=quadratic(b,c);
+        els.sumReadout.textContent=`${state.p} + ${state.q} = ${b}`;
+        els.productReadout.textContent=`${state.p} × ${state.q} = ${c}`;
+      }
+
+      function clearInspection(){
+        els.criteria.innerHTML="";
+      }
+
+      function showCriteria(results,markFailures){
+        els.criteria.innerHTML="";
+        for(const result of results){
+          const row=document.createElement("div");
+          row.className="criterion "+(result.ok?"pass":markFailures?"fail":"");
+          const mark=document.createElement("span");
+          mark.className="mark";
+          mark.textContent=result.ok?"✓":markFailures?"×":"•";
+          const text=document.createElement("span");
+          text.textContent=result.text;
+          row.append(mark,text);
+          els.criteria.appendChild(row);
+        }
+      }
+
+      function inspect(){
+        if(state.solved)return;
+        if(state.p===null||state.q===null){
+          els.feedback.className="feedback bad";
+          els.feedback.textContent="A blueprint needs two bracket numbers before it can be inspected.";
+          return;
+        }
+
+        state.attempts++;
+        const results=state.current.check(state.p,state.q);
+        const passed=results.every(r=>r.ok);
+        showCriteria(results,true);
+
+        if(!passed){
+          state.streak=0;
+          els.feedback.className="feedback bad";
+          const failed=results.filter(r=>!r.ok).map(r=>r.text);
+          els.feedback.textContent=`Not approved yet. Check: ${failed.join("; ")}. Adjust the factors and inspect again.`;
+          els.architectText.innerHTML="<strong>Professor Hoot:</strong> A failed blueprint is still useful: keep the conditions that passed and change only what you need.";
+          updateStats();
+          return;
+        }
+
+        state.solved=true;
+        state.completed++;
+        state.streak++;
+        state.withinWorkshop++;
+
+        let earned=state.attempts===1?3:state.attempts===2?2:1;
+        if(state.hintUsed)earned=Math.min(earned,2);
+        state.stars+=earned;
+
+        if(state.stars>state.best){
+          state.best=state.stars;
+          localStorage.setItem("quadraticBuilderBest",String(state.best));
+        }
+
+        els.feedback.className="feedback good";
+        els.feedback.innerHTML=`Blueprint approved! <span class="stars">${"★".repeat(earned)}${"☆".repeat(3-earned)}</span> ${quadratic(state.p+state.q,state.p*state.q)} = ${bracket(state.p)}${bracket(state.q)}`;
+        els.architectText.innerHTML=`<strong>Professor Hoot:</strong> ${pick(praise)}`;
+        els.inspect.disabled=true;
+        els.hint.disabled=true;
+        els.clear.disabled=true;
+        els.next.disabled=false;
+
+        if(state.withinWorkshop>=4&&state.workshop<4){
+          state.workshop++;
+          state.withinWorkshop=0;
+          els.architectText.innerHTML=`<strong>Professor Hoot:</strong> Workshop ${state.workshop} unlocked! The blueprints are getting more devious.`;
+        }
+        updateStats();
+      }
+
+      function showHint(){
+        if(state.solved||state.hintUsed)return;
+        state.hintUsed=true;
+        els.hint.disabled=true;
+        els.feedback.className="feedback";
+        els.feedback.textContent=`Blueprint hint: ${state.current.hint}`;
+      }
+
+      function nextMission(){
+        if(!state.solved)return;
+        startMission();
+      }
+
+      function startMission(){
+        state.current=createMission(state.workshop);
+        state.p=null;state.q=null;state.attempts=0;state.hintUsed=false;state.solved=false;
+
+        els.missionTitle.textContent=state.current.title;
+        els.missionText.textContent=state.current.text;
+        els.feedback.className="feedback";
+        els.feedback.textContent="Construct a quadratic that satisfies the blueprint, then inspect your design.";
+        els.inspect.disabled=false;els.hint.disabled=false;els.clear.disabled=false;els.next.disabled=true;
+        renderBuild();
+        clearInspection();
+        updateStats();
+      }
+
+      function updateStats(){
+        els.stars.textContent=state.stars;
+        els.completed.textContent=state.completed;
+        els.streak.textContent=state.streak;
+        els.workshopStat.textContent=state.workshop>=4?"MASTER":state.workshop;
+        els.best.textContent=state.best;
+        els.badge.textContent=workshopLabels[state.workshop];
+        els.blueprintProgress.textContent=state.workshop>=4
+          ? `Master blueprint ${state.completed-11}`
+          : `Blueprint ${state.withinWorkshop+1} of 4`;
+      }
+
+      function reset(){
+        state.stars=0;state.completed=0;state.streak=0;state.workshop=1;state.withinWorkshop=0;
+        state.p=null;state.q=null;state.current=null;state.attempts=0;state.hintUsed=false;state.solved=false;state.lastMissionKey="";
+        els.architectText.innerHTML="<strong>Professor Hoot:</strong> A good builder thinks about the sum and product before choosing the numbers.";
+        startMission();
+      }
+
+      els.slotA.addEventListener("click",()=>clearSlot("p"));
+      els.slotB.addEventListener("click",()=>clearSlot("q"));
+      els.inspect.addEventListener("click",inspect);
+      els.hint.addEventListener("click",showHint);
+      els.clear.addEventListener("click",clearDesign);
+      els.next.addEventListener("click",nextMission);
+      els.newGame.addEventListener("click",reset);
+
+      buildTiles();
+      reset();
+    })();
+  </script>
+</body>
+</html>
