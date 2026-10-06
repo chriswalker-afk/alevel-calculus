@@ -2133,6 +2133,16 @@ document.addEventListener("keydown", (event) => {
     closeTopicNavigation();
     return;
   }
+  if (
+    event.key === "Escape"
+    && activeMode === "understand"
+    && standardActivityContent.dataset.customUnderstandActive === "true"
+    && standardActivityContent.dataset.understandInstructionsOpen === "true"
+  ) {
+    event.preventDefault();
+    closeUnderstandInstructions({ remember: true });
+    return;
+  }
   if (event.key === "Escape" && workspaceToolsToggle.getAttribute("aria-expanded") === "true") {
     event.preventDefault();
     setWorkspaceToolsCollapsed(true);
