@@ -242,6 +242,10 @@ assert "dismissedUnderstandInstructions" in js
 assert "syncUnderstandInstructions" in js
 assert "understandInstructionsClose.addEventListener" in js
 assert "understand-instructions-review" in css
+assert "workspaceHeaderControls.insertBefore(understandInstructionsReview, workspaceToolsBar)" in js
+assert "position: fixed !important" in css and "translate(-50%, -50%)" in css
+assert '[data-understand-instructions-open="true"]::after' in css
+assert "syncUnderstandInstructions(activity, false)" in js
 assert "./styles/tokens.css" in parser.stylesheets
 assert any("app-shell.css" in sheet for sheet in parser.stylesheets)
 assert any("question-shell.css" in sheet for sheet in parser.stylesheets)
