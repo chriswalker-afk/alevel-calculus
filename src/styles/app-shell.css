@@ -3749,29 +3749,47 @@ html[data-learning-mode="understand"] .activity-copy > .activity-overline {
 
 
 /* Dismissible instruction pop-ins for bespoke Understand experiences.
-   The instructional copy appears on first visit, can be dismissed, and can be
-   reopened without permanently occupying a teaching column. */
+   Instructions are centred over the activity on first view. Once dismissed,
+   Review instructions lives in the shared workspace bar so it never obscures
+   the activity title or steals diagram space. */
 .activity-stage__content[data-custom-understand-active="true"] {
   position: relative;
   grid-template-columns: minmax(0, 1fr) !important;
   align-items: stretch;
+  min-width: 0;
+  min-height: 100%;
+}
+
+.activity-stage__content[data-custom-understand-active="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 22;
+  display: none;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--surface-canvas) 48%, transparent);
+  backdrop-filter: blur(1.5px);
+}
+
+.activity-stage__content[data-custom-understand-active="true"][data-understand-instructions-open="true"]::after {
+  display: block;
 }
 
 .activity-stage__content[data-custom-understand-active="true"] > .activity-copy {
   position: absolute !important;
-  top: var(--space-3);
-  left: var(--space-3);
+  top: 50%;
+  left: 50%;
   z-index: 24;
-  width: min(390px, calc(100% - 2 * var(--space-3)));
-  max-width: calc(100% - 2 * var(--space-3));
-  max-height: min(72%, 620px) !important;
+  width: min(540px, calc(100% - 48px));
+  max-width: calc(100% - 48px);
+  max-height: min(72dvh, calc(100% - 48px)) !important;
   overflow: auto !important;
-  padding: var(--space-4);
+  padding: var(--space-5);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-xl);
-  background: color-mix(in srgb, var(--surface-base) 96%, transparent);
+  background: var(--surface-base);
   box-shadow: var(--shadow-drawer);
-  backdrop-filter: blur(8px);
+  transform: translate(-50%, -50%);
 }
 
 .activity-stage__content[data-custom-understand-active="true"] > .activity-copy[hidden],
@@ -3784,6 +3802,14 @@ html[data-learning-mode="understand"] .activity-copy > .activity-overline {
   grid-column: 1 !important;
   width: 100%;
   min-width: 0;
+  min-height: 0;
+}
+
+/* Do not let the instruction layer participate in layout sizing. The visual
+   keeps the full width/height it had after the pop-in is closed. */
+.activity-stage__content[data-custom-understand-active="true"] > .math-placeholder,
+.activity-stage__content[data-custom-understand-active="true"] .understand-visual-host {
+  max-width: 100%;
 }
 
 .understand-instructions-popin__header {
@@ -3792,7 +3818,7 @@ html[data-learning-mode="understand"] .activity-copy > .activity-overline {
   justify-content: space-between;
   gap: var(--space-3);
   margin-bottom: var(--space-3);
-  padding-bottom: var(--space-2);
+  padding-bottom: var(--space-3);
   border-bottom: 1px solid var(--divider-default);
 }
 
@@ -3803,8 +3829,8 @@ html[data-learning-mode="understand"] .activity-copy > .activity-overline {
 }
 
 .understand-instructions-popin__close {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   flex: 0 0 auto;
   display: grid;
   place-items: center;
@@ -3830,45 +3856,47 @@ html[data-learning-mode="understand"] .activity-copy > .activity-overline {
 .activity-stage__content[data-custom-understand-active="true"] > .activity-copy > p[data-activity-body] {
   margin: 0;
   color: var(--text-secondary);
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   line-height: var(--leading-relaxed);
 }
 
 .activity-stage__content[data-custom-understand-active="true"] > .activity-copy > .activity-callout {
-  margin-top: var(--space-3);
+  margin-top: var(--space-4);
 }
 
-.understand-instructions-review {
-  position: absolute;
-  top: var(--space-3);
-  left: var(--space-3);
-  z-index: 23;
-  min-height: 36px;
+/* Review is now part of the same chrome as the learning-mode and Tools
+   controls. It is intentionally quieter than the mode tabs. */
+.topbar-workspace-controls .understand-instructions-review {
+  position: static;
+  z-index: auto;
+  min-height: var(--touch-target-min);
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 7px;
   padding: 0 var(--space-3);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--surface-base) 92%, transparent);
+  background: var(--surface-base);
   color: var(--text-secondary);
-  box-shadow: var(--shadow-raised);
-  backdrop-filter: blur(6px);
+  box-shadow: none;
   font: inherit;
   font-size: var(--text-xs);
   font-weight: var(--weight-semibold);
   cursor: pointer;
+  white-space: nowrap;
 }
 
-.understand-instructions-review:hover,
-.understand-instructions-review:focus-visible {
+.topbar-workspace-controls .understand-instructions-review:hover,
+.topbar-workspace-controls .understand-instructions-review:focus-visible {
   border-color: var(--mode-accent);
   background: var(--mode-soft);
   color: var(--mode-soft-text);
   outline: none;
 }
 
-.understand-instructions-review > span:first-child {
+.topbar-workspace-controls .understand-instructions-review > span:first-child {
   width: 20px;
   height: 20px;
   display: inline-grid;
@@ -3878,18 +3906,41 @@ html[data-learning-mode="understand"] .activity-copy > .activity-overline {
   font-weight: var(--weight-bold);
 }
 
-@media (max-width: 680px) {
-  .activity-stage__content[data-custom-understand-active="true"] > .activity-copy {
-    top: var(--space-2);
-    left: var(--space-2);
-    width: calc(100% - 2 * var(--space-2));
-    max-width: calc(100% - 2 * var(--space-2));
-    max-height: min(66dvh, 560px) !important;
-    padding: var(--space-3);
+@media (max-width: 1180px) {
+  .topbar-workspace-controls .understand-instructions-review {
+    width: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    padding: 0;
   }
 
-  .understand-instructions-review {
-    top: var(--space-2);
-    left: var(--space-2);
+  .topbar-workspace-controls .understand-instructions-review > span:last-child {
+    display: none;
   }
 }
+
+@media (max-width: 680px) {
+  .activity-stage__content[data-custom-understand-active="true"] > .activity-copy {
+    width: calc(100% - 24px);
+    max-width: calc(100% - 24px);
+    max-height: min(74dvh, calc(100% - 24px)) !important;
+    padding: var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .activity-stage__content[data-custom-understand-active="true"] > .activity-copy {
+    animation: understand-instructions-enter 140ms var(--motion-easing);
+  }
+}
+
+@keyframes understand-instructions-enter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 8px)) scale(.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
