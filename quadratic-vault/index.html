@@ -619,8 +619,7 @@
             ? state.currentPicture.complete
             : revealJokes;
           const joke = pick(jokePool);
-          const revealName = state.currentPicture ? state.currentPicture.name : "Secret picture";
-          els.revealMessage.textContent = `${revealName}! ${joke} +5 picture bonus.`;
+          els.revealMessage.textContent = `${joke} +5 picture bonus.`;
           if(state.score > state.best){
             state.best = state.score;
             localStorage.setItem("quadraticVaultBest",String(state.best));
