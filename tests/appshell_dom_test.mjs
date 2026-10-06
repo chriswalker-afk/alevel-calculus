@@ -84,7 +84,13 @@ const learningWorkspace = new FakeElement('learningWorkspace');
 const modePanel = new FakeElement('modePanel');
 const stage = new FakeElement('stage');
 const standardActivityContent = new FakeElement('standardActivityContent');
-standardActivityContent.children.set('.activity-copy', new FakeElement('activityCopy'));
+const activityCopy = new FakeElement('activityCopy');
+standardActivityContent.children.set('.activity-copy', activityCopy);
+const understandInstructionsHeader = new FakeElement('understandInstructionsHeader');
+understandInstructionsHeader.hidden = true;
+const understandInstructionsClose = new FakeElement('understandInstructionsClose');
+const understandInstructionsReview = new FakeElement('understandInstructionsReview');
+understandInstructionsReview.hidden = true;
 const activityVisual = new FakeElement('activityVisual');
 const customUnderstandHost = new FakeElement('customUnderstandHost');
 customUnderstandHost.hidden = true;
@@ -421,6 +427,9 @@ const documentMap = new Map([
   ['[data-mode-panel]', modePanel],
   ['[data-activity-stage]', stage],
   ['[data-standard-activity-content]', standardActivityContent],
+  ['[data-understand-instructions-header]', understandInstructionsHeader],
+  ['[data-understand-instructions-close]', understandInstructionsClose],
+  ['[data-understand-instructions-review]', understandInstructionsReview],
   ['[data-activity-visual]', activityVisual],
   ['[data-understand-visual-host]', customUnderstandHost],
   ['[data-question-shell]', questionShellElement],
@@ -706,6 +715,15 @@ assert(shell.dataset.activityIndex === '1', 'Next from Topic goals should advanc
 assert(title.textContent === 'What does gradient mean on a curve?', 'The first mathematical Understand activity should follow Topic goals');
 assert(customUnderstandHost.hidden === false, 'The first real Understand activity should mount into the dedicated visual host');
 assert(standardActivityContent.dataset.customUnderstandActive === 'true', 'AppShell should expose the shared custom-Understand layout state');
+assert(standardActivityContent.dataset.understandInstructionsOpen === 'true', 'A new custom Understand activity should open its instruction pop-in initially');
+assert(activityCopy.hidden === false && understandInstructionsReview.hidden === true, 'Open instructions should show the pop-in and hide the review trigger');
+listeners.get('understandInstructionsClose:click')?.();
+assert(activityCopy.hidden === true && understandInstructionsReview.hidden === false, 'Closing instructions should free the workspace and expose Review instructions');
+assert(standardActivityContent.dataset.understandInstructionsOpen === 'false', 'Closing instructions should expose the closed state');
+listeners.get('understandInstructionsReview:click')?.();
+assert(activityCopy.hidden === false && understandInstructionsReview.hidden === true, 'Review instructions should reopen the same instructional copy');
+assert(standardActivityContent.dataset.understandInstructionsOpen === 'true', 'Reviewing instructions should restore the open state');
+listeners.get('understandInstructionsClose:click')?.();
 assert(wordBankCount.textContent === '2', 'Vocabulary should be encountered when the first mathematical Understand page is visited');
 assert(shell.dataset.stabilityMarker === 'same-shell', 'Next should not replace the AppShell object');
 
