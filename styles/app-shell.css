@@ -3952,18 +3952,18 @@ html[data-learning-mode="understand"] .activity-copy > .activity-overline {
    height purely from their width; dense activities scroll inside their visual
    surface rather than extending below the browser. */
 .activity-stage__content[data-custom-understand-active="true"] {
-  --understand-graph-height: clamp(210px, 42dvh, 420px);
+  --understand-graph-height: clamp(240px, 48dvh, 500px);
   height: 100%;
   min-height: 0;
   overflow: hidden;
 }
 
 html[data-ui-density="compact"] .activity-stage__content[data-custom-understand-active="true"] {
-  --understand-graph-height: clamp(190px, 36dvh, 350px);
+  --understand-graph-height: clamp(220px, 43dvh, 430px);
 }
 
 html[data-ui-density="tight"] .activity-stage__content[data-custom-understand-active="true"] {
-  --understand-graph-height: clamp(170px, 32dvh, 300px);
+  --understand-graph-height: clamp(200px, 38dvh, 370px);
 }
 
 .activity-stage__content[data-custom-understand-active="true"] > .math-placeholder {
@@ -4035,7 +4035,7 @@ html[data-ui-density="tight"] .activity-stage__content[data-custom-understand-ac
 
 @media (max-width: 680px) {
   .activity-stage__content[data-custom-understand-active="true"] {
-    --understand-graph-height: clamp(180px, 34dvh, 280px);
+    --understand-graph-height: clamp(200px, 38dvh, 320px);
     height: auto;
     min-height: 0;
     overflow: visible;
