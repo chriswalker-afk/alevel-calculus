@@ -162,6 +162,9 @@ required_attrs = {
     "data-reset-progress",
     "data-confirm-reset",
     "data-standard-activity-content",
+    "data-understand-instructions-header",
+    "data-understand-instructions-close",
+    "data-understand-instructions-review",
     "data-question-shell",
     "data-question-shell-input",
     "data-question-shell-choice",
@@ -235,6 +238,10 @@ assert 'aria-controls="topic-navigation"' in html
 assert 'aria-expanded="false"' in html
 assert 'role="tablist"' in html and 'role="tabpanel"' in html
 assert 'data-learning-mode="understand"' in html
+assert "dismissedUnderstandInstructions" in js
+assert "syncUnderstandInstructions" in js
+assert "understandInstructionsClose.addEventListener" in js
+assert "understand-instructions-review" in css
 assert "./styles/tokens.css" in parser.stylesheets
 assert any("app-shell.css" in sheet for sheet in parser.stylesheets)
 assert any("question-shell.css" in sheet for sheet in parser.stylesheets)
