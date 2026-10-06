@@ -6,7 +6,7 @@
   <meta name="description" content="Interactive calculus learning site for Pearson Edexcel 8MA0 / 9MA0.">
   <title>Calculus | Learning workspace</title>
   <link rel="stylesheet" href="/alevel-calculus/styles/tokens.css">
-  <link rel="stylesheet" href="/alevel-calculus/styles/app-shell.css?v=understandtitle1">
+  <link rel="stylesheet" href="/alevel-calculus/styles/app-shell.css?v=instructions1">
   <link rel="stylesheet" href="/alevel-calculus/styles/landing-page.css?v=landing3">
   <link rel="stylesheet" href="/alevel-calculus/styles/question-shell.css?v=aolayout2">
   <link rel="stylesheet" href="/alevel-calculus/styles/math-renderer.css?v=memorymath2">
@@ -988,6 +988,16 @@
               </section>
 
               <div class="activity-copy">
+                <div class="understand-instructions-popin__header" data-understand-instructions-header hidden>
+                  <strong>Instructions</strong>
+                  <button
+                    class="understand-instructions-popin__close"
+                    type="button"
+                    aria-label="Close instructions"
+                    title="Close instructions"
+                    data-understand-instructions-close
+                  >×</button>
+                </div>
                 <p class="activity-overline" data-activity-overline>Explore the idea</p>
                 <h2 data-activity-title>See the derivative as a gradient function</h2>
                 <p data-activity-body>Start from what the graph is doing, then connect that visual change to the derivative rather than beginning with a rule to memorise.</p>
@@ -996,6 +1006,17 @@
                   <p>Explore, notice and make sense of the mathematics before formalising the method.</p>
                 </div>
               </div>
+              <button
+                class="understand-instructions-review"
+                type="button"
+                aria-expanded="false"
+                aria-controls="understand-instructions-popin"
+                data-understand-instructions-review
+                hidden
+              >
+                <span aria-hidden="true">?</span>
+                <span>Review instructions</span>
+              </button>
               <div class="math-placeholder" aria-label="Interactive mathematics workspace" data-activity-visual>
                 <div class="understand-visual-host" data-understand-visual-host hidden></div>
                 <div class="math-placeholder__grid" aria-hidden="true"></div>
@@ -1858,6 +1879,6 @@
   </dialog>
 
   <noscript>This site needs JavaScript to switch learning modes and activities and to open the topic, help and Word Bank drawers.</noscript>
-  <script type="module" src="/alevel-calculus/scripts/app-shell.js?v=basicslayout1"></script>
+  <script type="module" src="/alevel-calculus/scripts/app-shell.js?v=instructions1"></script>
 </body>
 </html>
