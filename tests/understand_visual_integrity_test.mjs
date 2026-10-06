@@ -44,6 +44,7 @@ assert.match(appCss, /html\[data-learning-mode="understand"\][\s\S]*\.activity-c
 assert.match(appCss, /data-custom-understand-active="true"[\s\S]*> \.activity-copy > h2[\s\S]*display:\s*none/, "Custom Understand visuals must own the single visible activity title.");
 assert.match(appCss, /\.understand-visual-host \[class\$="__eyebrow"\][\s\S]*display:\s*none/, "Custom Understand primary headings must not be repeated by an internal eyebrow label.");
 assert.match(appCss, /--understand-graph-height:\s*clamp\(/, "Custom Understand graphs need a viewport-aware height budget.");
+assert.match(appCss, /--understand-graph-height:\s*clamp\(240px,\s*48dvh,\s*500px\)/, "Standard Understand graph sizing should use the balanced mid-range budget.");
 assert.match(appCss, /data-custom-understand-active="true"[\s\S]*\.diagram-primitives[\s\S]*aspect-ratio:\s*auto\s*!important/, "Full-width Understand graphs must not become taller just because their width increases.");
 assert.match(appCss, /\.understand-visual-host > \*[\s\S]*max-height:\s*100%\s*!important/, "Dense Understand experiences must stay inside the available visual viewport.");
 
