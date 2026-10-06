@@ -1830,6 +1830,9 @@ export function renderActivity(index) {
   standardActivityContent.dataset.customUnderstandActive = "false";
   standardActivityContent.dataset.basicsUnderstandActive = "false";
   customUnderstandHost.hidden = true;
+  // Reset the contextual instruction control before branching into Memorise or
+  // generated AO content; custom Understand activities opt back in below.
+  syncUnderstandInstructions(activity, false);
 
   const memoryLabView = activeMode === "memorise" ? activity.memoryLabView : null;
   const generatedQuestionSet = generatedQuestionSetForActivity(activity.activityId);
