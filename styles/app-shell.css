@@ -3944,3 +3944,108 @@ html[data-learning-mode="understand"] .activity-copy > .activity-overline {
   }
 }
 
+
+
+/* Understand visual sizing audit 2026-10-06.
+   Custom Understand activities should fit the available teaching viewport after
+   the chrome/side-bar changes. Wide diagrams no longer derive an excessive
+   height purely from their width; dense activities scroll inside their visual
+   surface rather than extending below the browser. */
+.activity-stage__content[data-custom-understand-active="true"] {
+  --understand-graph-height: clamp(210px, 42dvh, 420px);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+html[data-ui-density="compact"] .activity-stage__content[data-custom-understand-active="true"] {
+  --understand-graph-height: clamp(190px, 36dvh, 350px);
+}
+
+html[data-ui-density="tight"] .activity-stage__content[data-custom-understand-active="true"] {
+  --understand-graph-height: clamp(170px, 32dvh, 300px);
+}
+
+.activity-stage__content[data-custom-understand-active="true"] > .math-placeholder {
+  height: 100% !important;
+  max-height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.activity-stage__content[data-custom-understand-active="true"] .understand-visual-host {
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.activity-stage__content[data-custom-understand-active="true"] .understand-visual-host > * {
+  height: 100% !important;
+  max-height: 100% !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+/* Shared graph renderer: preserve the SVG's own viewBox proportions inside a
+   viewport-aware box instead of letting the CSS aspect ratio make a full-width
+   graph taller than the screen. */
+.activity-stage__content[data-custom-understand-active="true"] .diagram-primitives {
+  height: var(--understand-graph-height) !important;
+  min-height: 0 !important;
+  max-height: var(--understand-graph-height) !important;
+  aspect-ratio: auto !important;
+}
+
+.activity-stage__content[data-custom-understand-active="true"] .diagram-primitives__svg {
+  min-height: 0 !important;
+  max-height: 100% !important;
+}
+
+/* Older topic-specific layouts carried desktop min-heights from the previous
+   two-column shell. Those values are now allowed to shrink with the workspace. */
+.activity-stage__content[data-custom-understand-active="true"] :is(
+  .pre-calculus-understand__graph-host,
+  .first-principles-understand__graph-host,
+  .trig-identities-inverse-understand__graph,
+  .concavity-inflection-understand__graph,
+  .limit-of-sum-understand__explorer,
+  .differential-equations-understand__family,
+  .trapezium-integration-understand__builder
+) {
+  min-height: 0 !important;
+  max-height: 100%;
+}
+
+/* Graph-heavy shared explorers should consume the remaining visual space, not
+   create a second vertical page inside an activity. */
+.activity-stage__content[data-custom-understand-active="true"] :is(
+  .linked-gradient-explorer,
+  .family-curves-explorer,
+  .chord-tangent-explorer,
+  .area-explorer,
+  .rectangle-sum-explorer,
+  .parametric-tracer,
+  .rate-flow,
+  .trapezium-rule-builder
+) {
+  max-height: 100%;
+}
+
+@media (max-width: 680px) {
+  .activity-stage__content[data-custom-understand-active="true"] {
+    --understand-graph-height: clamp(180px, 34dvh, 280px);
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .activity-stage__content[data-custom-understand-active="true"] > .math-placeholder,
+  .activity-stage__content[data-custom-understand-active="true"] .understand-visual-host,
+  .activity-stage__content[data-custom-understand-active="true"] .understand-visual-host > * {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
