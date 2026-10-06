@@ -3776,10 +3776,10 @@ html[data-learning-mode="understand"] .activity-copy > .activity-overline {
 }
 
 .activity-stage__content[data-custom-understand-active="true"] > .activity-copy {
-  position: absolute !important;
+  position: fixed !important;
   top: 50%;
   left: 50%;
-  z-index: 24;
+  z-index: 40;
   width: min(540px, calc(100% - 48px));
   max-width: calc(100% - 48px);
   max-height: min(72dvh, calc(100% - 48px)) !important;
@@ -3906,7 +3906,7 @@ html[data-learning-mode="understand"] .activity-copy > .activity-overline {
   font-weight: var(--weight-bold);
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1400px) {
   .topbar-workspace-controls .understand-instructions-review {
     width: var(--touch-target-min);
     min-width: var(--touch-target-min);
