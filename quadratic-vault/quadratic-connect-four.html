@@ -148,18 +148,39 @@
     }
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
   </style>
+  <link rel="stylesheet" href="arcade.css">
 </head>
 <body>
   <main class="shell">
+    <nav class="arcade-nav" aria-label="Quadratics Arcade">
+      <div class="arcade-brand-row">
+        <a class="arcade-brand" href="arcade.html">
+          <span class="arcade-mark">x²</span>
+          <span class="arcade-brand-copy"><strong>Quadratics Arcade</strong><span>IGCSE Foundation · factorise, build, solve</span></span>
+        </a>
+        <a class="arcade-home-link" href="arcade.html">All games</a>
+      </div>
+      <div class="arcade-tabs-wrap">
+        <div class="arcade-tabs">
+          <span class="arcade-group-label">Factorise</span>
+          <a class="arcade-tab" href="index.html">Vault</a>
+          <a class="arcade-tab" href="factor-factory.html">Factory</a>
+          <a class="arcade-tab" href="quadratic-builder.html">Builder</a>
+          <span class="arcade-group-divider" aria-hidden="true"></span>
+          <span class="arcade-group-label">Solve</span>
+          <a class="arcade-tab multiplayer active" href="quadratic-connect-four.html" aria-current="page">Connect Four</a>
+          <a class="arcade-tab multiplayer" href="quadratic-conquest.html">Conquest</a>
+        </div>
+      </div>
+    </nav>
     <header class="hero">
       <div>
-        <div class="eyebrow">D12 · Hot-seat multiplayer</div>
+        <div class="eyebrow">Hot-seat multiplayer · D12 solving</div>
         <h1>Quadratic Connect Four</h1>
         <p>Choose a column, solve the quadratic equation by factorising, and earn the right to drop your counter. Wrong answer? Your opponent can steal it.</p>
       </div>
       <div class="hero-actions">
-        <a class="nav-link" href="index.html">Quadratic Vault</a>
-        <a class="nav-link" href="quadratic-conquest.html">Conquest →</a>
+        <span class="mode-pill">2 players · hot seat · D12</span>
       </div>
     </header>
 
