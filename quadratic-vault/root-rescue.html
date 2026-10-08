@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#102a43">
+<meta name="description" content="A solo quadratic adventure: factorise, solve and rescue. Includes sign changes, repeated roots, zero roots and rearranging to zero.">
+<title>Root Rescue | Quadratics Arcade</title>
+<link rel="stylesheet" href="root-rescue.css?v=1">
+<link rel="stylesheet" href="arcade.css">
+<script defer src="root-rescue.js?v=1"></script>
+</head>
+<body>
+<a class="skip" href="#missionArea">Skip to the game</a>
+<main class="shell">
+<nav class="arcade-nav" aria-label="Quadratics Arcade">
+  <div class="arcade-brand-row">
+    <a class="arcade-brand" href="arcade.html"><span class="arcade-mark">x&sup2;</span><span class="arcade-brand-copy"><strong>Quadratics Arcade</strong><span>IGCSE Foundation &middot; factorise, build, solve</span></span></a>
+    <a class="arcade-home-link" href="arcade.html">All games</a>
+  </div>
+  <div class="arcade-tabs-wrap"><div class="arcade-tabs">
+    <span class="arcade-group-label">Factorise</span>
+    <a class="arcade-tab" href="index.html">Vault</a><a class="arcade-tab" href="factor-factory.html">Factory</a><a class="arcade-tab" href="quadratic-builder.html">Builder</a>
+    <span class="arcade-group-divider" aria-hidden="true"></span><span class="arcade-group-label">Solve</span>
+    <a class="arcade-tab active" href="root-rescue.html" aria-current="page">Root Rescue</a>
+    <a class="arcade-tab multiplayer" href="quadratic-connect-four.html">Connect Four</a><a class="arcade-tab multiplayer" href="quadratic-conquest.html">Conquest</a>
+  </div></div>
+</nav>
+<header class="hero">
+  <div><div class="eyebrow">Solo adventure &middot; D12 solving</div><h1>Root Rescue</h1><p>Open the factor lock. Find the roots. Bring the arcade crew home.</p></div>
+  <div class="hero-actions"><span class="mode-pill">1 player &middot; no timer</span><button type="button" class="quiet" id="newMission" hidden>Change mission</button></div>
+</header>
+<section id="missionArea" tabindex="-1">
+  <section id="setup" class="panel welcome">
+    <div class="welcome-copy"><div class="eyebrow">The rescue plan</div><h2>Four friends. Twelve locks.<br>One vital sign change.</h2><p>Factorising is only the first step. A rescue needs the <strong>solutions to the equation</strong> as well.</p>
+    <div class="worked-mini"><span class="math">x&sup2; &minus; 7x + 12 = 0</span><span class="math">(x &minus; 3)(x &minus; 4) = 0</span><strong class="math">x = 3 or x = 4</strong></div>
+    <p class="muted">Take your time. Retry mistakes, use clues, or study a worked solution. Nothing is lost from an earlier rescue.</p></div>
+    <div class="launch"><label for="missionSelect">Choose your mission</label>
+    <select id="missionSelect"><option value="all">Full rescue &middot; 12 locks</option><option value="0">First steps &middot; 3 locks</option><option value="1">Mixed signs &middot; 3 locks</option><option value="2">Special roots &middot; 3 locks</option><option value="3">Rearrange first &middot; 3 locks</option></select>
+    <div id="missionDescription" class="mission-description"></div>
+    <button id="startMission" class="primary" type="button">Begin rescue &rarr;</button>
+    <p class="muted small">Up to 3 stars per lock. No lives or speed bonuses. Best scores stay on this browser.</p></div>
+  </section>
+  <div id="playing" hidden>
+    <section class="stats" aria-label="Mission progress">
+      <div class="stat"><span>Locks opened</span><strong id="opened">0 / 12</strong></div>
+      <div class="stat"><span>Stars</span><strong id="stars">0 / 36</strong></div>
+      <div class="stat"><span>Rescued</span><strong id="rescued">0 / 4</strong></div>
+      <div class="stat"><span>Best for this mission</span><strong id="best">0</strong></div>
+    </section>
+    <div class="game-layout">
+      <section class="panel challenge" aria-labelledby="areaName">
+        <div class="challenge-head"><span class="eyebrow" id="areaName">First steps</span><span class="muted small" id="lockNumber">Lock 1 of 12</span></div>
+        <div id="route" class="route" aria-label="Lock progress"></div>
+        <div class="equation-block"><span class="small muted">Solve by factorising</span><div id="equation" class="equation math"></div></div>
+        <ol id="steps" class="steps" aria-label="Solving steps"></ol>
+        <div id="task" class="task">
+          <h2 id="taskTitle"></h2><p id="taskInstruction" class="muted"></p>
+          <div class="math preview" id="preview" aria-live="off"></div>
+          <form id="answerForm" novalidate>
+            <div class="input-row">
+              <div class="entry"><label id="labelA" for="entryA"></label><div class="entry-control"><input id="entryA" type="text" inputmode="numeric" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="8"><button type="button" class="sign" data-sign="entryA" aria-label="Change sign of first number">+/&minus;</button></div></div>
+              <div class="entry"><label id="labelB" for="entryB"></label><div class="entry-control"><input id="entryB" type="text" inputmode="numeric" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="8"><button type="button" class="sign" data-sign="entryB" aria-label="Change sign of second number">+/&minus;</button></div></div>
+            </div>
+            <p class="small muted" id="entryNote"></p>
+            <button type="submit" class="primary" id="check">Check factorisation</button>
+          </form>
+          <div class="help-actions"><button id="clue" type="button" class="quiet">Clue</button><button id="worked" type="button" class="quiet">Study the solution (0 stars)</button><span class="small muted" id="availableStars">3 stars available</span></div>
+        </div>
+        <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+        <section id="solution" class="solution" aria-label="Worked solution" hidden></section>
+        <button id="nextLock" class="primary next" type="button" hidden>Next lock &rarr;</button>
+      </section>
+      <aside class="panel rescue-panel" aria-labelledby="crewHeading"><div class="eyebrow">Rescue pods</div><h2 id="crewHeading">Bring the crew home</h2><p class="muted small">Each completed lock uncovers another third of a character.</p><div id="crew" class="crew"></div><p id="crewMessage" class="crew-message" aria-live="polite">The crew is counting on your roots.</p></aside>
+    </div>
+  </div>
+  <section id="finish" class="panel finish" hidden tabindex="-1"><div class="eyebrow">Mission complete</div><h2>Roots found. Crew rescued.</h2><div id="finalStars" class="final-stars"></div><p id="finishMessage"></p><div id="finishCrew" class="finish-crew"></div><div class="finish-actions"><button type="button" class="primary" id="replay">Replay with new equations</button><button type="button" class="quiet" id="chooseMission">Choose another mission</button><a class="quiet" href="quadratic-connect-four.html">Try a two-player match &rarr;</a></div></section>
+</section>
+<details class="rules"><summary>Rules, hints and the important maths</summary><p>A product is zero only when at least one factor is zero. For example, <span class="math">(x + 5)(x &minus; 2) = 0</span> gives <span class="math">x = &minus;5</span> or <span class="math">x = 2</span>. The numbers in the brackets are not usually the roots.</p><p>Start each lock with 3 stars. A wrong mathematical answer or a clue reduces the available stars by one, to a minimum of 1. Invalid or incomplete entries are not penalised. Studying the full solution opens the lock for 0 stars.</p><p>Either root order is accepted. For a repeated root, enter the single distinct solution and leave the other box blank, or enter it twice. Zero is a valid bracket number and a valid root. In the final area, first collect the equation into <span class="math">x&sup2; + bx + c = 0</span>.</p></details>
+<noscript><p class="panel">This game needs JavaScript enabled. No login is required.</p></noscript>
+<footer>Quadratics Arcade &middot; D12 &middot; solving by factorising &middot; single player</footer>
+</main>
+</body></html>
