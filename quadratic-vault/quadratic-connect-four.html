@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a43">
+  <title>Quadratic Connect Four | Hot-seat Multiplayer</title>
+  <style>
+    :root{
+      --bg:#071522;--panel:#10283d;--panel2:#15344e;--text:#f6fbff;--muted:#aac0d1;
+      --line:#2b4e68;--accent:#4fd1c5;--gold:#ffd166;--good:#68d391;--bad:#fc8181;
+      --p1:#63b3ed;--p2:#f6ad55;--shadow:0 18px 50px rgba(0,0,0,.28)
+    }
+    *{box-sizing:border-box}
+    html{background:var(--bg)}
+    body{
+      margin:0;min-height:100vh;color:var(--text);
+      background:
+        radial-gradient(circle at 12% 10%,rgba(99,179,237,.12),transparent 30rem),
+        radial-gradient(circle at 88% 16%,rgba(246,173,85,.10),transparent 30rem),
+        linear-gradient(180deg,#071522 0%,#0a1c2b 100%);
+      font:16px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+    }
+    button,input,a{font:inherit}
+    button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:3px}
+    a{color:inherit}
+    .shell{width:min(100% - 28px,1040px);margin:0 auto;padding:28px 0 48px}
+    .hero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-bottom:14px}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--accent);font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem}
+    h1{margin:.15rem 0 .35rem;font-size:clamp(2rem,6vw,3.6rem);line-height:1;letter-spacing:-.045em}
+    .hero p{margin:0;color:var(--muted);max-width:760px}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .nav-link,.ghost{
+      border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);
+      padding:10px 14px;border-radius:12px;text-decoration:none;font-weight:800;cursor:pointer
+    }
+    .nav-link{border-color:rgba(79,209,197,.42);color:#bff7f1}
+    .arena{
+      position:relative;overflow:hidden;border:1px solid var(--line);border-radius:24px;
+      background:linear-gradient(180deg,rgba(21,52,78,.98),rgba(13,34,52,.98));
+      box-shadow:var(--shadow);padding:clamp(18px,4vw,30px)
+    }
+    .setup{max-width:720px;margin:0 auto}
+    .setup h2{margin:.2rem 0 .35rem;font-size:1.55rem}
+    .setup p{color:var(--muted);margin:.2rem 0 1rem}
+    .player-setup{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .player-card{border:1px solid var(--line);background:rgba(6,22,34,.5);border-radius:16px;padding:14px}
+    .player-card label{display:block;font-weight:900;margin-bottom:7px}
+    .player-card input{
+      width:100%;min-height:46px;border:1px solid #315774;border-radius:12px;background:#081a29;color:var(--text);padding:9px 11px;font-size:16px
+    }
+    .player-dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+    .p1dot{background:var(--p1)}.p2dot{background:var(--p2)}
+    .start{
+      margin-top:14px;width:100%;border:0;border-radius:14px;background:var(--accent);color:#06211f;
+      padding:13px 18px;font-weight:950;cursor:pointer
+    }
+    .rules-mini{margin-top:14px;color:var(--muted);font-size:.92rem}
+    .game{display:none}
+    .game.show{display:block}
+    .turnbar{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-bottom:14px}
+    .turntext{font-size:1.05rem;font-weight:900}
+    .turntext span{color:var(--gold)}
+    .wins{color:var(--muted);font-size:.9rem}
+    .board-scroll{overflow-x:auto;padding-bottom:4px}
+    .board-inner{width:min(100%,650px);margin:0 auto;min-width:300px}
+    .column-controls{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:6px}
+    .col-btn{
+      min-height:44px;border:1px solid #315774;border-radius:9px;background:#102b42;color:#dcebf5;
+      font-weight:900;cursor:pointer
+    }
+    .col-btn:hover:not(:disabled){border-color:var(--accent);background:#153b57}
+    .col-btn:disabled{opacity:.35;cursor:not-allowed}
+    .board{
+      display:grid;grid-template-columns:repeat(7,1fr);gap:5px;background:#0a1a29;
+      border:1px solid #315774;border-radius:18px;padding:8px
+    }
+    .cell{
+      aspect-ratio:1;border-radius:50%;background:#071522;border:2px solid #23455f;
+      box-shadow:inset 0 3px 10px rgba(0,0,0,.4)
+    }
+    .cell.p1{background:var(--p1);border-color:#bee3f8}
+    .cell.p2{background:var(--p2);border-color:#feebc8}
+    .cell.win{box-shadow:0 0 0 4px var(--gold),inset 0 3px 10px rgba(0,0,0,.25)}
+    .question-panel{
+      margin-top:16px;border:1px solid #315774;border-radius:18px;background:rgba(6,22,34,.56);padding:16px
+    }
+    .question-panel.hidden{display:none}
+    .question-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    .badge{
+      display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:6px 10px;
+      background:rgba(79,209,197,.12);border:1px solid rgba(79,209,197,.36);color:#bff7f1;font-weight:900;font-size:.82rem
+    }
+    .solver{color:var(--muted);font-weight:800}
+    .equation{
+      margin:18px 0;text-align:center;font-family:"Cambria Math","STIX Two Math",Georgia,serif;
+      font-size:clamp(2rem,7vw,4rem);font-weight:900;line-height:1.15
+    }
+    .roots-form{display:grid;grid-template-columns:1fr auto 1fr auto;gap:10px;align-items:center;max-width:700px;margin:0 auto}
+    .root-input{
+      min-width:0;min-height:52px;border:1px solid #315774;border-radius:12px;background:#081a29;color:var(--text);
+      padding:10px 12px;text-align:center;font-size:1.15rem
+    }
+    .or{color:var(--muted);font-weight:900}
+    .submit{
+      min-height:52px;border:0;border-radius:12px;background:var(--accent);color:#06211f;font-weight:950;padding:10px 16px;cursor:pointer
+    }
+    .question-actions{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:11px}
+    .hint-btn{
+      border:1px solid rgba(255,209,102,.48);color:#ffe5a3;background:rgba(255,209,102,.07);
+      border-radius:11px;padding:9px 12px;cursor:pointer;font-weight:900
+    }
+    .feedback{
+      margin-top:12px;border:1px dashed #3a627e;border-radius:13px;padding:11px 13px;
+      background:rgba(16,40,61,.45);min-height:48px;color:#dcebf5
+    }
+    .feedback.good{border-color:rgba(104,211,145,.65);color:#c6f6d5}
+    .feedback.bad{border-color:rgba(252,129,129,.65);color:#fed7d7}
+    .handoff{display:none;text-align:center;padding:34px 12px}
+    .handoff.show{display:block}
+    .handoff h2{font-size:clamp(1.7rem,5vw,2.5rem);margin:.2rem 0}
+    .handoff p{color:var(--muted);max-width:560px;margin:.5rem auto 1rem}
+    .ready{border:0;background:var(--accent);color:#06211f;border-radius:14px;padding:12px 20px;font-weight:950;cursor:pointer}
+    .game-over{display:none;text-align:center;padding:28px 10px}
+    .game-over.show{display:block}
+    .game-over h2{font-size:2rem;margin:.2rem 0}
+    .game-over p{color:var(--muted)}
+    .end-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+    .primary{border:0;background:var(--accent);color:#06211f;border-radius:13px;padding:11px 16px;font-weight:950;cursor:pointer}
+    .secondary{border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);border-radius:13px;padding:11px 16px;font-weight:850;cursor:pointer}
+    .below{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-top:16px}
+    details,.mini{border:1px solid var(--line);background:rgba(16,40,61,.62);border-radius:16px;padding:14px 16px}
+    summary{cursor:pointer;font-weight:900}
+    details p,.mini p{color:var(--muted);margin:.65rem 0 0}
+    .mini strong{color:var(--gold)}
+    footer{color:#7795aa;text-align:center;font-size:.8rem;margin-top:18px}
+    @media(max-width:720px){
+      .hero{grid-template-columns:1fr}.hero-actions{justify-content:flex-start}
+      .player-setup{grid-template-columns:1fr}
+      .roots-form{grid-template-columns:1fr auto 1fr}
+      .roots-form .submit{grid-column:1/-1}
+      .below{grid-template-columns:1fr}
+    }
+    @media(max-width:440px){
+      .shell{width:min(100% - 18px,1040px);padding-top:18px}
+      .arena{border-radius:18px;padding:15px}
+      .roots-form{grid-template-columns:1fr}.or{text-align:center}
+    }
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">D12 · Hot-seat multiplayer</div>
+        <h1>Quadratic Connect Four</h1>
+        <p>Choose a column, solve the quadratic equation by factorising, and earn the right to drop your counter. Wrong answer? Your opponent can steal it.</p>
+      </div>
+      <div class="hero-actions">
+        <a class="nav-link" href="index.html">Quadratic Vault</a>
+        <a class="nav-link" href="quadratic-conquest.html">Conquest →</a>
+      </div>
+    </header>
+
+    <section class="arena">
+      <div id="setup" class="setup">
+        <h2>Set up the hot seat</h2>
+        <p>Two players share one device. The screen tells you when to pass it over.</p>
+        <div class="player-setup">
+          <div class="player-card">
+            <label for="p1name"><span class="player-dot p1dot"></span>Player 1</label>
+            <input id="p1name" maxlength="18" value="Player 1">
+          </div>
+          <div class="player-card">
+            <label for="p2name"><span class="player-dot p2dot"></span>Player 2</label>
+            <input id="p2name" maxlength="18" value="Player 2">
+          </div>
+        </div>
+        <button id="start" class="start" type="button">Start game</button>
+        <div class="rules-mini">Correct answer = counter placed. First to four in a row wins. A wrong first attempt gives the other player one steal attempt on the same equation and column.</div>
+      </div>
+
+      <div id="handoff" class="handoff">
+        <div class="eyebrow">Pass the device</div>
+        <h2 id="handoffTitle">Player 1's turn</h2>
+        <p id="handoffText">Make sure the next player is ready before revealing the board.</p>
+        <button id="ready" class="ready" type="button">I'm ready</button>
+      </div>
+
+      <div id="game" class="game">
+        <div class="turnbar">
+          <div class="turntext">Turn: <span id="turnName">Player 1</span></div>
+          <div id="wins" class="wins">Games: 0–0</div>
+        </div>
+
+        <div class="board-scroll">
+          <div class="board-inner">
+            <div id="columnControls" class="column-controls" aria-label="Choose a column"></div>
+            <div id="board" class="board" aria-label="Connect Four board"></div>
+          </div>
+        </div>
+
+        <section id="questionPanel" class="question-panel hidden">
+          <div class="question-head">
+            <div id="questionBadge" class="badge">Solve to place your counter</div>
+            <div id="solverText" class="solver"></div>
+          </div>
+          <div id="equation" class="equation">x² - 7x + 12 = 0</div>
+          <form id="rootsForm" class="roots-form">
+            <input id="root1" class="root-input" type="number" step="1" inputmode="numeric" placeholder="first root" aria-label="First root">
+            <span class="or">or</span>
+            <input id="root2" class="root-input" type="number" step="1" inputmode="numeric" placeholder="second root" aria-label="Second root">
+            <button class="submit" type="submit">Check roots</button>
+          </form>
+          <div class="question-actions">
+            <button id="hintBtn" class="hint-btn" type="button">Factor-pair clue</button>
+          </div>
+          <div id="feedback" class="feedback" role="status" aria-live="polite">Give both roots. Their order does not matter.</div>
+        </section>
+      </div>
+
+      <div id="gameOver" class="game-over">
+        <div class="eyebrow">Game over</div>
+        <h2 id="winnerText">Player 1 wins!</h2>
+        <p id="endSummary"></p>
+        <div class="end-actions">
+          <button id="rematch" class="primary" type="button">Rematch</button>
+          <button id="newPlayers" class="secondary" type="button">Change players</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="below">
+      <details>
+        <summary>How the maths works</summary>
+        <p>Every equation is a monic quadratic that factors over the integers. Students need both solutions. The game accepts the roots in either order; a repeated root should be entered twice.</p>
+      </details>
+      <div class="mini">
+        <strong>Hot-seat rule</strong>
+        <p>After each completed turn the game hides the board behind a pass screen. The steal mechanic means an incorrect answer can immediately become an opportunity for the other player.</p>
+      </div>
+    </section>
+
+    <footer>Quadratic Connect Four · solving quadratics by factorising · D12 hot-seat game</footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+      const $=id=>document.getElementById(id);
+      const els={
+        setup:$("setup"),p1name:$("p1name"),p2name:$("p2name"),start:$("start"),
+        handoff:$("handoff"),handoffTitle:$("handoffTitle"),handoffText:$("handoffText"),ready:$("ready"),
+        game:$("game"),turnName:$("turnName"),wins:$("wins"),columnControls:$("columnControls"),board:$("board"),
+        questionPanel:$("questionPanel"),questionBadge:$("questionBadge"),solverText:$("solverText"),equation:$("equation"),
+        rootsForm:$("rootsForm"),root1:$("root1"),root2:$("root2"),hintBtn:$("hintBtn"),feedback:$("feedback"),
+        gameOver:$("gameOver"),winnerText:$("winnerText"),endSummary:$("endSummary"),rematch:$("rematch"),newPlayers:$("newPlayers")
+      };
+      const state={
+        players:[{name:"Player 1",wins:0},{name:"Player 2",wins:0}],
+        board:Array.from({length:6},()=>Array(7).fill(0)),
+        current:0,pendingCol:null,question:null,solver:0,steal:false,moves:0,winCells:[],handoffAction:null,gameActive:false
+      };
+
+      const randInt=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+      const nonZero=(a,b)=>{let n=0;while(n===0)n=randInt(a,b);return n};
+
+      function cleanName(value,fallback){
+        const v=value.trim().slice(0,18);
+        return v||fallback;
+      }
+
+      function quadratic(b,c){
+        let out="x²";
+        if(b!==0){
+          const m=Math.abs(b);
+          out+=b>0?` + ${m===1?"":m}x`:` - ${m===1?"":m}x`;
+        }
+        if(c!==0)out+=c>0?` + ${c}`:` - ${Math.abs(c)}`;
+        return out+" = 0";
+      }
+
+      function bracket(n){
+        return `(x ${n>=0?"+":"-"} ${Math.abs(n)})`;
+      }
+
+      function makeQuestion(){
+        let p,q;
+        if(state.moves<4){
+          p=randInt(1,7);q=randInt(1,7);
+        }else if(state.moves<10){
+          const mode=Math.random()<.55?"mixed":"same";
+          if(mode==="mixed"){
+            p=randInt(1,9);q=-randInt(1,9);
+          }else{
+            const s=Math.random()<.5?1:-1;
+            p=s*randInt(1,8);q=s*randInt(1,8);
+          }
+        }else{
+          p=nonZero(-10,10);
+          q=Math.random()<.16?p:nonZero(-10,10);
+        }
+        const b=p+q,c=p*q;
+        return {p,q,b,c,roots:[-p,-q]};
+      }
+
+      function startGame(){
+        state.players[0].name=cleanName(els.p1name.value,"Player 1");
+        state.players[1].name=cleanName(els.p2name.value,"Player 2");
+        els.setup.style.display="none";
+        state.current=0;
+        resetBoard();
+        showHandoff(state.players[0].name,"Choose a column, then solve the equation to earn your counter.",()=>showBoard());
+      }
+
+      function resetBoard(){
+        state.board=Array.from({length:6},()=>Array(7).fill(0));
+        state.pendingCol=null;state.question=null;state.solver=state.current;state.steal=false;state.moves=0;state.winCells=[];state.gameActive=true;
+        els.gameOver.classList.remove("show");
+        renderBoard();
+        hideQuestion();
+        updateHeader();
+      }
+
+      function renderBoard(){
+        els.board.innerHTML="";
+        for(let r=0;r<6;r++){
+          for(let c=0;c<7;c++){
+            const cell=document.createElement("div");
+            cell.className="cell";
+            const owner=state.board[r][c];
+            if(owner===1)cell.classList.add("p1");
+            if(owner===2)cell.classList.add("p2");
+            if(state.winCells.some(([wr,wc])=>wr===r&&wc===c))cell.classList.add("win");
+            cell.setAttribute("aria-label",owner?`${state.players[owner-1].name} counter`:"empty");
+            els.board.appendChild(cell);
+          }
+        }
+
+        els.columnControls.innerHTML="";
+        for(let c=0;c<7;c++){
+          const btn=document.createElement("button");
+          btn.type="button";btn.className="col-btn";btn.textContent=String(c+1);
+          btn.setAttribute("aria-label",`Choose column ${c+1}`);
+          btn.disabled=state.board[0][c]!==0||state.question!==null||!state.gameActive;
+          btn.addEventListener("click",()=>chooseColumn(c));
+          els.columnControls.appendChild(btn);
+        }
+      }
+
+      function updateHeader(){
+        els.turnName.textContent=state.players[state.current].name;
+        els.wins.textContent=`Games: ${state.players[0].wins}–${state.players[1].wins}`;
+      }
+
+      function chooseColumn(col){
+        if(!state.gameActive||state.question||state.board[0][col]!==0)return;
+        state.pendingCol=col;
+        state.question=makeQuestion();
+        state.solver=state.current;
+        state.steal=false;
+        showQuestion();
+        renderBoard();
+      }
+
+      function showQuestion(){
+        const q=state.question;
+        els.questionPanel.classList.remove("hidden");
+        els.questionBadge.textContent=state.steal?"Steal chance":"Solve to place your counter";
+        els.solverText.textContent=`${state.players[state.solver].name} · Column ${state.pendingCol+1}`;
+        els.equation.textContent=quadratic(q.b,q.c);
+        els.root1.value="";els.root2.value="";
+        els.feedback.className="feedback";
+        els.feedback.textContent=state.steal
+          ?"Steal it: give both roots correctly to take this counter."
+          :"Give both roots. Their order does not matter.";
+        els.hintBtn.disabled=false;
+        setTimeout(()=>els.root1.focus(),0);
+      }
+
+      function hideQuestion(){
+        state.question=null;state.pendingCol=null;state.steal=false;
+        els.questionPanel.classList.add("hidden");
+      }
+
+      function clue(){
+        if(!state.question)return;
+        const q=state.question;
+        const signText=q.c>0
+          ? (q.b>0?"same signs, both positive":q.b<0?"same signs, both negative":"same signs")
+          :"opposite signs";
+        els.feedback.className="feedback";
+        els.feedback.textContent=`Factor clue: find two integers that add to ${q.b} and multiply to ${q.c} (${signText}). Then set each bracket equal to zero.`;
+        els.hintBtn.disabled=true;
+      }
+
+      function parseRoots(){
+        if(els.root1.value.trim()===""||els.root2.value.trim()==="")return null;
+        const a=Number(els.root1.value),b=Number(els.root2.value);
+        if(!Number.isInteger(a)||!Number.isInteger(b))return null;
+        return [a,b].sort((x,y)=>x-y);
+      }
+
+      function submitRoots(event){
+        event.preventDefault();
+        if(!state.question)return;
+        const entered=parseRoots();
+        if(!entered){
+          els.feedback.className="feedback bad";
+          els.feedback.textContent="Enter both integer roots before checking.";
+          return;
+        }
+        const expected=[...state.question.roots].sort((a,b)=>a-b);
+        const correct=entered[0]===expected[0]&&entered[1]===expected[1];
+        if(correct)correctAnswer();
+        else wrongAnswer();
+      }
+
+      function correctAnswer(){
+        const q=state.question;
+        const row=dropCounter(state.pendingCol,state.solver+1);
+        state.moves++;
+        els.feedback.className="feedback good";
+        els.feedback.textContent=`Correct: ${bracket(q.p)}${bracket(q.q)} = 0, so x = ${q.roots[0]} or x = ${q.roots[1]}.`;
+        renderBoard();
+
+        const win=findWin(row,state.pendingCol,state.solver+1);
+        if(win){
+          state.winCells=win;renderBoard();
+          state.players[state.solver].wins++;
+          state.gameActive=false;
+          setTimeout(()=>finishGame(state.solver),900);
+          return;
+        }
+        if(state.moves>=42){
+          state.gameActive=false;
+          setTimeout(()=>finishGame(null),900);
+          return;
+        }
+
+        const next=1-state.solver;
+        const placedBy=state.players[state.solver].name;
+        hideQuestion();renderBoard();updateHeader();
+        setTimeout(()=>{
+          state.current=next;updateHeader();
+          showHandoff(state.players[next].name,`${placedBy} placed a counter. Your turn: choose a column.`,()=>showBoard());
+        },750);
+      }
+
+      function wrongAnswer(){
+        const q=state.question;
+        if(!state.steal){
+          const thief=1-state.solver;
+          const original=state.players[state.solver].name;
+          state.steal=true;state.solver=thief;
+          els.feedback.className="feedback bad";
+          els.feedback.textContent="Not quite. Your opponent gets one steal attempt.";
+          setTimeout(()=>{
+            showHandoff(state.players[thief].name,`${original} missed. You can steal Column ${state.pendingCol+1} using the same equation.`,()=>{
+              showBoard();
+              showQuestion();
+            });
+          },650);
+        }else{
+          const next=1-state.solver;
+          els.feedback.className="feedback bad";
+          els.feedback.textContent=`Steal missed. Solution: ${bracket(q.p)}${bracket(q.q)} = 0, so x = ${q.roots[0]} or x = ${q.roots[1]}. No counter is placed.`;
+          state.moves++;
+          setTimeout(()=>{
+            hideQuestion();renderBoard();
+            state.current=next;updateHeader();
+            showHandoff(state.players[next].name,"Neither player claimed that column. Choose a fresh column.",()=>showBoard());
+          },1400);
+        }
+      }
+
+      function dropCounter(col,owner){
+        for(let r=5;r>=0;r--){
+          if(state.board[r][col]===0){state.board[r][col]=owner;return r}
+        }
+        return -1;
+      }
+
+      function findWin(row,col,owner){
+        const dirs=[[1,0],[0,1],[1,1],[1,-1]];
+        for(const [dr,dc] of dirs){
+          const line=[[row,col]];
+          let r=row+dr,c=col+dc;
+          while(r>=0&&r<6&&c>=0&&c<7&&state.board[r][c]===owner){line.push([r,c]);r+=dr;c+=dc}
+          r=row-dr;c=col-dc;
+          while(r>=0&&r<6&&c>=0&&c<7&&state.board[r][c]===owner){line.unshift([r,c]);r-=dr;c-=dc}
+          if(line.length>=4)return line;
+        }
+        return null;
+      }
+
+      function showHandoff(name,text,action){
+        els.game.classList.remove("show");
+        els.gameOver.classList.remove("show");
+        els.handoff.classList.add("show");
+        els.handoffTitle.textContent=`${name}'s turn`;
+        els.handoffText.textContent=text;
+        state.handoffAction=action;
+      }
+
+      function showBoard(){
+        els.handoff.classList.remove("show");
+        els.game.classList.add("show");
+        updateHeader();renderBoard();
+      }
+
+      function ready(){
+        const action=state.handoffAction;
+        state.handoffAction=null;
+        if(action)action();
+      }
+
+      function finishGame(winner){
+        els.game.classList.remove("show");
+        els.handoff.classList.remove("show");
+        els.gameOver.classList.add("show");
+        if(winner===null){
+          els.winnerText.textContent="Draw game";
+          els.endSummary.textContent="The board is full. Nobody connected four this time.";
+        }else{
+          els.winnerText.textContent=`${state.players[winner].name} wins!`;
+          els.endSummary.textContent=`${state.players[winner].name} connected four after ${state.moves} completed questions.`;
+        }
+        updateHeader();
+      }
+
+      function rematch(){
+        state.current=1-state.current;
+        resetBoard();
+        showHandoff(state.players[state.current].name,"New board, same players. You start this one.",()=>showBoard());
+      }
+
+      function changePlayers(){
+        els.gameOver.classList.remove("show");els.handoff.classList.remove("show");els.game.classList.remove("show");
+        els.setup.style.display="";
+      }
+
+      els.start.addEventListener("click",startGame);
+      els.ready.addEventListener("click",ready);
+      els.rootsForm.addEventListener("submit",submitRoots);
+      els.hintBtn.addEventListener("click",clue);
+      els.rematch.addEventListener("click",rematch);
+      els.newPlayers.addEventListener("click",changePlayers);
+
+      renderBoard();
+    })();
+  </script>
+</body>
+</html>
