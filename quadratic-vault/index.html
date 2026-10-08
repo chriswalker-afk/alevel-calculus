@@ -223,20 +223,39 @@
       *,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
     }
   </style>
+  <link rel="stylesheet" href="arcade.css">
 </head>
 <body>
   <main class="shell">
+    <nav class="arcade-nav" aria-label="Quadratics Arcade">
+      <div class="arcade-brand-row">
+        <a class="arcade-brand" href="arcade.html">
+          <span class="arcade-mark">x²</span>
+          <span class="arcade-brand-copy"><strong>Quadratics Arcade</strong><span>IGCSE Foundation · factorise, build, solve</span></span>
+        </a>
+        <a class="arcade-home-link" href="arcade.html">All games</a>
+      </div>
+      <div class="arcade-tabs-wrap">
+        <div class="arcade-tabs">
+          <span class="arcade-group-label">Factorise</span>
+          <a class="arcade-tab active" href="index.html" aria-current="page">Vault</a>
+          <a class="arcade-tab" href="factor-factory.html">Factory</a>
+          <a class="arcade-tab" href="quadratic-builder.html">Builder</a>
+          <span class="arcade-group-divider" aria-hidden="true"></span>
+          <span class="arcade-group-label">Solve</span>
+          <a class="arcade-tab multiplayer" href="quadratic-connect-four.html">Connect Four</a>
+          <a class="arcade-tab multiplayer" href="quadratic-conquest.html">Conquest</a>
+        </div>
+      </div>
+    </nav>
     <header class="hero">
       <div>
-        <div class="eyebrow">D11 · Early finisher game</div>
+        <div class="eyebrow">Solo practice · D11 factorising</div>
         <h1>Quadratic Vault</h1>
         <p>Crack factorisations, unlock the tougher Missing Factor level, protect your shields and reveal a different secret cartoon each game.</p>
       </div>
       <div class="hero-actions">
-        <a class="game-link" href="factor-factory.html">Factor Factory</a>
-        <a class="game-link" href="quadratic-builder.html">Quadratic Builder</a>
-        <a class="game-link" href="quadratic-connect-four.html">Connect Four</a>
-        <a class="game-link" href="quadratic-conquest.html">Conquest →</a>
+        <span class="mode-pill">Solo · D11 factorising</span>
         <button id="newGame" class="ghost" type="button">New game</button>
       </div>
     </header>
