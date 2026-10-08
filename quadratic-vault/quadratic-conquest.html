@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a43">
+  <title>Quadratic Conquest | Hot-seat Multiplayer</title>
+  <style>
+    :root{
+      --bg:#071522;--panel:#10283d;--panel2:#15344e;--text:#f6fbff;--muted:#aac0d1;
+      --line:#2b4e68;--accent:#4fd1c5;--gold:#ffd166;--good:#68d391;--bad:#fc8181;
+      --p1:#63b3ed;--p2:#f6ad55;--p3:#b794f4;--p4:#68d391;--shadow:0 18px 50px rgba(0,0,0,.28)
+    }
+    *{box-sizing:border-box}
+    html{background:var(--bg)}
+    body{
+      margin:0;min-height:100vh;color:var(--text);
+      background:
+        radial-gradient(circle at 12% 10%,rgba(104,211,145,.10),transparent 30rem),
+        radial-gradient(circle at 88% 16%,rgba(183,148,244,.10),transparent 30rem),
+        linear-gradient(180deg,#071522 0%,#0a1c2b 100%);
+      font:16px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+    }
+    button,input,select,a{font:inherit}
+    button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:3px}
+    a{color:inherit}
+    .shell{width:min(100% - 28px,1120px);margin:0 auto;padding:28px 0 48px}
+    .hero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-bottom:14px}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--accent);font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem}
+    h1{margin:.15rem 0 .35rem;font-size:clamp(2rem,6vw,3.6rem);line-height:1;letter-spacing:-.045em}
+    .hero p{margin:0;color:var(--muted);max-width:790px}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .nav-link{
+      border:1px solid rgba(79,209,197,.42);background:rgba(255,255,255,.03);color:#bff7f1;
+      padding:10px 14px;border-radius:12px;text-decoration:none;font-weight:800
+    }
+    .arena{
+      position:relative;overflow:hidden;border:1px solid var(--line);border-radius:24px;
+      background:linear-gradient(180deg,rgba(21,52,78,.98),rgba(13,34,52,.98));
+      box-shadow:var(--shadow);padding:clamp(18px,4vw,30px)
+    }
+    .setup{max-width:820px;margin:0 auto}
+    .setup h2{margin:.2rem 0 .35rem;font-size:1.55rem}
+    .setup p{color:var(--muted);margin:.2rem 0 1rem}
+    .count-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+    .count-row label{font-weight:900}
+    .count-row select{
+      min-height:44px;border:1px solid #315774;border-radius:11px;background:#081a29;color:var(--text);padding:8px 12px
+    }
+    .player-inputs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .player-card{border:1px solid var(--line);background:rgba(6,22,34,.5);border-radius:15px;padding:12px}
+    .player-card.hidden{display:none}
+    .player-card label{display:block;font-weight:900;margin-bottom:6px}
+    .player-card input{
+      width:100%;min-height:45px;border:1px solid #315774;border-radius:11px;background:#081a29;color:var(--text);
+      padding:9px 11px;font-size:16px
+    }
+    .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+    .dot0{background:var(--p1)}.dot1{background:var(--p2)}.dot2{background:var(--p3)}.dot3{background:var(--p4)}
+    .start{
+      margin-top:14px;width:100%;border:0;border-radius:14px;background:var(--accent);color:#06211f;
+      padding:13px 18px;font-weight:950;cursor:pointer
+    }
+    .setup-note{margin-top:12px;color:var(--muted);font-size:.92rem}
+    .handoff{display:none;text-align:center;padding:34px 12px}
+    .handoff.show{display:block}
+    .handoff h2{font-size:clamp(1.7rem,5vw,2.5rem);margin:.2rem 0}
+    .handoff p{color:var(--muted);max-width:600px;margin:.5rem auto 1rem}
+    .ready{border:0;background:var(--accent);color:#06211f;border-radius:14px;padding:12px 20px;font-weight:950;cursor:pointer}
+    .game{display:none}
+    .game.show{display:block}
+    .topbar{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-bottom:12px}
+    .turn{font-size:1.05rem;font-weight:900}
+    .turn span{color:var(--gold)}
+    .turncount{color:var(--muted);font-size:.9rem}
+    .scoreboard{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px}
+    .score{
+      display:none;border:1px solid var(--line);border-radius:13px;padding:9px 10px;background:rgba(6,22,34,.48);min-width:0
+    }
+    .score.show{display:block}
+    .score.active{outline:2px solid var(--gold)}
+    .score strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .score span{color:var(--muted);font-size:.8rem}
+    .map-wrap{overflow-x:auto}
+    .map{
+      width:min(100%,650px);min-width:310px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:7px;
+      background:#081a29;border:1px solid #315774;border-radius:20px;padding:10px
+    }
+    .territory{
+      position:relative;aspect-ratio:1;border:2px solid #315774;border-radius:15px;background:#10283d;color:var(--text);
+      cursor:default;padding:4px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;
+      transition:transform .15s ease,border-color .15s ease
+    }
+    .territory.eligible{cursor:pointer;border-color:var(--gold)}
+    .territory.eligible:hover{transform:translateY(-2px)}
+    .territory.selected{box-shadow:0 0 0 4px rgba(255,209,102,.38)}
+    .territory.owner0{background:color-mix(in srgb,var(--p1) 72%,#10283d);border-color:#bee3f8}
+    .territory.owner1{background:color-mix(in srgb,var(--p2) 72%,#10283d);border-color:#feebc8}
+    .territory.owner2{background:color-mix(in srgb,var(--p3) 72%,#10283d);border-color:#e9d8fd}
+    .territory.owner3{background:color-mix(in srgb,var(--p4) 72%,#10283d);border-color:#c6f6d5}
+    .difficulty{font-size:.72rem;letter-spacing:.04em}
+    .bonus{position:absolute;top:4px;right:5px;font-size:.9rem}
+    .fort{position:absolute;bottom:4px;left:5px;font-size:.85rem}
+    .question{
+      display:none;margin-top:16px;border:1px solid #315774;border-radius:18px;background:rgba(6,22,34,.56);padding:16px
+    }
+    .question.show{display:block}
+    .question-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    .badge{
+      display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:6px 10px;
+      background:rgba(79,209,197,.12);border:1px solid rgba(79,209,197,.36);color:#bff7f1;font-weight:900;font-size:.82rem
+    }
+    .targettext{color:var(--muted);font-weight:800}
+    .equation{
+      margin:17px 0;text-align:center;font-family:"Cambria Math","STIX Two Math",Georgia,serif;
+      font-size:clamp(2rem,7vw,4rem);font-weight:900;line-height:1.15
+    }
+    .roots-form{display:grid;grid-template-columns:1fr auto 1fr auto;gap:10px;align-items:center;max-width:700px;margin:0 auto}
+    .root-input{
+      min-width:0;min-height:52px;border:1px solid #315774;border-radius:12px;background:#081a29;color:var(--text);
+      padding:10px 12px;text-align:center;font-size:1.15rem
+    }
+    .or{color:var(--muted);font-weight:900}
+    .submit{min-height:52px;border:0;border-radius:12px;background:var(--accent);color:#06211f;font-weight:950;padding:10px 16px;cursor:pointer}
+    .qactions{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+    .hint{
+      border:1px solid rgba(255,209,102,.48);color:#ffe5a3;background:rgba(255,209,102,.07);
+      border-radius:11px;padding:9px 12px;cursor:pointer;font-weight:900
+    }
+    .cancel{
+      border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.03);border-radius:11px;padding:9px 12px;cursor:pointer;font-weight:850
+    }
+    .feedback{
+      margin-top:12px;border:1px dashed #3a627e;border-radius:13px;padding:11px 13px;
+      background:rgba(16,40,61,.45);min-height:48px;color:#dcebf5
+    }
+    .feedback.good{border-color:rgba(104,211,145,.65);color:#c6f6d5}
+    .feedback.bad{border-color:rgba(252,129,129,.65);color:#fed7d7}
+    .legend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;color:var(--muted);font-size:.82rem;margin-top:12px}
+    .game-over{display:none;text-align:center;padding:28px 10px}
+    .game-over.show{display:block}
+    .game-over h2{font-size:2rem;margin:.2rem 0}
+    .game-over p{color:var(--muted);max-width:620px;margin:.5rem auto}
+    .end-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+    .primary{border:0;background:var(--accent);color:#06211f;border-radius:13px;padding:11px 16px;font-weight:950;cursor:pointer}
+    .secondary{border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);border-radius:13px;padding:11px 16px;font-weight:850;cursor:pointer}
+    .below{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-top:16px}
+    details,.mini{border:1px solid var(--line);background:rgba(16,40,61,.62);border-radius:16px;padding:14px 16px}
+    summary{cursor:pointer;font-weight:900}
+    details p,.mini p{color:var(--muted);margin:.65rem 0 0}
+    .mini strong{color:var(--gold)}
+    footer{color:#7795aa;text-align:center;font-size:.8rem;margin-top:18px}
+    @media(max-width:760px){
+      .hero{grid-template-columns:1fr}.hero-actions{justify-content:flex-start}
+      .player-inputs{grid-template-columns:1fr}
+      .scoreboard{grid-template-columns:repeat(2,1fr)}
+      .roots-form{grid-template-columns:1fr auto 1fr}.roots-form .submit{grid-column:1/-1}
+      .below{grid-template-columns:1fr}
+    }
+    @media(max-width:440px){
+      .shell{width:min(100% - 18px,1120px);padding-top:18px}
+      .arena{border-radius:18px;padding:15px}
+      .roots-form{grid-template-columns:1fr}.or{text-align:center}
+      .map{gap:5px;padding:7px}.territory{border-radius:11px}
+    }
+    @supports not (background:color-mix(in srgb, red 50%, blue)){
+      .territory.owner0{background:#2f6f9f}.territory.owner1{background:#9b6433}
+      .territory.owner2{background:#6f579a}.territory.owner3{background:#3f7e5b}
+    }
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">D12 · 2–4 player hot-seat</div>
+        <h1>Quadratic Conquest</h1>
+        <p>Expand your territory by solving quadratic equations. Choose where to attack, weigh up the difficulty, and capture bonuses before your opponents do.</p>
+      </div>
+      <div class="hero-actions">
+        <a class="nav-link" href="quadratic-connect-four.html">← Connect Four</a>
+        <a class="nav-link" href="index.html">Quadratic Vault</a>
+      </div>
+    </header>
+
+    <section class="arena">
+      <div id="setup" class="setup">
+        <h2>Set up the conquest</h2>
+        <p>Players share one device. Each turn, choose a territory touching one you already own, then solve to capture it.</p>
+        <div class="count-row">
+          <label for="playerCount">Players</label>
+          <select id="playerCount">
+            <option value="2">2 players</option>
+            <option value="3">3 players</option>
+            <option value="4">4 players</option>
+          </select>
+        </div>
+        <div class="player-inputs">
+          <div class="player-card" data-player="0"><label><span class="dot dot0"></span>Player 1</label><input id="name0" maxlength="18" value="Player 1"></div>
+          <div class="player-card" data-player="1"><label><span class="dot dot1"></span>Player 2</label><input id="name1" maxlength="18" value="Player 2"></div>
+          <div class="player-card hidden" data-player="2"><label><span class="dot dot2"></span>Player 3</label><input id="name2" maxlength="18" value="Player 3"></div>
+          <div class="player-card hidden" data-player="3"><label><span class="dot dot3"></span>Player 4</label><input id="name3" maxlength="18" value="Player 4"></div>
+        </div>
+        <button id="start" class="start" type="button">Begin conquest</button>
+        <div class="setup-note">🏆 Crown territories are worth an extra point. ⚡ Surge territories grant another turn. 🛡 Shield territories fortify themselves when captured.</div>
+      </div>
+
+      <div id="handoff" class="handoff">
+        <div class="eyebrow">Pass the device</div>
+        <h2 id="handoffTitle">Player 1's turn</h2>
+        <p id="handoffText">Make sure the next player is ready before revealing the map.</p>
+        <button id="ready" class="ready" type="button">I'm ready</button>
+      </div>
+
+      <div id="game" class="game">
+        <div class="topbar">
+          <div class="turn">Turn: <span id="turnName">Player 1</span></div>
+          <div id="turnCount" class="turncount">Question 1 / 30</div>
+        </div>
+
+        <div id="scoreboard" class="scoreboard"></div>
+
+        <div class="map-wrap">
+          <div id="map" class="map" aria-label="Conquest territory map"></div>
+        </div>
+
+        <div class="legend">
+          <span>★ = difficulty</span><span>🏆 = +1 point</span><span>⚡ = extra turn</span><span>🛡 = fortifies on capture</span>
+        </div>
+
+        <section id="question" class="question">
+          <div class="question-head">
+            <div id="badge" class="badge">Territory challenge</div>
+            <div id="targetText" class="targettext"></div>
+          </div>
+          <div id="equation" class="equation">x² - 7x + 12 = 0</div>
+          <form id="rootsForm" class="roots-form">
+            <input id="root1" class="root-input" type="number" step="1" inputmode="numeric" placeholder="first root" aria-label="First root">
+            <span class="or">or</span>
+            <input id="root2" class="root-input" type="number" step="1" inputmode="numeric" placeholder="second root" aria-label="Second root">
+            <button class="submit" type="submit">Resolve attack</button>
+          </form>
+          <div class="qactions">
+            <button id="hint" class="hint" type="button">Factor-pair clue</button>
+            <button id="cancel" class="cancel" type="button">Choose another territory</button>
+          </div>
+          <div id="feedback" class="feedback" role="status" aria-live="polite">Give both roots. Their order does not matter.</div>
+        </section>
+      </div>
+
+      <div id="gameOver" class="game-over">
+        <div class="eyebrow">Conquest complete</div>
+        <h2 id="winnerText">Player 1 wins!</h2>
+        <p id="endSummary"></p>
+        <div class="end-actions">
+          <button id="rematch" class="primary" type="button">New map, same players</button>
+          <button id="newPlayers" class="secondary" type="button">Change players</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="below">
+      <details>
+        <summary>How territory capture works</summary>
+        <p>You may target any territory directly above, below, left or right of one you own. A correct solution captures an unfortified territory. A successful attack on a fortified enemy territory removes its shield first, so it takes a second successful attack to capture it.</p>
+      </details>
+      <div class="mini">
+        <strong>Win condition</strong>
+        <p>The target score depends on player count. Territory = 1 point; each crown you currently own adds another point. If nobody reaches the target after 30 questions, the highest score wins.</p>
+      </div>
+    </section>
+
+    <footer>Quadratic Conquest · solving quadratics by factorising · D12 hot-seat game</footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+      const $=id=>document.getElementById(id);
+      const els={
+        setup:$("setup"),playerCount:$("playerCount"),start:$("start"),
+        names:[$("name0"),$("name1"),$("name2"),$("name3")],
+        handoff:$("handoff"),handoffTitle:$("handoffTitle"),handoffText:$("handoffText"),ready:$("ready"),
+        game:$("game"),turnName:$("turnName"),turnCount:$("turnCount"),scoreboard:$("scoreboard"),map:$("map"),
+        question:$("question"),badge:$("badge"),targetText:$("targetText"),equation:$("equation"),
+        rootsForm:$("rootsForm"),root1:$("root1"),root2:$("root2"),hint:$("hint"),cancel:$("cancel"),feedback:$("feedback"),
+        gameOver:$("gameOver"),winnerText:$("winnerText"),endSummary:$("endSummary"),rematch:$("rematch"),newPlayers:$("newPlayers")
+      };
+
+      const state={
+        count:2,players:[],current:0,territories:[],selected:null,questionData:null,questions:0,maxQuestions:30,
+        goal:10,handoffAction:null,gameActive:false,extraTurn:false
+      };
+
+      const randInt=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+      const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
+      const shuffle=arr=>{
+        const a=[...arr];
+        for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+        return a;
+      };
+      const nonZero=(a,b)=>{let n=0;while(n===0)n=randInt(a,b);return n};
+
+      function cleanName(v,i){
+        const t=v.trim().slice(0,18);
+        return t||`Player ${i+1}`;
+      }
+
+      function updatePlayerInputs(){
+        const count=Number(els.playerCount.value);
+        document.querySelectorAll(".player-card").forEach(card=>{
+          card.classList.toggle("hidden",Number(card.dataset.player)>=count);
+        });
+      }
+
+      function startGame(){
+        state.count=Number(els.playerCount.value);
+        state.players=Array.from({length:state.count},(_,i)=>({name:cleanName(els.names[i].value,i)}));
+        state.goal=state.count===2?10:state.count===3?8:7;
+        state.current=0;
+        els.setup.style.display="none";
+        resetMap();
+        showHandoff(state.players[0].name,`First to ${state.goal} points wins. Choose a territory touching your starting land.`,showGame);
+      }
+
+      function resetMap(){
+        state.territories=Array.from({length:25},(_,i)=>({
+          id:i,owner:-1,difficulty:1+((i+randInt(0,2))%3),bonus:null,fortified:false
+        }));
+
+        const starts=state.count===2?[0,24]:state.count===3?[0,4,22]:[0,4,20,24];
+        starts.forEach((idx,i)=>state.territories[idx].owner=i);
+
+        const open=shuffle(state.territories.filter(t=>!starts.includes(t.id)).map(t=>t.id));
+        open.slice(0,3).forEach(id=>state.territories[id].bonus="crown");
+        open.slice(3,5).forEach(id=>state.territories[id].bonus="surge");
+        open.slice(5,7).forEach(id=>state.territories[id].bonus="shield");
+
+        state.selected=null;state.questionData=null;state.questions=0;state.gameActive=true;state.extraTurn=false;
+        els.gameOver.classList.remove("show");
+        els.question.classList.remove("show");
+        renderAll();
+      }
+
+      function neighbors(id){
+        const r=Math.floor(id/5),c=id%5,out=[];
+        if(r>0)out.push(id-5);if(r<4)out.push(id+5);if(c>0)out.push(id-1);if(c<4)out.push(id+1);
+        return out;
+      }
+
+      function eligibleIds(player){
+        const owned=state.territories.filter(t=>t.owner===player).map(t=>t.id);
+        if(owned.length===0){
+          return state.territories.filter(t=>t.owner===-1).map(t=>t.id);
+        }
+        const set=new Set();
+        for(const id of owned){
+          for(const n of neighbors(id)){
+            if(state.territories[n].owner!==player)set.add(n);
+          }
+        }
+        return [...set];
+      }
+
+      function playerScore(i){
+        return state.territories.reduce((sum,t)=>{
+          if(t.owner!==i)return sum;
+          return sum+1+(t.bonus==="crown"?1:0);
+        },0);
+      }
+
+      function renderAll(){
+        renderScoreboard();renderMap();
+        els.turnName.textContent=state.players[state.current]?.name||"";
+        els.turnCount.textContent=`Question ${Math.min(state.questions+1,state.maxQuestions)} / ${state.maxQuestions}`;
+      }
+
+      function renderScoreboard(){
+        els.scoreboard.innerHTML="";
+        for(let i=0;i<4;i++){
+          const card=document.createElement("div");
+          card.className="score";
+          if(i<state.count){
+            card.classList.add("show");
+            if(i===state.current)card.classList.add("active");
+            const strong=document.createElement("strong");
+            strong.textContent=state.players[i].name;
+            const span=document.createElement("span");
+            span.textContent=`${playerScore(i)} / ${state.goal} points · ${state.territories.filter(t=>t.owner===i).length} territories`;
+            card.append(strong,span);
+          }
+          els.scoreboard.appendChild(card);
+        }
+      }
+
+      function bonusIcon(bonus){
+        if(bonus==="crown")return "🏆";
+        if(bonus==="surge")return "⚡";
+        if(bonus==="shield")return "🛡";
+        return "";
+      }
+
+      function renderMap(){
+        els.map.innerHTML="";
+        const eligible=new Set(state.questionData?[]:eligibleIds(state.current));
+        for(const t of state.territories){
+          const btn=document.createElement("button");
+          btn.type="button";btn.className="territory";
+          if(t.owner>=0)btn.classList.add(`owner${t.owner}`);
+          if(eligible.has(t.id)&&state.gameActive)btn.classList.add("eligible");
+          if(state.selected===t.id)btn.classList.add("selected");
+          btn.disabled=!eligible.has(t.id)||!state.gameActive||!!state.questionData;
+
+          const diff=document.createElement("span");
+          diff.className="difficulty";
+          diff.textContent="★".repeat(t.difficulty);
+          btn.appendChild(diff);
+
+          if(t.bonus){
+            const bonus=document.createElement("span");
+            bonus.className="bonus";bonus.textContent=bonusIcon(t.bonus);btn.appendChild(bonus);
+          }
+          if(t.fortified){
+            const fort=document.createElement("span");
+            fort.className="fort";fort.textContent="🛡";btn.appendChild(fort);
+          }
+
+          const ownerText=t.owner>=0?state.players[t.owner].name:"neutral";
+          btn.setAttribute("aria-label",`Territory ${t.id+1}, ${ownerText}, difficulty ${t.difficulty}${t.bonus?", bonus "+t.bonus:""}${t.fortified?", fortified":""}`);
+          btn.addEventListener("click",()=>selectTerritory(t.id));
+          els.map.appendChild(btn);
+        }
+      }
+
+      function selectTerritory(id){
+        if(!state.gameActive||state.questionData||!eligibleIds(state.current).includes(id))return;
+        state.selected=id;
+        const t=state.territories[id];
+        const diff=t.owner>=0&&t.owner!==state.current&&t.fortified?3:t.difficulty;
+        state.questionData=makeQuestion(diff);
+        els.question.classList.add("show");
+        els.badge.textContent=t.owner===-1?"Capture neutral territory":t.fortified?"Break the fortification":"Attack enemy territory";
+        els.targetText.textContent=`Territory ${id+1} · difficulty ${"★".repeat(diff)} ${bonusIcon(t.bonus)}`;
+        els.equation.textContent=quadratic(state.questionData.b,state.questionData.c);
+        els.root1.value="";els.root2.value="";
+        els.feedback.className="feedback";
+        els.feedback.textContent="Give both roots correctly to resolve the attack.";
+        els.hint.disabled=false;
+        renderMap();
+        setTimeout(()=>els.root1.focus(),0);
+      }
+
+      function makeQuestion(difficulty){
+        let p,q;
+        if(difficulty===1){
+          p=randInt(1,6);q=randInt(1,6);
+        }else if(difficulty===2){
+          if(Math.random()<.55){p=randInt(1,8);q=-randInt(1,8)}
+          else{const s=Math.random()<.5?1:-1;p=s*randInt(1,8);q=s*randInt(1,8)}
+        }else{
+          p=nonZero(-10,10);q=Math.random()<.18?p:nonZero(-10,10);
+        }
+        return {p,q,b:p+q,c:p*q,roots:[-p,-q]};
+      }
+
+      function quadratic(b,c){
+        let out="x²";
+        if(b!==0){
+          const m=Math.abs(b);
+          out+=b>0?` + ${m===1?"":m}x`:` - ${m===1?"":m}x`;
+        }
+        if(c!==0)out+=c>0?` + ${c}`:` - ${Math.abs(c)}`;
+        return out+" = 0";
+      }
+
+      function bracket(n){
+        return `(x ${n>=0?"+":"-"} ${Math.abs(n)})`;
+      }
+
+      function showHint(){
+        if(!state.questionData)return;
+        const q=state.questionData;
+        const signs=q.c>0
+          ? (q.b>0?"same signs, both positive":q.b<0?"same signs, both negative":"same signs")
+          :"opposite signs";
+        els.feedback.className="feedback";
+        els.feedback.textContent=`Factor clue: find two integers that add to ${q.b} and multiply to ${q.c} (${signs}). Then set each bracket equal to zero.`;
+        els.hint.disabled=true;
+      }
+
+      function parseRoots(){
+        if(els.root1.value.trim()===""||els.root2.value.trim()==="")return null;
+        const a=Number(els.root1.value),b=Number(els.root2.value);
+        if(!Number.isInteger(a)||!Number.isInteger(b))return null;
+        return [a,b].sort((x,y)=>x-y);
+      }
+
+      function resolveAttack(event){
+        event.preventDefault();
+        if(!state.questionData||state.selected===null)return;
+        const entered=parseRoots();
+        if(!entered){
+          els.feedback.className="feedback bad";
+          els.feedback.textContent="Enter both integer roots before checking.";
+          return;
+        }
+        const expected=[...state.questionData.roots].sort((a,b)=>a-b);
+        const correct=entered[0]===expected[0]&&entered[1]===expected[1];
+        state.questions++;
+        if(correct)captureSuccess();
+        else captureFail();
+      }
+
+      function captureSuccess(){
+        const t=state.territories[state.selected];
+        const q=state.questionData;
+        let extra=false;
+        let message=`Correct: ${bracket(q.p)}${bracket(q.q)} = 0, so x = ${q.roots[0]} or x = ${q.roots[1]}. `;
+
+        if(t.owner>=0&&t.owner!==state.current&&t.fortified){
+          t.fortified=false;
+          message+="The shield is broken, but the territory remains with its owner.";
+        }else{
+          const oldOwner=t.owner;
+          t.owner=state.current;
+          t.fortified=t.bonus==="shield";
+          if(oldOwner===-1)message+="Territory captured!";
+          else message+=`Territory taken from ${state.players[oldOwner].name}!`;
+          if(t.bonus==="crown")message+=" Crown secured: this territory is worth 2 points.";
+          if(t.bonus==="shield")message+=" Shield raised: the next successful enemy attack only removes the fortification.";
+          if(t.bonus==="surge"){message+=" Surge captured: take another turn.";extra=true}
+        }
+
+        els.feedback.className="feedback good";
+        els.feedback.textContent=message;
+        renderAll();
+
+        const winner=winnerByTarget();
+        if(winner!==null){
+          setTimeout(()=>finishGame([winner],`${state.players[winner].name} reached ${state.goal} points.`),1100);
+          return;
+        }
+        if(state.questions>=state.maxQuestions){
+          setTimeout(()=>finishByScore(),1100);
+          return;
+        }
+
+        setTimeout(()=>{
+          closeQuestion();
+          if(extra){
+            state.extraTurn=true;
+            renderAll();
+            els.feedback.className="feedback";
+            showHandoff(state.players[state.current].name,"Surge bonus! Keep the device and take another turn.",showGame);
+          }else{
+            advancePlayer("Attack resolved. Choose the next territory.");
+          }
+        },1200);
+      }
+
+      function captureFail(){
+        const q=state.questionData;
+        els.feedback.className="feedback bad";
+        els.feedback.textContent=`Attack failed. ${bracket(q.p)}${bracket(q.q)} = 0, so x = ${q.roots[0]} or x = ${q.roots[1]}. The territory stays as it is.`;
+        renderAll();
+
+        if(state.questions>=state.maxQuestions){
+          setTimeout(()=>finishByScore(),1300);
+          return;
+        }
+
+        setTimeout(()=>{
+          closeQuestion();
+          advancePlayer("That attack failed. Your turn to choose a territory.");
+        },1300);
+      }
+
+      function closeQuestion(){
+        state.selected=null;state.questionData=null;state.extraTurn=false;
+        els.question.classList.remove("show");
+        renderMap();
+      }
+
+      function cancelSelection(){
+        if(!state.questionData)return;
+        closeQuestion();
+        els.feedback.className="feedback";
+      }
+
+      function advancePlayer(text){
+        state.current=(state.current+1)%state.count;
+        renderAll();
+        showHandoff(state.players[state.current].name,text,showGame);
+      }
+
+      function winnerByTarget(){
+        for(let i=0;i<state.count;i++)if(playerScore(i)>=state.goal)return i;
+        return null;
+      }
+
+      function finishByScore(){
+        const scores=state.players.map((_,i)=>playerScore(i));
+        const max=Math.max(...scores);
+        const winners=scores.map((s,i)=>s===max?i:null).filter(i=>i!==null);
+        const text=winners.length===1
+          ? `${state.players[winners[0]].name} has the highest score after ${state.maxQuestions} questions.`
+          : `The game ends tied on ${max} points.`;
+        finishGame(winners,text);
+      }
+
+      function finishGame(winners,summary){
+        state.gameActive=false;
+        els.game.classList.remove("show");
+        els.handoff.classList.remove("show");
+        els.gameOver.classList.add("show");
+        els.winnerText.textContent=winners.length===1
+          ? `${state.players[winners[0]].name} wins the conquest!`
+          : "Conquest ends in a draw!";
+        const standings=state.players.map((p,i)=>`${p.name}: ${playerScore(i)}`).join(" · ");
+        els.endSummary.textContent=`${summary} ${standings}`;
+      }
+
+      function showHandoff(name,text,action){
+        els.game.classList.remove("show");
+        els.gameOver.classList.remove("show");
+        els.handoff.classList.add("show");
+        els.handoffTitle.textContent=`${name}'s turn`;
+        els.handoffText.textContent=text;
+        state.handoffAction=action;
+      }
+
+      function showGame(){
+        els.handoff.classList.remove("show");
+        els.game.classList.add("show");
+        renderAll();
+      }
+
+      function ready(){
+        const action=state.handoffAction;state.handoffAction=null;
+        if(action)action();
+      }
+
+      function rematch(){
+        state.current=(state.current+1)%state.count;
+        resetMap();
+        showHandoff(state.players[state.current].name,`New map. First to ${state.goal} points wins.`,showGame);
+      }
+
+      function changePlayers(){
+        els.gameOver.classList.remove("show");els.handoff.classList.remove("show");els.game.classList.remove("show");
+        els.setup.style.display="";
+      }
+
+      els.playerCount.addEventListener("change",updatePlayerInputs);
+      els.start.addEventListener("click",startGame);
+      els.ready.addEventListener("click",ready);
+      els.rootsForm.addEventListener("submit",resolveAttack);
+      els.hint.addEventListener("click",showHint);
+      els.cancel.addEventListener("click",cancelSelection);
+      els.rematch.addEventListener("click",rematch);
+      els.newPlayers.addEventListener("click",changePlayers);
+
+      updatePlayerInputs();
+    })();
+  </script>
+</body>
+</html>
