@@ -466,7 +466,6 @@
           const next=1-state.solver;
           els.feedback.className="feedback bad";
           els.feedback.textContent=`Steal missed. Solution: ${bracket(q.p)}${bracket(q.q)} = 0, so x = ${q.roots[0]} or x = ${q.roots[1]}. No counter is placed.`;
-          state.moves++;
           setTimeout(()=>{
             hideQuestion();renderBoard();
             state.current=next;updateHeader();
