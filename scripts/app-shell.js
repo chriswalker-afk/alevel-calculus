@@ -737,7 +737,10 @@ function isLandingPath(pathname) {
 
 function landingHistoryPath() {
   const href = brandHomeLink?.getAttribute?.("href") ?? "";
-  if (href.startsWith("/alevel-calculus")) return "/alevel-calculus/";
+  const path = browserLocation?.pathname ?? "";
+  if (href.startsWith("/alevel-calculus") || path === "/alevel-calculus" || path.startsWith("/alevel-calculus/")) {
+    return "/alevel-calculus/";
+  }
   return "/";
 }
 
