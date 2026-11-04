@@ -81,6 +81,10 @@ const topicNavigationClose = new FakeElement('topicNavigationClose');
 const navigationScrim = new FakeElement('navigationScrim');
 navigationScrim.hidden = true;
 const learningWorkspace = new FakeElement('learningWorkspace');
+const workspaceNavHost = new FakeElement('workspaceNavHost');
+const workspaceHeaderControls = new FakeElement('workspaceHeaderControls');
+const topicSidebarToggle = new FakeElement('topicSidebarToggle');
+const topicSidebarToggleIcon = new FakeElement('topicSidebarToggleIcon');
 const modePanel = new FakeElement('modePanel');
 const stage = new FakeElement('stage');
 const standardActivityContent = new FakeElement('standardActivityContent');
@@ -424,6 +428,10 @@ const documentMap = new Map([
   ['[data-topic-navigation-close]', topicNavigationClose],
   ['[data-navigation-scrim]', navigationScrim],
   ['[data-learning-workspace]', learningWorkspace],
+  ['[data-workspace-nav-host]', workspaceNavHost],
+  ['.workspace-header__controls', workspaceHeaderControls],
+  ['[data-topic-sidebar-toggle]', topicSidebarToggle],
+  ['[data-topic-sidebar-toggle-icon]', topicSidebarToggleIcon],
   ['[data-mode-panel]', modePanel],
   ['[data-activity-stage]', stage],
   ['[data-standard-activity-content]', standardActivityContent],

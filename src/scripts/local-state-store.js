@@ -216,9 +216,32 @@ export function createLocalStateStore({
     };
   }
 
+  // UI preferences use their existing standalone keys so they do not alter
+  // exported learning-progress data or require a schema migration.
+  function getPreference(key, fallback = null) {
+    if (!storage) return fallback;
+    try {
+      return storage.getItem(key) ?? fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function setPreference(key, value) {
+    if (!storage) return false;
+    try {
+      storage.setItem(key, String(value));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   load();
 
   return Object.freeze({
+    getPreference,
+    setPreference,
     getState,
     getSlice,
     replaceState,

@@ -347,10 +347,7 @@ const workspaceToolsCollapsedByMode = new Map(
 const workspaceToolsPreferenceLocked = new Set();
 let activityIndex = 0;
 let navigationOpen = false;
-let sidebarCollapsed = false;
-try {
-  sidebarCollapsed = window.localStorage?.getItem(SIDEBAR_COLLAPSED_KEY) === "true";
-} catch {}
+let sidebarCollapsed = localStateStore.getPreference(SIDEBAR_COLLAPSED_KEY) === "true";
 let classWizOpen = false;
 let helpOpen = false;
 let wordBankOpen = false;
@@ -737,7 +734,10 @@ function isLandingPath(pathname) {
 
 function landingHistoryPath() {
   const href = brandHomeLink?.getAttribute?.("href") ?? "";
-  if (href.startsWith("/alevel-calculus")) return "/alevel-calculus/";
+  const path = browserLocation?.pathname ?? "";
+  if (href.startsWith("/alevel-calculus") || path === "/alevel-calculus" || path.startsWith("/alevel-calculus/")) {
+    return "/alevel-calculus/";
+  }
   return "/";
 }
 
@@ -1538,7 +1538,7 @@ function syncDesktopSidebar() {
 function setDesktopSidebarCollapsed(collapsed, { remember = true } = {}) {
   sidebarCollapsed = Boolean(collapsed);
   if (remember) {
-    try { window.localStorage?.setItem(SIDEBAR_COLLAPSED_KEY, sidebarCollapsed ? "true" : "false"); } catch {}
+    localStateStore.setPreference(SIDEBAR_COLLAPSED_KEY, sidebarCollapsed ? "true" : "false");
   }
   syncDesktopSidebar();
 }
