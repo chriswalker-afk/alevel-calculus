@@ -514,7 +514,7 @@ assert 'visited' in progress_store and 'completed' in progress_store and 'attemp
 assert 'recentSuccess' in progress_store and 'bestResult' in progress_store and 'lastSeen' in progress_store
 assert 'security' in progress_store and 'needs-review' in progress_store and 'developing' in progress_store and 'secure' in progress_store
 assert 'getModeCompletionState' in progress_store
-assert re.search(r'getTopicProgress\\(\\s*topicId,\\s*progressStore\\s*[,)]', js), "Topic progress must read through ProgressStore"
+assert 'getTopicProgress(topicId, progressStore' in js, "Topic progress must read through ProgressStore"
 assert 'progressStore.markVisited' in js, "Activity visits should pass through shared ProgressStore"
 assert 'localStateStore.subscribe' in js and 'localStateStore.importData' in js and 'localStateStore.reset' in js
 assert 'createVocabularyStore({ localStateStore })' in app_state, "VocabularyStore must now use the shared versioned state layer"
