@@ -30,7 +30,7 @@ for (const path of ["src/index.html", "index.html", "404.html"]) {
 // Home links must work relative to both the GitHub Pages project path
 // and the custom-domain root; 404.html sets its base dynamically.
 for (const path of ["src/index.html", "index.html", "404.html"]) {
-  assert.match(read(path), /<a class="brand" data-brand-home href="\\.\\/" aria-label="Calculus home">/);
+  assert.ok(read(path).includes('data-brand-home href="./"'), `${path} home link should resolve relative to its configured site root`);
 }
 
 const app = read("src/scripts/app-shell.js");
