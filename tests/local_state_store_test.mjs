@@ -35,6 +35,15 @@ store.updateSlice('vocabulary', { records: { 'vocab:derivative': { termId: 'voca
 const reloaded = createLocalStateStore({ storage, now, initialState: createBlankAppState() });
 assert(reloaded.getSlice('vocabulary').records['vocab:derivative'].needsReview === true, 'State must survive a fresh store instance');
 
+// Sidebar preference persistence stays in the shared storage adapter while
+// retaining the legacy storage key and keeping learning exports unchanged.
+const sidebarPreferenceKey = 'calculus:topics-sidebar-collapsed';
+assert(reloaded.getPreference(sidebarPreferenceKey) === null, 'Unknown UI preference should be unset');
+assert(reloaded.setPreference(sidebarPreferenceKey, 'true') === true, 'UI preference should be persisted');
+assert(storage.getItem(sidebarPreferenceKey) === 'true', 'Sidebar preference must preserve its legacy key');
+const preferenceReloaded = createLocalStateStore({ storage, now });
+assert(preferenceReloaded.getPreference(sidebarPreferenceKey) === 'true', 'UI preference should survive reload');
+
 const exported = reloaded.exportData();
 const inspection = reloaded.inspectImport(exported);
 assert(inspection.schemaVersion === APP_STATE_SCHEMA_VERSION, 'Export/import schema versions must match');
@@ -67,6 +76,8 @@ Object.defineProperty(globalThis, 'localStorage', {
 });
 const deniedStorageStore = createLocalStateStore({ initialState: createBlankAppState() });
 assert(deniedStorageStore.getStatus().persistent === false, 'Denied localStorage getter should fall back to in-memory state instead of crashing');
+assert(deniedStorageStore.getPreference(sidebarPreferenceKey, 'false') === 'false', 'Denied storage should use fallback preferences');
+assert(deniedStorageStore.setPreference(sidebarPreferenceKey, 'true') === false, 'Denied storage should reject preference writes safely');
 if (originalLocalStorageDescriptor) Object.defineProperty(globalThis, 'localStorage', originalLocalStorageDescriptor);
 else delete globalThis.localStorage;
 
